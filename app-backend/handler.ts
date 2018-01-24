@@ -13,7 +13,7 @@ import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces';
 import {makeExecutableSchema } from 'graphql-tools';
 import {resolvers} from './resolvers/';
 
-const typeDefs: ITypeDefinitions = require('./schemas/index.gql');
+const typeDefs: ITypeDefinitions = require('./schemas/index.graphql');
 
 const myGraphQLSchema = makeExecutableSchema({
     typeDefs,
@@ -27,7 +27,7 @@ export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context
 };
 
 // for local endpointURL is /graphql and for prod it is /stage/graphql
-export const playgroundHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => Promise<void>) 
+export const playgroundHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
         = lambdaPlayground({
 
     endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
