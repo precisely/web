@@ -6,16 +6,15 @@
  * without modification, are not permitted.
  */
 
-import {fromJS, Map} from 'immutable';
-import {SET_DATA} from '../constants';
+import {SET_LENGTH} from '../constants';
 
-const inititalState: Map<string, Object> = fromJS({});
+const inititalState: number = 10;
 
 // All the reducers to handle dispatched actions should be written here
-export function demoReducer(state: Map<string, Object> = inititalState, action: {type: string, response: Object}) {
+export function demoReducer(state: number = inititalState, action: {type: string, payload: number}): number {
     switch (action.type) {
-        case SET_DATA:
-            return fromJS(action.response);
+        case SET_LENGTH:
+            return action.payload;
         default:
             return state;
     }

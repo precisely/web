@@ -7,11 +7,11 @@
  */
 
 import * as React from 'react';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 import {graphql, ChildProps} from 'react-apollo';
 import gql from 'graphql-tag';
-// import {fetchData} from '../actions';
-// import {store} from '../store';
+import {setLength} from '../actions';
+import {store} from '../store';
 
 export interface IDemoProps {
     data?: Object;
@@ -32,6 +32,11 @@ type InputProps = {
 };
 
 class DemoImpl extends React.Component<ChildProps<InputProps, Response>> {
+
+    componentWillMount(): void {
+        store.dispatch(setLength(100));
+    }
+
     render() {
         const {data = {getRandomList: {list: [1, 2]}}} = this.props;
 
@@ -55,8 +60,14 @@ export const DemoQuery = gql`
 
 const withDemo = graphql<Response, InputProps>(DemoQuery, {
     options: ({ length }) => ({
-        variables: { length: 10 }
+        variables: { length }
     })
 });
 
-export const Demo = withDemo(DemoImpl);
+const mapStateToProps = (state: {data: number}) => {
+    return {
+        length: state.data,
+    };
+};
+
+export const Demo = connect(mapStateToProps)(withDemo(DemoImpl));

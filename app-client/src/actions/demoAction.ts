@@ -6,17 +6,11 @@
  * without modification, are not permitted.
  */
 
-import {SET_DATA, FETCH_DATA} from '../constants';
+import {SET_LENGTH} from '../constants';
 
-export function fetchData() {
+export function setLength(length: number) {
     return {
-        type: FETCH_DATA
-    };
-}
-
-export function setData(response: Object = {}) {
-    return {
-        type: SET_DATA,
-        response,
+        type: SET_LENGTH,
+        payload: length,
     };
 }
