@@ -3,25 +3,20 @@
     "outDir": "build/dist",
     "experimentalDecorators": true,
     "module": "esnext",
-    "target": "es5",
-    "lib": ["es7", "dom", "dom.iterable"],
+    "target": "es2016",
+    "lib": ["es6", "dom", "dom.iterable", "esnext.asynciterable"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": ".",
+    "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "*"
-      ]
-    }
+    "noUnusedLocals": true
   },
   "exclude": [
     "node_modules",
@@ -30,8 +25,6 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts",
-    "src/__tests__",
-    "src/__mocks__"
+    "src/setupTests.ts"
   ]
 }

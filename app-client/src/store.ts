@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-Present, CauseCode Technologies Pvt Ltd, India.
+ * Copyright (c) 2017-Present, CauseCode Technologies Pvt Ltd, India.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or
@@ -7,13 +7,14 @@
  */
 
 import logger from 'redux-logger';
-// import createSagaMiddleware, {SagaMiddleware} from 'redux-saga';
+import createSagaMiddleware, {SagaMiddleware} from 'redux-saga';
 import {createStore, applyMiddleware} from 'redux';
-import {rootReducer} from './reducers/index';
+import {rootReducer} from './reducers';
 
-// export const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware: SagaMiddleware<{}> = createSagaMiddleware();
 
 const middlewares = [
+    sagaMiddleware,
     logger,
 ];
 

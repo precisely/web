@@ -6,10 +6,10 @@
  * without modification, are not permitted.
  */
 
-import {combineReducers} from 'redux';
+import {combineReducers, Reducer} from 'redux';
 import {demoReducer} from './demoReducer';
 
 // All the reducers should be combined here
-export const rootReducer = combineReducers({
+export const rootReducer: Reducer<{}> = combineReducers({
     data: demoReducer
 });

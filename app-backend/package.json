@@ -9,12 +9,13 @@
   },
   "scripts": {
     "test": "jest --no-cache --coverage",
-    "start": "serverless dynamodb install && env-cmd ./config/security.env.local serverless offline start",
+    "start": "serverless dynamodb install && env-cmd ../config/security.env.local serverless offline start",
     "deploy-prod": "serverless --stage=production deploy"
   },
   "jest": {
     "transform": {
-      "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js"
+      "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
+      "\\.(gql|graphql)$": "jest-transform-graphql"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
     "moduleFileExtensions": [
@@ -31,7 +32,9 @@
     "babel-polyfill": "6.26.0",
     "graphql": "0.10.5",
     "graphql-playground-middleware-lambda": "1.2.0",
+    "graphql-tag": "^2.6.1",
     "graphql-tools": "2.7.2",
+    "jest-transform-graphql": "^2.1.0",
     "serverless-dynamodb-client": "0.0.2"
   },
   "devDependencies": {

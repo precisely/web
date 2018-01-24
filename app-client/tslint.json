@@ -1,8 +1,8 @@
 {
     "extends": ["tslint-react"],
+    "rulesDirectory": ["./node_modules/ts-rules/public"],
 
     "rules": {
-        "jsx-no-string-ref": false,
         "new-line-indent": [true,"spaces", 4, 2],
         "no-index-import": true,
         "no-import-spaces": true,
@@ -39,7 +39,7 @@
         ],
         "no-any": true,
         "no-arg": true,
-        "no-bitwise": false,
+        "no-bitwise": true,
         "no-console": [
             true,
             "log",
@@ -61,6 +61,7 @@
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": true,
+        "no-use-before-declare": true,
         "one-line": [
             true,
             "check-catch",
@@ -100,7 +101,6 @@
             "check-separator",
             "check-type",
             "check-typecast"
-        ],
-        "jsx-boolean-value": false
+        ]
     }
 }
