@@ -25,11 +25,11 @@ class DemoImpl extends React.Component<ChildProps<InputProps, Response> & IDemoP
 
     fetchRandomNumbers = (e: React.ChangeEvent<EventTarget>): void => {
         if (e.target[`value`]) {
-            store.dispatch(setLength(parseInt(e.target[`value`])));
+            store.dispatch(setLength(parseInt(e.target[`value`], 10)));
         }
     }
 
-    render() {
+    renderList = (): JSX.Element => {
         const {data} = this.props;
 
         if (!data || !data.getRandomList || !data.getRandomList.list || !data.getRandomList.list.length) {
@@ -37,22 +37,29 @@ class DemoImpl extends React.Component<ChildProps<InputProps, Response> & IDemoP
         }
 
         return (
+            <Row>
+                <Col xs={12} style={{backgroundColor: '#c1c1c1', wordWrap: 'break-word'}}>
+                    {JSON.stringify(data.getRandomList.list)}
+                </Col>
+            </Row>
+        );
+    }
+
+    render() {
+        return (
             <Grid>
-                <h5>You have successfully configured the boilerplate.</h5>
+                <h3 style={{textAlign: 'center'}}>You have successfully configured the boilerplate.</h3>
+                <br/>
                 <Row>
                     <Col xs={4} style={{marginTop: '-3px', fontSize: '24px'}}>
                         <Label>Enter random number length: </Label>
                     </Col>
                     <Col xs={3}>
-                        <FormControl type="number" onChange={this.fetchRandomNumbers} />
+                        <FormControl type="number" onChange={this.fetchRandomNumbers} value={this.props.length} />
                     </Col>
                 </Row>
-               <br/>
-                <Row>
-                    <Col xs={12} style={{backgroundColor: '#c1c1c1', wordWrap: 'break-word'}}>
-                        {JSON.stringify(data.getRandomList.list)}
-                    </Col>
-                </Row>
+                <br/>
+                {this.renderList()}
             </Grid>
         );
     }

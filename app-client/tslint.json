@@ -1,14 +1,8 @@
 {
     "extends": ["tslint-react"],
-    "rulesDirectory": ["./node_modules/ts-rules/public"],
+    "rulesDirectory": [],
 
     "rules": {
-        "new-line-indent": [true,"spaces", 4, 2],
-        "no-index-import": true,
-        "no-import-spaces": true,
-        "empty-line-before-return": true,
-        "no-anchor-href": { "severity": "warning" },
-        "model-resource-name": true,
         "align": [
             true,
             "parameters",
@@ -61,7 +55,6 @@
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": true,
-        "no-use-before-declare": true,
         "one-line": [
             true,
             "check-catch",

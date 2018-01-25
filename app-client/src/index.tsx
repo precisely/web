@@ -16,12 +16,8 @@ import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import registerServiceWorker from './registerServiceWorker';
-import {Demo} from './containers/demo/Demo';
 import {store} from './store';
-
-/**
- * Initiate all sagas
- */
+import {Demo} from './containers/demo/Demo';
 
 initReactFastclick();
 
@@ -36,7 +32,11 @@ ReactDOM.render(
             <div>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact={true} path="/" component={Demo} />
+                        <Route
+                                exact={true}
+                                path="/"
+                                component={Demo}
+                        />
                     </Switch>
                 </BrowserRouter>
             </div>
