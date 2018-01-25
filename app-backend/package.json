@@ -1,5 +1,5 @@
 {
-  "name": "serverless-graphql-typescript",
+  "name": "serverless-graphql-typescript-backend",
   "description": "Boilerplate for serverless-graphql using typescript",
   "version": "0.0.1",
   "private": true,
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "jest --no-cache --coverage",
-    "start": "serverless dynamodb install && env-cmd ../config/security.env.local serverless offline start",
+    "start": "env-cmd ../config/security.env.local serverless offline start",
+    "postinstall": "serverless dynamodb install",
     "deploy-prod": "serverless --stage=production deploy"
   },
   "jest": {
