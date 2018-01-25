@@ -2,10 +2,6 @@
   "name": "serverless-graphql-typescript",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
-    "prettier": "prettier --write \"{app-backend,app-client/**/src}/**/*.{js,css,json}\"",
-    "prettier-check": "prettier --list-different \"{app-backend,app-client/**/src}/**/*.{js,css,json}\"",
-    "test": "yarn run lint && yarn run prettier-check",
     "postinstall": "cd app-backend && npm install && cd ../app-client && npm install",
     "server": "cd app-backend && npm start",
     "client": "cd app-client && npm start",

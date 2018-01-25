@@ -11,9 +11,9 @@ import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda, graphiqlLambda, LambdaHandler } from 'apollo-server-lambda';
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces';
 import {makeExecutableSchema } from 'graphql-tools';
-import {resolvers} from './resolvers/';
+import {resolvers} from './resolvers';
 
-const typeDefs: ITypeDefinitions = require('./schemas/index.graphql');
+const typeDefs: ITypeDefinitions = require('./query.graphql');
 
 const myGraphQLSchema = makeExecutableSchema({
     typeDefs,

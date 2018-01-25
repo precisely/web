@@ -1,7 +1,0 @@
-#import "./random.graphql"
-#import "./twitter.graphql"
-
-type Query {
-    getTwitterFeed(handle: String!, consumer_key: String, consumer_secret: String): Tweets
-    getRandomList(length: Int): Random
-}
