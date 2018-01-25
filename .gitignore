@@ -13,3 +13,6 @@ jspm_packages
 .idea
 .vscode
 coverage
+
+# Production Config
+config/security.env.prod
