@@ -1,4 +1,4 @@
-# React-Mobile-Starter `v0.0.2`
+# React-Graphql-Serveress-Starter `v0.0.1`
 ### A starting point for React16 powered mobile apps.
 
 ### Installing:

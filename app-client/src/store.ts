@@ -7,14 +7,10 @@
  */
 
 import logger from 'redux-logger';
-import createSagaMiddleware, {SagaMiddleware} from 'redux-saga';
 import {createStore, applyMiddleware} from 'redux';
 import {rootReducer} from './reducers';
 
-export const sagaMiddleware: SagaMiddleware<{}> = createSagaMiddleware();
-
 const middlewares = [
-    sagaMiddleware,
     logger,
 ];
 

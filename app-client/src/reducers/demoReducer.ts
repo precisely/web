@@ -6,11 +6,10 @@
  * without modification, are not permitted.
  */
 
-import {SET_LENGTH} from '../constants';
+import {SET_LENGTH} from 'src/containers/demo/actionTypes';
 
 const inititalState: number = 10;
 
-// All the reducers to handle dispatched actions should be written here
 export function demoReducer(state: number = inititalState, action: {type: string, payload: number}): number {
     switch (action.type) {
         case SET_LENGTH:

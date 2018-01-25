@@ -16,15 +16,12 @@ import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import registerServiceWorker from './registerServiceWorker';
-import {rootSaga} from './sagas';
-import {TestMainPage} from './components/TestMainPage';
-import {Demo} from './containers/Demo';
-import {sagaMiddleware, store} from './store';
+import {Demo} from './containers/demo/Demo';
+import {store} from './store';
 
 /**
  * Initiate all sagas
  */
-sagaMiddleware.run(rootSaga);
 
 initReactFastclick();
 
@@ -39,8 +36,7 @@ ReactDOM.render(
             <div>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact={true} path="/" component={TestMainPage} />
-                        <Route path="/demo" component={Demo} />
+                        <Route exact={true} path="/" component={Demo} />
                     </Switch>
                 </BrowserRouter>
             </div>
@@ -48,4 +44,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root') as HTMLElement
 );
+
 registerServiceWorker();

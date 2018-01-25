@@ -7,7 +7,7 @@
  */
 
 import {combineReducers, Reducer} from 'redux';
-import {demoReducer} from './demoReducer';
+import {demoReducer} from 'src/reducers/demoReducer';
 
 // All the reducers should be combined here
 export const rootReducer: Reducer<{}> = combineReducers({

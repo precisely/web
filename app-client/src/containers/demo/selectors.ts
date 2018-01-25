@@ -8,10 +8,9 @@
 
 import {createSelector} from 'reselect';
 
-// Add selectors to get data from redux-store
-const selectDataDomain = (state: Map<string, Object>): Function => state[`data`].toJS();
+const selectDataDomain = (state: {data: number}): number => state.data;
 
-export const getData: Function = () => createSelector(
+export const getLength: Function = () => createSelector(
     selectDataDomain,
-    (data: Object) => Object.keys(data).length ? data[`instanceList`] : {}
+    (data: number) => Number.isInteger(data) ? data : 0
 );

@@ -8,28 +8,17 @@
 
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {createStructuredSelector, Selector} from 'reselect';
 import {graphql, ChildProps} from 'react-apollo';
-import gql from 'graphql-tag';
-import {setLength} from '../actions';
-import {store} from '../store';
+import {setLength} from 'src/actions';
+import {store} from 'src/store';
+import {InputProps} from 'src/containers/demo/interfaces';
+import {DemoQuery} from 'src/containers/demo/queries';
+import {getLength} from 'src/containers/demo/selectors';
 
 export interface IDemoProps {
     data?: Object;
 }
-
-type List = {
-    length: number;
-    list: number[];
-    sum: number;
-};
-
-type Response = {
-    getRandomList: List;
-};
-
-type InputProps = {
-    length: number;
-};
 
 class DemoImpl extends React.Component<ChildProps<InputProps, Response>> {
 
@@ -48,26 +37,14 @@ class DemoImpl extends React.Component<ChildProps<InputProps, Response>> {
     }
 }
 
-export const DemoQuery = gql`
-    query GetCharacter($length: Int!) {
-        getRandomList(length: $length) {
-            length
-            list
-            sum
-        }
-    }
-`;
-
 const withDemo = graphql<Response, InputProps>(DemoQuery, {
     options: ({ length }) => ({
         variables: { length }
     })
 });
 
-const mapStateToProps = (state: {data: number}) => {
-    return {
-        length: state.data,
-    };
-};
+const mapStateToProps: Selector<Map<string, Object>, {length: number}> = createStructuredSelector({
+    length: getLength(),
+});
 
 export const Demo = connect(mapStateToProps)(withDemo(DemoImpl));

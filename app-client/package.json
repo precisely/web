@@ -3,10 +3,6 @@
   "version": "0.0.2",
   "description": "A starting template for creating React16 and Redux powered mobile apps.",
   "main": "webpack.config.js",
-  "reactHero": {
-    "serverUrl": "",
-    "APIUrl": ""
-  },
   "author": "CauseCode Technologies",
   "license": "ISC",
   "repository": {
@@ -57,6 +53,10 @@
       "jsx",
       "json",
       "node"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "."
     ],
     "globals": {
       "ts-jest": {

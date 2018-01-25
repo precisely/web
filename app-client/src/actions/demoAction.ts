@@ -6,7 +6,7 @@
  * without modification, are not permitted.
  */
 
-import {SET_LENGTH} from '../constants';
+import {SET_LENGTH} from 'src/containers/demo/actionTypes';
 
 export function setLength(length: number) {
     return {
