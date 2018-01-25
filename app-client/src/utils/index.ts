@@ -36,20 +36,3 @@ export function getConfig(): Object {
     return (getEnvironment() === 'production') ? packageJson : localConfigJson;
 }
 
-/**
- * A method to get the serverURL from config Object
- * @returns string - server URL
- */
-export function getServerURL(): string {
-    const config: Object = getConfig();
-
-    if (isEmpty(config)) {
-        /* tslint:disable no-console */
-        console.error('Server configuration not found!');
-        /* tslint:enable no-console */
-
-        return '';
-    }
-
-    return config[`serverURL`] || '';
-}
