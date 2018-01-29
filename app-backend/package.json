@@ -1,12 +1,7 @@
 {
-  "name": "serverless-graphql-typescript",
-  "description": "A starting template for creating React16, Redux, GraphQL, Serverless and TypeScript powered mobile apps.",
-  "version": "0.0.1",
+  "name": "precisely-web",
+  "description": "",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:causecode/serverless-graphql-typescript.git"
-  },
   "scripts": {
     "test": "jest --no-cache --coverage",
     "start": "env-cmd ../config/security.env.local serverless offline start",
@@ -25,7 +20,7 @@
     ],
     "mapCoverage": true
   },
-  "author": "CauseCode Technologies",
+  "author": "Precise.ly, Inc",
   "license": "ISC",
   "dependencies": {
     "apollo-server-lambda": "1.3.2",

@@ -1,4 +1,4 @@
-## [0.0.1] - 2018-01-22
+## [0.0.1] - 2018-01-29
 
 ### Added
 - RandomList generator demo.

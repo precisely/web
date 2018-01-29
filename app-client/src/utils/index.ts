@@ -1,15 +1,10 @@
 /*
-* Copyright (c) 2017-Present, CauseCode Technologies Pvt Ltd, India.
+* Copyright (c) 2017-Present, Precise.ly, Inc.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
-
-/* tslint:disable no-any */
-const packageJson: any = require('../../../package.json');
-const localConfigJson: any = require('../../../localConfig.json');
-/* tslint:enable no-any */
 
 /**
  * A method to check if the given object is empty
@@ -27,12 +22,3 @@ export function isEmpty(object: Object): boolean {
 export function getEnvironment(): string {
     return process.env.NODE_ENV || '';
 }
-
-/**
- * A method to get serverURL configuration from package.json or localConfig.json
- * @returns Object for package.json or localConfig.json as per the environment
- */
-export function getConfig(): Object {
-    return (getEnvironment() === 'production') ? packageJson : localConfigJson;
-}
-
