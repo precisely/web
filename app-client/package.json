@@ -1,6 +1,5 @@
 {
-  "name": "react-serverless-graphql-typescript",
-  "version": "0.0.1",
+  "name": "serverless-graphql-typescript",
   "description": "A starting template for creating React16, Redux, GraphQL, Serverless and TypeScript powered mobile apps.",
   "main": "webpack.config.js",
   "author": "CauseCode Technologies",

@@ -1,6 +1,6 @@
 {
-  "name": "serverless-graphql-typescript-backend",
-  "description": "Boilerplate for serverless-graphql using typescript",
+  "name": "serverless-graphql-typescript",
+  "description": "A starting template for creating React16, Redux, GraphQL, Serverless and TypeScript powered mobile apps.",
   "version": "0.0.1",
   "private": true,
   "repository": {
