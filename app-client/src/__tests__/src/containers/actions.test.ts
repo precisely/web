@@ -6,7 +6,7 @@
  * without modification, are not permitted.
  */
 
-import {setLength} from 'src/actions/demoAction';
+import {setLength} from 'src/containers/demo/actions';
 import {SET_LENGTH} from 'src/containers/demo/actionTypes';
 
 describe('Tests for the demoActions', (): void => {

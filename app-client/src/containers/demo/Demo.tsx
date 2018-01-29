@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {createStructuredSelector, Selector} from 'reselect';
 import {graphql, ChildProps} from 'react-apollo';
 import {FormControl, Label, Row, Col, Grid} from 'react-bootstrap';
-import {setLength} from 'src/actions/demoAction';
+import {setLength} from 'src/containers/demo/actions';
 import {store} from 'src/store';
 import {InputProps} from 'src/containers/demo/interfaces';
 import {DemoQuery} from 'src/containers/demo/queries';

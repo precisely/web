@@ -7,7 +7,7 @@
  */
 
 import {SET_LENGTH} from 'src/containers/demo/actionTypes';
-import {demoReducer, inititalState} from 'src/reducers/demoReducer';
+import {demoReducer, inititalState} from 'src/containers/demo/reducer';
 
 describe('Tests for demoReducer', (): void => {
     const getActionData = (payload: number): {type: string, payload: number} => {
