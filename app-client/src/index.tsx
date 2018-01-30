@@ -15,7 +15,6 @@ import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import registerServiceWorker from './registerServiceWorker';
 import {store} from './store';
 import {Demo} from './containers/demo/Demo';
 
