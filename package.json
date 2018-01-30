@@ -4,10 +4,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "cd app-backend && npm install && cd ../app-client && npm install",
-    "server": "cd app-backend && npm start",
-    "client": "cd app-client && npm start",
-    "all": "npm run server | npm run client"
+    "postinstall": "cd app-backend && yarn install && cd ../app-client && yarn install",
+    "setup": "npm install -g serverless && nvm install v6.10.3",
+    "server": "cd app-backend && yarn start",
+    "client": "cd app-client && yarn start",
+    "all": "yarn run server | yarn run client"
   },
   "repository": {
     "type": "git",

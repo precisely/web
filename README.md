@@ -4,20 +4,28 @@
 
 ## Quick Setup
 
-You need to have Node 6 or higher installed.
+You need to have Node 6 or higher and `nvm` [installed](https://github.com/creationix/nvm#installation) on your system.
 
-`npm install -g serverless`
+- Install Dependencies.
 
-Install Dependencies.
+   `yarn install`
 
-`npm install`
+- Install required packages and Node v6.10.3 (If you haven't fixed [npm permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions), you may have to use `sudo`)
+
+   `yarn setup`
+
+## Managing Node Version
+
+- As AWS Lambda only supports v6.10.3 and v4.3.2 of Node.js, we are using `nvm` to manage versions.
+- Make sure to run `nvm use` in this directory if you have changed your nodeJS version for any reason.
+- If you are a [zsh](http://ohmyz.sh) user then you can configure your shell to call `nvm use` automatically in a directory with a .nvmrc file. [Read here.](https://github.com/creationix/nvm#zsh)
 
 
 ## Quick Start
 
 ### Backend Server
 
-`npm run server`
+`yarn server`
 
 - Api endpoint ([http://localhost:4000/api](http://localhost:4000/api))
 - Local Dynamodb ([http://localhost:8000/shell](http://localhost:8000/shell))
@@ -26,13 +34,13 @@ Install Dependencies.
 
 ### Frontend Client
 
-`npm run client`
+`yarn client`
 
 - React App ([http://localhost:3000](http://localhost:3000))
 
 ### Both (Backend & Frontend)
 
-`npm run all`
+`yarn all`
 
 This will run both concurrently but is not recommended when you want to view backend logs in console.
 
@@ -68,7 +76,7 @@ You need to make sure you have access to your deployed lambda functions.
 - Backend Server
     ```
     cd app-backend/
-    npm deploy-prod
+    yarn deploy-prod
     ```
 
 - Frontend Client
@@ -81,7 +89,7 @@ You need to make sure you have access to your deployed lambda functions.
     - Run the deployment command
         ```
         cd app-client/
-        npm deploy-prod
+        yarn deploy-prod
         # Your deployment url will be printed on the console
         ```
     - Your deployment url will be : http://[bucket-name].s3-website-[region-name].amazonaws.com/

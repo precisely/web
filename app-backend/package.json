@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "jest --no-cache --coverage",
-    "start": "env-cmd ../config/security.env.local serverless offline start",
+    "start": "./node_modules/.bin/env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "serverless dynamodb install",
     "deploy-prod": "serverless --stage=production deploy"
   },
