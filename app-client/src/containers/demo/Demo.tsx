@@ -10,7 +10,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector, Selector} from 'reselect';
 import {graphql, ChildProps} from 'react-apollo';
-import {FormControl, Label, Row, Col, Grid} from 'react-bootstrap';
+import {Input, Label, Row, Col, Container} from 'reactstrap';
 import {setLength} from 'src/containers/demo/actions';
 import {store} from 'src/store';
 import {InputProps} from 'src/containers/demo/interfaces';
@@ -47,20 +47,20 @@ class DemoImpl extends React.Component<ChildProps<InputProps, Response> & IDemoP
 
     render() {
         return (
-            <Grid>
+            <Container>
                 <h3 style={{textAlign: 'center'}}>You have successfully configured the boilerplate.</h3>
                 <br/>
                 <Row>
                     <Col xs={4} style={{marginTop: '-3px', fontSize: '24px'}}>
-                        <Label>Enter random number length: </Label>
+                        <Label for="length">Enter random number length: </Label>
                     </Col>
                     <Col xs={3}>
-                        <FormControl type="number" onChange={this.fetchRandomNumbers} value={this.props.length} />
+                        <Input id="length" type="number" onChange={this.fetchRandomNumbers} value={this.props.length} />
                     </Col>
                 </Row>
                 <br/>
                 {this.renderList()}
-            </Grid>
+            </Container>
         );
     }
 }

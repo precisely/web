@@ -10,13 +10,14 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import initReactFastclick from 'react-fastclick';
 import {Provider} from 'react-redux';
+import {StyleRoot} from 'radium';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {store} from './store';
-import {Demo} from './containers/demo/Demo';
+import {store} from 'src/store';
+import {LoginAndSignup} from 'src/containers/user/LoginAndSignup';
 
 initReactFastclick();
 
@@ -28,17 +29,14 @@ const client = new ApolloClient({
 ReactDOM.render(
     <Provider store={store}>
         <ApolloProvider client={client}>
-            <div>
+            <StyleRoot>
                 <BrowserRouter>
                     <Switch>
-                        <Route
-                                exact={true}
-                                path="/"
-                                component={Demo}
-                        />
+                        <Route exact={true} path="/login" component={LoginAndSignup} />
+                        <Route exact={true} path="/signup" component={LoginAndSignup} />
                     </Switch>
                 </BrowserRouter>
-            </div>
+            </StyleRoot>
         </ApolloProvider>
     </Provider>,
     document.getElementById('root') as HTMLElement
