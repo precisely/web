@@ -7,7 +7,14 @@ provider:
   runtime: nodejs6.10
   stage: dev
   region: us-east-1
+  environment:
+    SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
+    REGION: ${self:provider.region}
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - KMS:Decrypt
+      Resource: ${self:custom.kmsSecrets.keyArn} 
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -22,12 +29,16 @@ provider:
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
+  - serverless-kms-secrets
   - serverless-offline
 
 custom:
   serverless-offline:
     port: 4000
   webpackIncludeModules: true
+  serverless-kms-secrets:
+    secretsFile: kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml
+  kmsSecrets: ${file(./kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
   dynamodb:
     start:
       port: 8000
