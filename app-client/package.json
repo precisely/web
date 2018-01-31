@@ -1,0 +1,153 @@
+{
+  "name": "precisely-web",
+  "description": "",
+  "main": "webpack.config.js",
+  "author": "Precise.ly, Inc",
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "start": "./node_modules/.bin/env-cmd ../../config/security.env.local node scripts/start.js",
+    "build": "./node_modules/.bin/env-cmd ../../config/security.env.prod node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom",
+    "compile": "yarn run clean && tsc",
+    "lint-ts": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
+    "deploy-prod": "yarn run build && serverless client deploy"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "<rootDir>/coverage",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!**/node_modules/**",
+      "!src/interfaces/**",
+      "!src/__tests__/**",
+      "!src/index.tsx",
+      "!**/registerServiceWorker.ts",
+      "!src/ambientInterfaces.d.ts"
+    ],
+    "mapCoverage": true,
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testRegex": "(/tests/.*-test|\\.(test|spec))\\.(ts|tsx)$",
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
+    },
+    "moduleFileExtensions": [
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "./tsconfig.test.json"
+      }
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "."
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.1.4",
+    "apollo-client": "^2.0.2",
+    "apollo-client-preset": "^1.0.2",
+    "apollo-link-http": "^1.3.2",
+    "autoprefixer": "7.1.6",
+    "axios": "0.17.1",
+    "case-sensitive-paths-webpack-plugin": "2.1.1",
+    "chalk": "1.1.3",
+    "css-loader": "0.28.4",
+    "dotenv": "4.0.0",
+    "env-cmd": "7.0.0",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "0.11.2",
+    "fs-extra": "3.0.1",
+    "graphql": "0.12.3",
+    "graphql-tag": "2.6.1",
+    "html-webpack-plugin": "2.29.0",
+    "immutable": "3.8.2",
+    "iscroll": "5.2.0",
+    "iscroll-react": "1.0.3",
+    "jest": "21.2.1",
+    "object-assign": "4.1.1",
+    "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "2.0.6",
+    "promise": "8.0.1",
+    "radium": "0.19.6",
+    "react": "16.1.1",
+    "react-apollo": "2.0.4",
+    "react-bootstrap": "0.31.5",
+    "react-dev-utils": "4.0.1",
+    "react-dom": "16.1.1",
+    "react-fontawesome": "1.6.1",
+    "react-fastclick": "3.0.2",
+    "react-iscroll": "2.0.3",
+    "react-redux": "5.0.6",
+    "react-router-dom": "4.2.2",
+    "react-select": "1.0.0-rc.10",
+    "redux": "3.7.2",
+    "redux-logger": "3.0.6",
+    "redux-saga": "0.16.0",
+    "reselect": "3.0.1",
+    "source-map-loader": "0.2.1",
+    "style-loader": "0.18.2",
+    "sw-precache-webpack-plugin": "0.11.4",
+    "ts-jest": "21.1.4",
+    "ts-loader": "2.3.7",
+    "tslint": "5.7.0",
+    "tslint-loader": "3.5.3",
+    "tslint-react": "3.2.0",
+    "typescript": "2.5.3",
+    "url-loader": "0.5.9",
+    "webpack": "3.5.1",
+    "webpack-dev-server": "2.7.1",
+    "webpack-manifest-plugin": "1.2.1",
+    "whatwg-fetch": "2.0.3"
+  },
+  "devDependencies": {
+    "@types/enzyme": "3.1.1",
+    "@types/enzyme-adapter-react-16": "1.0.0",
+    "@types/graphql": "^0.12.1",
+    "@types/jest": "21.1.4",
+    "@types/node": "8.0.46",
+    "@types/radium": "0.18.23",
+    "@types/react": "16.0.35",
+    "@types/react-bootstrap": "0.31.6",
+    "@types/react-dom": "16.0.3",
+    "@types/react-fontawesome": "1.6.1",
+    "@types/react-redux": "5.0.11",
+    "@types/react-router-dom": "4.2.0",
+    "@types/redux-logger": "3.0.5",
+    "enzyme": "3.1.0",
+    "enzyme-adapter-react-16": "1.0.2",
+    "react-test-renderer": "16.0.0",
+    "serverless-finch": "^1.3.0",
+    "unroll": "1.5.0"
+  }
+}

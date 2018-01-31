@@ -1,0 +1,18 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Webpack directories
+.webpack
+
+# Misc
+.DS_Store
+.idea
+.vscode
+coverage
+
+# Production Config
+config/security.env.prod

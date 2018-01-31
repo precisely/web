@@ -1,0 +1,5 @@
+#import "./random/schema.graphql"
+
+type Query {
+    getRandomList(length: Int): Random
+}
