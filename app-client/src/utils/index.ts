@@ -22,3 +22,18 @@ export function isEmpty(object: Object): boolean {
 export function getEnvironment(): string {
     return process.env.NODE_ENV || '';
 }
+
+export const setTokenInLocalStorage = (token: string): boolean => {
+    if (!token) {
+        console.warn('No Token sent to setTokenInLocalStorage');
+        return false;
+    }
+
+    localStorage.setItem('AUTH_TOKEN', token);
+
+    return true;
+};
+
+export const removeTokenFromLocalStorage = (): void => {
+    localStorage.removeItem('AUTH_TOKEN');
+};

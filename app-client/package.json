@@ -6,8 +6,8 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/env-cmd ../../config/security.env.local node scripts/start.js",
-    "build": "./node_modules/.bin/env-cmd ../../config/security.env.prod node scripts/build.js",
+    "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
+    "build": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "compile": "yarn run clean && tsc",
     "lint-ts": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
@@ -74,6 +74,7 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "^1.1.4",
     "apollo-client": "^2.0.2",
     "apollo-client-preset": "^1.0.2",
@@ -110,6 +111,7 @@
     "react-iscroll": "2.0.3",
     "react-redux": "5.0.6",
     "react-router-dom": "4.2.2",
+    "react-router-redux": "5.0.0-alpha.8",
     "react-select": "1.0.0-rc.10",
     "react-transition-group": "2.2.1",
     "reactstrap": "4.8.0",
@@ -144,6 +146,7 @@
     "@types/react-fontawesome": "1.6.1",
     "@types/react-redux": "5.0.11",
     "@types/react-router-dom": "4.2.0",
+    "@types/react-router-redux": "5.0.10",
     "@types/reactstrap": "5.0.12",
     "@types/redux-logger": "3.0.5",
     "enzyme": "3.1.0",

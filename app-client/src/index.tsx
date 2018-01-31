@@ -22,7 +22,7 @@ import {LoginAndSignup} from 'src/containers/user/LoginAndSignup';
 initReactFastclick();
 
 const client = new ApolloClient({
-    link: new HttpLink({uri: 'http://localhost:4000/api'}),
+    link: new HttpLink({uri: process.env.REACT_APP_GRAPHQL_ENDPOINT}),
     cache: new InMemoryCache(),
 });
 

@@ -12,6 +12,7 @@ import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, Row, Col} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {PageContainer} from 'src/components/PageContainer';
+import {signup, login} from 'src/utils/cognito';
 
 const logo = require('src/assets/logo.png');
 
@@ -54,7 +55,7 @@ export class LoginAndSignup extends React.Component<RouteComponentProps<void>, I
 
     submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        const {email, password} = this.state;
+        const {email, password, isLoginPage} = this.state;
         const missingFieldMessage: string = 'This field is required.';
 
         if (!email.trim() && !password) {
@@ -73,8 +74,14 @@ export class LoginAndSignup extends React.Component<RouteComponentProps<void>, I
         }
 
         if (password.length < 6) {
-            this.updateErrorMessages('', 'The password length cannot be less than 6 characters.');
+            this.updateErrorMessages('', 'Minimum 6 characters needed.');
             return;
+        }
+
+        if (isLoginPage) {
+            login(email, password);
+        } else {
+            signup(email, password);
         }
     }
 
