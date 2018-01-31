@@ -3,12 +3,15 @@ import * as Bluebird from 'bluebird';
 
 const KMS: AWS.KMS = new AWS.KMS({region: process.env.REGION as string});
 
-export const decryptKMS = (encryptedKey: string): Bluebird<Object | Error> => {
+/*
+ * Utility function to decrypt the variables stored in process.env
+ */
+export const getEnvironmentVariables = (): Bluebird<Object | Error> => {
     return new Bluebird((
             resolve: (thenableOrResult?: {} | PromiseLike<{}>) => void, 
             reject: (error?: any) => void
     ): void => {
-        KMS.decrypt({CiphertextBlob: new Buffer(encryptedKey, 'base64')}, (
+        KMS.decrypt({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')}, (
                 error: Error, 
                 data: AWS.KMS.Types.DecryptResponse
         ): void => {

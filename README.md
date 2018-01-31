@@ -44,6 +44,11 @@ You need to have Node 6 or higher and `nvm` [installed](https://github.com/creat
 
 This will run both concurrently but is not recommended when you want to view backend logs in console.
 
+## Developer Notes
+
+* All the secrets are managed using AWS KMS. To know more about how to encrypt new secrets or update/use them, read [wiki](https://github.com/precisely/web/wiki/AWS-Key-Management#usage).
+
+* Currently available environment variables are listed [here](https://github.com/precisely/web/wiki/AWS-Key-Management#list-of-the-environment-variables-stored-currently-for-reference). Please do not forget to update the list if (and when) you add new variables.
 
 ## Usage
 
