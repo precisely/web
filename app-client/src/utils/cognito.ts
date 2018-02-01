@@ -53,7 +53,7 @@ export function login(
         onSuccess: (result: CognitoUserSession): void => {
             setTokenInLocalStorage(result.getIdToken().getJwtToken());
 
-            AWS.config.region = 'us-east-1';
+            AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
 
             const jwtToken: string = result.getIdToken().getJwtToken();
             AWS.config.credentials = new AWS.CognitoIdentityCredentials({

@@ -9,6 +9,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import initReactFastclick from 'react-fastclick';
+import Loadable from 'react-loadable';
 import {Provider} from 'react-redux';
 import {StyleRoot} from 'radium';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
@@ -17,7 +18,7 @@ import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {store} from 'src/store';
-import {LoginAndSignup} from 'src/containers/user/LoginAndSignup';
+import {LoadingPage} from 'src/containers/LoadingPage';
 
 initReactFastclick();
 
@@ -26,14 +27,32 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
+const LoadComponent = (componentName: string, path?: string) =>  {
+    return Loadable({
+        // tslint:disable-next-line
+        loader: () => import('src/containers/' + (path || componentName)),
+        // tslint:disable-next-line
+        render(loaded: any, props: any) {
+            // tslint:disable-next-line no-any
+            const Component: React.ComponentClass<any> = loaded[`${componentName}`];
+
+            return <Component {...props} />;
+        },
+        // tslint:disable-next-line
+        loading() {
+            return <LoadingPage />;
+        }
+    });
+};
+
 ReactDOM.render(
     <Provider store={store}>
         <ApolloProvider client={client}>
             <StyleRoot>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact={true} path="/login" component={LoginAndSignup} />
-                        <Route exact={true} path="/signup" component={LoginAndSignup} />
+                        <Route exact path="/login" component={LoadComponent('LoginAndSignup', 'user/LoginAndSignup')}/>
+                        <Route exact path="/signup" component={LoadComponent('LoginAndSignup', 'user/LoginAndSignup')}/>
                     </Switch>
                 </BrowserRouter>
             </StyleRoot>
