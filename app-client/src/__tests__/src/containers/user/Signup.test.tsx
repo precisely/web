@@ -13,7 +13,6 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, ISignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
-import {LabelledInput} from 'src/components/LabelledInput';
 import {signup} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {validateEmailAndPassword, showAlert} from 'src/utils';

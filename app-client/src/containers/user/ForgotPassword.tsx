@@ -25,7 +25,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
 
     toastId: number = null;
 
-    state = {email: '', isLoading: false};
+    state: IForgotPasswordState = {email: '', isLoading: false};
 
     updateLoadingState = (isLoading: boolean): void => {
         this.setState({isLoading});
