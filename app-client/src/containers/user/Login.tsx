@@ -69,7 +69,7 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
 
         return (
             <SignupLoginContainer>
-                <Form onSubmit={this.submitForm}>
+                <Form id="loginForm" onSubmit={this.submitForm}>
                     <FormGroup style={formGroup}>
                         <Input
                                 type="email"

@@ -60,11 +60,13 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
         if (validationInfo.isValid) {
             if (!confirmPassword) {
+                console.log('confirmPassword1', confirmPassword);
                 this.toastId = showAlert(this.toastId, 'Please confirm your password.');
                 return;
             }
 
             if (password !== confirmPassword) {
+                console.log('confirmPassword2', confirmPassword);
                 this.toastId = showAlert(this.toastId, 'Password does not match the confirm password.');
                 return;
             }
@@ -85,7 +87,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
         return (
             <SignupLoginContainer>
-                <Form onSubmit={this.submitForm}>
+                <Form id="signupForm" onSubmit={this.submitForm}>
                     <FormGroup style={formGroup}>
                         <Input
                                 type="email"

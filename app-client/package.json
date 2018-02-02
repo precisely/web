@@ -8,7 +8,7 @@
   "scripts": {
     "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
     "build": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
     "compile": "yarn run clean && tsc",
     "lint-ts": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "deploy-prod": "yarn run build && serverless client deploy"
