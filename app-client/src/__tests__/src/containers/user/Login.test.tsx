@@ -12,7 +12,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Login, ILoginState} from 'src/containers/user/Login';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {login} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
@@ -80,6 +80,7 @@ describe('Tests for Login', (): void => {
         ['Button', Button, 1],
         ['FormGroup', FormGroup, 2],
         ['Input', Input, 2],
+        ['Link', Link, 2],
         ['SignupLoginContainer', SignupLoginContainer, 1]
     ]);
 

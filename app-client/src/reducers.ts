@@ -7,9 +7,9 @@
  */
 
 import {combineReducers, Reducer} from 'redux';
-import {demoReducer} from 'src/containers/demo/reducer';
+import {routerReducer} from 'react-router-redux';
 
 // All the reducers should be combined here
 export const rootReducer: Reducer<{}> = combineReducers({
-    data: demoReducer
+    router: routerReducer,
 });

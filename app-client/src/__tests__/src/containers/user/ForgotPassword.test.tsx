@@ -16,6 +16,7 @@ import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents'
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {showAlert} from 'src/utils';
+import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -28,6 +29,7 @@ describe('Tests for ForgotPassword', (): void => {
 
     beforeEach((): void => {
         showAlert = jest.fn<number>().mockReturnValue(1);
+        mockedHistory.push = jest.fn<void>();
     });
 
     getResetPasswordCode = jest.fn<void>()
@@ -35,7 +37,7 @@ describe('Tests for ForgotPassword', (): void => {
                     email: string,
                     successCallback?: () => void,
                     failureCallback?: () => void
-            ): void => {
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
                     resolve(successCallback());
                 });
@@ -44,16 +46,13 @@ describe('Tests for ForgotPassword', (): void => {
                     email: string,
                     successCallback?: () => void,
                     failureCallback?: () => void
-            ): void => {
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
                     reject(failureCallback());
                 });
             });
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
-    const mockedHistory: {push: jest.Mock<void>} = {
-        push: jest.fn<void>(),
-    };
 
     const componentTree: ShallowWrapper<RouteComponentProps<void>, IForgotPasswordState> = shallow(
             <ForgotPassword history={mockedHistory} />
@@ -96,9 +95,4 @@ describe('Tests for ForgotPassword', (): void => {
         await componentTree.find(Form).simulate('submit', {preventDefault});
         expect(mockedHistory.push).toBeCalledWith('/reset-password/dummy@user.com');
     });
-
-    // it('should show an error message if the form is not submitted successfully', async (): Promise<void> => {
-    //     await componentTree.find(Form).simulate('submit', {preventDefault});
-    //     expect(showAlert).toBeCalledWith(1, 'Unable to process your request at this moment. Please try again later.');
-    // });
 });

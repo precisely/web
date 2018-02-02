@@ -16,6 +16,7 @@ import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents'
 import {resetPassword} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {showAlert} from 'src/utils';
+import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -29,9 +30,6 @@ describe('Tests for ResetPassword', (): void => {
     Radium.TestMode.enable();
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
-    let mockedHistory: {push: jest.Mock<void>} = {
-        push: jest.fn<void>(),
-    };
 
     beforeEach((): void => {
         showAlert = jest.fn<number>().mockReturnValue(1);
@@ -45,8 +43,7 @@ describe('Tests for ResetPassword', (): void => {
                     newPassword: string,
                     successCallback?: () => void,
                     failureCallback?: () => void
-            ): void => {
-                console.log('called');
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
                     resolve(successCallback());
                 });
@@ -57,8 +54,7 @@ describe('Tests for ResetPassword', (): void => {
                     newPassword: string,
                     successCallback?: () => void,
                     failureCallback?: () => void
-            ): void => {
-                console.log('called');
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
                     reject(failureCallback());
                 });
@@ -78,11 +74,6 @@ describe('Tests for ResetPassword', (): void => {
 
     describe('When the email not present in the params.', (): void => {
         const componentTree: ShallowWrapperType = getComponentTree({email: 'test@example.com'});
-
-        // it('should not route to the forgot password.', (): void => {
-        //     getComponentTree();
-        //     expect(mockedHistory.push).not.toBeCalled();
-        // });
 
         unroll('it should display #count #elementName elements', (
                 done: () => void,
@@ -128,11 +119,5 @@ describe('Tests for ResetPassword', (): void => {
             await componentTree.find(Form).simulate('submit', {preventDefault});
             expect(mockedHistory.push).toBeCalledWith('/login');
         });
-
-        // it('should show an error message if the form is not submitted successfully', async (): Promise<void> => {
-        //     await componentTree.find(Form).simulate('submit', {preventDefault});
-        //     expect(showAlert)
-        //             .toBeCalledWith(1, 'Unable to process your request at this moment. Please try again later.');
-        // });
     });
 });

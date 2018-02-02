@@ -47,10 +47,9 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
         this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
     }
 
-    onFailure = (): void => {
+    onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
         this.updateLoadingState(false);
-        this.toastId =
-            showAlert(this.toastId, 'Unable to process your request at this moment. Please try again later.');
+        this.toastId = showAlert(this.toastId, message);
     }
 
     submitForm = (e: React.FormEvent<HTMLFormElement>): void => {

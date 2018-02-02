@@ -51,8 +51,11 @@ ReactDOM.render(
                 <ToastContainer hideProgressBar />
                 <BrowserRouter>
                     <Switch>
+                        /*This route will be removed when the Homepage is ready*/
+                        <Route exact path="/" component={LoadComponent('Login', 'user/Login')} />
                         <Route exact path="/login" component={LoadComponent('Login', 'user/Login')} />
                         <Route exact path="/signup" component={LoadComponent('Signup', 'user/Signup')} />
+                        <Route exact path="/dashboard" component={LoadComponent('Dashboard', 'user/Dashboard')} />
                         <Route
                                 exact
                                 path="/forgot-password"

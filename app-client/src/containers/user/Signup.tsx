@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {signup} from 'src/utils/cognito';
@@ -41,6 +41,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
     onSuccess = (): void => {
         this.updateLoadingState(false);
         this.props.history.push('/login');
+        this.toastId = showAlert(this.toastId, 'Please check your email to confirm your account.', 'success');
     }
 
     onFailure = (message: string = 'Unable to signup at this moment. Please try again later.'): void => {
@@ -122,6 +123,9 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                     <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Signup'}
                     </Button>
+                    <div>
+                        <Link to="/login" style={linkFontSize}>Already have an account? Login here</Link>
+                    </div>
                 </Form>
             </SignupLoginContainer>
         );
@@ -130,4 +134,8 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
 const formGroup: CSS = {
     textAlign: 'left',
+};
+
+const linkFontSize: CSS = {
+    fontSize: '14px',
 };

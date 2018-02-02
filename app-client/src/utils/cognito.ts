@@ -107,7 +107,7 @@ export function logOut(): void {
 export function getResetPasswordCode(
         email: string,
         successCallback?: () => void,
-        failureCallback?: (error: Error) => void
+        failureCallback?: (message: string) => void
 ): void {
     const cognitoUser: CognitoUser = getCognitoUser(email);
 
@@ -119,7 +119,7 @@ export function getResetPasswordCode(
         },
         onFailure: (error: Error): void => {
             if (failureCallback) {
-                failureCallback(error);
+                failureCallback(error.message);
             }
         },
     });
@@ -130,7 +130,7 @@ export function resetPassword(
         verificationCode: string,
         newPassword: string,
         successCallback?: () => void,
-        failureCallback?: (error: Error) => void
+        failureCallback?: (message: string) => void
 ): void {
     const cognitoUser: CognitoUser = getCognitoUser(email);
 
@@ -142,7 +142,7 @@ export function resetPassword(
         },
         onFailure(error: Error): void {
             if (failureCallback) {
-                failureCallback(error);
+                failureCallback(error.message);
             }
         },
     });
