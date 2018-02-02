@@ -28,23 +28,21 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
+// tslint:disable
 const LoadComponent = (componentName: string, path?: string) =>  {
     return Loadable({
-        // tslint:disable-next-line
         loader: () => import('src/containers/' + (path || componentName)),
-        // tslint:disable-next-line
         render(loaded: any, props: any) {
-            // tslint:disable-next-line no-any
             const Component: React.ComponentClass<any> = loaded[`${componentName}`];
 
             return <Component {...props} />;
         },
-        // tslint:disable-next-line
         loading() {
             return <LoadingPage />;
         }
     });
 };
+// tslint:enable
 
 ReactDOM.render(
     <Provider store={store}>

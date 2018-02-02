@@ -31,7 +31,7 @@ export function login(
     email: string,
     password: string,
     successCallback?: () => void,
-    failureCallback?: () => void
+    failureCallback?: (message: string) => void
 ): void {
     const authenticationData: {Username: string, Password: string} = {
         Username : email,
@@ -66,9 +66,9 @@ export function login(
             }
         },
 
-        onFailure: (): void => {
+        onFailure: (error: Error): void => {
             if (failureCallback) {
-                failureCallback();
+                failureCallback(error.message);
             }
         },
     });
@@ -78,12 +78,12 @@ export function signup(
         email: string,
         password: string,
         successCallback?: (result: ISignUpResult) => void,
-        failureCallback?: (error: Error) => void
+        failureCallback?: (message: string) => void
 ): void {
     userPool.signUp(email, password, null, null, (error: Error, result: ISignUpResult): void => {
         if (error) {
             if (failureCallback) {
-                failureCallback(error);
+                failureCallback(error.message);
             }
 
             return;

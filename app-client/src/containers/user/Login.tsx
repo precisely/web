@@ -26,7 +26,7 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
 
     toastId: number = null;
 
-    state = {email: '', password: '', isLoading: false};
+    state: ILoginState = {email: '', password: '', isLoading: false};
 
     updateLoadingState = (isLoading: boolean): void => {
         this.setState({isLoading});
@@ -37,9 +37,9 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
         this.props.history.push('/dashboard');
     }
 
-    onFailure = (): void => {
+    onFailure = (message: string = 'Unable to login.'): void => {
         this.updateLoadingState(false);
-        this.toastId = showAlert(this.toastId, 'Unable to login.');
+        this.toastId = showAlert(this.toastId, message);
     }
 
     submitForm = (e: React.FormEvent<HTMLFormElement>): void => {

@@ -43,9 +43,9 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
         this.props.history.push('/dashboard');
     }
 
-    onFailure = (): void => {
+    onFailure = (message: string = 'Unable to signup at this moment. Please try again later.'): void => {
         this.updateLoadingState(false);
-        this.toastId = showAlert(this.toastId, 'Unable to signup at this moment. Please try again later.');
+        this.toastId = showAlert(this.toastId, message);
     }
 
     submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -60,13 +60,11 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
         if (validationInfo.isValid) {
             if (!confirmPassword) {
-                console.log('confirmPassword1', confirmPassword);
                 this.toastId = showAlert(this.toastId, 'Please confirm your password.');
                 return;
             }
 
             if (password !== confirmPassword) {
-                console.log('confirmPassword2', confirmPassword);
                 this.toastId = showAlert(this.toastId, 'Password does not match the confirm password.');
                 return;
             }
