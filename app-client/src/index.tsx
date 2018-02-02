@@ -51,8 +51,18 @@ ReactDOM.render(
                 <ToastContainer hideProgressBar />
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/login" component={LoadComponent('Login', 'user/Login')}/>
-                        <Route exact path="/signup" component={LoadComponent('Signup', 'user/Signup')}/>
+                        <Route exact path="/login" component={LoadComponent('Login', 'user/Login')} />
+                        <Route exact path="/signup" component={LoadComponent('Signup', 'user/Signup')} />
+                        <Route
+                                exact
+                                path="/forgot-password"
+                                component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
+                        />
+                        <Route
+                                path="/reset-password/:email"
+                                component={LoadComponent('ResetPassword', 'user/ResetPassword')}
+                        />
+                        <Route path="*" component={LoadComponent('NotFound')} />
                     </Switch>
                 </BrowserRouter>
             </StyleRoot>

@@ -27,6 +27,15 @@ const poolData: {UserPoolId: string, ClientId: string} = {
 
 const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
+export const getCognitoUser = (email: string): CognitoUser => {
+    const userData: {Username: string, Pool: CognitoUserPool} = {
+        Username : email,
+        Pool : userPool
+    };
+
+    return new CognitoUser(userData);
+};
+
 export function login(
     email: string,
     password: string,
@@ -39,13 +48,7 @@ export function login(
     };
 
     const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-
-    const userData: {Username: string, Pool: CognitoUserPool} = {
-        Username : email,
-        Pool : userPool
-    };
-
-    const cognitoUser: CognitoUser = new CognitoUser(userData);
+    const cognitoUser: CognitoUser = getCognitoUser(email);
 
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: (result: CognitoUserSession): void => {
@@ -99,4 +102,48 @@ export function logOut(): void {
     const cognitoUser = userPool.getCurrentUser();
     cognitoUser.signOut();
     removeTokenFromLocalStorage();
+}
+
+export function getResetPasswordCode(
+        email: string,
+        successCallback?: () => void,
+        failureCallback?: (error: Error) => void
+): void {
+    const cognitoUser: CognitoUser = getCognitoUser(email);
+
+    cognitoUser.forgotPassword({
+        onSuccess: (): void => {
+            if (successCallback) {
+                successCallback();
+            }
+        },
+        onFailure: (error: Error): void => {
+            if (failureCallback) {
+                failureCallback(error);
+            }
+        },
+    });
+}
+
+export function resetPassword(
+        email: string,
+        verificationCode: string,
+        newPassword: string,
+        successCallback?: () => void,
+        failureCallback?: (error: Error) => void
+): void {
+    const cognitoUser: CognitoUser = getCognitoUser(email);
+
+    cognitoUser.confirmPassword(verificationCode, newPassword, {
+        onSuccess(): void {
+            if (successCallback) {
+                successCallback();
+            }
+        },
+        onFailure(error: Error): void {
+            if (failureCallback) {
+                failureCallback(error);
+            }
+        },
+    });
 }
