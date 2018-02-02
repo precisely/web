@@ -105,6 +105,12 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-transition-group@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.6.tgz#8903fa2cf540ba454461590bff811a787889617c"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*":
   version "16.0.36"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.36.tgz#ceb5639013bdb92a94147883052e69bb2c22c69b"

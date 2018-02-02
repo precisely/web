@@ -7,9 +7,7 @@
  */
 
 import * as AWS from 'aws-sdk';
-import {push} from 'react-router-redux';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
-import {store} from 'src/store';
 import {
     CognitoUserPool,
     AuthenticationDetails,
@@ -63,8 +61,6 @@ export function login(
                 }
             });
 
-            store.dispatch(push('/dashboard'));
-
             if (successCallback) {
                 successCallback();
             }
@@ -78,14 +74,24 @@ export function login(
     });
 }
 
-export function signup(email: string, password: string): void {
+export function signup(
+        email: string,
+        password: string,
+        successCallback?: (result: ISignUpResult) => void,
+        failureCallback?: (error: Error) => void
+): void {
     userPool.signUp(email, password, null, null, (error: Error, result: ISignUpResult): void => {
         if (error) {
-            console.log('error', error);
+            if (failureCallback) {
+                failureCallback(error);
+            }
+
             return;
         }
 
-        console.log('user name is ' + result.user.getUsername());
+        if (successCallback) {
+            successCallback(result);
+        }
     });
 }
 

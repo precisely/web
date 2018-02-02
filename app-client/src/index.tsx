@@ -17,6 +17,7 @@ import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
 import {LoadingPage} from 'src/containers/LoadingPage';
 
@@ -49,10 +50,11 @@ ReactDOM.render(
     <Provider store={store}>
         <ApolloProvider client={client}>
             <StyleRoot>
+                <ToastContainer hideProgressBar />
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/login" component={LoadComponent('LoginAndSignup', 'user/LoginAndSignup')}/>
-                        <Route exact path="/signup" component={LoadComponent('LoginAndSignup', 'user/LoginAndSignup')}/>
+                        <Route exact path="/login" component={LoadComponent('Login', 'user/Login')}/>
+                        <Route exact path="/signup" component={LoadComponent('Signup', 'user/Signup')}/>
                     </Switch>
                 </BrowserRouter>
             </StyleRoot>
