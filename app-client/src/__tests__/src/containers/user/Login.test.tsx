@@ -13,10 +13,10 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Login, ILoginState} from 'src/containers/user/Login';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
-import {LabelledInput} from 'src/components/LabelledInput';
 import {login} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -27,7 +27,10 @@ describe('Tests for Login', (): void => {
 
     Radium.TestMode.enable();
 
-    showAlert = jest.fn<number>().mockReturnValue(1);
+    beforeEach((): void => {
+        showAlert = jest.fn<number>().mockReturnValue(1);
+        mockedHistory.push = jest.fn<void>();
+    });
 
     login = jest.fn<void>()
             .mockImplementationOnce((
@@ -35,9 +38,9 @@ describe('Tests for Login', (): void => {
                 password: string,
                 successCallback?: () => void,
                 failureCallback?: () => void
-            ): void => {
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
-                    resolve(successCallback());
+                    return resolve(successCallback());
                 });
             })
             .mockImplementationOnce((
@@ -45,24 +48,21 @@ describe('Tests for Login', (): void => {
                 password: string,
                 successCallback?: () => void,
                 failureCallback?: () => void
-            ): void => {
+            ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
-                    reject(failureCallback());
+                    return reject(failureCallback());
                 });
             });
 
     validateEmailAndPassword = jest.fn()
-        .mockImplementationOnce(() => {
-            return {isValid: false, toastId: 1};
-        })
-        .mockImplementation(() => {
-            return {isValid: true, toastId: 1};
-        });
+            .mockImplementationOnce(() => {
+                return {isValid: false, toastId: 1};
+            })
+            .mockImplementation(() => {
+                return {isValid: true, toastId: 1};
+            });
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
-    const mockedHistory: {push: jest.Mock<void>} = {
-        push: jest.fn<void>(),
-    };
 
     const componentTree: ShallowWrapper<RouteComponentProps<void>, ILoginState> = shallow(
             <Login history={mockedHistory} />
@@ -105,9 +105,4 @@ describe('Tests for Login', (): void => {
         await componentTree.find('#loginForm').simulate('submit', {preventDefault});
         expect(mockedHistory.push).toBeCalledWith('/dashboard');
     });
-
-    // it('should show an error message if the form is not submitted successfully', async (): Promise<void> => {
-    //     await componentTree.find('#loginForm').simulate('submit', {preventDefault});
-    //     expect(showAlert).toBeCalledWith(1, 'Unable to login.');
-    // });
 });

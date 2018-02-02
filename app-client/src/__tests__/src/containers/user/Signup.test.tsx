@@ -37,7 +37,7 @@ describe('Tests for Signup', (): void => {
             password: string,
             successCallback?: () => void,
             failureCallback?: () => void
-    ): void => {
+    ): Promise<void> => {
         return new Promise((resolve, reject): void => {
             resolve(successCallback());
         });
@@ -47,19 +47,19 @@ describe('Tests for Signup', (): void => {
             password: string,
             successCallback?: () => void,
             failureCallback?: () => void
-    ): void => {
+    ): Promise<void> => {
         return new Promise((resolve, reject): void => {
             reject(failureCallback());
         });
     });
 
     validateEmailAndPassword = jest.fn()
-    .mockImplementationOnce(() => {
-        return {isValid: false, toastId: 1};
-    })
-    .mockImplementation(() => {
-        return {isValid: true, toastId: 1};
-    });
+            .mockImplementationOnce(() => {
+                return {isValid: false, toastId: 1};
+            })
+            .mockImplementation(() => {
+                return {isValid: true, toastId: 1};
+            });
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
     const mockedHistory: {push: jest.Mock<void>} = {
@@ -67,7 +67,7 @@ describe('Tests for Signup', (): void => {
     };
 
     const componentTree: ShallowWrapper<RouteComponentProps<void>, ISignupState> = shallow(
-        <Signup history={mockedHistory} />
+            <Signup history={mockedHistory} />
     );
 
     unroll('it should display #count #elementName elements', (
@@ -117,11 +117,6 @@ describe('Tests for Signup', (): void => {
 
     it('should change the route to the dashboard when the form is submitted successfully.', async (): Promise<void> => {
         await componentTree.find('#signupForm').simulate('submit', {preventDefault});
-        expect(mockedHistory.push).toBeCalledWith('/dashboard');
+        expect(mockedHistory.push).toBeCalledWith('/login');
     });
-
-    // it('should show an error message if the form is not submitted successfully', async (): Promise<void> => {
-    //     await componentTree.find('#SignupForm').simulate('submit', {preventDefault});
-    //     expect(showAlert).toBeCalledWith(1, 'Unable to Signup.');
-    // });
 });

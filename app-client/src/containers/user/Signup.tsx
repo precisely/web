@@ -27,7 +27,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
     toastId: number = null;
 
-    state = {
+    state: ISignupState = {
         email: '',
         password: '',
         isLoading: false,
@@ -40,7 +40,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
     onSuccess = (): void => {
         this.updateLoadingState(false);
-        this.props.history.push('/dashboard');
+        this.props.history.push('/login');
     }
 
     onFailure = (message: string = 'Unable to signup at this moment. Please try again later.'): void => {
