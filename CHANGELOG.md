@@ -17,3 +17,5 @@
 - Added Cognito SDKs.
 - Added Login and Signup page.
 - Added Forgot password and Reset password page.
+- Added AuthRoute Component
+- Added Homepage

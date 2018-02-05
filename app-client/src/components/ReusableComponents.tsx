@@ -28,5 +28,6 @@ export const UncontrolledDropdown = Radium(Bootstrap.UncontrolledDropdown);
 export const DropdownToggle = Radium(Bootstrap.DropdownToggle);
 export const DropdownMenu = Radium(Bootstrap.DropdownMenu);
 export const DropdownItem = Radium(Bootstrap.DropdownItem);
+export const Container = Radium(Bootstrap.Container);
 
 export const Link = Radium(RouterLink);

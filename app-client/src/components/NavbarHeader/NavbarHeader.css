@@ -1,0 +1,7 @@
+@media screen and (min-width: 992px) {
+    .navbar {
+       padding: 15px 330px 8px 330px;
+       letter-spacing: -1px;
+       background-color: white;
+    }
+}
