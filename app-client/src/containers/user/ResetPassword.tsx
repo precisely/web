@@ -115,7 +115,7 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
                                 }}
                         />
                     </FormGroup>
-                    <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
+                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Reset Password'}
                     </Button>
                 </Form>

@@ -17,5 +17,10 @@
 - Added Cognito SDKs.
 - Added Login and Signup page.
 - Added Forgot password and Reset password page.
+
+## [0.0.3] - 2018-02-06
+
+### Added
+
 - Added AuthRoute Component
 - Added Homepage

@@ -120,7 +120,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                                 }}
                         />
                     </FormGroup>
-                    <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
+                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Signup'}
                     </Button>
                     <div>
