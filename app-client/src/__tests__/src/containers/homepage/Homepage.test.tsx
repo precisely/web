@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Homepage} from 'src/containers/homepage/Homepage';
 import {Footer} from 'src/components/Footer';
-import {NavbarHeader} from 'src/components/navbarHeader/NavbarHeader';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Container} from 'src/components/ReusableComponents';
 
 const scrollParallax = require('react-scroll-parallax');
@@ -37,7 +37,7 @@ describe('Homepage tests.', (): void => {
         done();
     }, [ // tslint:disable-next-line
         ['elementName', 'element', 'count'],
-        ['NavbarHeader', NavbarHeader, 1],
+        ['NavigationBar', NavigationBar, 1],
         ['ParallaxProvider', ParallaxProvider, 1],
         ['Container', Container, 2],
         ['Parallax', Parallax, 1],

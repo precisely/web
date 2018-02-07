@@ -10,7 +10,7 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Container} from 'src/components/ReusableComponents';
-import {NavbarHeader} from 'src/components/navbarHeader/NavbarHeader';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 
 @Radium
 export class Dashboard extends React.Component<RouteComponentProps<void>> {
@@ -23,7 +23,7 @@ export class Dashboard extends React.Component<RouteComponentProps<void>> {
     render(): JSX.Element {
         return (
             <div>
-                <NavbarHeader {...this.props}/>
+                <NavigationBar {...this.props}/>
                 <hr/>
                 <Container>
                     <h6>This is a dummy dashboard page.</h6><br/>

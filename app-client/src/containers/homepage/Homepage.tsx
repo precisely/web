@@ -10,9 +10,10 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Footer} from 'src/components/Footer';
-import {NavbarHeader} from 'src/components/navbarHeader/NavbarHeader';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Container, Col} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
+import {HelveticaFont} from 'src/constants/styleGuide';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
@@ -29,12 +30,12 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
     render(): JSX.Element {
         return (
             <div>
-                <NavbarHeader {...this.props}/>
+                <NavigationBar {...this.props}/>
                 <ParallaxProvider>
-                <div style={containerStyle}>
-                    <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate>
-                        <div style={imageStyle}/>
-                    </Parallax>
+                    <div style={containerStyle}>
+                        <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate>
+                            <div style={imageStyle}/>
+                        </Parallax>
                         <div style={parallaxChildren}>
                             <h1 style={[headingStyle, {fontWeight: 300, fontSize: '3.5em'}]}>
                                 Do a deep dive on your DNA
@@ -142,7 +143,7 @@ const parallaxChildren: CSS = {
 };
 
 const headingStyle: CSS = {
-    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif', 
+    ...HelveticaFont, 
     fontWeight: 200
 };
 

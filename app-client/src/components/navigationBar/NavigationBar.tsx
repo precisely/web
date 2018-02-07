@@ -10,6 +10,7 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {CSS} from 'src/interfaces';
+import {logOut, isLoggedIn} from 'src/utils/cognito';
 import {
     Collapse,
     Navbar,
@@ -19,32 +20,27 @@ import {
     NavItem,
     NavLink,
 } from 'src/components/ReusableComponents';
-import {logOut, isLoggedIn} from 'src/utils/cognito';
-import 'src/components/navbarHeader/NavbarHeader.css';
+import 'src/components/navigationBar/NavigationBar.css';
+
 const logo = require('src/assets/logo-horizontal.png');
 
-export interface INavbarHeaderState {
+export interface INavigationBarState {
     isOpen: boolean;
 }
 
 @Radium
-export class NavbarHeader extends React.Component<RouteComponentProps<void>, INavbarHeaderState> {
-    constructor(props: RouteComponentProps<void>) {
-        super(props);
+export class NavigationBar extends React.Component<RouteComponentProps<void>, INavigationBarState> {
+    state = {
+        isOpen: false
+    };
 
-        this.toggle = this.toggle.bind(this);
-        this.state = {
-            isOpen: false
-        };
-    }
-
-    toggle() {
+    toggle = (): void => {
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
 
-    handleClick(loggedIn: boolean) {
+    handleClick = (loggedIn: boolean): void => {
         if (loggedIn) {
             logOut();
             this.props.history.replace('/');
@@ -55,6 +51,7 @@ export class NavbarHeader extends React.Component<RouteComponentProps<void>, INa
 
     render() {
         const loggedIn: boolean = isLoggedIn();
+        
         return (
             <Navbar light sticky="top" expand="md" toggleable="md" className="navbar">
               <NavbarBrand href="/"><img src={logo} alt="precise.ly" style={navbarBrandStyle}/></NavbarBrand>
