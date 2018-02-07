@@ -27,7 +27,8 @@
     ],
     "mapCoverage": true,
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/src/__mocks__/localStorage.js"
     ],
     "testRegex": "(/tests/.*-test|\\.(test|spec))\\.(ts|tsx)$",
     "testEnvironment": "node",

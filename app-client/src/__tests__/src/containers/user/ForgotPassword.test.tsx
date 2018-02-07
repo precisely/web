@@ -11,11 +11,11 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {Login, ILoginState} from 'src/containers/user/Login';
-import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
-import {login} from 'src/utils/cognito';
+import {ForgotPassword, IForgotPasswordState} from 'src/containers/user/ForgotPassword';
+import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
+import {getResetPasswordCode} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
@@ -23,7 +23,7 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for Login', (): void => {
+describe('Tests for ForgotPassword', (): void => {
 
     Radium.TestMode.enable();
 
@@ -32,45 +32,35 @@ describe('Tests for Login', (): void => {
         mockedHistory.push = jest.fn<void>();
     });
 
-    login = jest.fn<void>()
+    getResetPasswordCode = jest.fn<void>()
             .mockImplementationOnce((
-                email: string,
-                password: string,
-                successCallback?: () => void,
-                failureCallback?: () => void
+                    email: string,
+                    successCallback?: () => void,
+                    failureCallback?: () => void
             ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
-                    return resolve(successCallback());
+                    resolve(successCallback());
                 });
             })
             .mockImplementationOnce((
-                email: string,
-                password: string,
-                successCallback?: () => void,
-                failureCallback?: () => void
+                    email: string,
+                    successCallback?: () => void,
+                    failureCallback?: () => void
             ): Promise<void> => {
                 return new Promise((resolve, reject): void => {
-                    return reject(failureCallback());
+                    reject(failureCallback());
                 });
-            });
-
-    validateEmailAndPassword = jest.fn()
-            .mockImplementationOnce(() => {
-                return {isValid: false, toastId: 1};
-            })
-            .mockImplementation(() => {
-                return {isValid: true, toastId: 1};
             });
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>, ILoginState> = shallow(
-            <Login history={mockedHistory} />
+    const componentTree: ShallowWrapper<RouteComponentProps<void>, IForgotPasswordState> = shallow(
+            <ForgotPassword history={mockedHistory} />
     );
 
     unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
+        done: () => void,
+        args: {elementName: string, element: EnzymePropSelector, count: number}
     ): void => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
@@ -78,15 +68,15 @@ describe('Tests for Login', (): void => {
         ['elementName', 'element', 'count'],
         ['Form', Form, 1],
         ['Button', Button, 1],
-        ['FormGroup', FormGroup, 2],
-        ['Input', Input, 2],
-        ['Link', Link, 2],
+        ['FormGroup', FormGroup, 1],
+        ['Input', Input, 1],
         ['SignupLoginContainer', SignupLoginContainer, 1]
     ]);
 
-    it('should not submit the form when the username and password are not valid.', (): void => {
-        componentTree.find('#loginForm').simulate('submit', {preventDefault});
-        expect(login).not.toBeCalled();
+    it('should not submit the form when the email is not present.', (): void => {
+        componentTree.find(Form).simulate('submit', {preventDefault});
+        expect(showAlert).toBeCalledWith(null, 'Please enter your email.');
+        expect(getResetPasswordCode).not.toBeCalled();
     });
 
     unroll('It should change state value onChange of #id', (
@@ -98,12 +88,11 @@ describe('Tests for Login', (): void => {
         done();
     }, [ // tslint:disable-next-line
         ['id', 'value'],
-        ['email', 'dummyUsername'],
-        ['password', 'dummyPassword']
+        ['email', 'dummy@user.com'],
     ]);
 
     it('should change the route to the dashboard when the form is submitted successfully.', async (): Promise<void> => {
-        await componentTree.find('#loginForm').simulate('submit', {preventDefault});
-        expect(mockedHistory.push).toBeCalledWith('/dashboard');
+        await componentTree.find(Form).simulate('submit', {preventDefault});
+        expect(mockedHistory.push).toBeCalledWith('/reset-password/dummy@user.com');
     });
 });

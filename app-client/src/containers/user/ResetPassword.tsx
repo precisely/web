@@ -9,30 +9,33 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
-import {signup} from 'src/utils/cognito';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {resetPassword} from 'src/utils/cognito';
+import {showAlert} from 'src/utils';
 
-export interface ISignupState {
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
+export interface IResetPasswordState {
+    verificationCode?: string;
     isLoading?: boolean;
+    newPassword?: string;
+    confirmPassword?: string;
 }
 
 @Radium
-export class Signup extends React.Component<RouteComponentProps<void>, ISignupState> {
+export class ResetPassword extends React.Component<RouteComponentProps<{email: string}>, IResetPasswordState> {
 
     toastId: number = null;
 
-    state: ISignupState = {
-        email: '',
-        password: '',
-        isLoading: false,
-        confirmPassword: '',
-    };
+    state: IResetPasswordState = {verificationCode: '', isLoading: false, newPassword: '', confirmPassword: ''};
+
+    componentWillMount(): void {
+        const {match, history} = this.props;
+
+        if (!match.params || !match.params.email) {
+            history.push('/forgot-password');
+        }
+    }
 
     updateLoadingState = (isLoading: boolean): void => {
         this.setState({isLoading});
@@ -41,58 +44,48 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
     onSuccess = (): void => {
         this.updateLoadingState(false);
         this.props.history.push('/login');
-        this.toastId = showAlert(this.toastId, 'Please check your email to confirm your account.', 'success');
+        this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
     }
 
-    onFailure = (message: string = 'Unable to signup at this moment. Please try again later.'): void => {
+    onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
         this.updateLoadingState(false);
         this.toastId = showAlert(this.toastId, message);
     }
 
     submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        const {email, password, confirmPassword} = this.state;
+        const {verificationCode, newPassword, confirmPassword} = this.state;
 
-        const validationInfo: {isValid: boolean, toastId: number} =
-            validateEmailAndPassword(email, password, this.toastId);
-
-        // This is needed to prevent multiple toast from getting rendered.
-        this.toastId = validationInfo.toastId;
-
-        if (validationInfo.isValid) {
-            if (!confirmPassword) {
-                this.toastId = showAlert(this.toastId, 'Please confirm your password.');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                this.toastId = showAlert(this.toastId, 'Password does not match the confirm password.');
-                return;
-            }
-
-            this.updateLoadingState(true);
-            signup(email, password, this.onSuccess, this.onFailure);
+        if (newPassword !== confirmPassword) {
+            this.toastId = showAlert(this.toastId, 'Password does not match.');
+            return;
         }
+
+        this.updateLoadingState(true);
+
+        // Not adding a null check for the email here, since it's already added in the componentWillMount method
+        resetPassword(this.props.match.params.email, verificationCode, newPassword, this.onSuccess, this.onFailure);
     }
 
     handleInputChange(inputType: string, value: string): void {
-        this.setState((): ISignupState => ({
+        this.setState((): IResetPasswordState => ({
             [inputType]: value,
         }));
     }
 
     render(): JSX.Element {
-        const {isLoading, email, password, confirmPassword} = this.state;
+        const {isLoading, verificationCode, newPassword, confirmPassword} = this.state;
 
         return (
             <SignupLoginContainer>
-                <Form id="signupForm" onSubmit={this.submitForm}>
+                <Form onSubmit={this.submitForm}>
                     <FormGroup style={formGroup}>
                         <Input
-                                type="email"
-                                id="email"
-                                placeholder="Email"
-                                value={email}
+                                required
+                                type="text"
+                                id="verificationCode"
+                                placeholder="Enter your verification code"
+                                value={verificationCode}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                                     this.handleInputChange(e.target.id, e.target.value);
                                 }}
@@ -100,10 +93,11 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                     </FormGroup>
                     <FormGroup style={formGroup}>
                         <Input
+                                required
                                 type="password"
-                                id="password"
-                                placeholder="Password"
-                                value={password}
+                                id="newPassword"
+                                placeholder="Enter your new password"
+                                value={newPassword}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                                     this.handleInputChange(e.target.id, e.target.value);
                                 }}
@@ -111,9 +105,10 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                     </FormGroup>
                     <FormGroup style={formGroup}>
                         <Input
+                                required
                                 type="password"
                                 id="confirmPassword"
-                                placeholder="Re-enter your password"
+                                placeholder="Re-enter your new password"
                                 value={confirmPassword}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                                     this.handleInputChange(e.target.id, e.target.value);
@@ -121,11 +116,8 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                         />
                     </FormGroup>
                     <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Signup'}
+                        {isLoading ? 'Please wait...' : 'Reset Password'}
                     </Button>
-                    <div>
-                        <Link to="/login" style={linkFontSize}>Already have an account? Login here</Link>
-                    </div>
                 </Form>
             </SignupLoginContainer>
         );
@@ -134,8 +126,4 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
 
 const formGroup: CSS = {
     textAlign: 'left',
-};
-
-const linkFontSize: CSS = {
-    fontSize: '14px',
 };

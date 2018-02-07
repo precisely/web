@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {login} from 'src/utils/cognito';
@@ -92,9 +92,15 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
                                 }}
                         />
                     </FormGroup>
+                    <Link style={linkFontSize} to="/forgot-password">Forgot Password?</Link>
                     <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Login'}
                     </Button>
+                    <div>
+                        <Link style={linkFontSize} to="/signup">
+                            Don't have account? Sign up here
+                        </Link>
+                    </div>
                 </Form>
             </SignupLoginContainer>
         );
@@ -103,4 +109,8 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
 
 const formGroup: CSS = {
     textAlign: 'left',
+};
+
+const linkFontSize: CSS = {
+    fontSize: '14px',
 };

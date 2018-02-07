@@ -12,8 +12,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, ISignupState} from 'src/containers/user/Signup';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
-import {LabelledInput} from 'src/components/LabelledInput';
+import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
 import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
@@ -32,26 +31,26 @@ describe('Tests for Signup', (): void => {
     });
 
     signup = jest.fn<void>()
-    .mockImplementationOnce((
-            email: string,
-            password: string,
-            successCallback?: () => void,
-            failureCallback?: () => void
-    ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-            resolve(successCallback());
-        });
-    })
-    .mockImplementationOnce((
-            email: string,
-            password: string,
-            successCallback?: () => void,
-            failureCallback?: () => void
-    ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-            reject(failureCallback());
-        });
-    });
+            .mockImplementationOnce((
+                email: string,
+                password: string,
+                successCallback?: () => void,
+                failureCallback?: () => void
+            ): Promise<void> => {
+                return new Promise((resolve, reject): void => {
+                    resolve(successCallback());
+                });
+            })
+            .mockImplementationOnce((
+                email: string,
+                password: string,
+                successCallback?: () => void,
+                failureCallback?: () => void
+            ): Promise<void> => {
+                return new Promise((resolve, reject): void => {
+                    reject(failureCallback());
+                });
+            });
 
     validateEmailAndPassword = jest.fn()
             .mockImplementationOnce(() => {
@@ -82,6 +81,7 @@ describe('Tests for Signup', (): void => {
         ['Button', Button, 1],
         ['FormGroup', FormGroup, 3],
         ['Input', Input, 3],
+        ['Link', Link, 1],
         ['SignupLoginContainer', SignupLoginContainer, 1]
     ]);
 
