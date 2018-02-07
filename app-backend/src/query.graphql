@@ -1,5 +1,18 @@
-#import "./random/schema.graphql"
+#import "./userDataMapper/userDataMap/schema.graphql"
+#import "./userDataMapper/vendorDatatype/schema.graphql"
+
+type GenericResponse {
+    success: Boolean,
+    message: String
+}
 
 type Query {
-    getRandomList(length: Int): Random
+    listUserDataMap: [UserDataMap],
+    listVendorDatatype: [VendorDatatype],
+    getVendorDatatype(id: Int!): VendorDatatype,
+}
+
+type Mutation {
+    createVendorDatatype(vendor: String!, data_type: String!): VendorDatatype,
+    deleteVendorDatatype(id: Int!): GenericResponse,
 }

@@ -6,11 +6,18 @@
 * without modification, are not permitted.
 */
 
-import {random, IRandomList} from "./random/resolver";
 import {IResolvers} from "graphql-tools/dist/Interfaces";
+import {UserDataMapResolver} from "./userDataMapper/userDataMap/resolver";
+import {VendorDatatypeResolver} from "./userDataMapper/vendorDatatype/resolver";
 
 export const resolvers: IResolvers = {
   Query: {
-    getRandomList: (root: any, args: {length: number}): IRandomList => random.list(args),
+    listUserDataMap: () => UserDataMapResolver.list(),
+    listVendorDatatype: () => VendorDatatypeResolver.list(),
+    getVendorDatatype: (root: any, args: {id: number}): any => VendorDatatypeResolver.get(args),
   },
+  Mutation: {
+    createVendorDatatype: (root: any, args: {vendor: string, data_type: string}) => VendorDatatypeResolver.create(args),
+    deleteVendorDatatype: (root: any, args: {id: number}) => VendorDatatypeResolver.delete(args),
+  }
 };
