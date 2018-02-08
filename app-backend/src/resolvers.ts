@@ -17,10 +17,8 @@ export const resolvers: IResolvers = {
         listVendorDatatype: () => VendorDatatypeResolver.list(),
         getVendorDatatype: (root: any, args: {id: number}) => VendorDatatypeResolver.get(args),
 
-        getUserDataMapByDataType: (root: any, args: {data_type_user_id: string}) =>
-                UserDataMapResolver.getUserDataMapByDataType(args),
-        getUserDataMapByUserAndVendor: (root: any, args: {user_id: string, vendor_data_type_id: string}) =>
-                UserDataMapResolver.getUserDataMapByUserAndVendor(args),
+        getUserDataMap: (root: any, args: {data_type_user_id: string, user_id: string, vendor_data_type_id: string}) =>
+                UserDataMapResolver.getUserDataMap(args),
     },
     Mutation: {
         createVendorDatatype: (root: any, args: { vendor: string, data_type: string }) => 

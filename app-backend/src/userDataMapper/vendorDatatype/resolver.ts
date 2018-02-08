@@ -23,7 +23,7 @@ export const VendorDatatypeResolver = {
                 data_type: args.data_type
             });
         } catch (error) {
-            console.log('Error:', error.message);
+            console.log('VendorDatatype-Create:', error.message);
             return error;
         }
         
@@ -43,7 +43,7 @@ export const VendorDatatypeResolver = {
                 throw new Error('No such vendor found');
             }
         } catch (error) {
-            console.log('Error:', error.message);
+            console.log('VendorDatatype-list:', error.message);
             return error;
         }
 
@@ -59,7 +59,7 @@ export const VendorDatatypeResolver = {
             }
             updated = await vendorDatatype.update({...args.data}, {where: {id: args.id}});
         } catch (error) {
-            console.log('Error:', error.message);
+            console.log('VendorDatatype-update:', error.message);
             return error;
         }
 
@@ -74,7 +74,7 @@ export const VendorDatatypeResolver = {
                 throw new Error('Couldn\'t be deleted');
             }
         } catch (error) {
-            console.log('Error:', error.message);
+            console.log('VendorDatatype-delete:', error.message);
             return error;
         }
 
