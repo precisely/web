@@ -1,26 +1,29 @@
-import { sequelize } from '../sequelize';
-import {IVendorDatatypeInstance} from 'src/userDataMapper/vendorDatatype/VendorDatatype';
+import * as Sequelize from 'sequelize';
+import {sequelize} from '../sequelize';
+import {IVendorDatatypeInstance, IVendorDatatypeAttributes} from 'src/userDataMapper/vendorDatatype/VendorDatatype';
 
-const VendorDatatype = sequelize[`VendorDatatype`];
+const VendorDatatype: Sequelize.Model<IVendorDatatypeInstance, IVendorDatatypeAttributes> 
+        = sequelize[`VendorDatatype`];
 
 export const VendorDatatypeResolver = {
 
     async create(args: {vendor: string, data_type: string}) {
-        let vendorDatatypeInstance: any;
+        let vendorDatatypeInstance: IVendorDatatypeInstance;
         try {
             vendorDatatypeInstance = await VendorDatatype.create({
                 vendor: args.vendor,
                 data_type: args.data_type
             });
-        } catch (err) {
-            console.log('Error:', err.message);
+        } catch (error) {
+            console.log('Error:', error.message);
+            return error;
         }
         
         return vendorDatatypeInstance.get({plain: true});
     },
 
     async list() {
-        const vendorDatatypeInstances = await VendorDatatype.findAll({raw: true});
+        const vendorDatatypeInstances: IVendorDatatypeInstance[] = await VendorDatatype.findAll({raw: true});
         return vendorDatatypeInstances;
     },
     
@@ -28,29 +31,38 @@ export const VendorDatatypeResolver = {
         let vendorDatatypeInstance: IVendorDatatypeInstance;
         try {
             vendorDatatypeInstance = await VendorDatatype.findById(args.id);
+            if (!vendorDatatypeInstance) throw new Error('No such user found');
         } catch (error) {
             console.log('Error:', error.message);
-        }
-
-        if (!vendorDatatypeInstance) {
-            throw new Error('No such user found');
+            return error;
         }
 
         return vendorDatatypeInstance;
     },
 
-    async delete(args: {id: number}) {
-        let vendorDatatypeInstance: any;
+    async update(args: {id: number, data: IVendorDatatypeAttributes}) {
+        let updated: IVendorDatatypeInstance;
+
         try {
-            vendorDatatypeInstance = await VendorDatatype.destroy({
-                where: {id: args.id}
-            });
-        } catch (err) {
-            console.log('Error:', err.message);
+            const vendorDatatype = await VendorDatatype.findById(args.id);
+            if (!vendorDatatype) throw new Error('No such user found');
+            updated = await vendorDatatype.update({...args.data}, {where: {id: args.id}});
+        } catch (error) {
+            console.log('Error:', error.message);
+            return error;
         }
 
-        if (!vendorDatatypeInstance) {
-            return {success: false, message: 'Couldn\'t be deleted'};
+        return updated;
+    },
+
+    async delete(args: {id: number}) {
+        let deleted: number;
+        try {
+            deleted = await VendorDatatype.destroy({where: {id: args.id}});
+            if (!deleted) throw new Error('Couldn\'t be deleted');
+        } catch (error) {
+            console.log('Error:', error.message);
+            return error;
         }
 
         return {success: true, message: 'Deleted Successfully'};

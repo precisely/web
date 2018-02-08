@@ -14,5 +14,6 @@ type Query {
 
 type Mutation {
     createVendorDatatype(vendor: String!, data_type: String!): VendorDatatype,
+    updateVendorDatatype(id: Int!, data: VendorDatatypeInput!): VendorDatatype,
     deleteVendorDatatype(id: Int!): GenericResponse,
 }

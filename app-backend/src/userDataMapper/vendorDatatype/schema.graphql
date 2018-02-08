@@ -3,3 +3,8 @@ type VendorDatatype {
     vendor: String,
     data_type: String
 }
+
+input VendorDatatypeInput {
+    vendor: String,
+    data_type: String
+}

@@ -5,7 +5,9 @@ export interface IVendorDatatypeAttributes {
     data_type: string;
 }
 
-export interface IVendorDatatypeInstance extends Sequelize.Instance<IVendorDatatypeAttributes>, IVendorDatatypeAttributes {
+export interface IVendorDatatypeInstance 
+        extends Sequelize.Instance<IVendorDatatypeAttributes>, IVendorDatatypeAttributes {
+            
     id: number;
 }
 
