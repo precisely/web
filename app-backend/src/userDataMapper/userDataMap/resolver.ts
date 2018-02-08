@@ -1,3 +1,11 @@
+/*
+* Copyright (c) 2011-Present, Precise.ly, Inc.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or
+* without modification, are not permitted.
+*/
+
 import {sequelize} from '../sequelize';
 import {IUserDataMapInstance} from 'src/userDataMapper/userDataMap/UserDataMap';
 
@@ -37,7 +45,7 @@ export const UserDataMapResolver = {
                 where: {data_type_user_id},
                 include: [{model: VendorDatatype, as: 'vendor_data_type'}]
             });
-        } catch(error) {
+        } catch (error) {
             console.log('UserDataMap-getUserDataMapByDataType:', error.message);
 
             return error.message;
@@ -55,7 +63,7 @@ export const UserDataMapResolver = {
                 where: {user_id, vendor_data_type_id},
                 include: [{model: VendorDatatype, as: 'vendor_data_type'}]
             });
-        } catch(error) {
+        } catch (error) {
             console.log('UserDataMap-getUserDataMapByUserAndVendor:', error.message);
 
             return error.message;
