@@ -15,7 +15,12 @@ export const resolvers: IResolvers = {
     Query: {
         listUserDataMap: () => UserDataMapResolver.list(),
         listVendorDatatype: () => VendorDatatypeResolver.list(),
-        getVendorDatatype: (root: any, args: { id: number }) => VendorDatatypeResolver.get(args),
+        getVendorDatatype: (root: any, args: {id: number}) => VendorDatatypeResolver.get(args),
+
+        getUserDataMapByDataType: (root: any, args: {data_type_user_id: string}) =>
+                UserDataMapResolver.getUserDataMapByDataType(args),
+        getUserDataMapByUserAndVendor: (root: any, args: {user_id: string, vendor_data_type_id: string}) =>
+                UserDataMapResolver.getUserDataMapByUserAndVendor(args),
     },
     Mutation: {
         createVendorDatatype: (root: any, args: { vendor: string, data_type: string }) => 
@@ -23,5 +28,8 @@ export const resolvers: IResolvers = {
         updateVendorDatatype: (root: any, args: { id: number, data: IVendorDatatypeAttributes }) =>
                 VendorDatatypeResolver.update(args),
         deleteVendorDatatype: (root: any, args: { id: number }) => VendorDatatypeResolver.delete(args),
+
+        createUserDataMap: (root: any, args: {user_id: string, vendor_data_type_id: number}) =>
+                UserDataMapResolver.create(args),
     }
 };

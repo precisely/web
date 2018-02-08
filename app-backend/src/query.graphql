@@ -10,10 +10,14 @@ type Query {
     listUserDataMap: [UserDataMap],
     listVendorDatatype: [VendorDatatype],
     getVendorDatatype(id: Int!): VendorDatatype,
+    getUserDataMap: UserDataMap,
+    getUserDataMapByDataType(data_type_user_id: String!): UserDataMap,
+    getUserDataMapByUserAndVendor(user_id: String!, vendor_data_type_id: Int!): UserDataMap,
 }
 
 type Mutation {
     createVendorDatatype(vendor: String!, data_type: String!): VendorDatatype,
     updateVendorDatatype(id: Int!, data: VendorDatatypeInput!): VendorDatatype,
     deleteVendorDatatype(id: Int!): GenericResponse,
+    createUserDataMap(user_id: String!, vendor_data_type_id: Int!): UserDataMap,
 }

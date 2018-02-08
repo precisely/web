@@ -31,7 +31,9 @@ export const VendorDatatypeResolver = {
         let vendorDatatypeInstance: IVendorDatatypeInstance;
         try {
             vendorDatatypeInstance = await VendorDatatype.findById(args.id);
-            if (!vendorDatatypeInstance) throw new Error('No such user found');
+            if (!vendorDatatypeInstance) {
+                throw new Error('No such user found');
+            }
         } catch (error) {
             console.log('Error:', error.message);
             return error;
@@ -45,7 +47,9 @@ export const VendorDatatypeResolver = {
 
         try {
             const vendorDatatype = await VendorDatatype.findById(args.id);
-            if (!vendorDatatype) throw new Error('No such user found');
+            if (!vendorDatatype) {
+                throw new Error('No such user found');
+            }
             updated = await vendorDatatype.update({...args.data}, {where: {id: args.id}});
         } catch (error) {
             console.log('Error:', error.message);
@@ -59,7 +63,9 @@ export const VendorDatatypeResolver = {
         let deleted: number;
         try {
             deleted = await VendorDatatype.destroy({where: {id: args.id}});
-            if (!deleted) throw new Error('Couldn\'t be deleted');
+            if (!deleted) {
+                throw new Error('Couldn\'t be deleted');
+            }
         } catch (error) {
             console.log('Error:', error.message);
             return error;
