@@ -40,7 +40,7 @@ export const VendorDatatypeResolver = {
         try {
             vendorDatatypeInstance = await VendorDatatype.findById(args.id);
             if (!vendorDatatypeInstance) {
-                throw new Error('No such user found');
+                throw new Error('No such vendor found');
             }
         } catch (error) {
             console.log('Error:', error.message);
@@ -52,11 +52,10 @@ export const VendorDatatypeResolver = {
 
     async update(args: {id: number, data: IVendorDatatypeAttributes}) {
         let updated: IVendorDatatypeInstance;
-
         try {
             const vendorDatatype = await VendorDatatype.findById(args.id);
             if (!vendorDatatype) {
-                throw new Error('No such user found');
+                throw new Error('No such vendor found');
             }
             updated = await vendorDatatype.update({...args.data}, {where: {id: args.id}});
         } catch (error) {

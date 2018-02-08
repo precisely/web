@@ -36,6 +36,7 @@
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
     "sequelize": "4.27.0",
+    "sequelize-mock": "0.10.2",
     "serverless-dynamodb-client": "0.0.2"
   },
   "devDependencies": {

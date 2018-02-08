@@ -29,7 +29,6 @@ export const UserDataMapResolver = {
             });
         } catch (error) {
             console.log('UserDataMap-Create:', error.message);
-
             return error.message;
         }
 
@@ -47,7 +46,6 @@ export const UserDataMapResolver = {
             });
         } catch (error) {
             console.log('UserDataMap-getUserDataMapByDataType:', error.message);
-
             return error.message;
         }
 
@@ -65,7 +63,6 @@ export const UserDataMapResolver = {
             });
         } catch (error) {
             console.log('UserDataMap-getUserDataMapByUserAndVendor:', error.message);
-
             return error.message;
         }
 

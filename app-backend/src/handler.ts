@@ -8,9 +8,9 @@
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
-import {graphqlLambda, graphiqlLambda, LambdaHandler } from 'apollo-server-lambda';
-import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces';
-import {makeExecutableSchema } from 'graphql-tools';
+import {graphqlLambda, graphiqlLambda, LambdaHandler} from 'apollo-server-lambda';
+import {ITypeDefinitions} from 'graphql-tools/dist/Interfaces';
+import {makeExecutableSchema} from 'graphql-tools';
 import {resolvers} from './resolvers';
 
 const typeDefs: ITypeDefinitions = require('./query.graphql');
