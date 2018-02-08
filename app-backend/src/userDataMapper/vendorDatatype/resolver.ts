@@ -43,7 +43,7 @@ export const VendorDatatypeResolver = {
                 throw new Error('No such vendor found');
             }
         } catch (error) {
-            console.log('VendorDatatype-list:', error.message);
+            console.log('VendorDatatype-get:', error.message);
             return error;
         }
 

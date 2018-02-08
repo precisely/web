@@ -17,17 +17,17 @@ const KMS: AWS.KMS = new AWS.KMS({region: process.env.REGION as string});
 export const getEnvironmentVariables = (): Bluebird<Object | Error> => {
     return new Bluebird((
             resolve: (thenableOrResult?: {} | PromiseLike<{}>) => void, 
-            reject: (error?: any) => void
+            reject: (error?: Error) => void
     ): void => {
         KMS.decrypt({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')}, (
                 error: Error, 
                 data: AWS.KMS.Types.DecryptResponse
         ): void => {
-            if(error) {
-                reject(error)
+            if (error) {
+                reject(error);
             } else {
-                resolve(data && data.Plaintext && JSON.parse(data.Plaintext.toString()))
+                resolve(data && data.Plaintext && JSON.parse(data.Plaintext.toString()));
             }
-        })
-    })
+        });
+    });
 };

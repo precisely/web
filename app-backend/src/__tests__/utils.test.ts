@@ -9,49 +9,53 @@
 jest.mock('aws-sdk', () => {
     return {
         KMS: () => ({
-            decrypt: jest.fn((
-                        params: AWS.KMS.Types.DecryptRequest, 
+            decrypt: jest.fn()
+                .mockImplementationOnce((
+                        params: AWS.KMS.Types.DecryptRequest,
+                        callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
+                ): void => {
+                    callback(new Error('mock error'), null);
+                })
+                .mockImplementationOnce((
+                        params: AWS.KMS.Types.DecryptRequest,
                         callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
                 ): void => {
                     callback(null, {Plaintext: new Buffer(JSON.stringify({demo: 'test'}))});
                 })
-                .mockImplementationOnce((
-                    params: AWS.KMS.Types.DecryptRequest, 
-                    callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-                ): void => {
-                    callback(new Error('mock error'), null)
-                })
         })
-    }
+    };
 });
 
-import {decryptKMS} from '../utils';
+import {getEnvironmentVariables} from '../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('Test for decryptKMS', (): void => {
+
+    process.env.SECRETS = 'test';
+
     it('decryptKMS should be a function', (): void => {
-        expect(typeof decryptKMS).toBe('function');
+        expect(typeof getEnvironmentVariables).toBe('function');
     });
 
     unroll('it should #expectedResult when #description', (
             done: () => void,
             args: {expectedResult: string, description: string}
     ): void => {
-        decryptKMS('testData')
-            .then((data: {demo: string}) => {
+        getEnvironmentVariables()
+            .then((data: {demo: string}): void => {
                 expect(data).toBe({demo: 'test'});
             })
-            .catch((error: Error) => {
+            .catch((error: Error): void => {
                 expect(error.message).toBe('mock error');
             })
-            .finally(() => {
+            .finally((): void => {
                 done();
             });
     }, [
         ['expectedResult', 'description'],
         ['fail', 'KMS.decrypt throws error'],
         ['pass', 'KMS.decrypt calls success callback'],
-    ])
+    ]);
 });
