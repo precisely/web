@@ -9,7 +9,6 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {CSS} from 'src/interfaces';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
 import {
     Collapse,
@@ -54,7 +53,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>, IN
         
         return (
             <Navbar light sticky="top" expand="md" toggleable="md" className="navbar">
-              <NavbarBrand href="/"><img src={logo} alt="precise.ly" style={navbarBrandStyle}/></NavbarBrand>
+              <NavbarBrand href="/"><img src={logo} alt="precise.ly" /></NavbarBrand>
               <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
               <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
@@ -72,7 +71,3 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>, IN
         );
     }
 }
-
-const navbarBrandStyle: CSS = {
-    width: '45%',
-};
