@@ -21,7 +21,7 @@ export interface IUserDataMapInstance extends Sequelize.Instance<IUserDataMapAtt
 export const UserDataMap = (sequelize: Sequelize.Sequelize): 
         Sequelize.Model<IUserDataMapInstance, IUserDataMapAttributes> => {
 
-    const UserDataMap: Sequelize.Model<IUserDataMapInstance, IUserDataMapAttributes> =
+    const UserDataMapAttributes: Sequelize.Model<IUserDataMapInstance, IUserDataMapAttributes> =
             sequelize.define<IUserDataMapInstance, IUserDataMapAttributes>('userDataMap', {
 
         user_id: {
@@ -40,9 +40,17 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
     });
 
     // Add your associations here
-    UserDataMap[`associate`] = (models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}) => {
-    	UserDataMap.belongsTo(models[`VendorDatatype`], {as: 'vendor_data_type', foreignKey: 'vendor_data_type_id'});
-    }
+    UserDataMapAttributes[`associate`] = (
+            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}
+        ): void => {
+        UserDataMapAttributes.belongsTo(
+                models[`VendorDatatype`],
+                {
+                    as: 'vendor_data_type',
+                    foreignKey: 'vendor_data_type_id',
+                }
+        );
+    };
 
-    return UserDataMap;
-}
+    return UserDataMapAttributes;
+};

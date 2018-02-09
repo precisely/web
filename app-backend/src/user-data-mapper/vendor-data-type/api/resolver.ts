@@ -7,8 +7,11 @@
 */
 
 import * as Sequelize from 'sequelize';
-import {sequelize} from '../sequelize';
-import {IVendorDatatypeInstance, IVendorDatatypeAttributes} from 'src/userDataMapper/vendorDatatype/VendorDatatype';
+import {sequelize} from 'src/user-data-mapper/sequelize';
+import {
+    IVendorDatatypeInstance,
+    IVendorDatatypeAttributes,
+} from 'src/user-data-mapper/vendor-data-type/models/VendorDatatype';
 
 const VendorDatatype: Sequelize.Model<IVendorDatatypeInstance, IVendorDatatypeAttributes> 
         = sequelize[`VendorDatatype`];

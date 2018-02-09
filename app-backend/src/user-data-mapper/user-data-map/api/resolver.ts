@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {sequelize} from '../sequelize';
-import {IUserDataMapInstance} from 'src/userDataMapper/userDataMap/UserDataMap';
+import {sequelize} from 'src/user-data-mapper/sequelize';
+import {IUserDataMapInstance} from 'src/user-data-mapper/user-data-map/models/UserDataMap';
 
 const UserDataMap = sequelize[`UserDataMap`];
 const VendorDatatype = sequelize[`VendorDatatype`];
@@ -43,7 +43,7 @@ export const UserDataMapResolver = {
 
         if (data_type_user_id) {
             where[`data_type_user_id`] = data_type_user_id;
-        } else if(user_id && vendor_data_type_id) {
+        } else if (user_id && vendor_data_type_id) {
             where[`user_id`] = user_id;
             where[`vendor_data_type_id`] = vendor_data_type_id;
         } else {

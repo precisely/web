@@ -22,7 +22,7 @@ export interface IVendorDatatypeInstance
 export const VendorDatatype = (sequelize: Sequelize.Sequelize): 
         Sequelize.Model<IVendorDatatypeInstance, IVendorDatatypeAttributes> => {
 
-    const VendorDatatype: Sequelize.Model<IVendorDatatypeInstance, IVendorDatatypeAttributes> =
+    const VendorDatatypeAttributes: Sequelize.Model<IVendorDatatypeInstance, IVendorDatatypeAttributes> =
             sequelize.define<IVendorDatatypeInstance, IVendorDatatypeAttributes>('vendorDatatype', {
 
         vendor: {
@@ -41,9 +41,11 @@ export const VendorDatatype = (sequelize: Sequelize.Sequelize):
     });
 
     // Add your associations here
-    VendorDatatype[`associate`] = (models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}) => {
-    	VendorDatatype.hasOne(models[`UserDataMap`], {foreignKey: 'vendor_data_type_id'});
-    }
+    VendorDatatypeAttributes[`associate`] = (
+            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}
+        ): void => {
+        VendorDatatypeAttributes.hasOne(models[`UserDataMap`], {foreignKey: 'vendor_data_type_id'});
+    };
 
-    return VendorDatatype;
-}
+    return VendorDatatypeAttributes;
+};

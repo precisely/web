@@ -6,10 +6,10 @@
 * without modification, are not permitted.
 */
 
-jest.mock('../../../userDataMapper/vendorDatatype/VendorDatatype');
-jest.mock('../../../userDataMapper/userDataMap/UserDataMap');
+jest.mock('src/user-data-mapper/vendor-data-type/models/VendorDatatype');
+jest.mock('src/user-data-mapper/user-data-map/models/UserDataMap');
 
-import {UserDataMapResolver} from '../../../userDataMapper/userDataMap/resolver';
+import {UserDataMapResolver} from 'src/user-data-mapper/user-data-map/api/resolver';
 
 describe('UserDataMap resolver tests.', (): void => {
     it('should pass when list is found', async () => {
@@ -31,7 +31,7 @@ describe('UserDataMap resolver tests.', (): void => {
             let response = await UserDataMapResolver.create({user_id: 'invalid'});
             expect(response.message).toEqual('mock-create error');
         });
-    })
+    });
 
     describe('tests for update', (): void => {
 
@@ -56,5 +56,5 @@ describe('UserDataMap resolver tests.', (): void => {
             let response = await UserDataMapResolver.getUserDataMap({});
             expect(response.message).toEqual('Missing Parameters. See documentation for details.');
         });
-    })
+    });
 });

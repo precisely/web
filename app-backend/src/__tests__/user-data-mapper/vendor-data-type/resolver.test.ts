@@ -6,12 +6,10 @@
 * without modification, are not permitted.
 */
 
-jest.mock('../../../userDataMapper/vendorDatatype/VendorDatatype');
-jest.mock('../../../userDataMapper/userDataMap/UserDataMap');
+jest.mock('src/user-data-mapper/vendor-data-type/models/VendorDatatype');
+jest.mock('src/user-data-mapper/user-data-map/models/UserDataMap');
 
-import * as Sequelize from 'sequelize';
-import {sequelize} from '../../../userDataMapper/sequelize';
-import {VendorDatatypeResolver} from '../../../userDataMapper/vendorDatatype/resolver';
+import {VendorDatatypeResolver} from 'src/user-data-mapper/vendor-data-type/api/resolver';
 
 describe('Tests for VendorDatatypeResolve', (): void => {
 

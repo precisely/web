@@ -18,7 +18,11 @@
       "ts",
       "js"
     ],
-    "mapCoverage": true
+    "mapCoverage": true,
+    "moduleDirectories": [
+      "node_modules",
+      "."
+    ]
   },
   "author": "Precise.ly, Inc",
   "license": "ISC",

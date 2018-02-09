@@ -31,7 +31,6 @@
     "jest",
     "src/setupTests.ts",
     "src/__tests__",
-    "../app-client",
-    "src/userDataMapper/*/__mocks__"
+    "src/user-data-mapper/*/models/__mocks__"
   ]
 }
