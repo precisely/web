@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {IUserDataMapInstance} from 'src/user-data-mapper/user-data-map/models/UserDataMap';
+import {IUserDataMapInstance} from '../UserDataMap';
 
 const SequelizeMock = require('sequelize-mock');
 const DBConnectionMock = new SequelizeMock();

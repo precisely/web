@@ -26,15 +26,20 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
 
         user_id: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: 'userIdAndVendorDataTypeId'
         },
 
         data_type_user_id: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true
-        }
+        },
 
+        vendor_data_type_id: {
+            type: Sequelize.INTEGER,
+            unique: 'userIdAndVendorDataTypeId'
+        }
     }, {
         tableName: 'userDataMap'
     });

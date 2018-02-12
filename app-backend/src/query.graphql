@@ -1,5 +1,5 @@
-#import "src/user-data-mapper/user-data-map/api/schema.graphql"
-#import "src/user-data-mapper/vendor-data-type/api/schema.graphql"
+#import "./user-data-mapper/user-data-map/api/schema.graphql"
+#import "./user-data-mapper/vendor-data-type/api/schema.graphql"
 
 type GenericResponse {
     success: Boolean,

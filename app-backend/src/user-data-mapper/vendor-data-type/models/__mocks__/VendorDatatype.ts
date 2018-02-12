@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {IVendorDatatypeInstance} from 'src/user-data-mapper/vendor-data-type/models/VendorDatatype';
+import {IVendorDatatypeInstance} from '../VendorDatatype';
 
 const SequelizeMock = require('sequelize-mock');
 const DBConnectionMock = new SequelizeMock();

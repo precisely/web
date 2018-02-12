@@ -6,10 +6,10 @@
 * without modification, are not permitted.
 */
 
-jest.mock('src/user-data-mapper/vendor-data-type/models/VendorDatatype');
-jest.mock('src/user-data-mapper/user-data-map/models/UserDataMap');
+jest.mock('../../../user-data-mapper/vendor-data-type/models/VendorDatatype');
+jest.mock('../../../user-data-mapper/user-data-map/models/UserDataMap');
 
-import {UserDataMapResolver} from 'src/user-data-mapper/user-data-map/api/resolver';
+import {UserDataMapResolver} from '../../../user-data-mapper/user-data-map/api/resolver';
 
 describe('UserDataMap resolver tests.', (): void => {
     it('should pass when list is found', async () => {

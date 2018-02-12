@@ -27,12 +27,14 @@ export const VendorDatatype = (sequelize: Sequelize.Sequelize):
 
         vendor: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: 'vendorAndDatatype'
         },
 
         data_type: {
             type: Sequelize.STRING,
             allowNull: false,
+            unique: 'vendorAndDatatype'
         }
 
     }, {

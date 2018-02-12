@@ -7,10 +7,9 @@
 */
 
 import * as Sequelize from 'sequelize';
-import {UserDataMap} from 'src/user-data-mapper/user-data-map/models/UserDataMap';
-import {VendorDatatype} from 'src/user-data-mapper/vendor-data-type/models/VendorDatatype';
+import {UserDataMap} from './user-data-map/models/UserDataMap';
+import {VendorDatatype} from './vendor-data-type/models/VendorDatatype';
 
-console.log('Sequelize', Sequelize);
 const sequelize: Sequelize.Sequelize = new Sequelize(
     process.env[`POSTGRES_DB_NAME`] || '',
     process.env[`POSTGRES_DB_USERNAME`] || '',

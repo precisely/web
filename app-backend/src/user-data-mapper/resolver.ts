@@ -6,9 +6,9 @@
 * without modification, are not permitted.
 */
 
-import {UserDataMapResolver} from 'src/user-data-mapper/user-data-map/api/resolver';
-import {VendorDatatypeResolver} from 'src/user-data-mapper/vendor-data-type/api/resolver';
-import {IVendorDatatypeAttributes} from 'src/user-data-mapper/vendor-data-type/models/VendorDatatype';
+import {UserDataMapResolver} from './user-data-map/api/resolver';
+import {VendorDatatypeResolver} from './vendor-data-type/api/resolver';
+import {IVendorDatatypeAttributes} from './vendor-data-type/models/VendorDatatype';
 
 export const queries = {
     listUserDataMap: () => UserDataMapResolver.list(),

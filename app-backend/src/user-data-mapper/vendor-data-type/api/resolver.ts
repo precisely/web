@@ -7,7 +7,7 @@
 */
 
 import * as Sequelize from 'sequelize';
-import {sequelize} from 'src/user-data-mapper/sequelize';
+import {sequelize} from '../../sequelize';
 import {
     IVendorDatatypeInstance,
     IVendorDatatypeAttributes,

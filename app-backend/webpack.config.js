@@ -1,21 +1,12 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
-const fs = require('fs');
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
-// Setting NODE_PATH to current working directory to support absolute imports
-process.env.NODE_PATH = './';
 
 module.exports = {
   entry: slsw.lib.entries,
   target: 'node',
   externals: [nodeExternals()],
   resolve: {
-    modules: [
-      "node_modules",
-      resolveApp('node_modules')
-    ].concat(process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
     extensions: [
       '.js',
       '.jsx',

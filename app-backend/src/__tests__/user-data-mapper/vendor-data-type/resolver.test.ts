@@ -6,10 +6,10 @@
 * without modification, are not permitted.
 */
 
-jest.mock('src/user-data-mapper/vendor-data-type/models/VendorDatatype');
-jest.mock('src/user-data-mapper/user-data-map/models/UserDataMap');
+jest.mock('../../../user-data-mapper/vendor-data-type/models/VendorDatatype');
+jest.mock('../../../user-data-mapper/user-data-map/models/UserDataMap');
 
-import {VendorDatatypeResolver} from 'src/user-data-mapper/vendor-data-type/api/resolver';
+import {VendorDatatypeResolver} from '../../../user-data-mapper/vendor-data-type/api/resolver';
 
 describe('Tests for VendorDatatypeResolve', (): void => {
 

@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {sequelize} from 'src/user-data-mapper/sequelize';
-import {IUserDataMapInstance} from 'src/user-data-mapper/user-data-map/models/UserDataMap';
+import {sequelize} from '../../sequelize';
+import {IUserDataMapInstance} from '../models/UserDataMap';
 
 const UserDataMap = sequelize[`UserDataMap`];
 const VendorDatatype = sequelize[`VendorDatatype`];
