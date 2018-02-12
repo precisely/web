@@ -22,6 +22,7 @@ const myGraphQLSchema = makeExecutableSchema({
 });
 
 export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     const handler: LambdaHandler = graphqlLambda({ schema: myGraphQLSchema, tracing: true });
     return handler(event, context, callback);
 };
