@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "test": "jest --no-cache --coverage",
-    "start": "./node_modules/.bin/env-cmd ../config/security.env.local serverless offline start",
+    "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "serverless dynamodb install",
-    "deploy-prod": "serverless --stage=production deploy"
+    "deploy-prod": "serverless --stage=production deploy",
+    "deploy-stage": "serverless --stage=stage deploy"
   },
   "jest": {
     "transform": {
