@@ -1,0 +1,7 @@
+type Genetics {
+    gene: String,
+    source: String,
+    variant: String,
+    quality: String,
+    data_type_user_id: String
+}

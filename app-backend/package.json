@@ -32,6 +32,8 @@
     "aws-sdk": "2.188.0",
     "babel-polyfill": "6.26.0",
     "bluebird": "3.5.1",
+    "dynogels": "9.0.0",
+    "dynogels-promisified": "1.0.4",
     "graphql": "0.10.5",
     "graphql-playground-middleware-lambda": "1.2.0",
     "graphql-tag": "2.6.1",
@@ -45,6 +47,7 @@
   "devDependencies": {
     "@types/aws-lambda": "0.0.27",
     "@types/bluebird": "3.5.20",
+    "@types/dynogels": "8.0.0",
     "@types/graphql": "0.12.1",
     "@types/jest": "21.1.4",
     "@types/node": "9.3.0",
