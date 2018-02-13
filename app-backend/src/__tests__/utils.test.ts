@@ -31,31 +31,28 @@ import {getEnvironmentVariables} from '../utils';
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Test for decryptKMS', (): void => {
+describe('Test for getEnvironmentVariables', (): void => {
 
     process.env.SECRETS = 'test';
 
-    it('decryptKMS should be a function', (): void => {
+    it('getEnvironmentVariables should be a function', (): void => {
         expect(typeof getEnvironmentVariables).toBe('function');
     });
 
-    unroll('it should #expectedResult when #description', (
+    unroll('it should #description when #expectedResult', async (
             done: () => void,
             args: {expectedResult: string, description: string}
-    ): void => {
-        getEnvironmentVariables()
-            .then((data: {demo: string}): void => {
-                expect(data).toBe({demo: 'test'});
-            })
-            .catch((error: Error): void => {
-                expect(error.message).toBe('mock error');
-            })
-            .finally((): void => {
-                done();
-            });
+    ): Promise<void> => {
+        const result = await getEnvironmentVariables();
+        if(args.expectedResult === 'pass') {
+            expect(result).toEqual({"demo": "test"});
+        } else {
+            expect(result).toBeFalsy();
+        }
+        done();
     }, [
         ['expectedResult', 'description'],
-        ['fail', 'KMS.decrypt throws error'],
-        ['pass', 'KMS.decrypt calls success callback'],
+        ['fail', 'return null'],
+        ['pass', 'return data'],
     ]);
 });
