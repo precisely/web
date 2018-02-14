@@ -1,7 +1,20 @@
+type DataTypeUserId {
+    data_type_user_id: String
+}
+
 type Genetics {
     gene: String,
     source: String,
     variant: String,
     quality: String,
     data_type_user_id: String
+}
+
+type GeneticsListItem {
+    attrs: Genetics
+}
+
+type GeneticsList {
+    Items: [GeneticsListItem],
+    LastEvaluatedKey: DataTypeUserId
 }

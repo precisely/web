@@ -13,6 +13,7 @@ import * as GeneticsResolvers from './genetics-service/api/resolver';
 export const resolvers: IResolvers = {
     Query: {
         ...UserDataMapperResolvers.queries,
+        ...GeneticsResolvers.queries,
     },
     Mutation: {
         ...UserDataMapperResolvers.mutations,
