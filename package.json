@@ -8,7 +8,8 @@
     "setup": "npm install -g serverless && nvm install v6.10.3",
     "server": "cd app-backend && yarn start",
     "client": "cd app-client && yarn start",
-    "all": "yarn run server | yarn run client"
+    "all": "yarn run server | yarn run client",
+    "test": "cd app-backend && yarn test && cd ../app-client && yarn test"
   },
   "repository": {
     "type": "git",
