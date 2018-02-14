@@ -16,7 +16,7 @@ interface IListFilters {
     updatedAt?: string; // Should be the ISO date string
 }
 
-const geneticsResolver = {
+export const geneticsResolver = {
     async create(args: IGeneticsAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
 
@@ -61,14 +61,14 @@ const geneticsResolver = {
                 throw new Error('No such record found');
             }
         } catch (error) {
-            console.log('geneticsResolver-update:', error.message);
+            console.log('geneticsResolver-get:', error.message);
             return error.message;
         }
 
         return geneticsInstance.attrs;
     },
 
-    async list(args: IListFilters) {
+    async list(args: IListFilters = {}) {
         const {limit = 15, lastEvaluatedKey, createdAt, updatedAt} = args;
         let result;
         try {

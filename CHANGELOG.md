@@ -32,3 +32,6 @@
 ### Removed
 
 - VendorDataType
+
+### Added
+- The Genetics model and it's CRUD endpoints.
