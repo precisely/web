@@ -1,5 +1,0 @@
-type Random {
-    list: [Int]!
-    length: Int
-    sum: Int
-}

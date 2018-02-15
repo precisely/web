@@ -27,6 +27,10 @@ const poolData: {UserPoolId: string, ClientId: string} = {
 
 const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
+export const isLoggedIn = (): boolean => {
+    return !!userPool.getCurrentUser();
+};
+
 export const getCognitoUser = (email: string): CognitoUser => {
     const userData: {Username: string, Pool: CognitoUserPool} = {
         Username : email,

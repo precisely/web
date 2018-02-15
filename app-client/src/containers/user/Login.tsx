@@ -93,7 +93,7 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
                         />
                     </FormGroup>
                     <Link style={linkFontSize} to="/forgot-password">Forgot Password?</Link>
-                    <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
+                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Login'}
                     </Button>
                     <div>

@@ -17,5 +17,17 @@ export const Input = Radium(Bootstrap.Input);
 export const Form = Radium(Bootstrap.Form);
 export const FormGroup = Radium(Bootstrap.FormGroup);
 export const FormText = Radium(Bootstrap.FormText);
+export const Collapse = Radium(Bootstrap.Collapse);
+export const Navbar = Radium(Bootstrap.Navbar);
+export const NavbarToggler = Radium(Bootstrap.NavbarToggler);
+export const NavbarBrand = Radium(Bootstrap.NavbarBrand);
+export const Nav = Radium(Bootstrap.Nav);
+export const NavItem = Radium(Bootstrap.NavItem);
+export const NavLink = Radium(Bootstrap.NavLink);
+export const UncontrolledDropdown = Radium(Bootstrap.UncontrolledDropdown);
+export const DropdownToggle = Radium(Bootstrap.DropdownToggle);
+export const DropdownMenu = Radium(Bootstrap.DropdownMenu);
+export const DropdownItem = Radium(Bootstrap.DropdownItem);
+export const Container = Radium(Bootstrap.Container);
 
 export const Link = Radium(RouterLink);

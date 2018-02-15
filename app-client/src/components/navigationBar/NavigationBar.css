@@ -1,0 +1,14 @@
+.navbar {
+    letter-spacing: -1px;
+    background-color: white;
+}
+
+#brand-logo {
+    width: 10em;
+}
+
+@media screen and (min-width: 992px) {
+    .navbar {
+       padding: 8px 300px 8px 300px;
+    }
+}

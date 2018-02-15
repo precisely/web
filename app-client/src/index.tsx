@@ -20,6 +20,8 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
 import {LoadingPage} from 'src/containers/LoadingPage';
+import {AuthRoute} from 'src/components/AuthRoute';
+import {isLoggedIn} from 'src/utils/cognito';
 
 initReactFastclick();
 
@@ -51,19 +53,47 @@ ReactDOM.render(
                 <ToastContainer hideProgressBar />
                 <BrowserRouter>
                     <Switch>
-                        /*This route will be removed when the Homepage is ready*/
-                        <Route exact path="/" component={LoadComponent('Login', 'user/Login')} />
-                        <Route exact path="/login" component={LoadComponent('Login', 'user/Login')} />
-                        <Route exact path="/signup" component={LoadComponent('Signup', 'user/Signup')} />
-                        <Route exact path="/dashboard" component={LoadComponent('Dashboard', 'user/Dashboard')} />
-                        <Route
+                        <AuthRoute
+                                onEnter={(): boolean => !isLoggedIn()}
+                                redirectTo="/dashboard"
+                                path="/"
                                 exact
-                                path="/forgot-password"
-                                component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
+                                component={LoadComponent('Homepage', 'homepage/Homepage')}
                         />
-                        <Route
+                        <AuthRoute
+                                onEnter={(): boolean => !isLoggedIn()}
+                                redirectTo="/dashboard"
+                                path="/login"
+                                exact
+                                component={LoadComponent('Login', 'user/Login')}
+                        />
+                        <AuthRoute
+                                onEnter={(): boolean => !isLoggedIn()}
+                                redirectTo="/dashboard"
+                                path="/signup"
+                                exact
+                                component={LoadComponent('Signup', 'user/Signup')}
+                        />
+                        <AuthRoute
+                                onEnter={(): boolean => isLoggedIn()}
+                                redirectTo="/login"
+                                path="/dashboard"
+                                exact
+                                component={LoadComponent('Dashboard', 'user/Dashboard')}
+                        />
+                        <AuthRoute
+                                onEnter={(): boolean => !isLoggedIn()}
+                                redirectTo="/dashboard"
                                 path="/reset-password/:email"
+                                exact
                                 component={LoadComponent('ResetPassword', 'user/ResetPassword')}
+                        />
+                        <AuthRoute
+                                onEnter={(): boolean => !isLoggedIn()}
+                                redirectTo="/dashboard"
+                                path="/forgot-password"
+                                exact
+                                component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
                         />
                         <Route path="*" component={LoadComponent('NotFound')} />
                     </Switch>

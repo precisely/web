@@ -81,7 +81,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
                                 }}
                         />
                     </FormGroup>
-                    <Button style={{width: '100%'}} disabled={isLoading} active={isLoading}>
+                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
                         {isLoading ? 'Please wait...' : 'Submit'}
                     </Button>
                 </Form>

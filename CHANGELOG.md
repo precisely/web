@@ -17,3 +17,12 @@
 - Added Cognito SDKs.
 - Added Login and Signup page.
 - Added Forgot password and Reset password page.
+
+## [0.0.3] - 2018-02-06
+
+### Added
+
+- AuthRoute Component
+- Homepage
+- The UserDataMapper models, schemas and the resolvers.
+- `eslint-config-react-app` to the dev dependencies.

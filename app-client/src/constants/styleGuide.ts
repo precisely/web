@@ -7,3 +7,9 @@
  */
 
 // All the global CSS styles and color constants should be written here
+
+import {CSS} from 'src/interfaces';
+
+export const HelveticaFont: CSS = {
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+};

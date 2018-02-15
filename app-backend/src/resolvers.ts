@@ -6,11 +6,14 @@
 * without modification, are not permitted.
 */
 
-import {random, IRandomList} from "./random/resolver";
-import {IResolvers} from "graphql-tools/dist/Interfaces";
+import {IResolvers} from 'graphql-tools/dist/Interfaces';
+import * as UserDataMapperResolvers from './user-data-mapper/resolver';
 
 export const resolvers: IResolvers = {
-  Query: {
-    getRandomList: (root: any, args: {length: number}): IRandomList => random.list(args),
-  },
+    Query: {
+        ...UserDataMapperResolvers.queries,
+    },
+    Mutation: {
+        ...UserDataMapperResolvers.mutations,
+    }
 };
