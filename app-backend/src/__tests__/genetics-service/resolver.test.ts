@@ -16,6 +16,13 @@ unroll.use(it);
 
 type ExecSuccess = Promise<{Items: IGeneticsAttributes[]}>;
 
+// tslint:disable-no-any
+const mockedPromise = <DataType>(data: DataType): Promise<DataType> => {
+    return new Promise((resolve): void => {
+        return resolve(data);
+    });
+};
+
 describe('Genetics resolver tests.', (): void => {
     let dummyData: IGeneticsAttributes = {
         gene: 'XXXXY',
@@ -24,44 +31,13 @@ describe('Genetics resolver tests.', (): void => {
         data_type_user_id: 'PQR03',
     };
 
-    /**
-     * TODO Figure out a better approach for mocking this method.
-     * Tried the following, but nothing seems to be working:
-     * - jest's reset or clean mock methods.
-     * - aws-sdk-mock
-     * - dynalite
-     */
     Genetics.getAsync = jest.fn()
-            .mockImplementationOnce((): Promise<{data_type_user_id: string}> => {
-                return new Promise((resolve): void => {
-                    return resolve({data_type_user_id: 'PQR03'});
-                });
-            })
-            .mockImplementationOnce((): Promise<null> => {
-                return new Promise((resolve): void => {
-                    return resolve(null);
-                });
-            })
-            .mockImplementationOnce((): Promise<{data_type_user_id: string}> => {
-                return new Promise((resolve): void => {
-                    return resolve({data_type_user_id: 'PQR03'});
-                });
-            })
-            .mockImplementationOnce((): Promise<null> => {
-                return new Promise((resolve): void => {
-                    return resolve(null);
-                });
-            })
-            .mockImplementationOnce((): Promise<{attrs: IGeneticsAttributes}> => {
-                return new Promise((resolve): void => {
-                    return resolve({attrs: dummyData});
-                });
-            })
-            .mockImplementationOnce((): Promise<null> => {
-                return new Promise((resolve): void => {
-                    return resolve(null);
-                });
-            });
+            .mockImplementationOnce(() => mockedPromise<{data_type_user_id: string}>({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => mockedPromise<null>(null))
+            .mockImplementationOnce(() => mockedPromise<{data_type_user_id: string}>({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => mockedPromise<null>(null))
+            .mockImplementationOnce(() => mockedPromise<{attrs: IGeneticsAttributes}>({attrs: dummyData}))
+            .mockImplementationOnce(() => mockedPromise<null>(null));
 
     Genetics.createAsync = jest.fn()
             .mockImplementation((data: IGeneticsAttributes): Promise<{attrs: IGeneticsAttributes}> => {
