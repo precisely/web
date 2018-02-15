@@ -44,8 +44,8 @@ describe('Test for getEnvironmentVariables', (): void => {
             args: {expectedResult: string, description: string}
     ): Promise<void> => {
         const result = await getEnvironmentVariables();
-        if(args.expectedResult === 'pass') {
-            expect(result).toEqual({"demo": "test"});
+        if (args.expectedResult === 'pass') {
+            expect(result).toEqual({'demo': 'test'});
         } else {
             expect(result).toBeFalsy();
         }

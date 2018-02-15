@@ -10,7 +10,7 @@
     "build": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
     "compile": "yarn run clean && tsc",
-    "lint-ts": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
+    "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
     "deploy-prod": "yarn run build && serverless client deploy"
   },

@@ -9,7 +9,9 @@
     "server": "cd app-backend && yarn start",
     "client": "cd app-client && yarn start",
     "all": "yarn run server | yarn run client",
-    "test": "cd app-backend && yarn test && cd ../app-client && yarn test"
+    "test": "cd app-backend && yarn test && cd ../app-client && yarn test",
+    "tslint": "cd app-backend && yarn tslint && cd ../app-client && yarn tslint",
+    "eslint": "cd app-backend && yarn eslint && cd ../app-client && yarn eslint"
   },
   "repository": {
     "type": "git",

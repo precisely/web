@@ -47,7 +47,7 @@ export const UserDataMapResolver = {
             where[`user_id`] = user_id;
             where[`vendor_data_type_id`] = vendor_data_type_id;
         } else {
-            return new Error('Missing Parameters. See documentation for details.')
+            return new Error('Missing Parameters. See documentation for details.');
         }
 
         try {
@@ -56,7 +56,7 @@ export const UserDataMapResolver = {
                 include: [{model: VendorDatatype, as: 'vendor_data_type'}]
             });
             if (!userDataMapInstance) {
-                throw new Error('No such user data found')
+                throw new Error('No such user data found');
             }
         } catch (error) {
             console.log('UserDataMap-getUserDataMap:', error.message);
