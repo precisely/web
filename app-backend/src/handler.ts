@@ -21,6 +21,7 @@ const myGraphQLSchema = makeExecutableSchema({
     logger: console,
 });
 
+/* istanbul ignore next */
 export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     const handler: LambdaHandler = graphqlLambda({ schema: myGraphQLSchema, tracing: true });
@@ -34,8 +35,8 @@ export const playgroundHandler: ((event: APIGatewayEvent, context: Context, call
     endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
 });
 
-export const graphiqlHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void) 
+export const graphiqlHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
         = graphiqlLambda({
-            
+
     endpointURL: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
 });
