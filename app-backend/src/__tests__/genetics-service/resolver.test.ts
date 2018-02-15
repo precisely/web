@@ -14,6 +14,8 @@ import {geneticsResolver, queries, mutations} from '../../genetics-service/api/r
 const unroll = require('unroll');
 unroll.use(it);
 
+type ExecSuccess = Promise<{Items: IGeneticsAttributes[]}>;
+
 describe('Genetics resolver tests.', (): void => {
     let dummyData: IGeneticsAttributes = {
         gene: 'XXXXY',
@@ -30,61 +32,61 @@ describe('Genetics resolver tests.', (): void => {
      * - dynalite
      */
     Genetics.getAsync = jest.fn()
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<{data_type_user_id: string}> => {
+                return new Promise((resolve): void => {
                     return resolve({data_type_user_id: 'PQR03'});
                 });
             })
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<null> => {
+                return new Promise((resolve): void => {
                     return resolve(null);
                 });
             })
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<{data_type_user_id: string}> => {
+                return new Promise((resolve): void => {
                     return resolve({data_type_user_id: 'PQR03'});
                 });
             })
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<null> => {
+                return new Promise((resolve): void => {
                     return resolve(null);
                 });
             })
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<{attrs: IGeneticsAttributes}> => {
+                return new Promise((resolve): void => {
                     return resolve({attrs: dummyData});
                 });
             })
-            .mockImplementationOnce((): Promise<any> => {
-                return new Promise((resolve): any => {
+            .mockImplementationOnce((): Promise<null> => {
+                return new Promise((resolve): void => {
                     return resolve(null);
                 });
-    });
+            });
 
     Genetics.createAsync = jest.fn()
-            .mockImplementation((data: IGeneticsAttributes): Promise<any> => {
-                return new Promise((resolve, reject): any => {
+            .mockImplementation((data: IGeneticsAttributes): Promise<{attrs: IGeneticsAttributes}> => {
+                return new Promise((resolve): void => {
                     return resolve({attrs: data});
                 });
             });
 
     Genetics.updateAsync = jest.fn()
-            .mockImplementation((data: IGeneticsAttributes): Promise<any> => {
-                return new Promise((resolve, reject): any => {
+            .mockImplementation((data: IGeneticsAttributes): Promise<{attrs: IGeneticsAttributes}> => {
+                return new Promise((resolve): void => {
                     return resolve({attrs: data});
                 });
             });
 
-    const errorExecAsync: jest.Mock<void> = jest.fn((): Promise<void> => {
+    const errorExecAsync: jest.Mock<Promise<void>> = jest.fn((): Promise<void> => {
         return new Promise((): void => {
             throw new Error('An error occured.');
         });
     });
 
-    const successExecAsync: jest.Mock<void> = jest.fn(() => {
+    const successExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
         return {
-            execAsync: jest.fn(() => {
-                return new Promise((resolve) => {
+            execAsync: jest.fn((): ExecSuccess => {
+                return new Promise((resolve): void => {
                     resolve({Items: [dummyData]});
                 });
             })
@@ -107,10 +109,22 @@ describe('Genetics resolver tests.', (): void => {
         };
     });
 
+    Genetics.destroyAsync = jest.fn()
+            .mockImplementationOnce((): Promise<{attrs: IGeneticsAttributes}> => {
+                return new Promise((): void => {
+                    throw new Error('An error occured.');
+                });
+            })
+            .mockImplementationOnce((): Promise<boolean> => {
+                return new Promise((resolve): void => {
+                    return resolve(true);
+                });
+            });
+
     describe('Create tests', (): void => {
         it('should throw an error when the record already exists.', async (): Promise<void> => {
             let response = await geneticsResolver.create(dummyData);
-            expect(response).toEqual('Record already exists.');
+            expect(response[`message`]).toEqual('Record already exists.');
         });
 
         it('should create a new record when there is no error', async (): Promise<void> => {
@@ -126,8 +140,9 @@ describe('Genetics resolver tests.', (): void => {
         });
 
         it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
-            let response = await geneticsResolver.update(dummyData);
-            expect(response).toEqual('No such record found');
+            let response = await geneticsResolver
+                    .update({data_type_user_id: 'abcd', gene: 'XXXXX', source: 'helix', variant: 'qwerty'});
+            expect(response[`message`]).toEqual('No such record found');
         });
     });
 
@@ -138,15 +153,27 @@ describe('Genetics resolver tests.', (): void => {
         });
 
         it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
-            let response = await geneticsResolver.get({data_type_user_id: 'PQR03'});
-            expect(response).toEqual('No such record found');
+            let response = await geneticsResolver.get({data_type_user_id: 'abcd'});
+            expect(response[`message`]).toEqual('No such record found');
+        });
+    });
+
+    describe('Delete tests', (): void => {
+        it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
+            let response = await geneticsResolver.delete({data_type_user_id: 'abcd'});
+            expect(response[`message`]).toEqual('An error occured.');
+        });
+
+        it('should return true when the record is deleted successfully.', async (): Promise<void> => {
+            let response = await geneticsResolver.delete({data_type_user_id: 'PQR03'});
+            expect(response).toEqual(true);
         });
     });
 
     describe('List test', (): void => {
         it('should return an error message if an error occurs.', async (): Promise<void> => {
             let response = await geneticsResolver.list();
-            expect(response).toEqual('An error occured.');
+            expect(response[`message`]).toEqual('An error occured.');
         });
 
         unroll('It should respond with the genetics data list when #paramName is present.', async (
@@ -167,7 +194,7 @@ describe('Genetics resolver tests.', (): void => {
     describe('Tests for the queries.', (): void => {
         unroll('It should call the #resolverName when #queryName is called.', (
                 done: () => void,
-                args: {queryName: string, resolverName: string, params: any}
+                args: {queryName: string, resolverName: string, params: {limit?: number, data_type_user_id?: string}}
         ): void => {
             geneticsResolver[args.resolverName] = jest.fn();
             queries[args.queryName]({}, args.params);
@@ -183,7 +210,11 @@ describe('Genetics resolver tests.', (): void => {
     describe('Tests for the mutations.', (): void => {
         unroll('It should call the #resolverName when #mutationName is called.', (
                 done: () => void,
-                args: {mutationName: string, resolverName: string, params: any}
+                args: {
+                    mutationName: string,
+                    resolverName: string,
+                    params: IGeneticsAttributes | {data_type_user_id?: string}
+                }
         ): void => {
             geneticsResolver[args.resolverName] = jest.fn();
             mutations[args.mutationName]({}, args.params);
@@ -193,6 +224,7 @@ describe('Genetics resolver tests.', (): void => {
             ['mutationName', 'resolverName', 'params'],
             ['createGenetics', 'create', dummyData],
             ['updateGenetics', 'update', dummyData],
+            ['deleteGenetics', 'delete', {data_type_user_id: 'PQR'}],
         ]);
     });
 });

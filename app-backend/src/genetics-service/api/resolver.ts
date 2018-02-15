@@ -16,6 +16,13 @@ interface IListFilters {
     updatedAt?: string; // Should be the ISO date string
 }
 
+interface IListObject {
+    Items: IGeneticsAttributes[];
+    LastEvaluatedKey: {
+        data_type_user_id: string;
+    };
+}
+
 export const geneticsResolver = {
     async create(args: IGeneticsAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
@@ -29,7 +36,7 @@ export const geneticsResolver = {
             geneticsInstance = await Genetics.createAsync({...args}, {overwrite: false});
         } catch (error) {
             console.log('geneticsResolver-create: ', error.message);
-            return error.message;
+            return error;
         }
 
         return geneticsInstance.attrs;
@@ -46,7 +53,7 @@ export const geneticsResolver = {
             geneticsInstance = await Genetics.updateAsync({...args});
         } catch (error) {
             console.log('geneticsResolver-update:', error.message);
-            return error.message;
+            return error;
         }
 
         return geneticsInstance.attrs;
@@ -62,17 +69,17 @@ export const geneticsResolver = {
             }
         } catch (error) {
             console.log('geneticsResolver-get:', error.message);
-            return error.message;
+            return error;
         }
 
         return geneticsInstance.attrs;
     },
 
-    async list(args: IListFilters = {}) {
+    async list(args: IListFilters = {}): Promise<IListObject> {
         const {limit = 15, lastEvaluatedKey, createdAt, updatedAt} = args;
-        let result;
+        let result: IListObject;
         try {
-            let scan: Scan & {execAsync?: () => void} = Genetics.scan().limit(limit);
+            let scan: Scan & {execAsync?: () => IListObject} = Genetics.scan().limit(limit);
 
             if (lastEvaluatedKey) {
                 scan = scan.startKey(lastEvaluatedKey);
@@ -89,11 +96,22 @@ export const geneticsResolver = {
             result = await scan.execAsync();
         } catch (error) {
             console.log('geneticsResolver-list:', error.message);
-            return error.message;
+            return error;
         }
 
         return result;
-    }
+    },
+
+    async delete(args: {data_type_user_id: string}): Promise<boolean> {
+        try {
+            await Genetics.destroyAsync(args.data_type_user_id);
+        } catch (error) {
+            console.log('geneticsResolver-delete:', error.message);
+            return error;
+        }
+
+        return true;
+    },
 };
 
 export const queries = {
@@ -104,4 +122,5 @@ export const queries = {
 export const mutations = {
     createGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.create(args),
     updateGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.update(args),
+    deleteGenetics: (root: any, args: {data_type_user_id: string}) => geneticsResolver.delete(args),
 };

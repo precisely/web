@@ -22,4 +22,5 @@ type Mutation {
             quality: String,
             data_type_user_id: String!
     ): Genetics,
+    deleteGenetics(data_type_user_id: String!): Boolean
 }
