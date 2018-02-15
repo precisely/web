@@ -21,7 +21,7 @@ import {
 } from 'src/components/ReusableComponents';
 import 'src/components/navigationBar/NavigationBar.css';
 
-const logo = require('src/assets/logo-horizontal.png');
+const logo = require('src/assets/precisely-logo.png');
 
 export interface INavigationBarState {
     isOpen: boolean;
@@ -53,7 +53,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>, IN
         
         return (
             <Navbar light sticky="top" expand="md" toggleable="md" className="navbar">
-              <NavbarBrand href="/"><img src={logo} alt="precise.ly" /></NavbarBrand>
+              <NavbarBrand href="/"><img id="brand-logo" src={logo} alt="precise.ly" /></NavbarBrand>
               <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
               <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
