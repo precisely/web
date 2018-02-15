@@ -3,7 +3,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest --no-cache --coverage",
+    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "serverless dynamodb install",
     "deploy-prod": "serverless --stage=production deploy",
