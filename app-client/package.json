@@ -7,12 +7,16 @@
   "private": true,
   "scripts": {
     "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
-    "build": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
+    "build-dev": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/build.js",
+    "build-stage": "./node_modules/.bin/env-cmd ../config/security.env.stage node scripts/build.js",
+    "build-prod": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "compile": "yarn run clean && tsc",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
-    "deploy-prod": "yarn run build && serverless client deploy"
+    "deploy-dev": "yarn run build-dev && serverless client deploy",
+    "deploy-stage": "yarn run build-stage && serverless client deploy -s stage",
+    "deploy-prod": "yarn run build-prod && serverless client deploy -s prod"
   },
   "jest": {
     "collectCoverage": true,

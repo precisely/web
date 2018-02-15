@@ -1,4 +1,4 @@
-service: serverless-graphql-client
+service: precisely-deploy-client
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
@@ -7,11 +7,12 @@ provider:
   runtime: nodejs6.10
   stage: dev
   region: us-east-1
+  profile: ${opt:stage, self:provider.stage}-profile-precisely
 
 plugins:
   - serverless-finch
 
 custom:
   client:
-    bucketName: s3-bucketname-serverless-graphql
+    bucketName: ${opt:stage, self:provider.stage}-precisely-01
     distributionFolder: build
