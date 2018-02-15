@@ -22,5 +22,7 @@
 
 ### Added
 
-- Added AuthRoute Component
-- Added Homepage
+- AuthRoute Component
+- Homepage
+- The UserDataMapper models, schemas and the resolvers.
+- `eslint-config-react-app` to the dev dependencies.

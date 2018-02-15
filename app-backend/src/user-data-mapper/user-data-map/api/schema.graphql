@@ -1,0 +1,6 @@
+type UserDataMap {
+    user_id: String,
+    vendor_data_type_id: Int,
+    vendor_data_type: VendorDatatype,
+    data_type_user_id: String
+}

@@ -1,4 +1,4 @@
-service: serverless-graphql-typescript
+service: precisely
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
@@ -7,6 +7,7 @@ provider:
   runtime: nodejs6.10
   stage: dev
   region: us-east-1
+  profile: ${opt:stage, self:provider.stage}-profile-precisely
   environment:
     SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
     REGION: ${self:provider.region}
@@ -67,21 +68,3 @@ functions:
         path: graphiql
         method: get
         cors: true
-
-resources:
-  Resources:
-    UserTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        KeySchema:
-          -
-            AttributeName: screen_name
-            KeyType: HASH
-        AttributeDefinitions:
-          -
-            AttributeName: screen_name
-            AttributeType: S
-        ProvisionedThroughput:
-          ReadCapacityUnits: 10
-          WriteCapacityUnits: 10
-        TableName: 'users'

@@ -1,11 +1,17 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
 const slsw = require('serverless-webpack');
 
 module.exports = {
   entry: slsw.lib.entries,
   target: 'node',
-  externals: [nodeExternals()],
+  externals: ['pg-native', 'tedious', 'sqlite3', 'mysql2'],
+  plugins: [
+    new webpack.ContextReplacementPlugin(
+            /sequelize(\\|\/)/,
+            path.resolve(__dirname, '../src'
+          )
+  )],
   resolve: {
     extensions: [
       '.js',

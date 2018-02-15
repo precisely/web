@@ -1,0 +1,10 @@
+type VendorDatatype {
+    id: Int,
+    vendor: String,
+    data_type: String
+}
+
+input VendorDatatypeInput {
+    vendor: String,
+    data_type: String
+}
