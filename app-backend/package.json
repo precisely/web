@@ -14,7 +14,7 @@
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": "(__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"
@@ -55,12 +55,12 @@
     "imports-loader": "0.7.1",
     "jest": "21.2.1",
     "jsonfile": "4.0.0",
+    "sequelize-mock": "0.10.2",
     "serverless-dynamodb-local": "0.2.26",
     "serverless-kms-secrets": "1.0.2",
     "serverless-offline": "3.15.3",
     "serverless-webpack": "4.1.0",
-    "sequelize-mock": "0.10.2",
-    "ts-jest": "22.0.1",
+    "ts-jest": "^22.0.4",
     "ts-loader": "3.3.0",
     "typescript": "2.6.2",
     "unroll": "1.5.0",
