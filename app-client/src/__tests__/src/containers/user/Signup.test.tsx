@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, ISignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {SignupLoginContainer} from 'src/components/PageContent';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 
 const unroll = require('unroll');

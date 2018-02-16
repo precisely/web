@@ -11,9 +11,11 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, FormText} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {formButton, removeBorderRadius, header} from 'src/constants/styleGuide';
 
 export interface IForgotPasswordState {
     email?: string;
@@ -64,28 +66,35 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
         const {isLoading, email} = this.state;
 
         return (
-            <SignupLoginContainer>
-                <Form onSubmit={this.submitForm}>
-                    <FormGroup style={formGroup}>
-                        <FormText color="muted">
-                            Please enter the email you use for your account.<br/>
-                            We will send a verification code on your email.
-                        </FormText>
-                        <Input
-                                type="email"
-                                id="email"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Submit'}
-                    </Button>
-                </Form>
-            </SignupLoginContainer>
+            <div>
+                <NavigationBar {...this.props} />
+                <div className="mx-auto" style={{width: '500px'}}>
+                    <h1 className="mt-5 mb-4" style={header}>Forgot password</h1>
+                    <PageContent>
+                        <Form onSubmit={this.submitForm}>
+                            <FormGroup style={formGroup}>
+                                <FormText color="muted">
+                                    Please enter the email you use for your account.<br/>
+                                    We will send a verification code on your email.
+                                </FormText>
+                                <Input
+                                        style={removeBorderRadius}
+                                        type="email"
+                                        id="email"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <Button style={formButton} disabled={isLoading} active={isLoading}>
+                                {isLoading ? 'Please wait...' : 'Submit'}
+                            </Button>
+                        </Form>
+                    </PageContent>
+                </div>
+            </div>
         );
     }
 }

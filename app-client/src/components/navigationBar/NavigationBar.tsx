@@ -28,15 +28,13 @@ export interface INavigationBarState {
 }
 
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<void>, INavigationBarState> {
+export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, INavigationBarState> {
     state = {
         isOpen: false
     };
 
     toggle = (): void => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
+        this.setState({isOpen: !this.state.isOpen});
     }
 
     handleClick = (loggedIn: boolean): void => {
@@ -50,23 +48,23 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>, IN
 
     render() {
         const loggedIn: boolean = isLoggedIn();
-        
+
         return (
             <Navbar light sticky="top" expand="md" toggleable="md" className="navbar">
-              <NavbarBrand href="/"><img id="brand-logo" src={logo} alt="precise.ly" /></NavbarBrand>
-              <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
-              <Collapse isOpen={this.state.isOpen} navbar>
-                <Nav className="ml-auto" navbar>
-                  <NavItem className="pr-4">
-                    <NavLink href="/components/">ABOUT US</NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink style={{cursor: 'pointer'}} onClick={() => this.handleClick(loggedIn)}>
-                      {loggedIn ? 'LOG OUT' : 'LOG IN'}
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-              </Collapse>
+                <NavbarBrand href="/"><img id="brand-logo" src={logo} alt="precise.ly" /></NavbarBrand>
+                <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
+                <Collapse isOpen={this.state.isOpen} navbar>
+                    <Nav className="ml-auto" navbar>
+                        <NavItem className="pr-4">
+                            <NavLink href="/components/">ABOUT US</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick(loggedIn)}>
+                                {loggedIn ? 'LOG OUT' : 'LOG IN'}
+                            </NavLink>
+                        </NavItem>
+                    </Nav>
+                </Collapse>
             </Navbar>
         );
     }

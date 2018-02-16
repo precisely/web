@@ -11,9 +11,11 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {signup} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {formButton, removeBorderRadius, inputStyle, header} from 'src/constants/styleGuide';
 
 export interface ISignupState {
     email?: string;
@@ -85,49 +87,58 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
         const {isLoading, email, password, confirmPassword} = this.state;
 
         return (
-            <SignupLoginContainer>
-                <Form id="signupForm" onSubmit={this.submitForm}>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="email"
-                                id="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="password"
-                                id="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Re-enter your password"
-                                value={confirmPassword}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Signup'}
-                    </Button>
-                    <div>
-                        <Link to="/login" style={linkFontSize}>Already have an account? Login here</Link>
+            <div>
+                <NavigationBar {...this.props} />
+                <div className="mx-auto" style={{width: '500px'}}>
+                    <h1 className="mt-5 mb-4" style={header}>Sign Up</h1>
+                    <PageContent>
+                        <Form id="signupForm" onSubmit={this.submitForm}>
+                            <FormGroup style={formGroup} className="mb-0">
+                                <Input
+                                        style={removeBorderRadius}
+                                        type="email"
+                                        id="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={formGroup} className="mb-0">
+                                <Input
+                                        style={inputStyle}
+                                        type="password"
+                                        id="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={formGroup}>
+                                <Input
+                                        style={inputStyle}
+                                        type="password"
+                                        id="confirmPassword"
+                                        placeholder="Re-enter your password"
+                                        value={confirmPassword}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <Button style={formButton} disabled={isLoading} active={isLoading}>
+                                {isLoading ? 'Please wait...' : 'Signup'}
+                            </Button>
+                        </Form>
+                    </PageContent>
+                    <div style={[linkFontSize, {textAlign: 'center'}]} className="mt-4">
+                        Already have an account? <Link to="/login">Login</Link>
                     </div>
-                </Form>
-            </SignupLoginContainer>
+                </div>
+            </div>
         );
     }
 }

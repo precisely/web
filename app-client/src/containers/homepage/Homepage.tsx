@@ -9,11 +9,10 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Footer} from 'src/components/Footer';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Container, Col} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {HelveticaFont} from 'src/constants/styleGuide';
+import {helveticaFont} from 'src/constants/styleGuide';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
@@ -110,7 +109,6 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
                         </div>
                     </Container>
                 </div>
-                <Footer />
             </div>
         );
     }
@@ -143,7 +141,7 @@ const parallaxChildren: CSS = {
 };
 
 const headingStyle: CSS = {
-    ...HelveticaFont, 
+    ...helveticaFont,
     fontWeight: 200
 };
 

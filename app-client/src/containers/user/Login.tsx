@@ -9,11 +9,14 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {login} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {formButton, removeBorderRadius, inputStyle} from 'src/constants/styleGuide';
+import {header} from 'src/constants/styleGuide';
 
 export interface ILoginState {
     email?: string;
@@ -68,49 +71,65 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
         const {isLoading, email, password} = this.state;
 
         return (
-            <SignupLoginContainer>
-                <Form id="loginForm" onSubmit={this.submitForm}>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="email"
-                                id="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="password"
-                                id="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <Link style={linkFontSize} to="/forgot-password">Forgot Password?</Link>
-                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Login'}
-                    </Button>
-                    <div>
-                        <Link style={linkFontSize} to="/signup">
-                            Don't have account? Sign up here
-                        </Link>
+            <div>
+                <NavigationBar {...this.props} />
+                <div className="mx-auto" style={{width: '500px'}}>
+                    <h1 className="mt-5 mb-4" style={header}>Welcome back</h1>
+                    <PageContent>
+                        <Form id="loginForm" onSubmit={this.submitForm}>
+                            <FormGroup className="mb-0">
+                                <Input
+                                        style={removeBorderRadius}
+                                        type="email"
+                                        id="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup>
+                                    <Input
+                                            style={passwordStyle}
+                                            type="password"
+                                            id="password"
+                                            placeholder="Password"
+                                            value={password}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                                this.handleInputChange(e.target.id, e.target.value);
+                                            }}
+                                    />
+                                    <InputGroupAddon style={inputAddon}>
+                                        <Link style={linkFontSize} to="/forgot-password">Forgot Password?</Link>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                            </FormGroup>
+                            <Button style={formButton} disabled={isLoading} active={isLoading}>
+                                {isLoading ? 'Please wait...' : 'Login'}
+                            </Button>
+                        </Form>
+                    </PageContent>
+                    <div style={[linkFontSize, {textAlign: 'center'}]} className="mt-4">
+                        Don't have account? <Link to="/signup">Sign Up</Link>
                     </div>
-                </Form>
-            </SignupLoginContainer>
+                </div>
+            </div>
         );
     }
 }
 
-const formGroup: CSS = {
-    textAlign: 'left',
-};
-
 const linkFontSize: CSS = {
     fontSize: '14px',
+};
+
+const passwordStyle: CSS = {
+    ...inputStyle,
+    borderRight: 'none',
+};
+
+const inputAddon: CSS = {
+    ...inputStyle,
+    backgroundColor: '#fff',
 };

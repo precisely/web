@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ResetPassword, IResetPasswordState} from 'src/containers/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {resetPassword} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {SignupLoginContainer} from 'src/components/PageContent';
 import {showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 

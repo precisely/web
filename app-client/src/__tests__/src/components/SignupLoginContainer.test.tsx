@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {SignupLoginContainer} from 'src/components/PageContent';
 import {Row, Col} from 'src/components/ReusableComponents';
 
 const unroll = require('unroll');

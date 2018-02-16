@@ -11,9 +11,11 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {resetPassword} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {formButton, inputStyle, removeBorderRadius, header} from 'src/constants/styleGuide';
 
 export interface IResetPasswordState {
     verificationCode?: string;
@@ -77,49 +79,58 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
         const {isLoading, verificationCode, newPassword, confirmPassword} = this.state;
 
         return (
-            <SignupLoginContainer>
-                <Form onSubmit={this.submitForm}>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                required
-                                type="text"
-                                id="verificationCode"
-                                placeholder="Enter your verification code"
-                                value={verificationCode}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                required
-                                type="password"
-                                id="newPassword"
-                                placeholder="Enter your new password"
-                                value={newPassword}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                required
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Re-enter your new password"
-                                value={confirmPassword}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Reset Password'}
-                    </Button>
-                </Form>
-            </SignupLoginContainer>
+            <div>
+                <NavigationBar {...this.props} />
+                <div className="mx-auto" style={{width: '500px'}}>
+                    <h1 className="mt-5 mb-4" style={header}>Reset password</h1>
+                    <PageContent>
+                        <Form onSubmit={this.submitForm}>
+                            <FormGroup style={formGroup} className="mb-0">
+                                <Input
+                                        style={removeBorderRadius}
+                                        required
+                                        type="text"
+                                        id="verificationCode"
+                                        placeholder="Enter your verification code"
+                                        value={verificationCode}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={formGroup} className="mb-0">
+                                <Input
+                                        style={inputStyle}
+                                        required
+                                        type="password"
+                                        id="newPassword"
+                                        placeholder="Enter your new password"
+                                        value={newPassword}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={formGroup}>
+                                <Input
+                                        style={inputStyle}
+                                        required
+                                        type="password"
+                                        id="confirmPassword"
+                                        placeholder="Re-enter your new password"
+                                        value={confirmPassword}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <Button style={formButton} disabled={isLoading} active={isLoading}>
+                                {isLoading ? 'Please wait...' : 'Reset Password'}
+                            </Button>
+                        </Form>
+                    </PageContent>
+                </div>
+            </div>
         );
     }
 }
