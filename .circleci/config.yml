@@ -1,0 +1,195 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+
+defaults: &defaults
+    docker:
+        # specify the version you desire here
+        - image: circleci/node:6.10
+        
+        # Specify service dependencies here if necessary
+        # CircleCI maintains a library of pre-built images
+        # documented at https://circleci.com/docs/2.0/circleci-images/
+        # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+version: 2
+jobs:
+    build-frontend:
+        <<: *defaults
+        steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+            - v1-dependencies-{{ checksum "app-client/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+        - run: 
+            name: Installing Dependencies
+            command: cd app-client && yarn install
+
+        - save_cache:
+            paths:
+                - node_modules
+                - app-client/node_modules
+            key: v1-dependencies-{{ checksum "app-client/package.json" }}
+
+        # run frontend tests!
+        - run:
+            name: Frontend Tests
+            command: cd app-client && yarn test
+
+        # run linters!
+        - run:
+            name: TSLint
+            command: cd app-client && yarn tslint
+        - run:
+            name: ESLint
+            command: cd app-client && yarn eslint
+
+    build-backend:
+        <<: *defaults
+        steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+            - v1-dependencies-{{ checksum "app-backend/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+        - run: 
+            name: Installing Dependencies
+            command: cd app-backend && yarn install
+
+        - save_cache:
+            paths:
+                - node_modules
+                - app-backend/node_modules
+            key: v1-dependencies-{{ checksum "app-backend/package.json" }}
+
+        # run backend tests!
+        - run: 
+            name: Backend Tests
+            command: cd app-backend && yarn test
+
+        # run linters!
+        - run:
+            name: TSLint
+            command: cd app-backend && yarn tslint
+        - run:
+            name: ESLint
+            command: cd app-backend && yarn eslint
+            
+    stage-deploy-frontend:
+        <<: *defaults
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "app-client/package.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+            - run:
+                name: Set AWS Profile
+                command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+            - run:
+                name: Deploying frontend on Staging
+                command: cd app-client && yarn deploy-stage
+
+    stage-deploy-backend:
+        <<: *defaults
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "app-backend/package.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+            - run:
+                name: Set AWS Profile
+                command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+            - run:
+                name: Deploying backend on Staging
+                command: cd app-backend && yarn deploy-stage
+
+    prod-deploy-frontend:
+        <<: *defaults
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "app-client/package.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+            - run:
+                name: Set AWS Profile
+                command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n prod-profile-precisely --key ${AWS_ACCESS_KEY_PROD} --secret ${AWS_SECRET_KEY_PROD}
+            - run:
+                name: Deploying frontend on Production
+                command: cd app-client && yarn deploy-prod
+
+    prod-deploy-backend:
+        <<: *defaults
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "app-backend/package.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+            - run:
+                name: Set AWS Profile
+                command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n prod-profile-precisely --key ${AWS_ACCESS_KEY_PROD} --secret ${AWS_SECRET_KEY_PROD}
+            - run:
+                name: Deploying backend on Production
+                command: cd app-backend && yarn deploy-prod
+
+workflows:
+    version: 2
+    build-test-and-deploy:
+        jobs:
+            - build-backend
+            - build-frontend
+
+            # run this job only when dev branch is build
+            - stage-deploy-backend:
+                filters:
+                    branches:
+                        only:
+                            - dev
+                requires:
+                    - build-backend
+                    - build-frontend
+
+            - stage-deploy-frontend:
+                filters:
+                    branches:
+                        only:
+                            - dev
+                requires:
+                    - stage-deploy-backend
+
+            # run this job only when master branch is build
+            - prod-deploy-backend:
+                filters:
+                    branches:
+                        only:
+                            - master
+                requires:
+                    - build-backend
+                    - build-frontend
+                    
+            - prod-deploy-frontend:
+                filters:
+                    branches:
+                        only:
+                            - master
+                requires:
+                    - prod-deploy-backend

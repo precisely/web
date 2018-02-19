@@ -23,7 +23,7 @@ export const UserDataMap = () => UserDataMapMock;
 
 UserDataMapMock.findAll = jest.fn((): IUserDataMapInstance[] => {
     return [UserDataMapMock.build()];
-})
+});
 
 UserDataMapMock.create = jest.fn((args: {user_id: string, vendor_data_type_id: number}): PromiseLike<void> => {
     return new Promise((resolve, reject): void => {
@@ -43,7 +43,7 @@ UserDataMapMock.findOne = jest.fn((
             resolve(UserDataMapMock.build());
         } else if (args.where.data_type_user_id === 'invalid') {
             resolve();
-        } else if (args.where.user_id === 'test' && args.where.vendor_data_type_id === 1){
+        } else if (args.where.user_id === 'test' && args.where.vendor_data_type_id === 1) {
             resolve(UserDataMapMock.build());
         } else {
             reject(new Error('mock-findOne error'));
@@ -51,4 +51,4 @@ UserDataMapMock.findOne = jest.fn((
     });
 });
 
-UserDataMapMock.associate = (): void => {};
+UserDataMapMock.associate = (): void => {}; // tslint:disable-line:no-empty

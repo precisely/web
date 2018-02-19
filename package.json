@@ -8,11 +8,17 @@
     "setup": "npm install -g serverless && nvm install v6.10.3",
     "server": "cd app-backend && yarn start",
     "client": "cd app-client && yarn start",
-    "all": "yarn run server | yarn run client"
+    "all": "yarn run server | yarn run client",
+    "test": "cd app-backend && yarn test && cd ../app-client && yarn test",
+    "tslint": "cd app-backend && yarn tslint && cd ../app-client && yarn tslint",
+    "eslint": "cd app-backend && yarn eslint && cd ../app-client && yarn eslint",
+    "deploy-dev": "cd app-backend && yarn deploy-dev && cd ../app-client && yarn deploy-dev",
+    "deploy-stage": "cd app-backend && yarn deploy-stage && cd ../app-client && yarn deploy-stage",
+    "deploy-prod": "cd app-backend && yarn deploy-prod && cd ../app-client && yarn deploy-prod"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/precisely/web"
+    "url": "https://github.com/precisely/web" 
   },
   "dependencies": {},
   "devDependencies": {}

@@ -34,7 +34,7 @@ describe('Tests for VendorDatatypeResolve', (): void => {
             expect(response.message).toEqual('No such vendor found');
         });
 
-    })
+    });
 
     describe('tests for create', (): void => {
 
@@ -48,7 +48,7 @@ describe('Tests for VendorDatatypeResolve', (): void => {
             let response = await VendorDatatypeResolver.create({vendor: 'test'});
             expect(response.message).toEqual('mock-create error');
         });
-    })
+    });
 
     describe('tests for update', (): void => {
 
@@ -62,7 +62,7 @@ describe('Tests for VendorDatatypeResolve', (): void => {
             let response = await VendorDatatypeResolver.update({id: -1, data: {vendor: 'test'}});
             expect(response.message).toEqual('No such vendor found');
         });
-    })
+    });
 
     describe('tests for delete', (): void => {
 
@@ -76,5 +76,5 @@ describe('Tests for VendorDatatypeResolve', (): void => {
             let response = await VendorDatatypeResolver.delete({id: -1});
             expect(response.message).toEqual('Couldn\'t be deleted');
         });
-    })
-})
+    });
+});
