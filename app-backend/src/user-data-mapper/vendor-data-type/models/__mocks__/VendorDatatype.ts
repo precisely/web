@@ -14,10 +14,10 @@ const DBConnectionMock = new SequelizeMock();
 export const VendorDatatypeMock = DBConnectionMock.define('vendorDatatype', {
         vendor: 'test',
         data_type: 'test',
-    }, {
+    }, { 
         instanceMethods: {
             update: jest.fn((): void => VendorDatatypeMock.build()),
-            destroy: jest.fn((): void => {}),
+            destroy: jest.fn(),
         },
         paranoid: true
     });
@@ -25,7 +25,7 @@ export const VendorDatatype = () => VendorDatatypeMock;
 
 VendorDatatypeMock.findAll = jest.fn((): IVendorDatatypeInstance[] => {
         return [VendorDatatypeMock.build()];
-    })
+    });
 
 VendorDatatypeMock.findById = jest.fn((id: number): PromiseLike<IVendorDatatypeInstance> => {
     return new Promise((resolve: (instance?: IVendorDatatypeInstance) => void, reject: () => void): void => {
@@ -37,9 +37,9 @@ VendorDatatypeMock.findById = jest.fn((id: number): PromiseLike<IVendorDatatypeI
     });
 });
 
-VendorDatatypeMock.create = jest.fn((
-        args: {vendor: string, data_type: string}
-    ): PromiseLike<IVendorDatatypeInstance> => {
+VendorDatatypeMock.create = jest.fn((args: {vendor: string, data_type: string}): 
+        PromiseLike<IVendorDatatypeInstance> => {
+
     return new Promise((resolve: (instance: IVendorDatatypeInstance) => void, reject: (error: Error) => void): void => {
         if (args.vendor && args.data_type) {
             resolve(VendorDatatypeMock.build());
@@ -59,4 +59,4 @@ VendorDatatypeMock.destroy = jest.fn((args: {where: {id: number}}): PromiseLike<
     });
 });
 
-VendorDatatypeMock.associate = () => {};
+VendorDatatypeMock.associate = () => {}; // tslint:disable-line:no-empty

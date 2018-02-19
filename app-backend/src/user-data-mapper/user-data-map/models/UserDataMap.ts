@@ -46,7 +46,7 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
 
     // Add your associations here
     UserDataMapAttributes[`associate`] = (
-            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}
+            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>} // tslint:disable-line:no-any
         ): void => {
         UserDataMapAttributes.belongsTo(
                 models[`VendorDatatype`],

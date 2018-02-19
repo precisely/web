@@ -44,7 +44,7 @@ export const VendorDatatype = (sequelize: Sequelize.Sequelize):
 
     // Add your associations here
     VendorDatatypeAttributes[`associate`] = (
-            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>}
+            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>} // tslint:disable-line:no-any
         ): void => {
         VendorDatatypeAttributes.hasOne(models[`UserDataMap`], {foreignKey: 'vendor_data_type_id'});
     };
