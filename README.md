@@ -53,6 +53,9 @@ This will run both concurrently but is not recommended when you want to view bac
 
 ## Developer Notes
 
+* Branching structure to be followed:
+    * https://graysonkoonce.com/stacked-pull-requests-keeping-github-diffs-small/
+
 * All the secrets are managed using AWS KMS. To know more about how to encrypt new secrets or update/use them, read [wiki](https://github.com/precisely/web/wiki/AWS-Key-Management#usage).
 
 * Currently available environment variables are listed [here](https://github.com/precisely/web/wiki/AWS-Key-Management#list-of-the-environment-variables-stored-currently-for-reference). Please do not forget to update the list if (and when) you add new variables.
