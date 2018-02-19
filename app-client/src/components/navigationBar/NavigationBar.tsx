@@ -56,7 +56,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavItem className="pr-4">
-                            <NavLink href="/components/">ABOUT US</NavLink>
+                            <NavLink href="/about-us">ABOUT US</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick(loggedIn)}>

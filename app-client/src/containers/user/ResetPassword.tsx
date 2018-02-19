@@ -15,7 +15,7 @@ import {PageContent} from 'src/components/PageContent';
 import {resetPassword} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, inputStyle, removeBorderRadius, header} from 'src/constants/styleGuide';
+import {formButton, inputStyle, removeBorderRadius, header, loginAndSignupPanel} from 'src/constants/styleGuide';
 
 export interface IResetPasswordState {
     verificationCode?: string;
@@ -81,7 +81,7 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
         return (
             <div>
                 <NavigationBar {...this.props} />
-                <div className="mx-auto" style={{width: '500px'}}>
+                <div className="mx-auto" style={loginAndSignupPanel}>
                     <h1 className="mt-5 mb-4" style={header}>Reset password</h1>
                     <PageContent>
                         <Form onSubmit={this.submitForm}>

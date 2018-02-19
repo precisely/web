@@ -9,23 +9,18 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Homepage} from 'src/containers/homepage/Homepage';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {Container} from 'src/components/ReusableComponents';
-
-const scrollParallax = require('react-scroll-parallax');
-const Parallax = scrollParallax.Parallax;
-const ParallaxProvider = scrollParallax.ParallaxProvider;
+import {PageContent} from 'src/components/PageContent';
+import {Row, Col} from 'src/components/ReusableComponents';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Homepage tests.', (): void => {
+describe('SignupLoginContainer tests.', (): void => {
 
     const componentTree: ShallowWrapper = shallow(
-        <Homepage />
+        <PageContent>I am a dummy child.</PageContent>
     );
 
     unroll('it should display #count #elementName elements', (
@@ -36,16 +31,11 @@ describe('Homepage tests.', (): void => {
         done();
     }, [ // tslint:disable-next-line
         ['elementName', 'element', 'count'],
-        ['NavigationBar', NavigationBar, 1],
-        ['ParallaxProvider', ParallaxProvider, 1],
-        ['Container', Container, 2],
-        ['Parallax', Parallax, 1],
-        ['img', 'img', 5],
-        ['div', 'div', 9],
-        ['h1', 'h1', 1],
-        ['h3', 'h3', 3],
-        ['h4', 'h4', 1],
-        ['p', 'p', 6],
+        ['Row', Row, 1],
+        ['Col', Col, 1],
     ]);
 
+    it('should render the children correctly.', (): void => {
+        expect(componentTree.contains('I am a dummy child.')).toBe(true);
+    });
 });

@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ForgotPassword, IForgotPasswordState} from 'src/containers/user/ForgotPassword';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {getResetPasswordCode} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/PageContent';
+import {PageContent} from 'src/components/PageContent';
 import {showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -70,7 +70,7 @@ describe('Tests for ForgotPassword', (): void => {
         ['Button', Button, 1],
         ['FormGroup', FormGroup, 1],
         ['Input', Input, 1],
-        ['SignupLoginContainer', SignupLoginContainer, 1]
+        ['SignupLoginContainer', PageContent, 1]
     ]);
 
     it('should not submit the form when the email is not present.', (): void => {

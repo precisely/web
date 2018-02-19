@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Login, ILoginState} from 'src/containers/user/Login';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {login} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/PageContent';
+import {PageContent} from 'src/components/PageContent';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -81,7 +81,7 @@ describe('Tests for Login', (): void => {
         ['FormGroup', FormGroup, 2],
         ['Input', Input, 2],
         ['Link', Link, 2],
-        ['SignupLoginContainer', SignupLoginContainer, 1]
+        ['SignupLoginContainer', PageContent, 1]
     ]);
 
     it('should not submit the form when the username and password are not valid.', (): void => {

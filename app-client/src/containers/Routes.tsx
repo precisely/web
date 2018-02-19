@@ -76,6 +76,7 @@ export class Routes extends React.Component {
                         exact
                         component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
                 />
+                <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
                 <Route path="*" component={LoadComponent('NotFound')} />
             </Switch>
         );

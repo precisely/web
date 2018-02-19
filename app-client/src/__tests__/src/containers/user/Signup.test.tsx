@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, ISignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/PageContent';
+import {PageContent} from 'src/components/PageContent';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 
 const unroll = require('unroll');
@@ -82,7 +82,7 @@ describe('Tests for Signup', (): void => {
         ['FormGroup', FormGroup, 3],
         ['Input', Input, 3],
         ['Link', Link, 1],
-        ['SignupLoginContainer', SignupLoginContainer, 1]
+        ['SignupLoginContainer', PageContent, 1]
     ]);
 
     it('should not submit the form when the username and password are not valid.', (): void => {

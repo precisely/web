@@ -15,7 +15,7 @@ import {PageContent} from 'src/components/PageContent';
 import {signup} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, inputStyle, header} from 'src/constants/styleGuide';
+import {formButton, removeBorderRadius, inputStyle, header, loginAndSignupPanel} from 'src/constants/styleGuide';
 
 export interface ISignupState {
     email?: string;
@@ -89,7 +89,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
         return (
             <div>
                 <NavigationBar {...this.props} />
-                <div className="mx-auto" style={{width: '500px'}}>
+                <div className="mx-auto" style={loginAndSignupPanel}>
                     <h1 className="mt-5 mb-4" style={header}>Sign Up</h1>
                     <PageContent>
                         <Form id="signupForm" onSubmit={this.submitForm}>

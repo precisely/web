@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ResetPassword, IResetPasswordState} from 'src/containers/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {resetPassword} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/PageContent';
+import {PageContent} from 'src/components/PageContent';
 import {showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -87,7 +87,7 @@ describe('Tests for ResetPassword', (): void => {
             ['Button', Button, 1],
             ['FormGroup', FormGroup, 3],
             ['Input', Input, 3],
-            ['SignupLoginContainer', SignupLoginContainer, 1]
+            ['SignupLoginContainer', PageContent, 1]
         ]);
 
         it('should not submit the form when the passwords are not equal.', (): void => {

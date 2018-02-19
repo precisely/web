@@ -15,8 +15,7 @@ import {PageContent} from 'src/components/PageContent';
 import {login} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, inputStyle} from 'src/constants/styleGuide';
-import {header} from 'src/constants/styleGuide';
+import {formButton, removeBorderRadius, inputStyle, loginAndSignupPanel, header} from 'src/constants/styleGuide';
 
 export interface ILoginState {
     email?: string;
@@ -73,7 +72,7 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
         return (
             <div>
                 <NavigationBar {...this.props} />
-                <div className="mx-auto" style={{width: '500px'}}>
+                <div className="mx-auto" style={loginAndSignupPanel}>
                     <h1 className="mt-5 mb-4" style={header}>Welcome back</h1>
                     <PageContent>
                         <Form id="loginForm" onSubmit={this.submitForm}>

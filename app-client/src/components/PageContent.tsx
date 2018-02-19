@@ -16,7 +16,7 @@ export interface IPageContentProps {
 }
 
 export let PageContent: React.StatelessComponent<IPageContentProps> = props => (
-    <Row style={content} className="p-5 mx-auto">
+    <Row style={content} className="p-lg-5 p-sm-1 mx-auto">
         <Col style={formColumn} className="m-5">
             {props.children}
         </Col>
@@ -28,12 +28,9 @@ PageContent = Radium(PageContent);
 const formColumn: CSS = {
     textAlign: 'center',
     padding: 0,
-    '@media screen and (min-width: 600px)': {
-        minWidth: '250px',
-    },
 };
 
 const content: CSS = {
     backgroundColor: '#fff',
-    boxShadow: '0 1px 30px -4px rgba(192, 79, 127, 0.51)',
+    boxShadow: '0 1px 15px -4px rgba(192, 79, 127, 0.51)',
 };

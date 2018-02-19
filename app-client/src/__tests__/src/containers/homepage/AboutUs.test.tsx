@@ -8,20 +8,20 @@
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
+import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {SignupLoginContainer} from 'src/components/PageContent';
-import {Row, Col} from 'src/components/ReusableComponents';
+import {AboutUs} from 'src/containers/homepage/AboutUs';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {PageContent} from 'src/components/PageContent';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('SignupLoginContainer tests.', (): void => {
+describe('AboutUs tests.', (): void => {
 
-    const componentTree: ShallowWrapper = shallow(
-        <SignupLoginContainer>I am a dummy child.</SignupLoginContainer>
-    );
+    const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<AboutUs />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
@@ -31,12 +31,10 @@ describe('SignupLoginContainer tests.', (): void => {
         done();
     }, [ // tslint:disable-next-line
         ['elementName', 'element', 'count'],
-        ['div', 'div', 1],
-        ['Row', Row, 1],
-        ['Col', Col, 1],
+        ['NavigationBar', NavigationBar, 1],
+        ['h1', 'h1', 1],
+        ['h5', 'h5', 1],
+        ['p', 'p', 5],
+        ['PageContent', PageContent, 1]
     ]);
-
-    it('should render the children correctly.', (): void => {
-        expect(componentTree.contains('I am a dummy child.')).toBe(true);
-    });
 });

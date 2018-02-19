@@ -49,5 +49,12 @@ export const container: CSS = {
 
 export const header: CSS = {
     textAlign: 'center',
-    fontWeight: 100,
+    fontWeight: 200,
+};
+
+export const loginAndSignupPanel: CSS = {
+    width: '500px',
+    '@media screen and (max-width: 700px)': {
+        width: '345px',
+    },
 };

@@ -15,7 +15,7 @@ import {PageContent} from 'src/components/PageContent';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, header} from 'src/constants/styleGuide';
+import {formButton, removeBorderRadius, header, loginAndSignupPanel} from 'src/constants/styleGuide';
 
 export interface IForgotPasswordState {
     email?: string;
@@ -68,7 +68,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
         return (
             <div>
                 <NavigationBar {...this.props} />
-                <div className="mx-auto" style={{width: '500px'}}>
+                <div className="mx-auto" style={loginAndSignupPanel}>
                     <h1 className="mt-5 mb-4" style={header}>Forgot password</h1>
                     <PageContent>
                         <Form onSubmit={this.submitForm}>
