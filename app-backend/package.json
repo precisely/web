@@ -6,8 +6,9 @@
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless offline start",
     "postinstall": "./node_modules/.bin/serverless dynamodb install",
-    "deploy-prod": "./node_modules/.bin/serverless --stage=production deploy",
-    "deploy-stage": "./node_modules/.bin/serverless --stage=stage deploy",
+    "deploy-dev": "./node_modules/.bin/serverless deploy -s dev",
+    "deploy-stage": "./node_modules/.bin/serverless deploy -s stage",
+    "deploy-prod": "./node_modules/.bin/serverless deploy -s prod",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src"
   },
