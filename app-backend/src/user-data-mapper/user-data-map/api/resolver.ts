@@ -10,59 +10,48 @@ import {sequelize} from '../../sequelize';
 import {IUserDataMapInstance} from '../models/UserDataMap';
 
 const UserDataMap = sequelize[`UserDataMap`];
-const VendorDatatype = sequelize[`VendorDatatype`];
+
+export interface IListFilters {
+    limit?: number;
+    offset?: number;
+}
 
 export const UserDataMapResolver = {
 
-    async list() {
-        return await UserDataMap.findAll({include: [{model: VendorDatatype, as: 'vendor_data_type'}]});
-    },
-
-    async create(args: {user_id: string, vendor_data_type_id: number}) {
-        let userDataMapInstance: IUserDataMapInstance;
-        const {user_id, vendor_data_type_id} = args;
+    async list(args: IListFilters = {}) {
+        let userDataMapInstances: IUserDataMapInstance[];
+        const {limit = 15, offset = 0} = args;
 
         try {
-            userDataMapInstance = await UserDataMap.create({
-                user_id,
-                vendor_data_type_id,
-            });
+            userDataMapInstances = await UserDataMap.findAll({limit, offset});
         } catch (error) {
-            console.log('UserDataMap-Create:', error.message);
+            console.log('UserDataMap-list:', error.message);
             return error;
         }
-
-        return userDataMapInstance.get({plain: true});
+        
+        return await userDataMapInstances;
     },
 
-    async getUserDataMap(args: {data_type_user_id: string, user_id: string, vendor_data_type_id: string}) {
+    async findOrCreate(args: {user_id: string, vendor_data_type: string}) {
         let userDataMapInstance: IUserDataMapInstance;
-        const {data_type_user_id, user_id, vendor_data_type_id} = args;
-
-        const where = {};
-
-        if (data_type_user_id) {
-            where[`data_type_user_id`] = data_type_user_id;
-        } else if (user_id && vendor_data_type_id) {
-            where[`user_id`] = user_id;
-            where[`vendor_data_type_id`] = vendor_data_type_id;
-        } else {
-            return new Error('Missing Parameters. See documentation for details.');
-        }
+        const {user_id, vendor_data_type} = args;
 
         try {
-            userDataMapInstance = await UserDataMap.findOne({
-                where,
-                include: [{model: VendorDatatype, as: 'vendor_data_type'}]
-            });
-            if (!userDataMapInstance) {
-                throw new Error('No such user data found');
-            }
+            userDataMapInstance = await UserDataMap
+                .findCreateFind({
+                    where: {
+                        user_id,
+                        vendor_data_type,
+                    }
+                })
+                .spread((user: IUserDataMapInstance, created: boolean): IUserDataMapInstance => {
+                    return user;
+                });
         } catch (error) {
-            console.log('UserDataMap-getUserDataMap:', error.message);
+            console.log('UserDataMap-findOrCreate:', error.message);
             return error;
         }
-
+        
         return userDataMapInstance.get({plain: true});
-    },
+    }
 };

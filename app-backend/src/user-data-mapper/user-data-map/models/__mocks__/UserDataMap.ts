@@ -16,39 +16,30 @@ export const UserDataMapMock = DBConnectionMock.define(
         {
             user_id: 'test',
             data_type_user_id: 'dummyId',
-            vendor_data_type_id: 1
+            vendor_data_type: 'test'
         },
         {});
+
 export const UserDataMap = () => UserDataMapMock;
 
-UserDataMapMock.findAll = jest.fn((): IUserDataMapInstance[] => {
-    return [UserDataMapMock.build()];
-});
-
-UserDataMapMock.create = jest.fn((args: {user_id: string, vendor_data_type_id: number}): PromiseLike<void> => {
+UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): PromiseLike<IUserDataMapInstance[]> => {
     return new Promise((resolve, reject): void => {
-        if (args.user_id === 'test') {
-            resolve(UserDataMapMock.build());
+        if (params.limit > 0) {
+            resolve([UserDataMapMock.build()]);
         } else {
-            reject(new Error('mock-create error'));
+            reject(new Error('mock-findAll error'));
         }
     });
 });
 
-UserDataMapMock.findOne = jest.fn((
-        args: {where: {data_type_user_id: string, user_id: string, vendor_data_type_id: string}}
-    ): PromiseLike<void> => {
-    return new Promise((resolve, reject): void => {
-        if (args.where.data_type_user_id === 'test') {
-            resolve(UserDataMapMock.build());
-        } else if (args.where.data_type_user_id === 'invalid') {
-            resolve();
-        } else if (args.where.user_id === 'test' && args.where.vendor_data_type_id === 1) {
-            resolve(UserDataMapMock.build());
-        } else {
-            reject(new Error('mock-findOne error'));
-        }
-    });
+UserDataMapMock.findCreateFind = jest.fn((params: {where: {user_id: string}}) => {
+    return {
+        spread: (): Promise<IUserDataMapInstance> => new Promise((resolve, reject): void => {
+            if (params.where.user_id === 'dummyId') {
+                resolve(UserDataMapMock.build());
+            } else {
+                reject(new Error('mock-findCreateFind error'));
+            }
+        })
+    };
 });
-
-UserDataMapMock.associate = (): void => {}; // tslint:disable-line:no-empty

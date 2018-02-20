@@ -10,13 +10,20 @@ import * as Sequelize from 'sequelize';
 
 export interface IUserDataMapAttributes {
     user_id: string;
-    vendor_data_type_id: number;
+    vendor_data_type: string;
     data_type_user_id: string;
 }
 
 export interface IUserDataMapInstance extends Sequelize.Instance<IUserDataMapAttributes>, IUserDataMapAttributes {
 
 }
+
+export const vendorDataTypeList: string[] = [
+    // Add vendorDataType here
+    'precisely:demo',
+    'precisely:test',
+    'precisely:genetics',
+];
 
 export const UserDataMap = (sequelize: Sequelize.Sequelize): 
         Sequelize.Model<IUserDataMapInstance, IUserDataMapAttributes> => {
@@ -27,7 +34,7 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
         user_id: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: 'userIdAndVendorDataTypeId'
+            unique: 'userIdAndVendorDataType'
         },
 
         data_type_user_id: {
@@ -36,26 +43,19 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
             primaryKey: true
         },
 
-        vendor_data_type_id: {
-            type: Sequelize.INTEGER,
-            unique: 'userIdAndVendorDataTypeId'
+        vendor_data_type: {
+            type: Sequelize.STRING,
+            unique: 'userIdAndVendorDataType',
+            validate: {
+                isIn: {
+                    args: [vendorDataTypeList],
+                    msg: 'No such vendorDataType exists'
+                }
+            }
         }
     }, {
         tableName: 'userDataMap'
     });
-
-    // Add your associations here
-    UserDataMapAttributes[`associate`] = (
-            models: {[index: string]: Sequelize.Model<Sequelize.Instance<any>, any>} // tslint:disable-line:no-any
-        ): void => {
-        UserDataMapAttributes.belongsTo(
-                models[`VendorDatatype`],
-                {
-                    as: 'vendor_data_type',
-                    foreignKey: 'vendor_data_type_id',
-                }
-        );
-    };
 
     return UserDataMapAttributes;
 };

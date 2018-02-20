@@ -8,7 +8,6 @@
 
 import * as Sequelize from 'sequelize';
 import {UserDataMap} from './user-data-map/models/UserDataMap';
-import {VendorDatatype} from './vendor-data-type/models/VendorDatatype';
 
 const sequelize: Sequelize.Sequelize = new Sequelize(
     process.env[`POSTGRES_DB_NAME`] || '',
@@ -23,12 +22,7 @@ const sequelize: Sequelize.Sequelize = new Sequelize(
 );
 
 sequelize[`UserDataMap`] = UserDataMap(sequelize);
-sequelize[`VendorDatatype`] = VendorDatatype(sequelize);
-
-sequelize[`UserDataMap`].associate(sequelize);
-sequelize[`VendorDatatype`].associate(sequelize);
 
 sequelize[`UserDataMap`].sync();
-sequelize[`VendorDatatype`].sync();
 
 export {sequelize};
