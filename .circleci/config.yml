@@ -119,38 +119,6 @@ jobs:
                 name: Deploying backend on Staging
                 command: cd app-backend && yarn deploy-stage
 
-    prod-deploy-frontend:
-        <<: *defaults
-        steps:
-            - checkout
-            - restore_cache:
-                keys:
-                - v1-dependencies-{{ checksum "app-client/package.json" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
-            - run:
-                name: Set AWS Profile
-                command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n prod-profile-precisely --key ${AWS_ACCESS_KEY_PROD} --secret ${AWS_SECRET_KEY_PROD}
-            - run:
-                name: Deploying frontend on Production
-                command: cd app-client && yarn deploy-prod
-
-    prod-deploy-backend:
-        <<: *defaults
-        steps:
-            - checkout
-            - restore_cache:
-                keys:
-                - v1-dependencies-{{ checksum "app-backend/package.json" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
-            - run:
-                name: Set AWS Profile
-                command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n prod-profile-precisely --key ${AWS_ACCESS_KEY_PROD} --secret ${AWS_SECRET_KEY_PROD}
-            - run:
-                name: Deploying backend on Production
-                command: cd app-backend && yarn deploy-prod
-
 workflows:
     version: 2
     build-test-and-deploy:
@@ -175,21 +143,3 @@ workflows:
                             - dev
                 requires:
                     - stage-deploy-backend
-
-            # run this job only when master branch is build
-            - prod-deploy-backend:
-                filters:
-                    branches:
-                        only:
-                            - master
-                requires:
-                    - build-backend
-                    - build-frontend
-                    
-            - prod-deploy-frontend:
-                filters:
-                    branches:
-                        only:
-                            - master
-                requires:
-                    - prod-deploy-backend
