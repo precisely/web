@@ -14,9 +14,9 @@ const dynogels = require('dynogels-promisified');
 AWS.config.update({region: 'us-east-1'});
 
 export interface IGeneticsAttributes {
-    gene: string;
-    source: string;
-    variant: string;
+    gene?: string;
+    source?: string;
+    variant?: string;
     quality?: string;
     data_type_user_id: string;
 }
@@ -40,7 +40,5 @@ export const Genetics = dynogels.define('dev-01-dynamo-genetics', {
 dynogels.createTables((error: string): void => {
     if (error) {
         console.log('Error while creating the tables.', error);
-    } else {
-        console.log('Tables created successfully.');
     }
 });

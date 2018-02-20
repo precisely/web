@@ -9,17 +9,17 @@ type GenericResponse {
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
     geneticsList(limit: Int, lastEvaluatedKey: String, createdAt: String): GeneticsList,
-    getGeneticsData(data_type_user_id: String!): Genetics
+    getGeneticsData(dataTypeUserId: String!): Genetics
 }
 
 type Mutation {
     findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
-    updateGenetics(gene: String, source: String, variant: String, quality: String, data_type_user_id: String!): Genetics,
+    updateGenetics(gene: String, source: String, variant: String, quality: String, dataTypeUserId: String!): Genetics,
     createGenetics(
             gene: String!,
             source: String!,
             variant: String!,
             quality: String,
-            data_type_user_id: String!
+            dataTypeUserId: String!
     ): Genetics,
 }

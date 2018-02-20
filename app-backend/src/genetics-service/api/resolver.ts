@@ -23,17 +23,27 @@ interface IListObject {
     };
 }
 
+export interface ICreateOrUpdateAttributes {
+    gene: string;
+    source: string;
+    variant: string;
+    quality?: string;
+    dataTypeUserId: string;
+}
+
 export const geneticsResolver = {
-    async create(args: IGeneticsAttributes): Promise<IGeneticsAttributes> {
+    async create(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
+        const {dataTypeUserId, gene, quality, source, variant} = args;
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.data_type_user_id);
+            geneticsInstance = await Genetics.getAsync(dataTypeUserId);
             if (geneticsInstance) {
                 throw new Error('Record already exists.');
             }
 
-            geneticsInstance = await Genetics.createAsync({...args}, {overwrite: false});
+            geneticsInstance = await Genetics.createAsync(
+                    {gene, quality, source, variant, data_type_user_id: dataTypeUserId}, {overwrite: false});
         } catch (error) {
             console.log('geneticsResolver-create: ', error.message);
             return error;
@@ -42,15 +52,23 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async update(args: IGeneticsAttributes): Promise<IGeneticsAttributes> {
+    async update(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
+        const dataToUpdate: IGeneticsAttributes = {data_type_user_id: args.dataTypeUserId};
+
+        for (const key in args) {
+            if (key !== 'dataTypeUserId' && args[key]) {
+                dataToUpdate[key] = args[key];
+            }
+        }
+
         try {
-            geneticsInstance = await Genetics.getAsync(args.data_type_user_id);
+            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
 
-            geneticsInstance = await Genetics.updateAsync({...args});
+            geneticsInstance = await Genetics.updateAsync({...dataToUpdate});
         } catch (error) {
             console.log('geneticsResolver-update:', error.message);
             return error;
@@ -59,11 +77,11 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async get(args: {data_type_user_id: string}): Promise<IGeneticsAttributes> {
+    async get(args: {dataTypeUserId: string}): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.data_type_user_id);
+            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
@@ -108,11 +126,11 @@ export const geneticsResolver = {
 /* istanbul ignore next */
 export const queries = {
     geneticsList: (root: any, args: IListFilters) => geneticsResolver.list(args),
-    getGeneticsData: (root: any, args: {data_type_user_id: string}) => geneticsResolver.get(args),
+    getGeneticsData: (root: any, args: {dataTypeUserId: string}) => geneticsResolver.get(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-    createGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.create(args),
-    updateGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.update(args),
+    createGenetics: (root: any, args: ICreateOrUpdateAttributes) => geneticsResolver.create(args),
+    updateGenetics: (root: any, args: ICreateOrUpdateAttributes) => geneticsResolver.update(args),
 };

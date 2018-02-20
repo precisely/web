@@ -9,7 +9,7 @@
 jest.mock('../../genetics-service/models/Genetics');
 
 import {IGeneticsAttributes, Genetics} from '../../genetics-service/models/Genetics';
-import {geneticsResolver} from '../../genetics-service/api/resolver';
+import {geneticsResolver, ICreateOrUpdateAttributes} from '../../genetics-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -24,19 +24,21 @@ const mockedPromise = <DataType>(data: DataType): Promise<DataType> => {
 };
 
 describe('Genetics resolver tests.', (): void => {
-    let dummyData: IGeneticsAttributes = {
+    const commonData: {gene: string, variant: string, source: string} = {
         gene: 'XXXXY',
         variant: 'demo2',
         source: 'helix2',
-        data_type_user_id: 'PQR03',
     };
 
+    const dummyRequestData: ICreateOrUpdateAttributes = {...commonData, dataTypeUserId: 'PQR03'};
+    const dummyResponseData: IGeneticsAttributes = {...commonData, data_type_user_id: 'PQR03'};
+
     Genetics.getAsync = jest.fn()
-            .mockImplementationOnce(() => mockedPromise<{data_type_user_id: string}>({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => mockedPromise<{dataTypeUserId: string}>({dataTypeUserId: 'PQR03'}))
             .mockImplementationOnce(() => mockedPromise<null>(null))
-            .mockImplementationOnce(() => mockedPromise<{data_type_user_id: string}>({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => mockedPromise<{dataTypeUserId: string}>({dataTypeUserId: 'PQR03'}))
             .mockImplementationOnce(() => mockedPromise<null>(null))
-            .mockImplementationOnce(() => mockedPromise<{attrs: IGeneticsAttributes}>({attrs: dummyData}))
+            .mockImplementationOnce(() => mockedPromise<{attrs: IGeneticsAttributes}>({attrs: dummyResponseData}))
             .mockImplementationOnce(() => mockedPromise<null>(null));
 
     Genetics.createAsync = jest.fn()
@@ -63,7 +65,7 @@ describe('Genetics resolver tests.', (): void => {
         return {
             execAsync: jest.fn((): ExecSuccess => {
                 return new Promise((resolve): void => {
-                    resolve({Items: [dummyData]});
+                    resolve({Items: [dummyResponseData]});
                 });
             })
         };
@@ -87,37 +89,37 @@ describe('Genetics resolver tests.', (): void => {
 
     describe('Create tests', (): void => {
         it('should throw an error when the record already exists.', async (): Promise<void> => {
-            let response = await geneticsResolver.create(dummyData);
+            let response = await geneticsResolver.create(dummyRequestData);
             expect(response[`message`]).toEqual('Record already exists.');
         });
 
         it('should create a new record when there is no error', async (): Promise<void> => {
-            let response = await geneticsResolver.create(dummyData);
-            expect(response).toEqual(dummyData);
+            let response = await geneticsResolver.create(dummyRequestData);
+            expect(response).toEqual(dummyResponseData);
         });
     });
 
     describe('Update tests', (): void => {
         it('should update the record when there is no error.', async (): Promise<void> => {
-            let response = await geneticsResolver.update(dummyData);
-            expect(response).toEqual(dummyData);
+            let response = await geneticsResolver.update(dummyRequestData);
+            expect(response).toEqual(dummyResponseData);
         });
 
         it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
             let response = await geneticsResolver
-                    .update({data_type_user_id: 'abcd', gene: 'XXXXX', source: 'helix', variant: 'qwerty'});
+                    .update({dataTypeUserId: 'abcd', gene: 'XXXXX', source: 'helix', variant: 'qwerty'});
             expect(response[`message`]).toEqual('No such record found');
         });
     });
 
     describe('Get tests', (): void => {
         it('should fetch the record when there is no error.', async (): Promise<void> => {
-            let response = await geneticsResolver.get({data_type_user_id: 'PQR03'});
-            expect(response).toEqual(dummyData);
+            let response = await geneticsResolver.get({dataTypeUserId: 'PQR03'});
+            expect(response).toEqual(dummyResponseData);
         });
 
         it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
-            let response = await geneticsResolver.get({data_type_user_id: 'abcd'});
+            let response = await geneticsResolver.get({dataTypeUserId: 'abcd'});
             expect(response[`message`]).toEqual('No such record found');
         });
     });
@@ -133,7 +135,7 @@ describe('Genetics resolver tests.', (): void => {
                 args: {paramName: string, paramValue: string}
         ): Promise<void> => {
             let response = await geneticsResolver.list({[args.paramName]: args.paramValue});
-            expect(response).toEqual({Items: [dummyData]});
+            expect(response).toEqual({Items: [dummyResponseData]});
             done();
         }, [ // tslint:disable-next-line
             ['paramName', 'paramValue'],
