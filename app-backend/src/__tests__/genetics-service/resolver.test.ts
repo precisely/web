@@ -9,7 +9,7 @@
 jest.mock('../../genetics-service/models/Genetics');
 
 import {IGeneticsAttributes, Genetics} from '../../genetics-service/models/Genetics';
-import {geneticsResolver, queries, mutations} from '../../genetics-service/api/resolver';
+import {geneticsResolver} from '../../genetics-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -85,18 +85,6 @@ describe('Genetics resolver tests.', (): void => {
         };
     });
 
-    Genetics.destroyAsync = jest.fn()
-            .mockImplementationOnce((): Promise<{attrs: IGeneticsAttributes}> => {
-                return new Promise((): void => {
-                    throw new Error('An error occured.');
-                });
-            })
-            .mockImplementationOnce((): Promise<boolean> => {
-                return new Promise((resolve): void => {
-                    return resolve(true);
-                });
-            });
-
     describe('Create tests', (): void => {
         it('should throw an error when the record already exists.', async (): Promise<void> => {
             let response = await geneticsResolver.create(dummyData);
@@ -134,18 +122,6 @@ describe('Genetics resolver tests.', (): void => {
         });
     });
 
-    describe('Delete tests', (): void => {
-        it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
-            let response = await geneticsResolver.delete({data_type_user_id: 'abcd'});
-            expect(response[`message`]).toEqual('An error occured.');
-        });
-
-        it('should return true when the record is deleted successfully.', async (): Promise<void> => {
-            let response = await geneticsResolver.delete({data_type_user_id: 'PQR03'});
-            expect(response).toEqual(true);
-        });
-    });
-
     describe('List test', (): void => {
         it('should return an error message if an error occurs.', async (): Promise<void> => {
             let response = await geneticsResolver.list();
@@ -164,43 +140,6 @@ describe('Genetics resolver tests.', (): void => {
             ['lastEvaluatedKey', 'PQR01'],
             ['updatedAt', '2017-12-01T18:30:00.000Z'],
             ['createdAt', '2018-12-01T18:30:00.000Z'],
-        ]);
-    });
-
-    describe('Tests for the queries.', (): void => {
-        unroll('It should call the #resolverName when #queryName is called.', (
-                done: () => void,
-                args: {queryName: string, resolverName: string, params: {limit?: number, data_type_user_id?: string}}
-        ): void => {
-            geneticsResolver[args.resolverName] = jest.fn();
-            queries[args.queryName]({}, args.params);
-            expect(geneticsResolver[args.resolverName]).toBeCalledWith(args.params);
-            done();
-        }, [ // tslint:disable-next-line
-            ['queryName', 'resolverName', 'params'],
-            ['geneticsList', 'list', {limit: 10}],
-            ['getGeneticsData', 'get', {data_type_user_id: 'PQR'}],
-        ]);
-    });
-
-    describe('Tests for the mutations.', (): void => {
-        unroll('It should call the #resolverName when #mutationName is called.', (
-                done: () => void,
-                args: {
-                    mutationName: string,
-                    resolverName: string,
-                    params: IGeneticsAttributes | {data_type_user_id?: string}
-                }
-        ): void => {
-            geneticsResolver[args.resolverName] = jest.fn();
-            mutations[args.mutationName]({}, args.params);
-            expect(geneticsResolver[args.resolverName]).toBeCalledWith(args.params);
-            done();
-        }, [ // tslint:disable-next-line
-            ['mutationName', 'resolverName', 'params'],
-            ['createGenetics', 'create', dummyData],
-            ['updateGenetics', 'update', dummyData],
-            ['deleteGenetics', 'delete', {data_type_user_id: 'PQR'}],
         ]);
     });
 });

@@ -21,6 +21,7 @@ export interface IGeneticsAttributes {
     data_type_user_id: string;
 }
 
+/* istanbul ignore next */
 export const Genetics = dynogels.define('dev-01-dynamo-genetics', {
     hashKey : 'data_type_user_id',
 
@@ -35,6 +36,7 @@ export const Genetics = dynogels.define('dev-01-dynamo-genetics', {
     }
 });
 
+/* istanbul ignore next */
 dynogels.createTables((error: string): void => {
     if (error) {
         console.log('Error while creating the tables.', error);

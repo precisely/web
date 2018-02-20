@@ -101,26 +101,18 @@ export const geneticsResolver = {
 
         return result;
     },
-
-    async delete(args: {data_type_user_id: string}): Promise<boolean> {
-        try {
-            await Genetics.destroyAsync(args.data_type_user_id);
-        } catch (error) {
-            console.log('geneticsResolver-delete:', error.message);
-            return error;
-        }
-
-        return true;
-    },
 };
 
+// tslint:disable:no-any
+
+/* istanbul ignore next */
 export const queries = {
     geneticsList: (root: any, args: IListFilters) => geneticsResolver.list(args),
     getGeneticsData: (root: any, args: {data_type_user_id: string}) => geneticsResolver.get(args),
 };
 
+/* istanbul ignore next */
 export const mutations = {
     createGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.create(args),
     updateGenetics: (root: any, args: IGeneticsAttributes) => geneticsResolver.update(args),
-    deleteGenetics: (root: any, args: {data_type_user_id: string}) => geneticsResolver.delete(args),
 };
