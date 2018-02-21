@@ -1,0 +1,9 @@
+type Report {
+    id: String,
+    title: String,
+    slug: String,
+    raw_content: String,
+    parsed_content: String,
+    top_level: Boolean,
+    genes: String,
+}

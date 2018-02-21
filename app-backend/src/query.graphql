@@ -1,5 +1,6 @@
 #import "./user-data-map/api/schema.graphql"
 #import "./genetics-service/api/schema.graphql"
+#import "./report-service/api/schema.graphql"
 
 type GenericResponse {
     success: Boolean,
@@ -47,5 +48,6 @@ type Mutation {
             chromosomeName: String!,
             variantType: String!,
             quality: String!
-    ): Genetics
+    ): Genetics,
+    saveReport(slug: String!, title: String!, content: String!, genes: [String]): Report,
 }
