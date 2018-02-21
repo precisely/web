@@ -6,10 +6,15 @@ type GenericResponse {
     message: String
 }
 
+input LastEvaluatedKeyInput {
+    dataTypeUserId: String
+    gene: String
+}
+
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
-    geneticsList(limit: Int, lastEvaluatedKey: String, createdAt: String): GeneticsList,
-    getGeneticsData(dataTypeUserId: String!): Genetics
+    geneticsList(limit: Int, lastEvaluatedKeys: LastEvaluatedKeyInput, createdAt: String): GeneticsList,
+    getGeneticsData(dataTypeUserId: String!, gene: String!): Genetics
 }
 
 type Mutation {

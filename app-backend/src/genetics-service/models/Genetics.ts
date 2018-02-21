@@ -24,6 +24,7 @@ export interface IGeneticsAttributes {
 /* istanbul ignore next */
 export const Genetics = dynogels.define('dev-01-dynamo-genetics', {
     hashKey : 'data_type_user_id',
+    rangeKey: 'gene',
 
     timestamps : true,
 

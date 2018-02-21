@@ -1,5 +1,6 @@
-type DataTypeUserId {
+type LastEvaluatedKeyTypes {
     data_type_user_id: String
+    gene: String
 }
 
 type Genetics {
@@ -16,5 +17,5 @@ type GeneticsListItem {
 
 type GeneticsList {
     Items: [GeneticsListItem],
-    LastEvaluatedKey: DataTypeUserId
+    LastEvaluatedKey: LastEvaluatedKeyTypes
 }

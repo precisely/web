@@ -11,7 +11,10 @@ import {Genetics, IGeneticsAttributes} from '../models/Genetics';
 
 interface IListFilters {
     limit?: number;
-    lastEvaluatedKey?: string;
+    lastEvaluatedKeys?: {
+        dataTypeUserId: string;
+        gene: string;
+    };
     createdAt?: string; // Should be the ISO date string
     updatedAt?: string; // Should be the ISO date string
 }
@@ -20,6 +23,7 @@ interface IListObject {
     Items: IGeneticsAttributes[];
     LastEvaluatedKey: {
         data_type_user_id: string;
+        gene: string;
     };
 }
 
@@ -34,16 +38,20 @@ export interface ICreateOrUpdateAttributes {
 export const geneticsResolver = {
     async create(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
-        const {dataTypeUserId, gene, quality, source, variant} = args;
+        const dataForCreating: IGeneticsAttributes = {data_type_user_id: args.dataTypeUserId};
+
+        for (const key in args) {
+            if (key !== 'dataTypeUserId' && args[key]) {
+                dataForCreating[key] = args[key];
+            }
+        }
 
         try {
-            geneticsInstance = await Genetics.getAsync(dataTypeUserId);
+            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
             if (geneticsInstance) {
                 throw new Error('Record already exists.');
             }
-
-            geneticsInstance = await Genetics.createAsync(
-                    {gene, quality, source, variant, data_type_user_id: dataTypeUserId}, {overwrite: false});
+            geneticsInstance = await Genetics.createAsync({...dataForCreating}, {overwrite: false});
         } catch (error) {
             console.log('geneticsResolver-create: ', error.message);
             return error;
@@ -63,7 +71,7 @@ export const geneticsResolver = {
         }
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId);
+            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
@@ -77,11 +85,11 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async get(args: {dataTypeUserId: string}): Promise<IGeneticsAttributes> {
+    async get(args: {dataTypeUserId: string, gene: string}): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId);
+            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
@@ -94,13 +102,13 @@ export const geneticsResolver = {
     },
 
     async list(args: IListFilters = {}): Promise<IListObject> {
-        const {limit = 15, lastEvaluatedKey, createdAt, updatedAt} = args;
+        const {limit = 15, lastEvaluatedKeys, createdAt, updatedAt} = args;
         let result: IListObject;
         try {
             let scan: Scan & {execAsync?: () => IListObject} = Genetics.scan().limit(limit);
 
-            if (lastEvaluatedKey) {
-                scan = scan.startKey(lastEvaluatedKey);
+            if (lastEvaluatedKeys && lastEvaluatedKeys.dataTypeUserId && lastEvaluatedKeys.gene) {
+                scan = scan.startKey(lastEvaluatedKeys.dataTypeUserId, lastEvaluatedKeys.gene);
             }
 
             if (createdAt) {
@@ -126,7 +134,7 @@ export const geneticsResolver = {
 /* istanbul ignore next */
 export const queries = {
     geneticsList: (root: any, args: IListFilters) => geneticsResolver.list(args),
-    getGeneticsData: (root: any, args: {dataTypeUserId: string}) => geneticsResolver.get(args),
+    getGeneticsData: (root: any, args: {dataTypeUserId: string, gene: string}) => geneticsResolver.get(args),
 };
 
 /* istanbul ignore next */
