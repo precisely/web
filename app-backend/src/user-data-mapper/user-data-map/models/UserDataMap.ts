@@ -54,7 +54,7 @@ export const UserDataMap = (sequelize: Sequelize.Sequelize):
             }
         }
     }, {
-        tableName: 'userDataMap'
+        tableName: 'user_data_map'
     });
 
     return UserDataMapAttributes;

@@ -37,13 +37,13 @@ describe('UserDataMap resolver tests.', (): void => {
     describe('tests for findOrCreate', (): void => {
 
         it('should pass when all data is passed', async () => {
-            let response = await UserDataMapResolver.findOrCreate({user_id: 'dummyId', vendor_data_type: 'test'});
+            let response = await UserDataMapResolver.findOrCreate({userId: 'dummyId', vendorDataType: 'test'});
             expect(response.user_id).toEqual('test');
             expect(response.vendor_data_type).toEqual('test');
         });
 
         it('should throw error when data is missing', async () => {
-            let response = await UserDataMapResolver.findOrCreate({user_id: 'invalid', vendor_data_type: 'test'});
+            let response = await UserDataMapResolver.findOrCreate({userId: 'invalid', vendorDataType: 'test'});
             expect(response.message).toEqual('mock-findCreateFind error');
         });
     });

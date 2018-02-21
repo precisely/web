@@ -5,5 +5,5 @@ type Query {
 }
 
 type Mutation {
-    findOrCreateUserDataMap(user_id: String!, vendor_data_type: String!): UserDataMap,
+    findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
 }

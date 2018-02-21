@@ -34,12 +34,14 @@ UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): Pro
 
 UserDataMapMock.findCreateFind = jest.fn((params: {where: {user_id: string}}) => {
     return {
-        spread: (): Promise<IUserDataMapInstance> => new Promise((resolve, reject): void => {
+        spread: (callback: ((user: IUserDataMapInstance) => IUserDataMapInstance)): Promise<IUserDataMapInstance> => 
+                new Promise((resolve, reject): void => {
+                    
             if (params.where.user_id === 'dummyId') {
-                resolve(UserDataMapMock.build());
+                resolve(callback(UserDataMapMock.build()));
             } else {
                 reject(new Error('mock-findCreateFind error'));
             }
-        })
+        }),
     };
 });

@@ -32,26 +32,30 @@ export const UserDataMapResolver = {
         return await userDataMapInstances;
     },
 
-    async findOrCreate(args: {user_id: string, vendor_data_type: string}) {
+    async findOrCreate(args: {userId: string, vendorDataType: string}) {
         let userDataMapInstance: IUserDataMapInstance;
-        const {user_id, vendor_data_type} = args;
 
         try {
             userDataMapInstance = await UserDataMap
                 .findCreateFind({
                     where: {
-                        user_id,
-                        vendor_data_type,
+                        user_id: args.userId,
+                        vendor_data_type: args.vendorDataType,
                     }
                 })
-                .spread((user: IUserDataMapInstance, created: boolean): IUserDataMapInstance => {
+                .spread((user: IUserDataMapInstance): IUserDataMapInstance => {
+                    /* 
+                     *  findCreateFind returns [Instance, created]. Since we don't need created attribute,
+                     *  returning the user instance directly
+                     */ 
+
                     return user;
                 });
         } catch (error) {
             console.log('UserDataMap-findOrCreate:', error.message);
             return error;
         }
-        
+
         return userDataMapInstance.get({plain: true});
     }
 };

@@ -17,5 +17,5 @@ export const queries = {
 
 export const mutations = {
     findOrCreateUserDataMap: /* istanbul ignore next */ 
-        (root: any, args: {user_id: string, vendor_data_type: string}) => UserDataMapResolver.findOrCreate(args),
+        (root: any, args: {userId: string, vendorDataType: string}) => UserDataMapResolver.findOrCreate(args),
 };
