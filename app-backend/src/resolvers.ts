@@ -15,6 +15,7 @@ export const resolvers: IResolvers = {
     Query: {
         ...UserDataMapperResolvers.queries,
         ...GeneticsResolvers.queries,
+        ...ReportResolvers.queries,
     },
     Mutation: {
         ...UserDataMapperResolvers.mutations,

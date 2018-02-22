@@ -7,3 +7,16 @@ type Report {
     top_level: Boolean,
     genes: String,
 }
+
+type LastEvaluatedReportData {
+    slug: String
+}
+
+type ReportListItem {
+    attrs: Report
+}
+
+type ReportList {
+    Items: [ReportListItem],
+    LastEvaluatedKey: LastEvaluatedReportData
+}

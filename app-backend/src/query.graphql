@@ -12,6 +12,11 @@ input LastEvaluatedGeneticsRecord {
     gene: String
 }
 
+input LastEvaluatedReportRecord {
+    dataTypeUserId: String
+    gene: String
+}
+
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
     geneticsList(
@@ -20,7 +25,9 @@ type Query {
             opaqueId: String,
             gene: String,
     ): GeneticsList,
-    getGeneticsData(opaqueId: String!, gene: String!): Genetics
+    getGeneticsData(opaqueId: String!, gene: String!): Genetics,
+    listReports(limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord, createdAt: String): ReportList,
+    getReport(slug: String!, id: String!, userId: String!): Report,
 }
 
 type Mutation {

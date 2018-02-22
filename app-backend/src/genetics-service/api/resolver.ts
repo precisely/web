@@ -107,7 +107,7 @@ export const geneticsResolver = {
             console.log('geneticsResolver-get:', error.message);
             return error;
         }
-        console.log('>>\n\n', geneticsInstance);
+        
         return geneticsInstance.attrs;
     },
 

@@ -20,7 +20,7 @@ export interface IReportAttributes {
     raw_content: string;
     parsed_content: string;
     top_level: boolean;
-    genes: string;
+    genes: string[];
 }
 
 /* istanbul ignore next */
