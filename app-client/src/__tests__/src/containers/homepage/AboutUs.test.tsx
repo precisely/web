@@ -32,7 +32,7 @@ describe('AboutUs tests.', (): void => {
     }, [ // tslint:disable-next-line
         ['elementName', 'element', 'count'],
         ['NavigationBar', NavigationBar, 1],
-        ['h1', 'h1', 1],
+        ['h2', 'h2', 1],
         ['h5', 'h5', 1],
         ['p', 'p', 5],
         ['PageContent', PageContent, 1]

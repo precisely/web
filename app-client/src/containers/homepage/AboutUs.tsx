@@ -10,7 +10,6 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {PageContent} from 'src/components/PageContent';
-import {header} from 'src/constants/styleGuide';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {CSS} from 'src/interfaces';
 import {Container} from 'src/components/ReusableComponents';
@@ -22,10 +21,10 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
         return (
             <div>
                 <NavigationBar {...this.props} />
-                <Container className="mx-auto mt-5 mb-5">
-                    <PageContent>
-                        <h1 style={header}>About Us</h1>
-                        <h5 className="mt-1 mb-4" style={text}>The story behind Precise.ly</h5>
+                <Container className="mx-auto mt-4 mb-3">
+                    <PageContent style={contentStyle}>
+                        <h2 style={pageHeader}>About Us</h2>
+                        <h5 style={subHeader}>The story behind Precise.ly</h5>
                         <p style={paragraph}>We started out Curious, we’re now Precise.ly.</p>
                         <p style={paragraph}>
                             Our mission: to provide a platform for individuals to gather and track their personal
@@ -46,7 +45,7 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
                             disease. They can connect other patients who share their disease ‘subtype,’
                             based on the data they’ve accrued.
                         </p>
-                        <p style={paragraph}>
+                        <p style={[paragraph, {marginBottom: '55px'}]}>
                             We also firmly believe the data our customers assemble is theirs to control and
                             share as they see fit.
                         </p>
@@ -57,13 +56,33 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
     }
 }
 
-const text: CSS = {
+const fontWeight: CSS = {
     fontWeight: 200,
+};
+
+const pageHeader: CSS = {
+    ...fontWeight,
+    fontSize: '40px',
+    marginTop: '-3px',
+};
+
+const subHeader: CSS = {
+    ...fontWeight,
+    fontSize: '20px',
     letterSpacing: '1px',
+    marginTop: '-5px',
+    marginBottom: '20px',
 };
 
 const paragraph: CSS = {
     textAlign: 'left',
-    fontSize: '15px',
-    ...text,
+    fontSize: '16px',
+    ...fontWeight,
+};
+
+const contentStyle: CSS = {
+    width: '936px',
+    '@media screen and (max-width: 700px)': {
+        width: '350px',
+    },
 };

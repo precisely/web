@@ -10,12 +10,20 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
-import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/components/PageContent';
 import {resetPassword} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, inputStyle, removeBorderRadius, header, loginAndSignupPanel} from 'src/constants/styleGuide';
+import {
+    formButton,
+    noBorderTop,
+    removeBorderRadius,
+    header,
+    loginAndSignupPanel,
+    inputStyle,
+    alignCenter,
+    formMargin,
+} from 'src/constants/styleGuide';
 
 export interface IResetPasswordState {
     verificationCode?: string;
@@ -82,12 +90,12 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
             <div>
                 <NavigationBar {...this.props} />
                 <div className="mx-auto" style={loginAndSignupPanel}>
-                    <h1 className="mt-5 mb-4" style={header}>Reset password</h1>
+                    <h3 style={header}>Reset password</h3>
                     <PageContent>
-                        <Form onSubmit={this.submitForm}>
-                            <FormGroup style={formGroup} className="mb-0">
+                        <Form onSubmit={this.submitForm} style={formMargin}>
+                            <FormGroup style={alignCenter} className="mb-0">
                                 <Input
-                                        style={removeBorderRadius}
+                                        style={[removeBorderRadius, inputStyle]}
                                         required
                                         type="text"
                                         id="verificationCode"
@@ -98,9 +106,9 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
                                         }}
                                 />
                             </FormGroup>
-                            <FormGroup style={formGroup} className="mb-0">
+                            <FormGroup style={alignCenter} className="mb-0">
                                 <Input
-                                        style={inputStyle}
+                                        style={[noBorderTop, inputStyle]}
                                         required
                                         type="password"
                                         id="newPassword"
@@ -111,9 +119,9 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
                                         }}
                                 />
                             </FormGroup>
-                            <FormGroup style={formGroup}>
+                            <FormGroup style={alignCenter}>
                                 <Input
-                                        style={inputStyle}
+                                        style={[noBorderTop, inputStyle]}
                                         required
                                         type="password"
                                         id="confirmPassword"
@@ -134,7 +142,3 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
         );
     }
 }
-
-const formGroup: CSS = {
-    textAlign: 'left',
-};

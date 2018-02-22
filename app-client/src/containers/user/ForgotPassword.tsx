@@ -10,12 +10,19 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, FormText} from 'src/components/ReusableComponents';
-import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/components/PageContent';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, header, loginAndSignupPanel} from 'src/constants/styleGuide';
+import {
+    formButton,
+    removeBorderRadius,
+    header,
+    loginAndSignupPanel,
+    inputStyle,
+    alignCenter,
+    formMargin,
+} from 'src/constants/styleGuide';
 
 export interface IForgotPasswordState {
     email?: string;
@@ -69,16 +76,16 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
             <div>
                 <NavigationBar {...this.props} />
                 <div className="mx-auto" style={loginAndSignupPanel}>
-                    <h1 className="mt-5 mb-4" style={header}>Forgot password</h1>
+                    <h3 style={header}>Forgot password</h3>
                     <PageContent>
-                        <Form onSubmit={this.submitForm}>
-                            <FormGroup style={formGroup}>
+                        <Form onSubmit={this.submitForm} style={formMargin}>
+                            <FormGroup style={alignCenter}>
                                 <FormText color="muted">
                                     Please enter the email you use for your account.<br/>
                                     We will send a verification code on your email.
-                                </FormText>
+                                </FormText><br/>
                                 <Input
-                                        style={removeBorderRadius}
+                                        style={[removeBorderRadius, inputStyle]}
                                         type="email"
                                         id="email"
                                         placeholder="Enter your email"
@@ -98,7 +105,3 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
         );
     }
 }
-
-const formGroup: CSS = {
-    textAlign: 'left',
-};

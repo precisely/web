@@ -15,7 +15,16 @@ import {PageContent} from 'src/components/PageContent';
 import {login} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, inputStyle, loginAndSignupPanel, header} from 'src/constants/styleGuide';
+import {
+    formButton,
+    removeBorderRadius,
+    noBorderTop,
+    loginAndSignupPanel,
+    header,
+    inputStyle,
+    alignCenter,
+    formMargin,
+} from 'src/constants/styleGuide';
 
 export interface ILoginState {
     email?: string;
@@ -73,12 +82,12 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
             <div>
                 <NavigationBar {...this.props} />
                 <div className="mx-auto" style={loginAndSignupPanel}>
-                    <h1 className="mt-5 mb-4" style={header}>Welcome back</h1>
+                    <h3 style={header}>Welcome back</h3>
                     <PageContent>
-                        <Form id="loginForm" onSubmit={this.submitForm}>
-                            <FormGroup className="mb-0">
+                        <Form id="loginForm" onSubmit={this.submitForm} style={formMargin}>
+                            <FormGroup className="mb-0" style={alignCenter}>
                                 <Input
-                                        style={removeBorderRadius}
+                                        style={[removeBorderRadius, inputStyle]}
                                         type="email"
                                         id="email"
                                         placeholder="Email"
@@ -88,8 +97,8 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
                                         }}
                                 />
                             </FormGroup>
-                            <FormGroup>
-                                <InputGroup>
+                            <FormGroup style={alignCenter}>
+                                <InputGroup style={inputStyle}>
                                     <Input
                                             style={passwordStyle}
                                             type="password"
@@ -124,11 +133,14 @@ const linkFontSize: CSS = {
 };
 
 const passwordStyle: CSS = {
-    ...inputStyle,
+    ...noBorderTop,
     borderRight: 'none',
+    ':focus': {
+        borderColor: '#d9d9d9',
+    }
 };
 
 const inputAddon: CSS = {
-    ...inputStyle,
+    ...noBorderTop,
     backgroundColor: '#fff',
 };

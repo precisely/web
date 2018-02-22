@@ -13,11 +13,12 @@ import {Row, Col} from 'src/components/ReusableComponents';
 
 export interface IPageContentProps {
     children: React.ReactNode;
+    style?: CSS;
 }
 
 export let PageContent: React.StatelessComponent<IPageContentProps> = props => (
-    <Row style={content} className="p-lg-5 p-sm-1 mx-auto">
-        <Col style={formColumn} className="m-5">
+    <Row style={[content, props.style]} className="p-5 mx-auto">
+        <Col style={formColumn}>
             {props.children}
         </Col>
     </Row>
@@ -32,5 +33,5 @@ const formColumn: CSS = {
 
 const content: CSS = {
     backgroundColor: '#fff',
-    boxShadow: '0 1px 15px -4px rgba(192, 79, 127, 0.51)',
+    boxShadow: '0 2px 29px -8px rgba(192, 79, 127, 0.51)',
 };

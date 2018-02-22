@@ -10,6 +10,7 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
+import {CSS} from 'src/interfaces';
 import {
     Collapse,
     Navbar,
@@ -19,18 +20,19 @@ import {
     NavItem,
     NavLink,
 } from 'src/components/ReusableComponents';
-import 'src/components/navigationBar/NavigationBar.css';
 
 const logo = require('src/assets/precisely-logo.png');
 
 export interface INavigationBarState {
-    isOpen: boolean;
+    isOpen?: boolean;
+    backgroundColor?: string;
 }
 
 @Radium
 export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, INavigationBarState> {
     state = {
-        isOpen: false
+        isOpen: false,
+        backgroundColor: 'transparent',
     };
 
     toggle = (): void => {
@@ -46,14 +48,27 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
         }
     }
 
+    componentDidMount(): void {
+        window.addEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll = (): void => {
+        this.setState({backgroundColor: window.scrollY > 50 ? 'white' : 'transparent'});
+    }
+
     render() {
         const loggedIn: boolean = isLoggedIn();
+        const {isOpen, backgroundColor} = this.state;
+
+        navBar.backgroundColor = backgroundColor;
 
         return (
-            <Navbar light sticky="top" expand="md" toggleable="md" className="navbar">
-                <NavbarBrand href="/"><img id="brand-logo" src={logo} alt="precise.ly" /></NavbarBrand>
+            <Navbar light sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
+                <NavbarBrand href="/">
+                    <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+                </NavbarBrand>
                 <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
-                <Collapse isOpen={this.state.isOpen} navbar>
+                <Collapse isOpen={isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavItem className="pr-4">
                             <NavLink href="/about-us">ABOUT US</NavLink>
@@ -69,3 +84,15 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
         );
     }
 }
+
+const logoStyle: CSS = {
+    width: '10em',
+};
+
+const navBar: CSS = {
+    letterSpacing: '-1px',
+    transition: 'background-color 0.4s ease',
+    '@media screen and (min-width: 992px)': {
+        padding: '8px 245px',
+    },
+};

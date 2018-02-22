@@ -15,7 +15,16 @@ import {PageContent} from 'src/components/PageContent';
 import {signup} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {formButton, removeBorderRadius, inputStyle, header, loginAndSignupPanel} from 'src/constants/styleGuide';
+import {
+    formButton,
+    removeBorderRadius,
+    noBorderTop,
+    header,
+    loginAndSignupPanel,
+    inputStyle,
+    alignCenter,
+    formMargin,
+} from 'src/constants/styleGuide';
 
 export interface ISignupState {
     email?: string;
@@ -90,12 +99,12 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
             <div>
                 <NavigationBar {...this.props} />
                 <div className="mx-auto" style={loginAndSignupPanel}>
-                    <h1 className="mt-5 mb-4" style={header}>Sign Up</h1>
+                    <h3 style={header}>Sign Up</h3>
                     <PageContent>
-                        <Form id="signupForm" onSubmit={this.submitForm}>
-                            <FormGroup style={formGroup} className="mb-0">
+                        <Form id="signupForm" onSubmit={this.submitForm} style={formMargin}>
+                            <FormGroup style={alignCenter} className="mb-0">
                                 <Input
-                                        style={removeBorderRadius}
+                                        style={[removeBorderRadius, inputStyle]}
                                         type="email"
                                         id="email"
                                         placeholder="Email"
@@ -105,9 +114,9 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                                         }}
                                 />
                             </FormGroup>
-                            <FormGroup style={formGroup} className="mb-0">
+                            <FormGroup style={alignCenter} className="mb-0">
                                 <Input
-                                        style={inputStyle}
+                                        style={[noBorderTop, inputStyle]}
                                         type="password"
                                         id="password"
                                         placeholder="Password"
@@ -117,9 +126,9 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
                                         }}
                                 />
                             </FormGroup>
-                            <FormGroup style={formGroup}>
+                            <FormGroup style={alignCenter}>
                                 <Input
-                                        style={inputStyle}
+                                        style={[noBorderTop, inputStyle]}
                                         type="password"
                                         id="confirmPassword"
                                         placeholder="Re-enter your password"
@@ -142,10 +151,6 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
         );
     }
 }
-
-const formGroup: CSS = {
-    textAlign: 'left',
-};
 
 const linkFontSize: CSS = {
     fontSize: '14px',

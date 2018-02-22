@@ -14,6 +14,7 @@ import {LoadingPage} from 'src/containers/LoadingPage';
 import {isLoggedIn} from 'src/utils/cognito';
 
 // tslint:disable
+/* istanbul ignore next */
 const LoadComponent = (componentName: string, path?: string) =>  {
     return Loadable({
         loader: () => import('src/containers/' + (path || componentName)),
@@ -29,6 +30,7 @@ const LoadComponent = (componentName: string, path?: string) =>  {
 };
 // tslint:enable
 
+/* istanbul ignore next */
 export class Routes extends React.Component {
 
     render(): JSX.Element {

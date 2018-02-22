@@ -9,7 +9,10 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {RouteComponentProps} from 'react-router';
+import {NavigationBar, INavigationBarState} from 'src/components/navigationBar/NavigationBar';
+import {logOut, isLoggedIn} from 'src/utils/cognito';
+import {mockedHistory} from 'src/__tests__/testSetup.ts';
 import {
     Collapse,
     Navbar,
@@ -19,13 +22,13 @@ import {
     NavItem,
     NavLink,
 } from 'src/components/ReusableComponents';
-import {logOut, isLoggedIn} from 'src/utils/cognito';
-import {mockedHistory} from 'src/__tests__/testSetup.ts';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
+
+type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>, INavigationBarState>;
 
 describe('NavigationBar tests.', (): void => {
 
@@ -38,10 +41,12 @@ describe('NavigationBar tests.', (): void => {
             return false;
         });
 
+    const getComponentTree = (): ComponentTree => {
+        return shallow(<NavigationBar history={mockedHistory} />);
+    };
+
     describe('When user is logged in', (): void => {
-        const componentTree: ShallowWrapper = shallow(
-            <NavigationBar history={mockedHistory}/>
-        );
+        const componentTree: ComponentTree = getComponentTree();
 
         it('should log out when button is clicked', (): void => {
             componentTree.find(NavLink).at(1).simulate('click');
@@ -51,9 +56,7 @@ describe('NavigationBar tests.', (): void => {
     });
 
     describe('When user is logged out', (): void => {
-        const componentTree: ShallowWrapper = shallow(
-            <NavigationBar history={mockedHistory}/>
-        );
+        const componentTree: ComponentTree = getComponentTree();
 
         it('should redirect to login page when button is clicked', (): void => {
             componentTree.find(NavLink).at(1).simulate('click');
@@ -81,5 +84,24 @@ describe('NavigationBar tests.', (): void => {
             componentTree.find(NavbarToggler).simulate('click');
             expect(componentTree.state().isOpen).toBeTruthy();
         });
+    });
+
+    describe('When the handleScroll is executed.', (): void => {
+
+        const componentTree: ComponentTree = getComponentTree();
+
+        unroll('it should set the background color to #color when the scrollY position is #scrollY', (
+                done: () => void,
+                args: {scrollY: number, color: string}
+        ): void => {
+            Object.defineProperty(window, 'scrollY', {value: args.scrollY, writable: true});
+            componentTree.instance()[`handleScroll`]();
+            expect(componentTree.state().backgroundColor).toBe(args.color);
+            done();
+        }, [ // tslint:disable-next-line
+            ['scrollY', 'color'],
+            [100, 'white'],
+            [20, 'transparent'],
+        ]);
     });
 });
