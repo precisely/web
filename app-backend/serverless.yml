@@ -11,6 +11,7 @@ provider:
   environment:
     SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
     REGION: ${self:provider.region}
+    NODE_ENV: ${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:

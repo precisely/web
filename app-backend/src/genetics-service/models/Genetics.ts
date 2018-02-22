@@ -8,6 +8,7 @@
 
 import * as Joi from 'joi';
 import {AWS} from 'dynogels';
+import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
 
@@ -22,7 +23,7 @@ export interface IGeneticsAttributes {
 }
 
 /* istanbul ignore next */
-export const Genetics = dynogels.define('dev-01-dynamo-genetics', {
+export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-genetics', '01'), {
     hashKey : 'data_type_user_id',
     rangeKey: 'gene',
 

@@ -29,3 +29,10 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
         return null;
     }
 }
+
+/**
+ * Utility function to add the environment to the database table name.
+ */
+export function addEnvironmentToTableName(tableName: string, version: string): string {
+    return `${process.env.NODE_ENV}-${version}-${tableName}`;
+}
