@@ -29,6 +29,6 @@
 
 ## [0.0.4] - 2018-02-21
 
-### Changed
+### Removed
 
-- Removed vendorDataType
+- VendorDataType

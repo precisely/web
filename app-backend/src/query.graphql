@@ -1,4 +1,4 @@
-#import "./user-data-mapper/user-data-map/api/schema.graphql"
+#import "./user-data-map/api/schema.graphql"
 
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],

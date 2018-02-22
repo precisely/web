@@ -20,7 +20,7 @@ export const UserDataMapMock = DBConnectionMock.define(
         },
         {});
 
-export const UserDataMap = () => UserDataMapMock;
+export const UserDataMap = UserDataMapMock;
 
 UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): PromiseLike<IUserDataMapInstance[]> => {
     return new Promise((resolve, reject): void => {

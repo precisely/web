@@ -6,10 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {sequelize} from '../../sequelize';
-import {IUserDataMapInstance} from '../models/UserDataMap';
-
-const UserDataMap = sequelize[`UserDataMap`];
+import {UserDataMap} from '../models/UserDataMap';
+import {IUserDataMapInstance, IUserDataMapAttributes} from '../models/UserDataMap';
 
 export interface IListFilters {
     limit?: number;
@@ -18,7 +16,7 @@ export interface IListFilters {
 
 export const UserDataMapResolver = {
 
-    async list(args: IListFilters = {}) {
+    async list(args: IListFilters = {}): Promise<IUserDataMapInstance[]> {
         let userDataMapInstances: IUserDataMapInstance[];
         const {limit = 15, offset = 0} = args;
 
@@ -29,10 +27,10 @@ export const UserDataMapResolver = {
             return error;
         }
         
-        return await userDataMapInstances;
+        return userDataMapInstances;
     },
 
-    async findOrCreate(args: {userId: string, vendorDataType: string}) {
+    async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<IUserDataMapAttributes> {
         let userDataMapInstance: IUserDataMapInstance;
 
         try {
@@ -58,4 +56,18 @@ export const UserDataMapResolver = {
 
         return userDataMapInstance.get({plain: true});
     }
+};
+
+// tslint:disable:no-any
+
+/* istanbul ignore next */
+export const queries = {
+    listUserDataMap: (root: any, args: IListFilters) =>
+        UserDataMapResolver.list(args),
+};
+
+/* istanbul ignore next */
+export const mutations = {
+    findOrCreateUserDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
+        UserDataMapResolver.findOrCreate(args),
 };
