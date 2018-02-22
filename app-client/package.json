@@ -30,7 +30,6 @@
       "!**/registerServiceWorker.ts",
       "!src/ambientInterfaces.d.ts"
     ],
-    "mapCoverage": true,
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
       "<rootDir>/src/__mocks__/localStorage.js"
