@@ -101,7 +101,7 @@ jobs:
                 command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
-                command: cd app-client && yarn deploy-stage
+                command: cd app-client && yarn deploy:stage
 
     stage-deploy-backend:
         <<: *defaults
@@ -117,7 +117,7 @@ jobs:
                 command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
-                command: cd app-backend && yarn deploy-stage
+                command: cd app-backend && yarn deploy:stage
 
 workflows:
     version: 2
