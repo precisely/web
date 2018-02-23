@@ -35,7 +35,14 @@ export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-gen
         variant: Joi.string(),
         quality: Joi.string().optional(),
         data_type_user_id: Joi.string()
-    }
+    },
+
+    indexes: [{
+        hashKey: 'gene',
+        rangeKey: 'data_type_user_id',
+        name: 'GeneticsGlobalIndex',
+        type: 'global',
+    }],
 });
 
 /* istanbul ignore next */

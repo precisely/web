@@ -34,26 +34,24 @@ describe('Genetics resolver tests.', (): void => {
             .mockImplementationOnce((): {attrs: IGeneticsAttributes} => ({attrs: dummyResponseData}))
             .mockImplementationOnce(() => null);
 
-    Genetics.createAsync = Genetics.updateAsync = jest.fn()
-            .mockImplementation((data: IGeneticsAttributes): {attrs: IGeneticsAttributes} => ({attrs: data}));
-
-    const errorExecAsync: jest.Mock<Promise<void>> = jest.fn((): void => { throw new Error('An error occured.'); });
-
-    const successExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
+    const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
         return {
             execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
         };
     });
 
-    Genetics.scan = jest.fn(() => {
+    Genetics.createAsync = Genetics.updateAsync = jest.fn()
+            .mockImplementation((data: IGeneticsAttributes): {attrs: IGeneticsAttributes} => ({attrs: data}));
+
+    const mockedLimit = jest.fn((limit: number) => ({
+        execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),
+        startKey: mockedExecAsync,
+    }));
+
+    Genetics.query = jest.fn(() => {
         return {
-            limit: jest.fn((limit: number) => {
-                return {
-                    execAsync: errorExecAsync,
-                    startKey: successExecAsync,
-                    where: jest.fn(() => ({gte: successExecAsync})),
-                };
-            }),
+            limit: mockedLimit,
+            usingIndex: jest.fn(() => ({limit: mockedLimit}))
         };
     });
 
@@ -95,23 +93,24 @@ describe('Genetics resolver tests.', (): void => {
     });
 
     describe('List test', (): void => {
-        it('should return an error message if an error occurs.', async (): Promise<void> => {
+        it('should return an error message if required parameters are not present.', async (): Promise<void> => {
             let response = await geneticsResolver.list();
-            expect(response[`message`]).toEqual('An error occured.');
+            expect(response[`message`]).toEqual('Required parameters not present.');
         });
 
-        unroll('It should respond with the genetics data list when #paramName is present.', async (
+        unroll('It should respond with the genetics data list when #params are present.', async (
                 done: () => void,
-                args: {paramName: string, paramValue: string}
+                args: {params: {[key: string]: string | number}}
         ): Promise<void> => {
-            let response = await geneticsResolver.list({[args.paramName]: args.paramValue});
+            let response = await geneticsResolver.list(args.params);
             expect(response).toEqual({Items: [dummyResponseData]});
             done();
         }, [ // tslint:disable-next-line
-            ['paramName', 'paramValue'],
-            ['lastEvaluatedKeys', {dataTypeUserId: 'PQR01', gene: 'XXXXY'}],
-            ['updatedAt', '2017-12-01T18:30:00.000Z'],
-            ['createdAt', '2018-12-01T18:30:00.000Z'],
+            ['params'],
+            [{dataTypeUserId: 'ABC'}],
+            [{gene: 'QWERTY'}],
+            [{gene: 'QWERTY', lastEvaluatedKeys: {dataTypeUserId: 'XYZ', gene: 'QWERTY2'}}],
+            [{gene: 'QWERTY', lastEvaluatedKeys: {dataTypeUserId: 'XYZ', gene: 'QWERTY2'}, limit: 10}],
         ]);
     });
 });

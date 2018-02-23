@@ -6,14 +6,19 @@ type GenericResponse {
     message: String
 }
 
-input LastEvaluatedKeyInput {
+input LastEvaluatedGeneticsRecord {
     dataTypeUserId: String
     gene: String
 }
 
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
-    geneticsList(limit: Int, lastEvaluatedKeys: LastEvaluatedKeyInput, createdAt: String): GeneticsList,
+    geneticsList(
+            limit: Int,
+            lastEvaluatedKeys: LastEvaluatedGeneticsRecord,
+            dataTypeUserId: String,
+            gene: String,
+    ): GeneticsList,
     getGeneticsData(dataTypeUserId: String!, gene: String!): Genetics
 }
 

@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {Scan} from 'dynogels';
+import {Query} from 'dynogels';
 import {Genetics, IGeneticsAttributes} from '../models/Genetics';
 
 interface IListFilters {
@@ -15,8 +15,8 @@ interface IListFilters {
         dataTypeUserId: string;
         gene: string;
     };
-    createdAt?: string; // Should be the ISO date string
-    updatedAt?: string; // Should be the ISO date string
+    dataTypeUserId?: string;
+    gene?: string;
 }
 
 interface IListObject {
@@ -102,24 +102,25 @@ export const geneticsResolver = {
     },
 
     async list(args: IListFilters = {}): Promise<IListObject> {
-        const {limit = 15, lastEvaluatedKeys, createdAt, updatedAt} = args;
+        const {limit = 15, lastEvaluatedKeys, dataTypeUserId, gene} = args;
         let result: IListObject;
+
         try {
-            let scan: Scan & {execAsync?: () => IListObject} = Genetics.scan().limit(limit);
+            let query: Query & {execAsync?: () => IListObject};
+
+            if (dataTypeUserId) {
+                query = Genetics.query(dataTypeUserId).limit(limit);
+            } else if (gene) {
+                query = Genetics.query(gene).usingIndex('GeneticsGlobalIndex').limit(limit);
+            } else {
+                throw new Error('Required parameters not present.');
+            }
 
             if (lastEvaluatedKeys && lastEvaluatedKeys.dataTypeUserId && lastEvaluatedKeys.gene) {
-                scan = scan.startKey(lastEvaluatedKeys.dataTypeUserId, lastEvaluatedKeys.gene);
+                query = query.startKey(lastEvaluatedKeys.dataTypeUserId, lastEvaluatedKeys.gene);
             }
 
-            if (createdAt) {
-                scan = scan.where('createdAt').gte(createdAt);
-            }
-
-            if (updatedAt) {
-                scan = scan.where('updatedAt').gte(updatedAt);
-            }
-
-            result = await scan.execAsync();
+            result = await query.execAsync();
         } catch (error) {
             console.log('geneticsResolver-list:', error.message);
             return error;

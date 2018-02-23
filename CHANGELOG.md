@@ -35,3 +35,4 @@
 
 ### Added
 - The Genetics model and it's CRUD endpoints.
+- A global index for the `gene` in the Genetics model.
