@@ -12,9 +12,9 @@
     "test": "cd app-backend && yarn test && cd ../app-client && yarn test",
     "tslint": "cd app-backend && yarn tslint && cd ../app-client && yarn tslint",
     "eslint": "cd app-backend && yarn eslint && cd ../app-client && yarn eslint",
-    "deploy-dev": "cd app-backend && yarn deploy-dev && cd ../app-client && yarn deploy-dev",
-    "deploy-stage": "cd app-backend && yarn deploy-stage && cd ../app-client && yarn deploy-stage",
-    "deploy-prod": "cd app-backend && yarn deploy-prod && cd ../app-client && yarn deploy-prod"
+    "deploy:dev": "cd app-backend && yarn deploy:dev && cd ../app-client && yarn deploy:dev",
+    "deploy:stage": "cd app-backend && yarn deploy:stage && cd ../app-client && yarn deploy:stage",
+    "deploy:prod": "cd app-backend && yarn deploy:prod && cd ../app-client && yarn deploy:prod"
   },
   "repository": {
     "type": "git",

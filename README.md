@@ -106,19 +106,19 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     
     - Both (Backend and Frontend)
         ```
-        yarn deploy-dev
+        yarn deploy:dev
         ```
 
     - Backend Server only
         ```
         cd app-backend/
-        yarn deploy-dev
+        yarn deploy:dev
         ```
 
     - Frontend Client only
         ```
         cd app-client/
-        yarn deploy-dev
+        yarn deploy:dev
         ```
         - Your deployment url will be : http://dev-precisely-01.s3-website-us-east-1.amazonaws.com/
 
@@ -134,19 +134,19 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     
     - Both (Backend and Frontend)
         ```
-        yarn deploy-stage
+        yarn deploy:stage
         ```
 
     - Backend Server only
         ```
         cd app-backend/
-        yarn deploy-stage
+        yarn deploy:stage
         ```
 
     - Frontend Client only
         ```
         cd app-client/
-        yarn deploy-stage
+        yarn deploy:stage
         ```
         - Your deployment url will be : http://stage-precisely-01.s3-website-us-east-1.amazonaws.com/
 
@@ -162,18 +162,18 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     
    - Both (Backend and Frontend)
         ```
-        yarn deploy-prod
+        yarn deploy:prod
         ```
 
     - Backend Server only
         ```
         cd app-backend/
-        yarn deploy-prod
+        yarn deploy:prod
         ```
 
     - Frontend Client only
         ```
         cd app-client/
-        yarn deploy-prod
+        yarn deploy:prod
         ```
         - Your deployment url will be : http://prod-precisely-01.s3-website.us-east-2.amazonaws.com/
