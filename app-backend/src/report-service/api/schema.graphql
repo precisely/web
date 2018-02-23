@@ -5,7 +5,8 @@ type Report {
     raw_content: String,
     parsed_content: String,
     top_level: Boolean,
-    genes: String,
+    genes: [String],
+    genetics: GeneticsList
 }
 
 type LastEvaluatedReportData {

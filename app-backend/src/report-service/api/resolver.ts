@@ -8,6 +8,8 @@
 
 import {Scan} from 'dynogels';
 import {Report, IReportAttributes} from '../models/Report';
+import {userDataMapResolver} from '../../user-data-map/api/resolver';
+import {Genetics} from '../../genetics-service/models/Genetics';
 
 export interface ICreateOrUpdateAttributes {
     title: string;
@@ -84,6 +86,10 @@ export const reportResolver = {
             if (!reportInstance) {
                 throw new Error('No such record found');
             }
+            let userInstance = await userDataMapResolver.getByUserId({userId: args.userId});
+            let result = await Genetics.query(userInstance.opaque_id).execAsync();
+            
+            reportInstance.attrs[`genetics`] = result;
         } catch (error) {
             console.log('reportResolver-get:', error.message);
             return error;

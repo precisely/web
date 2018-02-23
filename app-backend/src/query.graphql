@@ -13,7 +13,7 @@ input LastEvaluatedGeneticsRecord {
 }
 
 input LastEvaluatedReportRecord {
-    dataTypeUserId: String
+    opaqueId: String
     gene: String
 }
 

@@ -15,7 +15,7 @@ export const UserDataMapMock = DBConnectionMock.define(
         'userDataMap',
         {
             user_id: 'test',
-            data_type_user_id: 'dummyId',
+            opaque_id: 'dummyId',
             vendor_data_type: 'test'
         },
         {});

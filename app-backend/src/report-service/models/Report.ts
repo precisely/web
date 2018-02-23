@@ -8,6 +8,7 @@
 
 import * as Joi from 'joi';
 import {AWS} from 'dynogels';
+import { IGeneticsAttributes } from '../../genetics-service/models/Genetics';
 
 const dynogels = require('dynogels-promisified');
 
@@ -21,6 +22,7 @@ export interface IReportAttributes {
     parsed_content: string;
     top_level: boolean;
     genes: string[];
+    genetics: IGeneticsAttributes[];
 }
 
 /* istanbul ignore next */
@@ -38,7 +40,14 @@ export const Report = dynogels.define('dev-01-dynamo-report', {
         parsed_content: Joi.string(),
         top_level: Joi.boolean(),
         genes: Joi.array().items(Joi.string()),
-    }
+    },
+
+    indexes: [{
+        hashKey: 'id',
+        rangeKey: 'slug',
+        name: 'ReportIdLocalIndex',
+        type: 'local',
+    }],
 });
 
 /* istanbul ignore next */

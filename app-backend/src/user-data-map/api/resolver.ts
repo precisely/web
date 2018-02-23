@@ -30,6 +30,17 @@ export const userDataMapResolver = {
         return userDataMapInstances;
     },
 
+    async getByUserId(args: {userId: string}): Promise<UserDataMapAttributes> {
+        let userDataMapInstance: UserDataMapInstance;
+
+        userDataMapInstance = await UserDataMap.findOne({where: {user_id: args.userId}});
+        if (!userDataMapInstance) {
+            throw new Error('No such user record found');
+        }
+        
+        return userDataMapInstance.get({plain: true});
+    },
+
     async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
         let userDataMapInstance: UserDataMapInstance;
 
@@ -62,8 +73,7 @@ export const userDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    listUserDataMap: (root: any, args: ListFilters) =>
-        userDataMapResolver.list(args),
+    listUserDataMap: (root: any, args: ListFilters) => userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */
