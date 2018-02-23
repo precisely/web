@@ -6,23 +6,24 @@
 * without modification, are not permitted.
 */
 
+import * as _ from 'lodash';
 import {Query} from 'dynogels';
 import {Genetics, IGeneticsAttributes} from '../models/Genetics';
 
 interface IListFilters {
     limit?: number;
     lastEvaluatedKeys?: {
-        dataTypeUserId: string;
+        opaqueId: string;
         gene: string;
     };
-    dataTypeUserId?: string;
+    opaqueId?: string;
     gene?: string;
 }
 
 interface IListObject {
     Items: IGeneticsAttributes[];
     LastEvaluatedKey: {
-        data_type_user_id: string;
+        opaque_id: string;
         gene: string;
     };
 }
@@ -32,22 +33,22 @@ export interface ICreateOrUpdateAttributes {
     source: string;
     variant: string;
     quality?: string;
-    dataTypeUserId: string;
+    opaqueId: string;
 }
 
 export const geneticsResolver = {
     async create(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
-        const dataForCreating: IGeneticsAttributes = {data_type_user_id: args.dataTypeUserId};
+        const dataForCreating: IGeneticsAttributes = {};
 
         for (const key in args) {
-            if (key !== 'dataTypeUserId' && args[key]) {
-                dataForCreating[key] = args[key];
+            if (args[key]) {
+                dataForCreating[_.snakeCase(key)] = args[key];
             }
         }
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
+            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
             if (geneticsInstance) {
                 throw new Error('Record already exists.');
             }
@@ -62,16 +63,16 @@ export const geneticsResolver = {
 
     async update(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
-        const dataToUpdate: IGeneticsAttributes = {data_type_user_id: args.dataTypeUserId};
+        const dataToUpdate: IGeneticsAttributes = {};
 
         for (const key in args) {
-            if (key !== 'dataTypeUserId' && args[key]) {
-                dataToUpdate[key] = args[key];
+            if (args[key]) {
+                dataToUpdate[_.snakeCase(key)] = args[key];
             }
         }
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
+            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
@@ -85,11 +86,11 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async get(args: {dataTypeUserId: string, gene: string}): Promise<IGeneticsAttributes> {
+    async get(args: {opaqueId: string, gene: string}): Promise<IGeneticsAttributes> {
         let geneticsInstance: {attrs: IGeneticsAttributes};
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.dataTypeUserId, args.gene);
+            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
             }
@@ -102,22 +103,22 @@ export const geneticsResolver = {
     },
 
     async list(args: IListFilters = {}): Promise<IListObject> {
-        const {limit = 15, lastEvaluatedKeys, dataTypeUserId, gene} = args;
+        const {limit = 15, lastEvaluatedKeys, opaqueId, gene} = args;
         let result: IListObject;
 
         try {
             let query: Query & {execAsync?: () => IListObject};
 
-            if (dataTypeUserId) {
-                query = Genetics.query(dataTypeUserId).limit(limit);
+            if (opaqueId) {
+                query = Genetics.query(opaqueId).limit(limit);
             } else if (gene) {
                 query = Genetics.query(gene).usingIndex('GeneticsGlobalIndex').limit(limit);
             } else {
                 throw new Error('Required parameters not present.');
             }
 
-            if (lastEvaluatedKeys && lastEvaluatedKeys.dataTypeUserId && lastEvaluatedKeys.gene) {
-                query = query.startKey(lastEvaluatedKeys.dataTypeUserId, lastEvaluatedKeys.gene);
+            if (lastEvaluatedKeys && lastEvaluatedKeys.opaqueId && lastEvaluatedKeys.gene) {
+                query = query.startKey(lastEvaluatedKeys.opaqueId, lastEvaluatedKeys.gene);
             }
 
             result = await query.execAsync();
@@ -135,7 +136,7 @@ export const geneticsResolver = {
 /* istanbul ignore next */
 export const queries = {
     geneticsList: (root: any, args: IListFilters) => geneticsResolver.list(args),
-    getGeneticsData: (root: any, args: {dataTypeUserId: string, gene: string}) => geneticsResolver.get(args),
+    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args),
 };
 
 /* istanbul ignore next */

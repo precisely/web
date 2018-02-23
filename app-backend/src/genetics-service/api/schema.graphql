@@ -1,14 +1,21 @@
 type LastEvaluatedGeneticsData {
-    data_type_user_id: String
+    opaque_id: String
     gene: String
 }
 
 type Genetics {
-    gene: String,
-    source: String,
-    variant: String,
-    quality: String,
-    data_type_user_id: String
+    opaque_id: String
+    sample_id: String
+    source: String
+    gene: String
+    variant_call: String
+    zygosity: String
+    start_base: String
+    chromosome_name: String
+    variant_type: String
+    quality: String
+    created_at: String
+    updated_at: String
 }
 
 type GeneticsListItem {

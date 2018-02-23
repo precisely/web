@@ -15,31 +15,45 @@ const dynogels = require('dynogels-promisified');
 AWS.config.update({region: 'us-east-1'});
 
 export interface IGeneticsAttributes {
-    gene?: string;
+    opaque_id?: string;
+    sample_id?: string;
     source?: string;
-    variant?: string;
+    gene?: string;
+    variant_call?: string;
+    zygosity?: string;
+    start_base?: string;
+    chromosome_name?: string;
+    variant_type?: string;
     quality?: string;
-    data_type_user_id: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 /* istanbul ignore next */
 export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-genetics', '01'), {
-    hashKey : 'data_type_user_id',
+    hashKey : 'opaque_id',
     rangeKey: 'gene',
 
     timestamps : true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
 
     schema : {
-        gene: Joi.string(),
+        opaque_id: Joi.string(),
+        sample_id: Joi.string(),
         source: Joi.string(),
-        variant: Joi.string(),
-        quality: Joi.string().optional(),
-        data_type_user_id: Joi.string()
+        gene: Joi.string(),
+        variant_call: Joi.string(),
+        zygosity: Joi.string(),
+        start_base: Joi.string(),
+        chromosome_name: Joi.string(),
+        variant_type: Joi.string(),
+        quality: Joi.string(),
     },
 
     indexes: [{
         hashKey: 'gene',
-        rangeKey: 'data_type_user_id',
+        rangeKey: 'opaque_id',
         name: 'GeneticsGlobalIndex',
         type: 'global',
     }],
