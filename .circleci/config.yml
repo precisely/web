@@ -4,10 +4,12 @@
 #
 
 defaults: &defaults
+    environment:
+        CC_TEST_REPORTER_ID: d3c6223bb6beb7b56cc01e2865e445a028085cd455695307b99d521bfcd2e1c8
     docker:
         # specify the version you desire here
-        - image: circleci/node:6.10
-        
+        - image: circleci/node:6.10.3
+
         # Specify service dependencies here if necessary
         # CircleCI maintains a library of pre-built images
         # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -15,10 +17,25 @@ defaults: &defaults
 
     working_directory: ~/repo
 
+download_codeclimate: &download_codeclimate
+    run:
+        name: Download Code Climate test-reporter
+        command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+upload_codeclimate_results: &upload_codeclimate_results
+    run:
+        name: Upload Code Climate Results
+        command: |
+            ./cc-test-reporter format-coverage --output "coverage/codeclimate.$CIRCLE_JOB.json"
+            AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER"
+
 version: 2
 jobs:
     build-frontend:
         <<: *defaults
+
         steps:
         - checkout
 
@@ -29,9 +46,11 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-        - run: 
+        - run:
             name: Installing Dependencies
             command: cd app-client && yarn install
+
+        - <<: *download_codeclimate
 
         - save_cache:
             paths:
@@ -42,7 +61,11 @@ jobs:
         # run frontend tests!
         - run:
             name: Frontend Tests
-            command: cd app-client && yarn test
+            command: |
+                cd app-client
+                ./cc-test-reporter before-build
+                yarn test
+                ./cc-test-reporter after-build --debug -t lcov --exit-code $?
 
         # run linters!
         - run:
@@ -51,6 +74,8 @@ jobs:
         - run:
             name: ESLint
             command: cd app-client && yarn eslint
+
+        - <<: *upload_codeclimate_results
 
     build-backend:
         <<: *defaults
@@ -64,7 +89,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-        - run: 
+        - run:
             name: Installing Dependencies
             command: cd app-backend && yarn install
 
@@ -74,10 +99,16 @@ jobs:
                 - app-backend/node_modules
             key: v1-dependencies-{{ checksum "app-backend/package.json" }}
 
+        - <<: *download_codeclimate
+
         # run backend tests!
-        - run: 
+        - run:
             name: Backend Tests
-            command: cd app-backend && yarn test
+            command: |
+                cd app-backend
+                ./cc-test-reporter before-build
+                yarn test
+                ./cc-test-reporter after-build --debug -t lcov --exit-code $?
 
         # run linters!
         - run:
@@ -86,7 +117,9 @@ jobs:
         - run:
             name: ESLint
             command: cd app-backend && yarn eslint
-            
+
+        - <<: *upload_codeclimate_results
+
     stage-deploy-frontend:
         <<: *defaults
         steps:
@@ -123,8 +156,8 @@ workflows:
     version: 2
     build-test-and-deploy:
         jobs:
-            - build-backend
             - build-frontend
+            - build-backend
 
             # run this job only when dev branch is build
             - stage-deploy-backend:
