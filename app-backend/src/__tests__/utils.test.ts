@@ -13,13 +13,13 @@ jest.mock('aws-sdk', () => {
                 .mockImplementationOnce((
                         params: AWS.KMS.Types.DecryptRequest,
                         callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-                ): void => {
+                ) => {
                     callback(new Error('mock error'), null);
                 })
                 .mockImplementationOnce((
                         params: AWS.KMS.Types.DecryptRequest,
                         callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-                ): void => {
+                ) => {
                     callback(null, {Plaintext: new Buffer(JSON.stringify({demo: 'test'}))});
                 })
         })
@@ -31,11 +31,11 @@ import {getEnvironmentVariables} from '../utils';
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Test for getEnvironmentVariables', (): void => {
+describe('Test for getEnvironmentVariables', () => {
 
     process.env.SECRETS = 'test';
 
-    it('getEnvironmentVariables should be a function', (): void => {
+    it('getEnvironmentVariables should be a function', () => {
         expect(typeof getEnvironmentVariables).toBe('function');
     });
 

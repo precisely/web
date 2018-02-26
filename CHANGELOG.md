@@ -26,3 +26,9 @@
 - Homepage
 - The UserDataMapper models, schemas and the resolvers.
 - `eslint-config-react-app` to the dev dependencies.
+
+## [0.0.4] - 2018-02-21
+
+### Removed
+
+- VendorDataType

@@ -7,7 +7,7 @@
 */
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
-import * as UserDataMapperResolvers from './user-data-mapper/resolver';
+import * as UserDataMapperResolvers from './user-data-map/api/resolver';
 
 export const resolvers: IResolvers = {
     Query: {
