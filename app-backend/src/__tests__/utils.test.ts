@@ -57,10 +57,10 @@ describe('Test for getEnvironmentVariables', () => {
     ]);
 });
 
-describe('Test for addEnvironmentToTableName', (): void => {
+describe('Test for addEnvironmentToTableName', () => {
     process.env.NODE_ENV = 'dev';
 
-    it('should add the environment to the table name.', (): void => {
+    it('should add the environment to the table name.', () => {
         const result: string = addEnvironmentToTableName('test-table', '01');
         expect(result).toBe('dev-01-test-table');
     });

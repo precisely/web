@@ -16,7 +16,7 @@ unroll.use(it);
 
 type ExecSuccess = {Items: IGeneticsAttributes[]};
 
-describe('Genetics resolver tests.', (): void => {
+describe('Genetics resolver tests.', () => {
     const commonData: {gene: string, variant: string, source: string} = {
         gene: 'XXXXY',
         variant: 'demo2',
@@ -55,7 +55,7 @@ describe('Genetics resolver tests.', (): void => {
         };
     });
 
-    describe('Create tests', (): void => {
+    describe('Create tests', () => {
         it('should throw an error when the record already exists.', async (): Promise<void> => {
             let response = await geneticsResolver.create(dummyRequestData);
             expect(response[`message`]).toEqual('Record already exists.');
@@ -67,7 +67,7 @@ describe('Genetics resolver tests.', (): void => {
         });
     });
 
-    describe('Update tests', (): void => {
+    describe('Update tests', () => {
         it('should update the record when there is no error.', async (): Promise<void> => {
             let response = await geneticsResolver.update(dummyRequestData);
             expect(response).toEqual(dummyResponseData);
@@ -80,7 +80,7 @@ describe('Genetics resolver tests.', (): void => {
         });
     });
 
-    describe('Get tests', (): void => {
+    describe('Get tests', () => {
         it('should fetch the record when there is no error.', async (): Promise<void> => {
             let response = await geneticsResolver.get({dataTypeUserId: 'PQR03', gene: 'XXXX'});
             expect(response).toEqual(dummyResponseData);
@@ -92,7 +92,7 @@ describe('Genetics resolver tests.', (): void => {
         });
     });
 
-    describe('List test', (): void => {
+    describe('List test', () => {
         it('should return an error message if required parameters are not present.', async (): Promise<void> => {
             let response = await geneticsResolver.list();
             expect(response[`message`]).toEqual('Required parameters not present.');
