@@ -1,7 +1,7 @@
 {
   "name": "precisely-web",
   "description": "",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "postinstall": "cd app-backend && yarn install && cd ../app-client && yarn install",

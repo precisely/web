@@ -39,3 +39,8 @@
 
 ### Changed
 - Style of the app layout.
+
+## [0.0.5] - 2018-02-26
+
+### Changed
+- The attributes of the Genetic model.

@@ -25,10 +25,10 @@ type Query {
 type Mutation {
     findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
     updateGenetics(
-            opaqueId: String!,
+            opaqueId: String!, # Required while updating
             sampleId: String,
             source: String,
-            gene: String!,
+            gene: String!, # Required while updating
             variantCall: String,
             zygosity: String,
             startBase: String,
@@ -37,7 +37,7 @@ type Mutation {
             quality: String
     ): Genetics,
     createGenetics(
-            opaqueId: String!,
+            opaqueId: String!, # All the fields are required while creating a record.
             sampleId: String!,
             source: String!,
             gene: String!,
