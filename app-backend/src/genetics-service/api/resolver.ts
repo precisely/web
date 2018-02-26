@@ -6,9 +6,10 @@
 * without modification, are not permitted.
 */
 
-import * as _ from 'lodash';
 import {Query} from 'dynogels';
 import {Genetics, IGeneticsAttributes} from '../models/Genetics';
+
+const toSnakeCase = require('lodash.snakecase');
 
 interface IListFilters {
     limit?: number;
@@ -48,7 +49,7 @@ export const geneticsResolver = {
 
         for (const key in args) {
             if (args[key]) {
-                dataForCreating[_.snakeCase(key)] = args[key];
+                dataForCreating[toSnakeCase(key)] = args[key];
             }
         }
 
@@ -72,7 +73,7 @@ export const geneticsResolver = {
 
         for (const key in args) {
             if (args[key]) {
-                dataToUpdate[_.snakeCase(key)] = args[key];
+                dataToUpdate[toSnakeCase(key)] = args[key];
             }
         }
 

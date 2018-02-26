@@ -39,6 +39,7 @@
     "graphql-tag": "2.6.1",
     "graphql-tools": "2.7.2",
     "jest-transform-graphql": "2.1.0",
+    "lodash.snakecase": "4.1.1",
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
     "sequelize": "4.27.0",
