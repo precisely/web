@@ -6,10 +6,10 @@ type Report {
     parsed_content: String,
     top_level: Boolean,
     genes: [String],
-    genetics: GeneticsList
 }
 
 type LastEvaluatedReportData {
+    id: String,
     slug: String
 }
 
@@ -19,5 +19,7 @@ type ReportListItem {
 
 type ReportList {
     Items: [ReportListItem],
-    LastEvaluatedKey: LastEvaluatedReportData
+    genetics: GeneticsList,
+    LastEvaluatedKey: LastEvaluatedReportData,
+    LastEvaluatedGeneticsKey: LastEvaluatedGeneticsData
 }

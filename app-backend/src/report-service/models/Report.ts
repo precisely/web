@@ -8,7 +8,8 @@
 
 import * as Joi from 'joi';
 import {AWS} from 'dynogels';
-import { IGeneticsAttributes } from '../../genetics-service/models/Genetics';
+import {IGeneticsAttributes} from '../../genetics-service/models/Genetics';
+import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
 
@@ -26,13 +27,13 @@ export interface IReportAttributes {
 }
 
 /* istanbul ignore next */
-export const Report = dynogels.define('dev-01-dynamo-report', {
-    hashKey: 'slug',
-    rangeKey: 'title',
+export const Report = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
+    hashKey: 'id',
+    rangeKey: 'slug',
 
     timestamps : true,
 
-    schema : {
+    schema: {
         id: dynogels.types.uuid(),
         title: Joi.string(),
         slug: Joi.string().required(),
@@ -43,10 +44,10 @@ export const Report = dynogels.define('dev-01-dynamo-report', {
     },
 
     indexes: [{
-        hashKey: 'id',
-        rangeKey: 'slug',
-        name: 'ReportIdLocalIndex',
-        type: 'local',
+        hashKey: 'slug',
+        rangeKey: 'id',
+        name: 'ReportGlobalIndex',
+        type: 'global',
     }],
 });
 

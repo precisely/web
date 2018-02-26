@@ -13,8 +13,8 @@ input LastEvaluatedGeneticsRecord {
 }
 
 input LastEvaluatedReportRecord {
-    opaqueId: String
-    gene: String
+    id: String!
+    slug: String!
 }
 
 type Query {
@@ -26,8 +26,16 @@ type Query {
             gene: String,
     ): GeneticsList,
     getGeneticsData(opaqueId: String!, gene: String!): Genetics,
-    listReports(limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord, createdAt: String): ReportList,
-    getReport(slug: String!, id: String!, userId: String!): Report,
+    reports(slug: String, id: String, limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord): ReportList,
+    report(
+            slug: String, 
+            id: String, 
+            userId: String!,
+            limit: Int, 
+            geneticsLimit: Int, 
+            lastEvaluatedKeys: LastEvaluatedReportRecord, 
+            geneticsLastEvaluatedKeys: LastEvaluatedGeneticsRecord
+    ): ReportList,
 }
 
 type Mutation {

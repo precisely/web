@@ -6,10 +6,10 @@
 * without modification, are not permitted.
 */
 
-import {Scan} from 'dynogels';
+import {Query} from 'dynogels';
 import {Report, IReportAttributes} from '../models/Report';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
-import {Genetics} from '../../genetics-service/models/Genetics';
+import {geneticsResolver} from '../../genetics-service/api/resolver';
 
 export interface ICreateOrUpdateAttributes {
     title: string;
@@ -20,19 +20,32 @@ export interface ICreateOrUpdateAttributes {
 
 interface IListFilters {
     limit?: number;
+    geneticsLimit?: number;
     lastEvaluatedKeys?: {
+        id: string;
         slug: string;
-        title: string;
     };
-    createdAt?: string; // Should be the ISO date string
-    updatedAt?: string; // Should be the ISO date string
+    geneticsLastEvaluatedKeys?: {
+        opaqueId: string;
+        gene: string;
+    };
+    id?: string;
+    slug?: string;
 }
 
 interface IListObject {
     Items: IReportAttributes[];
     LastEvaluatedKey: {
         slug: string;
-        title: string;
+        id: string;
+    };
+    LastEvaluatedReportKey: {
+        slug: string;
+        id: string;
+    };
+    LastEvaluatedGeneticsKey: {
+        opaque_id: string;
+        gene: string;
     };
 }
 
@@ -52,24 +65,24 @@ export const reportResolver = {
     },
 
     async list(args: IListFilters = {}): Promise<IListObject> {
-        const {limit = 15, lastEvaluatedKeys, createdAt, updatedAt} = args;
+        const {limit = 15, lastEvaluatedKeys, slug, id} = args;
         let result: IListObject;
         try {
-            let scan: Scan & {execAsync?: () => IListObject} = Report.scan().limit(limit);
+            let query: Query & {execAsync?: () => IListObject};
 
-            if (lastEvaluatedKeys && lastEvaluatedKeys.slug && lastEvaluatedKeys.title) {
-                scan = scan.startKey(lastEvaluatedKeys.slug && lastEvaluatedKeys.title);
+            if (id) {
+                query = Report.query(id).limit(limit);
+            } else if (slug) {
+                query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
+            } else {
+                throw new Error('Required parameters not present.');
             }
 
-            if (createdAt) {
-                scan = scan.where('createdAt').gte(createdAt);
+            if (lastEvaluatedKeys) {
+                query = query.startKey(lastEvaluatedKeys.id, lastEvaluatedKeys.slug);
             }
 
-            if (updatedAt) {
-                scan = scan.where('updatedAt').gte(updatedAt);
-            }
-
-            result = await scan.execAsync();
+            result = await query.execAsync();
         } catch (error) {
             console.log('reportResolver-list:', error.message);
             return error;
@@ -78,24 +91,27 @@ export const reportResolver = {
         return result;
     },
 
-    async get(args: {slug: string, id: string, userId: string}): Promise<IReportAttributes> {
-        let reportInstance: {attrs: IReportAttributes};
-
+    async get(args: IListFilters & {userId: string}): Promise<IListObject> {
+        const {slug, id, limit, geneticsLimit, lastEvaluatedKeys, geneticsLastEvaluatedKeys, userId} = args;
+        let reportInstance: IListObject;
+        
         try {
-            reportInstance = await Report.getAsync(args.slug, args.id);
-            if (!reportInstance) {
-                throw new Error('No such record found');
-            }
-            let userInstance = await userDataMapResolver.getByUserId({userId: args.userId});
-            let result = await Genetics.query(userInstance.opaque_id).execAsync();
-            
-            reportInstance.attrs[`genetics`] = result;
+            reportInstance = await reportResolver.list({slug, id, limit, lastEvaluatedKeys});
+
+            let userInstance = await userDataMapResolver.getByUserId({userId});
+            let result = await geneticsResolver.list({
+                opaqueId: userInstance.opaque_id, 
+                limit: geneticsLimit, 
+                lastEvaluatedKeys: geneticsLastEvaluatedKeys
+            });
+            reportInstance[`genetics`] = result;
+            reportInstance.LastEvaluatedGeneticsKey = result.LastEvaluatedKey;
         } catch (error) {
             console.log('reportResolver-get:', error.message);
             return error;
         }
         
-        return reportInstance.attrs;
+        return reportInstance;
     },
 };
 
@@ -103,11 +119,12 @@ export const reportResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    listReports: (root: any, args: IListFilters) => reportResolver.list(args),
-    getReport: (root: any, args: {slug: string, id: string, userId: string}) => reportResolver.get(args),
+    reports: (root: any, args: IListFilters) => reportResolver.list(args),
+    report: (root: any, args: IListFilters & {userId: string}) => reportResolver.get(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
+    // TODO: will be fixed with https://github.com/precisely/web/issues/90
     saveReport: (root: any, args: ICreateOrUpdateAttributes) => reportResolver.create(args),
 };
