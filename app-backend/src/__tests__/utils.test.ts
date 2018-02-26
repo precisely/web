@@ -13,29 +13,29 @@ jest.mock('aws-sdk', () => {
                 .mockImplementationOnce((
                         params: AWS.KMS.Types.DecryptRequest,
                         callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-                ): void => {
+                ) => {
                     callback(new Error('mock error'), null);
                 })
                 .mockImplementationOnce((
                         params: AWS.KMS.Types.DecryptRequest,
                         callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-                ): void => {
+                ) => {
                     callback(null, {Plaintext: new Buffer(JSON.stringify({demo: 'test'}))});
                 })
         })
     };
 });
 
-import {getEnvironmentVariables} from '../utils';
+import {getEnvironmentVariables, addEnvironmentToTableName} from '../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Test for getEnvironmentVariables', (): void => {
+describe('Test for getEnvironmentVariables', () => {
 
     process.env.SECRETS = 'test';
 
-    it('getEnvironmentVariables should be a function', (): void => {
+    it('getEnvironmentVariables should be a function', () => {
         expect(typeof getEnvironmentVariables).toBe('function');
     });
 
@@ -44,8 +44,8 @@ describe('Test for getEnvironmentVariables', (): void => {
             args: {expectedResult: string, description: string}
     ): Promise<void> => {
         const result = await getEnvironmentVariables();
-        if(args.expectedResult === 'pass') {
-            expect(result).toEqual({"demo": "test"});
+        if (args.expectedResult === 'pass') {
+            expect(result).toEqual({'demo': 'test'});
         } else {
             expect(result).toBeFalsy();
         }
@@ -55,4 +55,13 @@ describe('Test for getEnvironmentVariables', (): void => {
         ['fail', 'return null'],
         ['pass', 'return data'],
     ]);
+});
+
+describe('Test for addEnvironmentToTableName', () => {
+    process.env.NODE_ENV = 'dev';
+
+    it('should add the environment to the table name.', () => {
+        const result: string = addEnvironmentToTableName('test-table', '01');
+        expect(result).toBe('dev-01-test-table');
+    });
 });

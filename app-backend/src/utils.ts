@@ -20,10 +20,19 @@ const decryptAsync: (params: DecryptRequest) => Bluebird<Object> = Bluebird.prom
  */
 export async function getEnvironmentVariables(): Promise<Object | void> {
     try {
-        const result: DecryptResponse = await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
+        const result: DecryptResponse = 
+                await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
+                
         return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
     } catch (error) {
         console.log('Error while decrypting secrets:', error.message);
         return null;
     }
+}
+
+/**
+ * Utility function to add the environment to the database table name.
+ */
+export function addEnvironmentToTableName(tableName: string, version: string): string {
+    return `${process.env.NODE_ENV}-${version}-${tableName}`;
 }

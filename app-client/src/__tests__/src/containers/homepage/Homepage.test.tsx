@@ -10,7 +10,6 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Homepage} from 'src/containers/homepage/Homepage';
-import {Footer} from 'src/components/Footer';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Container} from 'src/components/ReusableComponents';
 
@@ -23,16 +22,14 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Homepage tests.', (): void => {
+describe('Homepage tests.', () => {
 
-    const componentTree: ShallowWrapper = shallow(
-        <Homepage />
-    );
+    const componentTree: ShallowWrapper = shallow(<Homepage />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
@@ -41,7 +38,6 @@ describe('Homepage tests.', (): void => {
         ['ParallaxProvider', ParallaxProvider, 1],
         ['Container', Container, 2],
         ['Parallax', Parallax, 1],
-        ['Footer', Footer, 1],
         ['img', 'img', 5],
         ['div', 'div', 9],
         ['h1', 'h1', 1],

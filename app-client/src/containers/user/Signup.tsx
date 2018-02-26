@@ -11,9 +11,20 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {signup} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {
+    formButton,
+    removeBorderRadius,
+    noBorderTop,
+    header,
+    loginAndSignupPanel,
+    inputStyle,
+    alignCenter,
+    formMargin,
+} from 'src/constants/styleGuide';
 
 export interface ISignupState {
     email?: string;
@@ -85,56 +96,61 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
         const {isLoading, email, password, confirmPassword} = this.state;
 
         return (
-            <SignupLoginContainer>
-                <Form id="signupForm" onSubmit={this.submitForm}>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="email"
-                                id="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="password"
-                                id="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <FormGroup style={formGroup}>
-                        <Input
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Re-enter your password"
-                                value={confirmPassword}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                    this.handleInputChange(e.target.id, e.target.value);
-                                }}
-                        />
-                    </FormGroup>
-                    <Button color="success" style={{width: '100%'}} disabled={isLoading} active={isLoading}>
-                        {isLoading ? 'Please wait...' : 'Signup'}
-                    </Button>
-                    <div>
-                        <Link to="/login" style={linkFontSize}>Already have an account? Login here</Link>
+            <div>
+                <NavigationBar {...this.props} />
+                <div className="mx-auto" style={loginAndSignupPanel}>
+                    <h3 style={header}>Sign Up</h3>
+                    <PageContent>
+                        <Form id="signupForm" onSubmit={this.submitForm} style={formMargin}>
+                            <FormGroup style={alignCenter} className="mb-0">
+                                <Input
+                                        style={[removeBorderRadius, inputStyle]}
+                                        type="email"
+                                        id="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={alignCenter} className="mb-0">
+                                <Input
+                                        style={[noBorderTop, inputStyle]}
+                                        type="password"
+                                        id="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <FormGroup style={alignCenter}>
+                                <Input
+                                        style={[noBorderTop, inputStyle]}
+                                        type="password"
+                                        id="confirmPassword"
+                                        placeholder="Re-enter your password"
+                                        value={confirmPassword}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                                            this.handleInputChange(e.target.id, e.target.value);
+                                        }}
+                                />
+                            </FormGroup>
+                            <Button style={formButton} disabled={isLoading} active={isLoading}>
+                                {isLoading ? 'Please wait...' : 'Signup'}
+                            </Button>
+                        </Form>
+                    </PageContent>
+                    <div style={[linkFontSize, {textAlign: 'center'}]} className="mt-4">
+                        Already have an account? <Link to="/login">Login</Link>
                     </div>
-                </Form>
-            </SignupLoginContainer>
+                </div>
+            </div>
         );
     }
 }
-
-const formGroup: CSS = {
-    textAlign: 'left',
-};
 
 const linkFontSize: CSS = {
     fontSize: '14px',

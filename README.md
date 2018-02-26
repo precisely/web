@@ -1,4 +1,5 @@
-### Precisely-web (v0.0.3)
+### Precisely-web (v0.0.3) 
+[![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev)
 
 ---
 
@@ -7,6 +8,8 @@
 You need to have Node 6 or higher and `nvm` [installed](https://github.com/creationix/nvm#installation) on your system.
 
 - Install Dependencies.
+
+   `npm i -g serverless`
 
    `yarn install`
 
@@ -50,6 +53,9 @@ This will run both concurrently but is not recommended when you want to view bac
 
 ## Developer Notes
 
+* Branching structure to be followed:
+    * https://graysonkoonce.com/stacked-pull-requests-keeping-github-diffs-small/
+
 * All the secrets are managed using AWS KMS. To know more about how to encrypt new secrets or update/use them, read [wiki](https://github.com/precisely/web/wiki/AWS-Key-Management#usage).
 
 * Currently available environment variables are listed [here](https://github.com/precisely/web/wiki/AWS-Key-Management#list-of-the-environment-variables-stored-currently-for-reference). Please do not forget to update the list if (and when) you add new variables.
@@ -88,7 +94,35 @@ To use the GraphQL Playground, open `/playground` of your Serverless service. Wi
 
 Configure your AWS keys. Here you can find a [2min walkthrough](https://www.youtube.com/watch?v=mRkUnA3mEt4) how to do retrieve the keys.
 
-- For `Staging`:
+- For `Development`
+
+    Make sure you have your development access key and secret token saved under `dev-profile-precisely` profile.
+
+    ```
+    sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+    ```
+
+    You need to make sure you have access to your deployed lambda functions.
+    
+    - Both (Backend and Frontend)
+        ```
+        yarn deploy:dev
+        ```
+
+    - Backend Server only
+        ```
+        cd app-backend/
+        yarn deploy:dev
+        ```
+
+    - Frontend Client only
+        ```
+        cd app-client/
+        yarn deploy:dev
+        ```
+        - Your deployment url will be : http://dev-precisely-01.s3-website-us-east-1.amazonaws.com/
+
+- For `Staging`: (**Auto Deployed on commits in `dev` branch**)
 
     Make sure you have your staging access key and secret token saved under `stage-profile-precisely` profile.
 
@@ -97,27 +131,24 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
 
     You need to make sure you have access to your deployed lambda functions.
+    
+    - Both (Backend and Frontend)
+        ```
+        yarn deploy:stage
+        ```
 
-    - Backend Server
+    - Backend Server only
         ```
         cd app-backend/
-        yarn deploy-stage
+        yarn deploy:stage
         ```
 
-    - Frontend Client
-        - First you will need to choose custom s3 bucket name for client. For ex: s3-firstname-serverless-graphql. Please note that bucket name must be unique across all aws buckets.
-
-        - Now, in `app-client/serverless.yml` edit the `custom.client.bucketName` property and replace it the bucket name above.
-
-        - Now, in `app-client/package.json` edit the `homepage` property with `https://${yourBucketName}.s3-website-${regionName}.amazonaws.com`. For ex: https://s3-bucketname-serverless-graphql.s3-website-us-east-1.amazonaws.com
-
-        - Run the deployment command
-            ```
-            cd app-client/
-            yarn deploy-prod
-            # Your deployment url will be printed on the console
-            ```
-        - Your deployment url will be : http://[bucket-name].s3-website-[region-name].amazonaws.com/
+    - Frontend Client only
+        ```
+        cd app-client/
+        yarn deploy:stage
+        ```
+        - Your deployment url will be : http://stage-precisely-01.s3-website-us-east-1.amazonaws.com/
 
 - For `Production`:
 
@@ -128,24 +159,21 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
 
     You need to make sure you have access to your deployed lambda functions.
+    
+   - Both (Backend and Frontend)
+        ```
+        yarn deploy:prod
+        ```
 
-    - Backend Server
+    - Backend Server only
         ```
         cd app-backend/
-        yarn deploy-prod
+        yarn deploy:prod
         ```
 
-    - Frontend Client
-        - First you will need to choose custom s3 bucket name for client. For ex: s3-firstname-serverless-graphql. Please note that bucket name must be unique across all aws buckets.
-
-        - Now, in `app-client/serverless.yml` edit the `custom.client.bucketName` property and replace it the bucket name above.
-
-        - Now, in `app-client/package.json` edit the `homepage` property with `https://${yourBucketName}.s3-website-${regionName}.amazonaws.com`. For ex: https://s3-bucketname-serverless-graphql.s3-website-us-east-1.amazonaws.com
-
-        - Run the deployment command
-            ```
-            cd app-client/
-            yarn deploy-prod
-            # Your deployment url will be printed on the console
-            ```
-        - Your deployment url will be : http://[bucket-name].s3-website-[region-name].amazonaws.com/
+    - Frontend Client only
+        ```
+        cd app-client/
+        yarn deploy:prod
+        ```
+        - Your deployment url will be : http://prod-precisely-01.s3-website.us-east-2.amazonaws.com/

@@ -26,3 +26,16 @@
 - Homepage
 - The UserDataMapper models, schemas and the resolvers.
 - `eslint-config-react-app` to the dev dependencies.
+
+## [0.0.4] - 2018-02-21
+
+### Removed
+- VendorDataType
+
+### Added
+- The Genetics model and it's CRUD endpoints.
+- A global index for the `gene` in the Genetics model.
+- AboutUs page.
+
+### Changed
+- Style of the app layout.
