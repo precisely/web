@@ -21,8 +21,10 @@ download_codeclimate: &download_codeclimate
     run:
         name: Download Code Climate test-reporter
         command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+            if [[ ! -f cc-test-report ]]; then
+                curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+                chmod +x ./cc-test-reporter
+            fi
 
 upload_codeclimate_results: &upload_codeclimate_results
     run:
@@ -39,30 +41,33 @@ jobs:
         steps:
         - checkout
 
+        - run:
+            name: Switch directory
+            command: cd app-client
+
         # Download and cache dependencies
         - restore_cache:
             keys:
-            - v1-dependencies-{{ checksum "app-client/package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
         - run:
             name: Installing Dependencies
-            command: cd app-client && yarn install
+            command: yarn install
 
         - <<: *download_codeclimate
 
         - save_cache:
             paths:
                 - node_modules
-                - app-client/node_modules
+                - cc-test-reporter
             key: v1-dependencies-{{ checksum "app-client/package.json" }}
 
         # run frontend tests!
         - run:
             name: Frontend Tests
             command: |
-                cd app-client
                 ./cc-test-reporter before-build
                 yarn test
                 ./cc-test-reporter after-build --debug -t lcov --exit-code $?
@@ -70,10 +75,10 @@ jobs:
         # run linters!
         - run:
             name: TSLint
-            command: cd app-client && yarn tslint
+            command: yarn tslint
         - run:
             name: ESLint
-            command: cd app-client && yarn eslint
+            command: yarn eslint
 
         - <<: *upload_codeclimate_results
 
@@ -82,22 +87,27 @@ jobs:
         steps:
         - checkout
 
+        - run:
+            name: Switch directory
+            command: cd app-backend
+
+
         # Download and cache dependencies
         - restore_cache:
             keys:
-            - v1-dependencies-{{ checksum "app-backend/package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
         - run:
             name: Installing Dependencies
-            command: cd app-backend && yarn install
+            command: yarn install
 
         - save_cache:
             paths:
                 - node_modules
-                - app-backend/node_modules
-            key: v1-dependencies-{{ checksum "app-backend/package.json" }}
+                - cc-test-reporter
+            key: v1-dependencies-{{ checksum "package.json" }}
 
         - <<: *download_codeclimate
 
@@ -105,7 +115,6 @@ jobs:
         - run:
             name: Backend Tests
             command: |
-                cd app-backend
                 ./cc-test-reporter before-build
                 yarn test
                 ./cc-test-reporter after-build --debug -t lcov --exit-code $?
@@ -113,10 +122,10 @@ jobs:
         # run linters!
         - run:
             name: TSLint
-            command: cd app-backend && yarn tslint
+            command: yarn tslint
         - run:
             name: ESLint
-            command: cd app-backend && yarn eslint
+            command: yarn eslint
 
         - <<: *upload_codeclimate_results
 
@@ -124,33 +133,43 @@ jobs:
         <<: *defaults
         steps:
             - checkout
+
+            - run:
+                name: Switch directory
+                command: cd app-client
+
             - restore_cache:
                 keys:
-                - v1-dependencies-{{ checksum "app-client/package.json" }}
+                - v1-dependencies-{{ checksum "package.json" }}
                 # fallback to using the latest cache if no exact match is found
                 - v1-dependencies-
             - run:
                 name: Set AWS Profile
-                command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
-                command: cd app-client && yarn deploy:stage
+                command: yarn deploy:stage
 
     stage-deploy-backend:
         <<: *defaults
         steps:
             - checkout
+
+            - run:
+                name: Switch directory
+                command: cd app-backend
+
             - restore_cache:
                 keys:
-                - v1-dependencies-{{ checksum "app-backend/package.json" }}
+                - v1-dependencies-{{ checksum "package.json" }}
                 # fallback to using the latest cache if no exact match is found
                 - v1-dependencies-
             - run:
                 name: Set AWS Profile
-                command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
-                command: cd app-backend && yarn deploy:stage
+                command: yarn deploy:stage
 
 workflows:
     version: 2
