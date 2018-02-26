@@ -29,11 +29,16 @@ interface IListObject {
 }
 
 export interface ICreateOrUpdateAttributes {
-    gene: string;
-    source: string;
-    variant: string;
+    opaqueId?: string;
+    sampleId?: string;
+    source?: string;
+    gene?: string;
+    variantCall?: string;
+    zygosity?: string;
+    startBase?: string;
+    chromosomeName?: string;
+    variantType?: string;
     quality?: string;
-    opaqueId: string;
 }
 
 export const geneticsResolver = {
