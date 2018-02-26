@@ -22,11 +22,11 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for Signup', (): void => {
+describe('Tests for Signup', () => {
 
     Radium.TestMode.enable();
 
-    beforeEach((): void => {
+    beforeEach(() => {
         showAlert = jest.fn<number>().mockReturnValue(1);
     });
 
@@ -72,7 +72,7 @@ describe('Tests for Signup', (): void => {
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
@@ -85,7 +85,7 @@ describe('Tests for Signup', (): void => {
         ['SignupLoginContainer', PageContent, 1]
     ]);
 
-    it('should not submit the form when the username and password are not valid.', (): void => {
+    it('should not submit the form when the username and password are not valid.', () => {
         componentTree.find('#signupForm').simulate('submit', {preventDefault});
         expect(signup).not.toBeCalled();
     });
@@ -93,7 +93,7 @@ describe('Tests for Signup', (): void => {
     unroll('It should change state value onChange of #id', (
             done: () => void,
             args: {id: string, value: string}
-    ): void => {
+    ) => {
         componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
         expect(componentTree.state(args.id)).toEqual(args.value);
         done();
@@ -103,19 +103,19 @@ describe('Tests for Signup', (): void => {
         ['password', 'dummyPassword'],
     ]);
 
-    it('should not submit the form when the confirm password is null.', (): void => {
+    it('should not submit the form when the confirm password is null.', () => {
         componentTree.find('#signupForm').simulate('submit', {preventDefault});
         expect(showAlert).toBeCalledWith(1, 'Please confirm your password.');
         expect(signup).not.toBeCalled();
     });
 
-    it('should change the confirm password state value on change.', (): void => {
+    it('should change the confirm password state value on change.', () => {
         componentTree.find(`#confirmPassword`)
                 .simulate('change', {target: {id: 'confirmPassword', value: 'dummyPassword'}});
         expect(componentTree.state('confirmPassword')).toEqual('dummyPassword');
     });
 
-    it('should change the route to the dashboard when the form is submitted successfully.', async (): Promise<void> => {
+    it('should change the route to the dashboard when the form is submitted successfully.', async () => {
         await componentTree.find('#signupForm').simulate('submit', {preventDefault});
         expect(mockedHistory.push).toBeCalledWith('/login');
     });

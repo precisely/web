@@ -17,7 +17,7 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('SignupLoginContainer tests.', (): void => {
+describe('SignupLoginContainer tests.', () => {
 
     const componentTree: ShallowWrapper = shallow(
         <PageContent>I am a dummy child.</PageContent>
@@ -26,7 +26,7 @@ describe('SignupLoginContainer tests.', (): void => {
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
@@ -35,7 +35,7 @@ describe('SignupLoginContainer tests.', (): void => {
         ['Col', Col, 1],
     ]);
 
-    it('should render the children correctly.', (): void => {
+    it('should render the children correctly.', () => {
         expect(componentTree.contains('I am a dummy child.')).toBe(true);
     });
 });

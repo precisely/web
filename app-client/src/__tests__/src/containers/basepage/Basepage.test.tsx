@@ -18,14 +18,14 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Basepage tests.', (): void => {
+describe('Basepage tests.', () => {
 
     const componentTree: ShallowWrapper = shallow(<Basepage />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line

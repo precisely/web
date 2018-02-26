@@ -25,7 +25,7 @@ configure({adapter: new Adapter()});
 
 type ShallowWrapperType = ShallowWrapper<RouteComponentProps<{email: string}>, IResetPasswordState>;
 
-describe('Tests for ResetPassword', (): void => {
+describe('Tests for ResetPassword', () => {
 
     Radium.TestMode.enable();
 
@@ -64,21 +64,21 @@ describe('Tests for ResetPassword', (): void => {
         return shallow(<ResetPassword history={mockedHistory} match={{params}}/>);
     };
 
-    describe('When the email is not present in the params.', (): void => {
-        it('should route to the forgot password page.', (): void => {
+    describe('When the email is not present in the params.', () => {
+        it('should route to the forgot password page.', () => {
             getComponentTree();
             expect(mockedHistory.push).toBeCalledWith('/forgot-password');
         });
 
     });
 
-    describe('When the email not present in the params.', (): void => {
+    describe('When the email not present in the params.', () => {
         const componentTree: ShallowWrapperType = getComponentTree({email: 'test@example.com'});
 
         unroll('it should display #count #elementName elements', (
                 done: () => void,
                 args: {elementName: string, element: EnzymePropSelector, count: number}
-        ): void => {
+        ) => {
             expect(componentTree.find(args.element).length).toBe(args.count);
             done();
         }, [ // tslint:disable-next-line
@@ -90,7 +90,7 @@ describe('Tests for ResetPassword', (): void => {
             ['SignupLoginContainer', PageContent, 1]
         ]);
 
-        it('should not submit the form when the passwords are not equal.', (): void => {
+        it('should not submit the form when the passwords are not equal.', () => {
             componentTree.find(`#newPassword`).simulate('change', {target: {id: 'confirmPassword', value: 'dummy'}});
             componentTree.find(Form).simulate('submit', {preventDefault});
             expect(showAlert).toBeCalledWith(null, 'Password does not match.');
@@ -98,13 +98,13 @@ describe('Tests for ResetPassword', (): void => {
         });
     });
 
-    describe('When the input fields are not empty.', function () {
+    describe('When the input fields are not empty.', () => {
         const componentTree: ShallowWrapperType = getComponentTree({email: 'test@example.com'});
 
         unroll('It should change state value onChange of #id', (
             done: () => void,
             args: {id: string, value: string}
-        ): void => {
+        ) => {
             componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
             expect(componentTree.state(args.id)).toEqual(args.value);
             done();
@@ -115,7 +115,7 @@ describe('Tests for ResetPassword', (): void => {
             ['confirmPassword', 'dummy'],
         ]);
 
-        it('should change the route to the login when the form is submitted successfully.', async (): Promise<void> => {
+        it('should change the route to the login when the form is submitted successfully.', async () => {
             await componentTree.find(Form).simulate('submit', {preventDefault});
             expect(mockedHistory.push).toBeCalledWith('/login');
         });

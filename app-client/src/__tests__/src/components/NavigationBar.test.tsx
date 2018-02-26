@@ -30,7 +30,7 @@ configure({adapter: new Adapter()});
 
 type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>, INavigationBarState>;
 
-describe('NavigationBar tests.', (): void => {
+describe('NavigationBar tests.', () => {
 
     logOut = jest.fn<void>();
     isLoggedIn = jest.fn<boolean>()
@@ -45,20 +45,20 @@ describe('NavigationBar tests.', (): void => {
         return shallow(<NavigationBar history={mockedHistory} />);
     };
 
-    describe('When user is logged in', (): void => {
+    describe('When user is logged in', () => {
         const componentTree: ComponentTree = getComponentTree();
 
-        it('should log out when button is clicked', (): void => {
+        it('should log out when button is clicked', () => {
             componentTree.find(NavLink).at(1).simulate('click');
             expect(logOut).toBeCalled();
             expect(mockedHistory.replace).toBeCalledWith('/');
         });
     });
 
-    describe('When user is logged out', (): void => {
+    describe('When user is logged out', () => {
         const componentTree: ComponentTree = getComponentTree();
 
-        it('should redirect to login page when button is clicked', (): void => {
+        it('should redirect to login page when button is clicked', () => {
             componentTree.find(NavLink).at(1).simulate('click');
             expect(mockedHistory.replace).toBeCalledWith('/');
         });
@@ -66,7 +66,7 @@ describe('NavigationBar tests.', (): void => {
         unroll('it should display #count #elementName elements', (
                 done: () => void,
                 args: {elementName: string, element: EnzymePropSelector, count: number}
-        ): void => {
+        ) => {
             expect(componentTree.find(args.element).length).toBe(args.count);
             done();
         }, [ // tslint:disable-next-line
@@ -80,20 +80,20 @@ describe('NavigationBar tests.', (): void => {
             ['NavLink', NavLink, 2],
         ]);
     
-        it('should set the state of isOpen to true', (): void => {
+        it('should set the state of isOpen to true', () => {
             componentTree.find(NavbarToggler).simulate('click');
             expect(componentTree.state().isOpen).toBeTruthy();
         });
     });
 
-    describe('When the handleScroll is executed.', (): void => {
+    describe('When the handleScroll is executed.', () => {
 
         const componentTree: ComponentTree = getComponentTree();
 
         unroll('it should set the background color to #color when the scrollY position is #scrollY', (
                 done: () => void,
                 args: {scrollY: number, color: string}
-        ): void => {
+        ) => {
             Object.defineProperty(window, 'scrollY', {value: args.scrollY, writable: true});
             componentTree.instance()[`handleScroll`]();
             expect(componentTree.state().backgroundColor).toBe(args.color);

@@ -23,11 +23,11 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for ForgotPassword', (): void => {
+describe('Tests for ForgotPassword', () => {
 
     Radium.TestMode.enable();
 
-    beforeEach((): void => {
+    beforeEach(() => {
         showAlert = jest.fn<number>().mockReturnValue(1);
         mockedHistory.push = jest.fn<void>();
     });
@@ -61,7 +61,7 @@ describe('Tests for ForgotPassword', (): void => {
     unroll('it should display #count #elementName elements', (
         done: () => void,
         args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
@@ -73,7 +73,7 @@ describe('Tests for ForgotPassword', (): void => {
         ['SignupLoginContainer', PageContent, 1]
     ]);
 
-    it('should not submit the form when the email is not present.', (): void => {
+    it('should not submit the form when the email is not present.', () => {
         componentTree.find(Form).simulate('submit', {preventDefault});
         expect(showAlert).toBeCalledWith(null, 'Please enter your email.');
         expect(getResetPasswordCode).not.toBeCalled();
@@ -82,7 +82,7 @@ describe('Tests for ForgotPassword', (): void => {
     unroll('It should change state value onChange of #id', (
             done: () => void,
             args: {id: string, value: string}
-    ): void => {
+    ) => {
         componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
         expect(componentTree.state(args.id)).toEqual(args.value);
         done();
@@ -91,7 +91,7 @@ describe('Tests for ForgotPassword', (): void => {
         ['email', 'dummy@user.com'],
     ]);
 
-    it('should change the route to the dashboard when the form is submitted successfully.', async (): Promise<void> => {
+    it('should change the route to the dashboard when the form is submitted successfully.', async () => {
         await componentTree.find(Form).simulate('submit', {preventDefault});
         expect(mockedHistory.push).toBeCalledWith('/reset-password/dummy@user.com');
     });

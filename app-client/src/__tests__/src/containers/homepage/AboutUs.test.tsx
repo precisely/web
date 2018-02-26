@@ -19,14 +19,14 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('AboutUs tests.', (): void => {
+describe('AboutUs tests.', () => {
 
     const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<AboutUs />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
