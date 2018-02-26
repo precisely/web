@@ -18,13 +18,13 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for NotFound', (): void => {
+describe('Tests for NotFound', () => {
     const componentTree: ShallowWrapper = shallow(<NotFound />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line

@@ -17,12 +17,12 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for AuthRoute', (): void => {
+describe('Tests for AuthRoute', () => {
     const onEnter = jest.fn<boolean>((value: boolean): boolean => {
         return value;
     });
 
-    describe('When onEnter returns true', (): void => {
+    describe('When onEnter returns true', () => {
         const componentTree: ShallowWrapper = shallow(
                 <AuthRoute 
                         onEnter={(): void => onEnter(true)}
@@ -32,12 +32,12 @@ describe('Tests for AuthRoute', (): void => {
                 />
         );
 
-        it('should test for Route component', (): void => {
+        it('should test for Route component', () => {
             expect(componentTree.find(Route).length).toBe(1);
         });
     });
 
-    describe('When onEnter returns false', (): void => {
+    describe('When onEnter returns false', () => {
         const componentTree: ShallowWrapper = shallow(
                 <AuthRoute 
                         onEnter={(): void => onEnter(false)}
@@ -47,7 +47,7 @@ describe('Tests for AuthRoute', (): void => {
                 />
         );
 
-        it('should test for Redirect component', (): void => {
+        it('should test for Redirect component', () => {
             expect(componentTree.find(Redirect).length).toBe(1);
         });
     });

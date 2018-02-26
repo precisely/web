@@ -19,13 +19,13 @@ unroll.use(it);
 configure({adapter: new Adapter()});
 Radium.TestMode.enable();
 
-describe('Tests for LoadingPage', (): void => {
+describe('Tests for LoadingPage', () => {
     const componentTree: ShallowWrapper = shallow(<LoadingPage />);
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line

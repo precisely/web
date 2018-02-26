@@ -30,9 +30,12 @@
 ## [0.0.4] - 2018-02-21
 
 ### Removed
-
 - VendorDataType
 
 ### Added
 - The Genetics model and it's CRUD endpoints.
 - A global index for the `gene` in the Genetics model.
+- AboutUs page.
+
+### Changed
+- Style of the app layout.

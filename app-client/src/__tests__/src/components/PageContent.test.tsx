@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {Row, Col} from 'src/components/ReusableComponents';
 
 const unroll = require('unroll');
@@ -17,26 +17,25 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('SignupLoginContainer tests.', (): void => {
+describe('SignupLoginContainer tests.', () => {
 
     const componentTree: ShallowWrapper = shallow(
-        <SignupLoginContainer>I am a dummy child.</SignupLoginContainer>
+        <PageContent>I am a dummy child.</PageContent>
     );
 
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
         ['elementName', 'element', 'count'],
-        ['div', 'div', 1],
         ['Row', Row, 1],
         ['Col', Col, 1],
     ]);
 
-    it('should render the children correctly.', (): void => {
+    it('should render the children correctly.', () => {
         expect(componentTree.contains('I am a dummy child.')).toBe(true);
     });
 });
