@@ -56,24 +56,24 @@ describe('Genetics resolver tests.', () => {
     });
 
     describe('Create tests', () => {
-        it('should throw an error when the record already exists.', async (): Promise<void> => {
+        it('should throw an error when the record already exists.', async () => {
             let response = await geneticsResolver.create(dummyRequestData);
             expect(response[`message`]).toEqual('Record already exists.');
         });
 
-        it('should create a new record when there is no error', async (): Promise<void> => {
+        it('should create a new record when there is no error', async () => {
             let response = await geneticsResolver.create(dummyRequestData);
             expect(response).toEqual(dummyResponseData);
         });
     });
 
     describe('Update tests', () => {
-        it('should update the record when there is no error.', async (): Promise<void> => {
+        it('should update the record when there is no error.', async () => {
             let response = await geneticsResolver.update(dummyRequestData);
             expect(response).toEqual(dummyResponseData);
         });
 
-        it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
+        it('should throw an error when the data_type_user_id is invalid.', async () => {
             let response = await geneticsResolver
                     .update({dataTypeUserId: 'abcd', gene: 'XXXXX', source: 'helix', variant: 'qwerty'});
             expect(response[`message`]).toEqual('No such record found');
@@ -81,19 +81,19 @@ describe('Genetics resolver tests.', () => {
     });
 
     describe('Get tests', () => {
-        it('should fetch the record when there is no error.', async (): Promise<void> => {
+        it('should fetch the record when there is no error.', async () => {
             let response = await geneticsResolver.get({dataTypeUserId: 'PQR03', gene: 'XXXX'});
             expect(response).toEqual(dummyResponseData);
         });
 
-        it('should throw an error when the data_type_user_id is invalid.', async (): Promise<void> => {
+        it('should throw an error when the data_type_user_id is invalid.', async () => {
             let response = await geneticsResolver.get({dataTypeUserId: 'abcd', gene: 'XXXX'});
             expect(response[`message`]).toEqual('No such record found');
         });
     });
 
     describe('List test', () => {
-        it('should return an error message if required parameters are not present.', async (): Promise<void> => {
+        it('should return an error message if required parameters are not present.', async () => {
             let response = await geneticsResolver.list();
             expect(response[`message`]).toEqual('Required parameters not present.');
         });
@@ -101,7 +101,7 @@ describe('Genetics resolver tests.', () => {
         unroll('It should respond with the genetics data list when #params are present.', async (
                 done: () => void,
                 args: {params: {[key: string]: string | number}}
-        ): Promise<void> => {
+        ) => {
             let response = await geneticsResolver.list(args.params);
             expect(response).toEqual({Items: [dummyResponseData]});
             done();
