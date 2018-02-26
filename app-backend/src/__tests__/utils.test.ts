@@ -26,7 +26,7 @@ jest.mock('aws-sdk', () => {
     };
 });
 
-import {getEnvironmentVariables} from '../utils';
+import {getEnvironmentVariables, addEnvironmentToTableName} from '../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -55,4 +55,13 @@ describe('Test for getEnvironmentVariables', () => {
         ['fail', 'return null'],
         ['pass', 'return data'],
     ]);
+});
+
+describe('Test for addEnvironmentToTableName', () => {
+    process.env.NODE_ENV = 'dev';
+
+    it('should add the environment to the table name.', () => {
+        const result: string = addEnvironmentToTableName('test-table', '01');
+        expect(result).toBe('dev-01-test-table');
+    });
 });

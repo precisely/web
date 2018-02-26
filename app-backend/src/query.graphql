@@ -1,9 +1,35 @@
 #import "./user-data-map/api/schema.graphql"
+#import "./genetics-service/api/schema.graphql"
+
+type GenericResponse {
+    success: Boolean,
+    message: String
+}
+
+input LastEvaluatedGeneticsRecord {
+    dataTypeUserId: String
+    gene: String
+}
 
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
+    geneticsList(
+            limit: Int,
+            lastEvaluatedKeys: LastEvaluatedGeneticsRecord,
+            dataTypeUserId: String,
+            gene: String,
+    ): GeneticsList,
+    getGeneticsData(dataTypeUserId: String!, gene: String!): Genetics
 }
 
 type Mutation {
     findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
+    updateGenetics(gene: String, source: String, variant: String, quality: String, dataTypeUserId: String!): Genetics,
+    createGenetics(
+            gene: String!,
+            source: String!,
+            variant: String!,
+            quality: String,
+            dataTypeUserId: String!
+    ): Genetics,
 }
