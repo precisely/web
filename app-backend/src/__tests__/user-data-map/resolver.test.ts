@@ -11,9 +11,9 @@ jest.mock('../../user-data-map/models/UserDataMap');
 import {UserDataMapResolver} from '../../user-data-map/api/resolver';
 import {IUserDataMapAttributes, IUserDataMapInstance} from '../../user-data-map/models/UserDataMap';
 
-describe('UserDataMap resolver tests.', (): void => {
+describe('UserDataMap resolver tests.', () => {
 
-    describe('tests for list', (): void => {
+    describe('tests for list', () => {
 
         it('should pass when no params are passed', async () => {
             let responseList: IUserDataMapInstance[] = await UserDataMapResolver.list();
@@ -35,7 +35,7 @@ describe('UserDataMap resolver tests.', (): void => {
         });
     });
 
-    describe('tests for findOrCreate', (): void => {
+    describe('tests for findOrCreate', () => {
 
         it('should pass when all data is passed', async () => {
             let response: IUserDataMapAttributes = await UserDataMapResolver.findOrCreate({
