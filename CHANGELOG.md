@@ -30,5 +30,10 @@
 ## [0.0.4] - 2018-02-21
 
 ### Removed
-
 - VendorDataType
+
+### Added
+- AboutUs page.
+
+### Changed
+- Style of the app layout.

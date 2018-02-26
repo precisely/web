@@ -17,12 +17,12 @@ import {
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Tests for utils/index.ts', (): void => {
+describe('Tests for utils/index.ts', () => {
 
     unroll('it should test the isEmpty function when the object is #condition', (
             done: () => void,
             args: {condition: string, params: Object, result: boolean}
-    ): void => {
+    ) => {
         expect(isEmpty(args.params)).toEqual(args.result);
         done();
     }, [ // tslint:disable-next-line
@@ -31,14 +31,14 @@ describe('Tests for utils/index.ts', (): void => {
         ['empty', {}, true]
     ]);
 
-    it('should test getEnvironment and return the correct environment', (): void => {
+    it('should test getEnvironment and return the correct environment', () => {
         expect(getEnvironment()).toEqual('test');
     });
 
     unroll('it should #operation the authentication token in the local storage', (
             done: () => void,
             args: {operation: string, tokenValue: string}
-    ): void => {
+    ) => {
         localStorage.setItem = jest.fn<void>();
         setTokenInLocalStorage(args.tokenValue);
         if (args.tokenValue) {
@@ -53,7 +53,7 @@ describe('Tests for utils/index.ts', (): void => {
         ['not save', '']
     ]);
 
-    it('should delete the token from the local storage.', (): void => {
+    it('should delete the token from the local storage.', () => {
         localStorage.removeItem = jest.fn<void>();
         removeTokenFromLocalStorage();
         expect(localStorage.removeItem).toBeCalledWith('AUTH_TOKEN');
@@ -63,7 +63,7 @@ describe('Tests for utils/index.ts', (): void => {
             done: () => void,
             // tslint:disable-next-line
             args: {condition: string, params: Array<any>, result: boolean}
-    ): void => {
+    ) => {
         expect(validateEmailAndPassword(...args.params)).toEqual(args.result);
         done();
     }, [ // tslint:disable-next-line

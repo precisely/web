@@ -14,7 +14,7 @@ import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Login, ILoginState} from 'src/containers/user/Login';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {login} from 'src/utils/cognito';
-import {SignupLoginContainer} from 'src/components/SignupLoginContainer';
+import {PageContent} from 'src/components/PageContent';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -23,11 +23,11 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Tests for Login', (): void => {
+describe('Tests for Login', () => {
 
     Radium.TestMode.enable();
 
-    beforeEach((): void => {
+    beforeEach(() => {
         showAlert = jest.fn<number>().mockReturnValue(1);
         mockedHistory.push = jest.fn<void>();
     });
@@ -71,7 +71,7 @@ describe('Tests for Login', (): void => {
     unroll('it should display #count #elementName elements', (
             done: () => void,
             args: {elementName: string, element: EnzymePropSelector, count: number}
-    ): void => {
+    ) => {
         expect(componentTree.find(args.element).length).toBe(args.count);
         done();
     }, [ // tslint:disable-next-line
@@ -81,10 +81,10 @@ describe('Tests for Login', (): void => {
         ['FormGroup', FormGroup, 2],
         ['Input', Input, 2],
         ['Link', Link, 2],
-        ['SignupLoginContainer', SignupLoginContainer, 1]
+        ['SignupLoginContainer', PageContent, 1]
     ]);
 
-    it('should not submit the form when the username and password are not valid.', (): void => {
+    it('should not submit the form when the username and password are not valid.', () => {
         componentTree.find('#loginForm').simulate('submit', {preventDefault});
         expect(login).not.toBeCalled();
     });
@@ -92,7 +92,7 @@ describe('Tests for Login', (): void => {
     unroll('It should change state value onChange of #id', (
             done: () => void,
             args: {id: string, value: string}
-    ): void => {
+    ) => {
         componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
         expect(componentTree.state(args.id)).toEqual(args.value);
         done();
@@ -102,7 +102,7 @@ describe('Tests for Login', (): void => {
         ['password', 'dummyPassword']
     ]);
 
-    it('should change the route to the dashboard when the form is submitted successfully.', async (): Promise<void> => {
+    it('should change the route to the dashboard when the form is submitted successfully.', async () => {
         await componentTree.find('#loginForm').simulate('submit', {preventDefault});
         expect(mockedHistory.push).toBeCalledWith('/dashboard');
     });
