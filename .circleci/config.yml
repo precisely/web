@@ -73,7 +73,6 @@ jobs:
 
             - *save_frontend_cache
 
-            # run frontend tests!
             - run:
                 name: Frontend Tests
                 command: |
@@ -81,7 +80,6 @@ jobs:
                     yarn test
                     cc-test-reporter after-build --debug -t lcov --exit-code $?
 
-            # run linters!
             - run:
                 name: TSLint
                 command: yarn tslint
@@ -97,7 +95,6 @@ jobs:
         steps:
             - *checkout
 
-            # Download and cache dependencies
             - *restore_backend_cache
 
             - run:
@@ -106,7 +103,6 @@ jobs:
 
             - *save_backend_cache
 
-            # run backend tests!
             - run:
                 name: Backend Tests
                 command: |
@@ -114,7 +110,6 @@ jobs:
                     yarn test
                     cc-test-reporter after-build --debug -t lcov --exit-code $?
 
-            # run linters!
             - run:
                 name: TSLint
                 command: yarn tslint
@@ -134,7 +129,6 @@ jobs:
                     AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER" coverage/
                     cc-test-reporter sum-coverage coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage
-                    #cc-test-reporter sum-coverage --output - --parts 2 coverage/codeclimate.*.json | cc-test-reporter upload-coverage --input -
 
     stage-deploy-frontend:
         <<: *frontend_defaults
