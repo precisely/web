@@ -24,21 +24,12 @@ ALIASES:
         <<: *defaults
         working_directory: ~/repo/app-backend
 
-    download_codeclimate: &download_codeclimate
-        run:
-            name: Download Code Climate test-reporter
-            command: |
-                if [[ ! -f cc-test-report ]]; then
-                    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-                    chmod +x ./cc-test-reporter
-                fi
-
     upload_codeclimate_results: &upload_codeclimate_results
         run:
             name: Upload Code Climate Results
             command: |
-                ./cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$JOB_TYPE.json"
-                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER"
+                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json"
+                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_BUILD_NUM"
 
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
@@ -50,7 +41,6 @@ ALIASES:
         save_cache:
             paths:
                 - node_modules
-                - cc-test-reporter
             key: v1-dependencies-frontend-{{ checksum "package.json" }}
 
     restore_backend_cache: &restore_backend_cache
@@ -63,26 +53,11 @@ ALIASES:
         save_cache:
             paths:
                 - node_modules
-                - cc-test-reporter
             key: v1-dependencies-backend-{{ checksum "package.json" }}
 
     checkout: &checkout
         checkout:
             path: ~/repo
-
-    install_awscli: &install_awscli
-        run:
-            name: Install dependencies
-            working_directory: /
-            command: |
-                AWSCLI_EXISTS=`command -v awscli`
-                if [[ -z "$AWSCLI_EXISTS" ]]; then
-                    apt-get -y -qq update
-                    apt-get -y -qq install python3.4-dev
-                    curl -O https://bootstrap.pypa.io/get-pip.py
-                    python3.4 get-pip.py --user
-                    pip install awscli --upgrade --user
-                fi
 
 version: 2
 jobs:
@@ -98,17 +73,15 @@ jobs:
                 name: Installing Dependencies
                 command: yarn install
 
-            - *download_codeclimate
-
             - *save_frontend_cache
 
             # run frontend tests!
             - run:
                 name: Frontend Tests
                 command: |
-                    ./cc-test-reporter before-build
+                    cc-test-reporter before-build
                     yarn test
-                    ./cc-test-reporter after-build --debug -t lcov --exit-code $?
+                    cc-test-reporter after-build --debug -t lcov --exit-code $?
 
             # run linters!
             - run:
@@ -133,17 +106,15 @@ jobs:
                 name: Installing Dependencies
                 command: yarn install
 
-            - *download_codeclimate
-
             - *save_backend_cache
 
             # run backend tests!
             - run:
                 name: Backend Tests
                 command: |
-                    ./cc-test-reporter before-build
+                    cc-test-reporter before-build
                     yarn test
-                    ./cc-test-reporter after-build --debug -t lcov --exit-code $?
+                    cc-test-reporter after-build --debug -t lcov --exit-code $?
 
             # run linters!
             - run:
@@ -154,6 +125,18 @@ jobs:
                 command: yarn eslint
 
             - *upload_codeclimate_results
+
+    report-codeclimate:
+        <<: *defaults
+        work_directory: ~/repo
+        steps:
+            - run:
+                name: Reporting CodeClimate results
+                command: |
+                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER" coverage/
+                    cc-test-reporter sum-coverage coverage/codeclimate.*.json
+                    cc-test-reporter upload-coverage
+                    #cc-test-reporter sum-coverage --output - --parts 2 coverage/codeclimate.*.json | cc-test-reporter upload-coverage --input -
 
     stage-deploy-frontend:
         <<: *frontend_defaults
@@ -191,6 +174,11 @@ workflows:
         jobs:
             - build-frontend
             - build-backend
+
+            - report-codeclimate:
+                requires:
+                    - build-frontend
+                    - build-backend
 
             # run this job only when dev branch is build
             - stage-deploy-backend:
