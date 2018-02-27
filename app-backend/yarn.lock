@@ -55,6 +55,7 @@
 "@types/jest@21.1.4":
   version "21.1.4"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.4.tgz#83c5c474dd6dee5bef9d014ff36787edfd4ab5a7"
+
 "@types/joi@*":
   version "13.0.5"
   resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.0.5.tgz#50829402204e8fec8ee287eeb37d79fbff34913c"
@@ -519,9 +520,9 @@ aws-sdk@2.188.0, aws-sdk@^2.3.19, aws-sdk@^2.7.0, aws-sdk@^2.72.0:
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
 
-aws-sdk@^2.75.0:
-  version "2.199.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.199.0.tgz#94c2484b030f299dda494c94bacc4f66e4b32de9"
+aws-sdk@^2.58.0:
+  version "2.203.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.203.0.tgz#7573c1274a4350bd5d78a6db93c9eeab40940acb"
   dependencies:
     buffer "4.9.1"
     events "^1.1.1"
@@ -3899,6 +3900,10 @@ jest-mock@^22.1.0:
   version "22.1.0"
   resolved "https://registry.yarnpkg.com/jest-mock/-/jest-mock-22.1.0.tgz#87ec21c0599325671c9a23ad0e05c86fb5879b61"
 
+jest-plugin-context@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/jest-plugin-context/-/jest-plugin-context-2.7.0.tgz#f654d9f916448b680b92b1273b4b756dee38d101"
+
 jest-regex-util@^21.2.0:
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/jest-regex-util/-/jest-regex-util-21.2.0.tgz#1b1e33e63143babc3e0f2e6c9b5ba1eb34b2d530"
@@ -4425,7 +4430,6 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.0, lodash@^4.17.4, lodash@^4.8.0:
 lodash@4.17.4, lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.0, lodash@^4.17.4, lodash@^4.8.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
