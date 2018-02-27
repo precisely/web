@@ -5,8 +5,6 @@
 
 ALIASES:
     defaults: &defaults
-        environment: &environment
-            CC_TEST_REPORTER_ID: d3c6223bb6beb7b56cc01e2865e445a028085cd455695307b99d521bfcd2e1c8
         docker:
             # specify the version you desire here
             - image: aneilbaboo/node:6.10.3
