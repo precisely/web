@@ -9,7 +9,7 @@ ALIASES:
             CC_TEST_REPORTER_ID: d3c6223bb6beb7b56cc01e2865e445a028085cd455695307b99d521bfcd2e1c8
         docker:
             # specify the version you desire here
-            - image: circleci/node:6.10.3
+            - image: aneilbaboo/node:6.10.3
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
@@ -18,16 +18,10 @@ ALIASES:
 
     frontend_defaults: &frontend_defaults
         <<: *defaults
-        environment:
-            <<: *environment
-            JOB_TYPE: frontend
         working_directory: ~/repo/app-client
 
     backend_defaults: &backend_defaults
         <<: *defaults
-        environment:
-            <<: *environment
-            JOB_TYPE: backend
         working_directory: ~/repo/app-backend
 
     download_codeclimate: &download_codeclimate
@@ -75,6 +69,20 @@ ALIASES:
     checkout: &checkout
         checkout:
             path: ~/repo
+
+    install_awscli: &install_awscli
+        run:
+            name: Install dependencies
+            working_directory: /
+            command: |
+                AWSCLI_EXISTS=`command -v awscli`
+                if [[ -z "$AWSCLI_EXISTS" ]]; then
+                    apt-get -y -qq update
+                    apt-get -y -qq install python3.4-dev
+                    curl -O https://bootstrap.pypa.io/get-pip.py
+                    python3.4 get-pip.py --user
+                    pip install awscli --upgrade --user
+                fi
 
 version: 2
 jobs:
