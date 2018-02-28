@@ -23,13 +23,13 @@ import {
 
 const logo = require('src/assets/precisely-logo.png');
 
-export interface INavigationBarState {
+export interface NavigationBarState {
     isOpen?: boolean;
     backgroundColor?: string;
 }
 
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, INavigationBarState> {
+export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, NavigationBarState> {
     state = {
         isOpen: false,
         backgroundColor: 'transparent',

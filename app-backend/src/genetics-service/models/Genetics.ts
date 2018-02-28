@@ -14,7 +14,7 @@ const dynogels = require('dynogels-promisified');
 
 AWS.config.update({region: 'us-east-1'});
 
-export interface IGeneticsAttributes {
+export interface GeneticsAttributes {
     opaque_id?: string;
     sample_id?: string;
     source?: string;

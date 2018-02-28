@@ -25,7 +25,7 @@ import {
     formMargin,
 } from 'src/constants/styleGuide';
 
-export interface IResetPasswordState {
+export interface ResetPasswordState {
     verificationCode?: string;
     isLoading?: boolean;
     newPassword?: string;
@@ -33,11 +33,11 @@ export interface IResetPasswordState {
 }
 
 @Radium
-export class ResetPassword extends React.Component<RouteComponentProps<{email: string}>, IResetPasswordState> {
+export class ResetPassword extends React.Component<RouteComponentProps<{email: string}>, ResetPasswordState> {
 
     toastId: number = null;
 
-    state: IResetPasswordState = {verificationCode: '', isLoading: false, newPassword: '', confirmPassword: ''};
+    state: ResetPasswordState = {verificationCode: '', isLoading: false, newPassword: '', confirmPassword: ''};
 
     componentWillMount(): void {
         const {match, history} = this.props;
@@ -78,7 +78,7 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
     }
 
     handleInputChange(inputType: string, value: string): void {
-        this.setState((): IResetPasswordState => ({
+        this.setState((): ResetPasswordState => ({
             [inputType]: value,
         }));
     }

@@ -19,7 +19,7 @@
         "eofline": true,
         "forin": true,
         "indent": [ true, "spaces" ],
-        "interface-name": [true, "always-prefix"],
+        "interface-name": [true, "never-prefix"],
         "jsdoc-format": true,
         "jsx-boolean-value": [false, "always"],
         "jsx-no-lambda": false,

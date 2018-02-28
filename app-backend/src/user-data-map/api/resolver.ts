@@ -7,17 +7,17 @@
 */
 
 import {UserDataMap} from '../models/UserDataMap';
-import {IUserDataMapInstance, IUserDataMapAttributes} from '../models/UserDataMap';
+import {UserDataMapInstance, UserDataMapAttributes} from '../models/UserDataMap';
 
-export interface IListFilters {
+export interface ListFilters {
     limit?: number;
     offset?: number;
 }
 
-export const UserDataMapResolver = {
+export const userDataMapResolver = {
 
-    async list(args: IListFilters = {}): Promise<IUserDataMapInstance[]> {
-        let userDataMapInstances: IUserDataMapInstance[];
+    async list(args: ListFilters = {}): Promise<UserDataMapInstance[]> {
+        let userDataMapInstances: UserDataMapInstance[];
         const {limit = 15, offset = 0} = args;
 
         try {
@@ -30,8 +30,8 @@ export const UserDataMapResolver = {
         return userDataMapInstances;
     },
 
-    async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<IUserDataMapAttributes> {
-        let userDataMapInstance: IUserDataMapInstance;
+    async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
+        let userDataMapInstance: UserDataMapInstance;
 
         try {
             userDataMapInstance = await UserDataMap
@@ -41,7 +41,7 @@ export const UserDataMapResolver = {
                         vendor_data_type: args.vendorDataType,
                     }
                 })
-                .spread((user: IUserDataMapInstance): IUserDataMapInstance => {
+                .spread((user: UserDataMapInstance): UserDataMapInstance => {
                     /* 
                      *  findCreateFind returns [Instance, created]. Since we don't need created attribute,
                      *  returning the user instance directly
@@ -62,12 +62,12 @@ export const UserDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    listUserDataMap: (root: any, args: IListFilters) =>
-        UserDataMapResolver.list(args),
+    listUserDataMap: (root: any, args: ListFilters) =>
+        userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
     findOrCreateUserDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
-        UserDataMapResolver.findOrCreate(args),
+        userDataMapResolver.findOrCreate(args),
 };

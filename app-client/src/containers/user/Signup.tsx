@@ -26,7 +26,7 @@ import {
     formMargin,
 } from 'src/constants/styleGuide';
 
-export interface ISignupState {
+export interface SignupState {
     email?: string;
     password?: string;
     confirmPassword?: string;
@@ -34,11 +34,11 @@ export interface ISignupState {
 }
 
 @Radium
-export class Signup extends React.Component<RouteComponentProps<void>, ISignupState> {
+export class Signup extends React.Component<RouteComponentProps<void>, SignupState> {
 
     toastId: number = null;
 
-    state: ISignupState = {
+    state: SignupState = {
         email: '',
         password: '',
         isLoading: false,
@@ -87,7 +87,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, ISignupSt
     }
 
     handleInputChange(inputType: string, value: string): void {
-        this.setState((): ISignupState => ({
+        this.setState((): SignupState => ({
             [inputType]: value,
         }));
     }

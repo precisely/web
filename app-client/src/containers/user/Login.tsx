@@ -26,18 +26,18 @@ import {
     formMargin,
 } from 'src/constants/styleGuide';
 
-export interface ILoginState {
+export interface LoginState {
     email?: string;
     password?: string;
     isLoading?: boolean;
 }
 
 @Radium
-export class Login extends React.Component<RouteComponentProps<void>, ILoginState> {
+export class Login extends React.Component<RouteComponentProps<void>, LoginState> {
 
     toastId: number = null;
 
-    state: ILoginState = {email: '', password: '', isLoading: false};
+    state: LoginState = {email: '', password: '', isLoading: false};
 
     updateLoadingState = (isLoading: boolean): void => {
         this.setState({isLoading});
@@ -70,7 +70,7 @@ export class Login extends React.Component<RouteComponentProps<void>, ILoginStat
     }
 
     handleInputChange(inputType: string, value: string): void {
-        this.setState((): ILoginState => ({
+        this.setState((): LoginState => ({
             [inputType]: value,
         }));
     }

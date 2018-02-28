@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {Login, ILoginState} from 'src/containers/user/Login';
+import {Login, LoginState} from 'src/containers/user/Login';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {login} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
@@ -64,7 +64,7 @@ describe('Tests for Login', () => {
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>, ILoginState> = shallow(
+    const componentTree: ShallowWrapper<RouteComponentProps<void>, LoginState> = shallow(
             <Login history={mockedHistory} />
     );
 

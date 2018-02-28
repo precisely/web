@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {Signup, ISignupState} from 'src/containers/user/Signup';
+import {Signup, SignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
@@ -65,7 +65,7 @@ describe('Tests for Signup', () => {
         push: jest.fn<void>(),
     };
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>, ISignupState> = shallow(
+    const componentTree: ShallowWrapper<RouteComponentProps<void>, SignupState> = shallow(
             <Signup history={mockedHistory} />
     );
 
