@@ -17,19 +17,19 @@ unroll.use(it);
 type ExecSuccess = {Items: IGeneticsAttributes[]};
 
 describe('Genetics resolver tests.', () => {
-    const commonData: {gene: string, variant: string, source: string} = {
-        gene: 'XXXXY',
-        variant: 'demo2',
-        source: 'helix2',
+    const commonData: {gene: string, source: string, quality: string} = {
+        gene: 'QWERTY2',
+        source: 'helix',
+        quality: 'demo',
     };
 
-    const dummyRequestData: ICreateOrUpdateAttributes = {...commonData, dataTypeUserId: 'PQR03'};
-    const dummyResponseData: IGeneticsAttributes = {...commonData, data_type_user_id: 'PQR03'};
+    const dummyRequestData: ICreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
+    const dummyResponseData: IGeneticsAttributes = {...commonData, opaque_id: 'PQR03'};
 
     Genetics.getAsync = jest.fn()
-            .mockImplementationOnce(() => ({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
             .mockImplementationOnce(() => null)
-            .mockImplementationOnce(() => ({data_type_user_id: 'PQR03'}))
+            .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
             .mockImplementationOnce(() => null)
             .mockImplementationOnce((): {attrs: IGeneticsAttributes} => ({attrs: dummyResponseData}))
             .mockImplementationOnce(() => null);
@@ -73,21 +73,21 @@ describe('Genetics resolver tests.', () => {
             expect(response).toEqual(dummyResponseData);
         });
 
-        it('should throw an error when the data_type_user_id is invalid.', async () => {
+        it('should throw an error when the opaque_id is invalid.', async () => {
             let response = await geneticsResolver
-                    .update({dataTypeUserId: 'abcd', gene: 'XXXXX', source: 'helix', variant: 'qwerty'});
+                    .update({opaqueId: 'abcd', gene: 'XXXXX', source: 'helix'});
             expect(response[`message`]).toEqual('No such record found');
         });
     });
 
     describe('Get tests', () => {
         it('should fetch the record when there is no error.', async () => {
-            let response = await geneticsResolver.get({dataTypeUserId: 'PQR03', gene: 'XXXX'});
+            let response = await geneticsResolver.get({opaqueId: 'PQR03', gene: 'QWERTY2'});
             expect(response).toEqual(dummyResponseData);
         });
 
-        it('should throw an error when the data_type_user_id is invalid.', async () => {
-            let response = await geneticsResolver.get({dataTypeUserId: 'abcd', gene: 'XXXX'});
+        it('should throw an error when the opaque_id is invalid.', async () => {
+            let response = await geneticsResolver.get({opaqueId: 'abcd', gene: 'XXXX'});
             expect(response[`message`]).toEqual('No such record found');
         });
     });
@@ -107,10 +107,10 @@ describe('Genetics resolver tests.', () => {
             done();
         }, [ // tslint:disable-next-line
             ['params'],
-            [{dataTypeUserId: 'ABC'}],
-            [{gene: 'QWERTY'}],
-            [{gene: 'QWERTY', lastEvaluatedKeys: {dataTypeUserId: 'XYZ', gene: 'QWERTY2'}}],
-            [{gene: 'QWERTY', lastEvaluatedKeys: {dataTypeUserId: 'XYZ', gene: 'QWERTY2'}, limit: 10}],
+            [{opaqueId: 'PQR03'}],
+            [{gene: 'QWERTY2'}],
+            [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}}],
+            [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}, limit: 10}],
         ]);
     });
 });

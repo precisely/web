@@ -7,7 +7,7 @@ type GenericResponse {
 }
 
 input LastEvaluatedGeneticsRecord {
-    dataTypeUserId: String
+    opaqueId: String
     gene: String
 }
 
@@ -16,20 +16,36 @@ type Query {
     geneticsList(
             limit: Int,
             lastEvaluatedKeys: LastEvaluatedGeneticsRecord,
-            dataTypeUserId: String,
+            opaqueId: String,
             gene: String,
     ): GeneticsList,
-    getGeneticsData(dataTypeUserId: String!, gene: String!): Genetics
+    getGeneticsData(opaqueId: String!, gene: String!): Genetics
 }
 
 type Mutation {
     findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
-    updateGenetics(gene: String, source: String, variant: String, quality: String, dataTypeUserId: String!): Genetics,
-    createGenetics(
-            gene: String!,
-            source: String!,
-            variant: String!,
-            quality: String,
-            dataTypeUserId: String!
+    updateGenetics(
+            opaqueId: String!, # Required while updating
+            sampleId: String,
+            source: String,
+            gene: String!, # Required while updating
+            variantCall: String,
+            zygosity: String,
+            startBase: String,
+            chromosomeName: String,
+            variantType: String,
+            quality: String
     ): Genetics,
+    createGenetics(
+            opaqueId: String!, # All the fields are required while creating a record.
+            sampleId: String!,
+            source: String!,
+            gene: String!,
+            variantCall: String!,
+            zygosity: String!,
+            startBase: String!,
+            chromosomeName: String!,
+            variantType: String!,
+            quality: String!
+    ): Genetics
 }
