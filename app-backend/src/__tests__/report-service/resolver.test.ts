@@ -20,6 +20,8 @@ type ExecSuccess = {Items: ReportAttributes[]};
 
 describe('Report resolver tests.', () => {
 
+    const authorizer = jest.fn();
+
     const commonData: {title: string, slug: string, genes: string[]} = {
         title: 'demo-title',
         slug: 'demo-slug',
@@ -60,12 +62,12 @@ describe('Report resolver tests.', () => {
 
     describe('Create tests', () => {
         it('should throw an error when the record already exists.', async () => {
-            let response = await reportResolver.create(dummyRequestData);
+            let response = await reportResolver.create(dummyRequestData, authorizer);
             expect(response[`message`]).toEqual('createAsync mock error');
         });
 
         it('should create a new record when there is no error', async () => {
-            let response = await reportResolver.create(dummyRequestData);
+            let response = await reportResolver.create(dummyRequestData, authorizer);
             expect(response).toEqual(dummyResponseData);
         });
     });
@@ -73,7 +75,7 @@ describe('Report resolver tests.', () => {
     describe('List test', () => {
 
         it('should fail if an error occurs', async () => {
-            let response = await reportResolver.list({});
+            let response = await reportResolver.list({}, authorizer);
             expect(response[`message`]).toEqual('query mock error');
         });
     
@@ -81,7 +83,7 @@ describe('Report resolver tests.', () => {
                 done: () => void,
                 args: {params: {[key: string]: string | number}}
         ) => {
-            let response = await reportResolver.list(args.params);
+            let response = await reportResolver.list(args.params, authorizer);
             expect(response).toEqual({Items: [dummyResponseData]});
             done();
         }, [ // tslint:disable-next-line
@@ -93,12 +95,12 @@ describe('Report resolver tests.', () => {
 
     describe('Get tests', () => {
         it('should throw an error when the if user is not found.', async () => {
-            let response = await reportResolver.get({});
+            let response = await reportResolver.get({}, authorizer);
             expect(response[`message`]).toEqual('userDataMapResolver mock error');
         });
 
         it('should return an error message if required parameters are not present.', async () => {
-            let response = await reportResolver.get({});
+            let response = await reportResolver.get({}, authorizer);
             expect(response[`message`]).toEqual('Required parameters not present.');
         });
 
@@ -106,8 +108,8 @@ describe('Report resolver tests.', () => {
                 done: () => void,
                 args: {params: {[key: string]: string | number}}
         ) => {
-            let response = await reportResolver.get(args.params);
-            response[`userData`]();
+            let response = await reportResolver.get(args.params, authorizer);
+            response[`userData`]({});
             expect(geneticsResolver.list).toBeCalled();
             expect(response[`Items`]).toEqual([dummyResponseData]);
             expect(typeof response[`userData`]).toEqual('function');

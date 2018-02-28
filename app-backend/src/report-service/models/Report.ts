@@ -14,6 +14,7 @@ import {addEnvironmentToTableName} from '../../utils';
 const dynogels = require('dynogels-promisified');
 
 AWS.config.update({region: process.env.REGION});
+
 export interface ReportAttributes {
     id?: string;
     title: string;
