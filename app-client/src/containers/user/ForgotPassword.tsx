@@ -24,17 +24,17 @@ import {
     formMargin,
 } from 'src/constants/styleGuide';
 
-export interface IForgotPasswordState {
+export interface ForgotPasswordState {
     email?: string;
     isLoading?: boolean;
 }
 
 @Radium
-export class ForgotPassword extends React.Component<RouteComponentProps<void>, IForgotPasswordState> {
+export class ForgotPassword extends React.Component<RouteComponentProps<void>, ForgotPasswordState> {
 
     toastId: number = null;
 
-    state: IForgotPasswordState = {email: '', isLoading: false};
+    state: ForgotPasswordState = {email: '', isLoading: false};
 
     updateLoadingState = (isLoading: boolean): void => {
         this.setState({isLoading});
@@ -64,7 +64,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, I
     }
 
     handleInputChange(inputType: string, value: string): void {
-        this.setState((): IForgotPasswordState => ({
+        this.setState((): ForgotPasswordState => ({
             [inputType]: value,
         }));
     }

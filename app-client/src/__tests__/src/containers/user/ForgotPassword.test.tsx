@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {ForgotPassword, IForgotPasswordState} from 'src/containers/user/ForgotPassword';
+import {ForgotPassword, ForgotPasswordState} from 'src/containers/user/ForgotPassword';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
@@ -54,7 +54,7 @@ describe('Tests for ForgotPassword', () => {
 
     const preventDefault: jest.Mock<void> = jest.fn<void>();
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>, IForgotPasswordState> = shallow(
+    const componentTree: ShallowWrapper<RouteComponentProps<void>, ForgotPasswordState> = shallow(
             <ForgotPassword history={mockedHistory} />
     );
 

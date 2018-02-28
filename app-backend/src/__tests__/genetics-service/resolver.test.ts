@@ -8,13 +8,13 @@
 
 jest.mock('../../genetics-service/models/Genetics');
 
-import {IGeneticsAttributes, Genetics} from '../../genetics-service/models/Genetics';
-import {geneticsResolver, ICreateOrUpdateAttributes} from '../../genetics-service/api/resolver';
+import {GeneticsAttributes, Genetics} from '../../genetics-service/models/Genetics';
+import {geneticsResolver, CreateOrUpdateAttributes} from '../../genetics-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-type ExecSuccess = {Items: IGeneticsAttributes[]};
+type ExecSuccess = {Items: GeneticsAttributes[]};
 
 describe('Genetics resolver tests.', () => {
     const commonData: {gene: string, source: string, quality: string} = {
@@ -23,15 +23,15 @@ describe('Genetics resolver tests.', () => {
         quality: 'demo',
     };
 
-    const dummyRequestData: ICreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
-    const dummyResponseData: IGeneticsAttributes = {...commonData, opaque_id: 'PQR03'};
+    const dummyRequestData: CreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
+    const dummyResponseData: GeneticsAttributes = {...commonData, opaque_id: 'PQR03'};
 
     Genetics.getAsync = jest.fn()
             .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
             .mockImplementationOnce(() => null)
             .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
             .mockImplementationOnce(() => null)
-            .mockImplementationOnce((): {attrs: IGeneticsAttributes} => ({attrs: dummyResponseData}))
+            .mockImplementationOnce((): {attrs: GeneticsAttributes} => ({attrs: dummyResponseData}))
             .mockImplementationOnce(() => null);
 
     const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
@@ -41,7 +41,7 @@ describe('Genetics resolver tests.', () => {
     });
 
     Genetics.createAsync = Genetics.updateAsync = jest.fn()
-            .mockImplementation((data: IGeneticsAttributes): {attrs: IGeneticsAttributes} => ({attrs: data}));
+            .mockImplementation((data: GeneticsAttributes): {attrs: GeneticsAttributes} => ({attrs: data}));
 
     const mockedLimit = jest.fn((limit: number) => ({
         execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),

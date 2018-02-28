@@ -10,7 +10,7 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
-import {NavigationBar, INavigationBarState} from 'src/components/navigationBar/NavigationBar';
+import {NavigationBar, NavigationBarState} from 'src/components/navigationBar/NavigationBar';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
 import {mockedHistory} from 'src/__tests__/testSetup.ts';
 import {
@@ -28,7 +28,7 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>, INavigationBarState>;
+type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>, NavigationBarState>;
 
 describe('NavigationBar tests.', () => {
 

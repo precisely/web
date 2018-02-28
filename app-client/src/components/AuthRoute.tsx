@@ -9,7 +9,7 @@
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 
-export interface IAuthRouteProps {
+export interface AuthRouteProps {
     onEnter: () => boolean;
     // tslint:disable-next-line no-any
     component: any;
@@ -18,7 +18,7 @@ export interface IAuthRouteProps {
     exact?: boolean;
 }
 
-export class AuthRoute extends React.Component<IAuthRouteProps> {
+export class AuthRoute extends React.Component<AuthRouteProps> {
     render(): JSX.Element {
         const {onEnter, component, path, redirectTo, exact} = this.props;
         const routeProps = exact ? {path, component, exact} : {path, component};

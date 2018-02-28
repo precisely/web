@@ -11,12 +11,12 @@ import * as Radium from 'radium';
 import {CSS} from 'src/interfaces';
 import {Row, Col} from 'src/components/ReusableComponents';
 
-export interface IPageContentProps {
+export interface PageContentProps {
     children: React.ReactNode;
     style?: CSS;
 }
 
-export let PageContent: React.StatelessComponent<IPageContentProps> = props => (
+export let PageContent: React.StatelessComponent<PageContentProps> = props => (
     <Row style={[content, props.style]} className="p-5 mx-auto">
         <Col style={formColumn}>
             {props.children}

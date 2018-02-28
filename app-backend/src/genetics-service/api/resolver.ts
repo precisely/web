@@ -7,11 +7,11 @@
 */
 
 import {Query} from 'dynogels';
-import {Genetics, IGeneticsAttributes} from '../models/Genetics';
+import {Genetics, GeneticsAttributes} from '../models/Genetics';
 
 const toSnakeCase = require('lodash.snakecase');
 
-interface IListFilters {
+interface ListFilters {
     limit?: number;
     lastEvaluatedKeys?: {
         opaqueId: string;
@@ -21,15 +21,15 @@ interface IListFilters {
     gene?: string;
 }
 
-interface IListObject {
-    Items: IGeneticsAttributes[];
+interface ListObject {
+    Items: GeneticsAttributes[];
     LastEvaluatedKey: {
         opaque_id: string;
         gene: string;
     };
 }
 
-export interface ICreateOrUpdateAttributes {
+export interface CreateOrUpdateAttributes {
     opaqueId?: string;
     sampleId?: string;
     source?: string;
@@ -43,9 +43,9 @@ export interface ICreateOrUpdateAttributes {
 }
 
 export const geneticsResolver = {
-    async create(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
-        let geneticsInstance: {attrs: IGeneticsAttributes};
-        const dataForCreating: IGeneticsAttributes = {};
+    async create(args: CreateOrUpdateAttributes): Promise<GeneticsAttributes> {
+        let geneticsInstance: {attrs: GeneticsAttributes};
+        const dataForCreating: GeneticsAttributes = {};
 
         for (const key in args) {
             if (args[key]) {
@@ -67,9 +67,9 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async update(args: ICreateOrUpdateAttributes): Promise<IGeneticsAttributes> {
-        let geneticsInstance: {attrs: IGeneticsAttributes};
-        const dataToUpdate: IGeneticsAttributes = {};
+    async update(args: CreateOrUpdateAttributes): Promise<GeneticsAttributes> {
+        let geneticsInstance: {attrs: GeneticsAttributes};
+        const dataToUpdate: GeneticsAttributes = {};
 
         for (const key in args) {
             if (args[key]) {
@@ -92,8 +92,8 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async get(args: {opaqueId: string, gene: string}): Promise<IGeneticsAttributes> {
-        let geneticsInstance: {attrs: IGeneticsAttributes};
+    async get(args: {opaqueId: string, gene: string}): Promise<GeneticsAttributes> {
+        let geneticsInstance: {attrs: GeneticsAttributes};
 
         try {
             geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
@@ -108,12 +108,12 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async list(args: IListFilters = {}): Promise<IListObject> {
+    async list(args: ListFilters = {}): Promise<ListObject> {
         const {limit = 15, lastEvaluatedKeys, opaqueId, gene} = args;
-        let result: IListObject;
+        let result: ListObject;
 
         try {
-            let query: Query & {execAsync?: () => IListObject};
+            let query: Query & {execAsync?: () => ListObject};
 
             if (opaqueId) {
                 query = Genetics.query(opaqueId).limit(limit);
@@ -141,12 +141,12 @@ export const geneticsResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    geneticsList: (root: any, args: IListFilters) => geneticsResolver.list(args),
+    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args),
     getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-    createGenetics: (root: any, args: ICreateOrUpdateAttributes) => geneticsResolver.create(args),
-    updateGenetics: (root: any, args: ICreateOrUpdateAttributes) => geneticsResolver.update(args),
+    createGenetics: (root: any, args: CreateOrUpdateAttributes) => geneticsResolver.create(args),
+    updateGenetics: (root: any, args: CreateOrUpdateAttributes) => geneticsResolver.update(args),
 };

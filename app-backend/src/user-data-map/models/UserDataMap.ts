@@ -25,13 +25,13 @@ const sequelize: Sequelize.Sequelize = new Sequelize(
     }
 );
 
-export interface IUserDataMapAttributes {
+export interface UserDataMapAttributes {
     user_id: string;
     vendor_data_type: string;
     data_type_user_id: string;
 }
 
-export interface IUserDataMapInstance extends Sequelize.Instance<IUserDataMapAttributes>, IUserDataMapAttributes {
+export interface UserDataMapInstance extends Sequelize.Instance<UserDataMapAttributes>, UserDataMapAttributes {
 
 }
 
@@ -42,9 +42,9 @@ export const vendorDataTypeList: string[] = [
     'precisely:genetics',
 ];
 
-export const UserDataMap: Sequelize.Model<IUserDataMapInstance, IUserDataMapAttributes> = 
+export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> = 
 
-        sequelize.define<IUserDataMapInstance, IUserDataMapAttributes>('userDataMap', {
+        sequelize.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
 
             user_id: {
                 type: Sequelize.STRING,

@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {ResetPassword, IResetPasswordState} from 'src/containers/user/ResetPassword';
+import {ResetPassword, ResetPasswordState} from 'src/containers/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
 import {resetPassword} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
@@ -23,7 +23,7 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-type ShallowWrapperType = ShallowWrapper<RouteComponentProps<{email: string}>, IResetPasswordState>;
+type ShallowWrapperType = ShallowWrapper<RouteComponentProps<{email: string}>, ResetPasswordState>;
 
 describe('Tests for ResetPassword', () => {
 

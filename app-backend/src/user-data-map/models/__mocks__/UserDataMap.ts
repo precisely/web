@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {IUserDataMapInstance} from '../UserDataMap';
+import {UserDataMapInstance} from '../UserDataMap';
 
 const SequelizeMock = require('sequelize-mock');
 const DBConnectionMock = new SequelizeMock();
@@ -22,7 +22,7 @@ export const UserDataMapMock = DBConnectionMock.define(
 
 export const UserDataMap = UserDataMapMock;
 
-UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): PromiseLike<IUserDataMapInstance[]> => {
+UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): PromiseLike<UserDataMapInstance[]> => {
     return new Promise((resolve, reject): void => {
         if (params.limit > 0) {
             resolve([UserDataMapMock.build()]);
@@ -34,7 +34,7 @@ UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): Pro
 
 UserDataMapMock.findCreateFind = jest.fn((params: {where: {user_id: string}}) => {
     return {
-        spread: (callback: ((user: IUserDataMapInstance) => IUserDataMapInstance)): Promise<IUserDataMapInstance> => 
+        spread: (callback: ((user: UserDataMapInstance) => UserDataMapInstance)): Promise<UserDataMapInstance> => 
                 new Promise((resolve, reject): void => {
                     
             if (params.where.user_id === 'dummyId') {
