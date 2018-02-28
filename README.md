@@ -1,5 +1,5 @@
-### Precisely-web (v0.0.3) 
-[![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev)
+### Precisely-web (v0.0.3)
+[![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/test_coverage)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/maintainability)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/maintainability)
 
 ---
 
@@ -86,7 +86,7 @@ To use the GraphQL Playground, open `/playground` of your Serverless service. Wi
 
 ### Usage of GraphiQL
  To use the GraphiQL, open `/graphiql` of your Serverless service. With serverless offline it is `http://localhost:4000/graphiql`.
- 
+
 <img width="800" height="500" alt="graphiql" src="https://user-images.githubusercontent.com/1587005/32695300-943e355e-c70c-11e7-9fac-2c9324a242c4.gif">
 
 
@@ -103,7 +103,7 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
 
     You need to make sure you have access to your deployed lambda functions.
-    
+
     - Both (Backend and Frontend)
         ```
         yarn deploy:dev
@@ -131,7 +131,7 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
 
     You need to make sure you have access to your deployed lambda functions.
-    
+
     - Both (Backend and Frontend)
         ```
         yarn deploy:stage
@@ -159,7 +159,7 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
 
     You need to make sure you have access to your deployed lambda functions.
-    
+
    - Both (Backend and Frontend)
         ```
         yarn deploy:prod
