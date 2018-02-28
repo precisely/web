@@ -8,13 +8,15 @@
 
 jest.mock('../../report-service/models/Report');
 
-import {IReportAttributes, Report} from '../../report-service/models/Report';
-import {reportResolver, ICreateOrUpdateAttributes} from '../../report-service/api/resolver';
+import {ReportAttributes, Report} from '../../report-service/models/Report';
+import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
+import {userDataMapResolver} from '../../user-data-map/api/resolver';
+import {geneticsResolver} from '../../genetics-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-type ExecSuccess = {Items: IReportAttributes[]};
+type ExecSuccess = {Items: ReportAttributes[]};
 
 describe('Report resolver tests.', (): void => {
 
@@ -24,11 +26,11 @@ describe('Report resolver tests.', (): void => {
         genes: ['demo', 'genes']
     };
 
-    const dummyRequestData: ICreateOrUpdateAttributes = {...commonData, content: 'demo-content'};
-    const dummyResponseData: IReportAttributes = {...commonData, raw_content: 'demo-content'};
+    const dummyRequestData: CreateOrUpdateAttributes = {...commonData, content: 'demo-content'};
+    const dummyResponseData: ReportAttributes = {...commonData, raw_content: 'demo-content'};
 
     Report.createAsync = jest.fn()
-            .mockImplementation((data: IReportAttributes): {attrs: IReportAttributes} => ({attrs: data}))
+            .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
             .mockImplementationOnce(() => {throw new Error('createAsync mock error'); });
 
     const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
@@ -42,12 +44,19 @@ describe('Report resolver tests.', (): void => {
         startKey: mockedExecAsync,
     }));
 
+    geneticsResolver.list =  jest.fn();
+    
     Report.query = jest.fn(() => {
         return {
             limit: mockedLimit,
             usingIndex: jest.fn(() => ({limit: mockedLimit}))
         };
-    });
+    })
+    .mockImplementationOnce(() => {throw new Error('query mock error'); });
+
+    userDataMapResolver.get = jest.fn()
+            .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
+            .mockImplementationOnce(() => {throw new Error('userDataMapResolver mock error'); });
 
     describe('Create tests', (): void => {
         it('should throw an error when the record already exists.', async (): Promise<void> => {
@@ -60,4 +69,55 @@ describe('Report resolver tests.', (): void => {
             expect(response).toEqual(dummyResponseData);
         });
     });
+
+    describe('List test', () => {
+
+        it('should fail if an error occurs', async () => {
+            let response = await reportResolver.list({});
+            expect(response[`message`]).toEqual('query mock error');
+        });
+    
+        unroll('it should respond with the report data list when #params are present.', async (
+                done: () => void,
+                args: {params: {[key: string]: string | number}}
+        ) => {
+            let response = await reportResolver.list(args.params);
+            expect(response).toEqual({Items: [dummyResponseData]});
+            done();
+        }, [ // tslint:disable-next-line
+            ['params'],
+            [{slug: 'test'}],
+            [{slug: 'QWERTY2', lastEvaluatedKeys: {slug: 'test', id: 'test'}}],
+        ]);
+    });
+
+    describe('Get tests', () => {
+        it('should throw an error when the if user is not found.', async () => {
+            let response = await reportResolver.get({});
+            expect(response[`message`]).toEqual('userDataMapResolver mock error');
+        });
+
+        it('should return an error message if required parameters are not present.', async () => {
+            let response = await reportResolver.get({});
+            expect(response[`message`]).toEqual('Required parameters not present.');
+        });
+
+        unroll('it should respond with the report data list when #params are present.', async (
+                done: () => void,
+                args: {params: {[key: string]: string | number}}
+        ) => {
+            let response = await reportResolver.get(args.params);
+            response[`userData`]();
+            expect(geneticsResolver.list).toBeCalled();
+            expect(response[`Items`]).toEqual([dummyResponseData]);
+            expect(typeof response[`userData`]).toEqual('function');
+            done();
+        }, [ // tslint:disable-next-line
+            ['params'],
+            [{id: 'test'}],
+            [{slug: 'test'}],
+            [{slug: 'test', lastEvaluatedKeys: {slug: 'test', id: 'test'}}],
+        ]);
+    });
+
 });

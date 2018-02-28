@@ -8,14 +8,14 @@
 
 import * as Joi from 'joi';
 import {AWS} from 'dynogels';
-import {IGeneticsAttributes} from '../../genetics-service/models/Genetics';
+import {GeneticsAttributes} from '../../genetics-service/models/Genetics';
 import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
 
 AWS.config.update({region: 'us-east-1'});
 
-export interface IReportAttributes {
+export interface ReportAttributes {
     id?: string;
     title: string;
     slug: string;
@@ -23,7 +23,7 @@ export interface IReportAttributes {
     parsed_content: string;
     top_level: boolean;
     genes: string[];
-    genetics: IGeneticsAttributes[];
+    genetics: GeneticsAttributes[];
 }
 
 /* istanbul ignore next */

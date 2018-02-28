@@ -9,14 +9,14 @@
 import {UserDataMap} from '../models/UserDataMap';
 import {UserDataMapInstance, UserDataMapAttributes} from '../models/UserDataMap';
 
-export interface ListFilters {
+export interface ListUserDataMapFilters {
     limit?: number;
     offset?: number;
 }
 
 export const userDataMapResolver = {
 
-    async list(args: ListFilters = {}): Promise<UserDataMapInstance[]> {
+    async list(args: ListUserDataMapFilters = {}): Promise<UserDataMapInstance[]> {
         let userDataMapInstances: UserDataMapInstance[];
         const {limit = 15, offset = 0} = args;
 
@@ -30,10 +30,12 @@ export const userDataMapResolver = {
         return userDataMapInstances;
     },
 
-    async getByUserId(args: {userId: string}): Promise<UserDataMapAttributes> {
+    async get(args: {user_id: string, vendor_data_type: string}): Promise<UserDataMapAttributes> {
         let userDataMapInstance: UserDataMapInstance;
+        const {user_id, vendor_data_type} = args;
 
-        userDataMapInstance = await UserDataMap.findOne({where: {user_id: args.userId}});
+        userDataMapInstance = await UserDataMap.findOne({where: {user_id, vendor_data_type}});
+
         if (!userDataMapInstance) {
             throw new Error('No such user record found');
         }
@@ -73,7 +75,7 @@ export const userDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    listUserDataMap: (root: any, args: ListFilters) => userDataMapResolver.list(args),
+    listUserDataMap: (root: any, args: ListUserDataMapFilters) => userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */

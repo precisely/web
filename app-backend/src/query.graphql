@@ -26,15 +26,14 @@ type Query {
             gene: String,
     ): GeneticsList,
     getGeneticsData(opaqueId: String!, gene: String!): Genetics,
-    reports(slug: String, id: String, limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord): ReportList,
+    reports(slug: String!, limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord): ReportList,
     report(
             slug: String, 
             id: String, 
             userId: String!,
-            limit: Int, 
-            geneticsLimit: Int, 
-            lastEvaluatedKeys: LastEvaluatedReportRecord, 
-            geneticsLastEvaluatedKeys: LastEvaluatedGeneticsRecord
+            vendorDataType: String!,
+            limit: Int,
+            lastEvaluatedKeys: LastEvaluatedReportRecord,
     ): ReportList,
 }
 
