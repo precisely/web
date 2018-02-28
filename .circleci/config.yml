@@ -27,7 +27,7 @@ ALIASES:
             name: Upload Code Climate Results
             command: |
                 cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json"
-                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_BUILD_NUM"
+                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
@@ -126,7 +126,7 @@ jobs:
             - run:
                 name: Reporting CodeClimate results
                 command: |
-                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER" coverage/
+                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
                     cc-test-reporter sum-coverage coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage
 
