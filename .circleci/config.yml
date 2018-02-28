@@ -3,128 +3,174 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 
-defaults: &defaults
-    docker:
-        # specify the version you desire here
-        - image: circleci/node:6.10
-        
-        # Specify service dependencies here if necessary
-        # CircleCI maintains a library of pre-built images
-        # documented at https://circleci.com/docs/2.0/circleci-images/
-        # - image: circleci/mongo:3.4.4
+ALIASES:
+    defaults: &defaults
+        docker:
+            # specify the version you desire here
+            - image: aneilbaboo/node:6.10.3
 
-    working_directory: ~/repo
+            # Specify service dependencies here if necessary
+            # CircleCI maintains a library of pre-built images
+            # documented at https://circleci.com/docs/2.0/circleci-images/
+            # - image: circleci/mongo:3.4.4
+
+    frontend_defaults: &frontend_defaults
+        <<: *defaults
+        working_directory: ~/repo/app-client
+
+    backend_defaults: &backend_defaults
+        <<: *defaults
+        working_directory: ~/repo/app-backend
+
+    upload_codeclimate_results: &upload_codeclimate_results
+        run:
+            name: Upload Code Climate Results
+            command: |
+                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json"
+                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_BUILD_NUM"
+
+    restore_frontend_cache: &restore_frontend_cache
+        restore_cache:
+            keys:
+                - v1-dependencies-frontend-{{ checksum "package.json" }}
+                - v1-dependencies-frontend
+
+    save_frontend_cache: &save_frontend_cache
+        save_cache:
+            paths:
+                - node_modules
+            key: v1-dependencies-frontend-{{ checksum "package.json" }}
+
+    restore_backend_cache: &restore_backend_cache
+        restore_cache:
+            keys:
+                - v1-dependencies-backend-{{ checksum "package.json" }}
+                - v1-dependencies-backend
+
+    save_backend_cache: &save_backend_cache
+        save_cache:
+            paths:
+                - node_modules
+            key: v1-dependencies-backend-{{ checksum "package.json" }}
+
+    checkout: &checkout
+        checkout:
+            path: ~/repo
 
 version: 2
 jobs:
     build-frontend:
-        <<: *defaults
+        <<: *frontend_defaults
+
         steps:
-        - checkout
+            - *checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            keys:
-            - v1-dependencies-{{ checksum "app-client/package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - *restore_frontend_cache
 
-        - run: 
-            name: Installing Dependencies
-            command: cd app-client && yarn install
+            - run:
+                name: Installing Dependencies
+                command: yarn install
 
-        - save_cache:
-            paths:
-                - node_modules
-                - app-client/node_modules
-            key: v1-dependencies-{{ checksum "app-client/package.json" }}
+            - *save_frontend_cache
 
-        # run frontend tests!
-        - run:
-            name: Frontend Tests
-            command: cd app-client && yarn test
+            - run:
+                name: Frontend Tests
+                command: |
+                    cc-test-reporter before-build
+                    yarn test
+                    cc-test-reporter after-build --debug -t lcov --exit-code $?
 
-        # run linters!
-        - run:
-            name: TSLint
-            command: cd app-client && yarn tslint
-        - run:
-            name: ESLint
-            command: cd app-client && yarn eslint
+            - run:
+                name: TSLint
+                command: yarn tslint
+            - run:
+                name: ESLint
+                command: yarn eslint
+
+            - *upload_codeclimate_results
 
     build-backend:
-        <<: *defaults
+        <<: *backend_defaults
+
         steps:
-        - checkout
+            - *checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            keys:
-            - v1-dependencies-{{ checksum "app-backend/package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - *restore_backend_cache
 
-        - run: 
-            name: Installing Dependencies
-            command: cd app-backend && yarn install
+            - run:
+                name: Installing Dependencies
+                command: yarn install
 
-        - save_cache:
-            paths:
-                - node_modules
-                - app-backend/node_modules
-            key: v1-dependencies-{{ checksum "app-backend/package.json" }}
+            - *save_backend_cache
 
-        # run backend tests!
-        - run: 
-            name: Backend Tests
-            command: cd app-backend && yarn test
+            - run:
+                name: Backend Tests
+                command: |
+                    cc-test-reporter before-build
+                    yarn test
+                    cc-test-reporter after-build --debug -t lcov --exit-code $?
 
-        # run linters!
-        - run:
-            name: TSLint
-            command: cd app-backend && yarn tslint
-        - run:
-            name: ESLint
-            command: cd app-backend && yarn eslint
-            
+            - run:
+                name: TSLint
+                command: yarn tslint
+            - run:
+                name: ESLint
+                command: yarn eslint
+
+            - *upload_codeclimate_results
+
+    report-codeclimate:
+        <<: *defaults
+        work_directory: ~/repo
+        steps:
+            - run:
+                name: Reporting CodeClimate results
+                command: |
+                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$BUILD_NUMBER" coverage/
+                    cc-test-reporter sum-coverage coverage/codeclimate.*.json
+                    cc-test-reporter upload-coverage
+
     stage-deploy-frontend:
-        <<: *defaults
+        <<: *frontend_defaults
+
         steps:
-            - checkout
-            - restore_cache:
-                keys:
-                - v1-dependencies-{{ checksum "app-client/package.json" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
+            - *checkout
+
+            - *restore_frontend_cache
+
             - run:
                 name: Set AWS Profile
-                command: cd app-client && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
-                command: cd app-client && yarn deploy:stage
+                command: yarn deploy:stage
 
     stage-deploy-backend:
-        <<: *defaults
+        <<: *backend_defaults
+
         steps:
-            - checkout
-            - restore_cache:
-                keys:
-                - v1-dependencies-{{ checksum "app-backend/package.json" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
+            - *checkout
+
+            - *restore_backend_cache
+
             - run:
                 name: Set AWS Profile
-                command: cd app-backend && ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
-                command: cd app-backend && yarn deploy:stage
+                command: yarn deploy:stage
 
 workflows:
     version: 2
     build-test-and-deploy:
         jobs:
-            - build-backend
             - build-frontend
+            - build-backend
+
+            - report-codeclimate:
+                requires:
+                    - build-frontend
+                    - build-backend
 
             # run this job only when dev branch is build
             - stage-deploy-backend:

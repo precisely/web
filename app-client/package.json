@@ -20,7 +20,7 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageDirectory": "<rootDir>/coverage",
+    "coverageDirectory": "coverage",
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!**/node_modules/**",
@@ -29,6 +29,12 @@
       "!src/index.tsx",
       "!**/registerServiceWorker.ts",
       "!src/ambientInterfaces.d.ts"
+    ],
+    "coverageReporters": [
+      "html",
+      "text",
+      "lcov",
+      "json"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
@@ -184,6 +190,7 @@
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.6.1",
+    "jest-plugin-context": "^2.7.0",
     "react-test-renderer": "16.0.0",
     "serverless": "1.24.1",
     "serverless-finch": "1.3.0",
