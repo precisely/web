@@ -36,3 +36,11 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
 export function addEnvironmentToTableName(tableName: string, version: string): string {
     return `${process.env.NODE_ENV}-${version}-${tableName}`;
 }
+
+export function test(allowedRoles: string[]) {
+    if (allowedRoles.indexOf('USER')) {
+        return true;
+    }
+
+    throw new Error('The user is unauthorized.');
+}

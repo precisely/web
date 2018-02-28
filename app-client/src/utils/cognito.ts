@@ -8,6 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
+import { convertToCognitoFormat } from './index';
 import {
     CognitoUserPool,
     AuthenticationDetails,
@@ -87,7 +88,13 @@ export function signup(
         successCallback?: (result: ISignUpResult) => void,
         failureCallback?: (message: string) => void
 ): void {
-    userPool.signUp(email, password, null, null, (error: Error, result: ISignUpResult): void => {
+    // tslint:disable
+    userPool.signUp(
+            email,
+            password,
+            convertToCognitoFormat({'custom:roles': 'USER'}) as any,
+            null,
+            (error: Error, result: ISignUpResult): void => {
         if (error) {
             if (failureCallback) {
                 failureCallback(error.message);

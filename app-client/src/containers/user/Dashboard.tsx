@@ -13,9 +13,11 @@ import {Container} from 'src/components/ReusableComponents';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
 import {header} from 'src/constants/styleGuide';
+import {graphql} from 'react-apollo';
+import {DemoQuery} from 'src/containers/user/queries';
 
 @Radium
-export class Dashboard extends React.Component<RouteComponentProps<void>> {
+export class DashboardImpl extends React.Component<RouteComponentProps<void>> {
 
     /**
      * This is a dummy component for demonstration purpose only.
@@ -36,3 +38,12 @@ export class Dashboard extends React.Component<RouteComponentProps<void>> {
         );
     }
 }
+
+// tslint:disable
+const withDashboard = graphql<Response, any>(DemoQuery, {
+    options: () => ({
+        variables: { opaqueId: 'GHI', gene: 'QWERTY' }
+    })
+});
+
+export const Dashboard = withDashboard(DashboardImpl);
