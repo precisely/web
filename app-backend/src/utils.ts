@@ -38,11 +38,14 @@ export function addEnvironmentToTableName(tableName: string, version: string): s
     return `${process.env.NODE_ENV}-${version}-${tableName}`;
 }
 
+/**
+ * Utility function to check if a user is authorized or not.
+ */
 export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {
     let isAuthorized: boolean = true;
 
     if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
-        isAuthorized = false;
+        throw new Error('The user is unauthorized.');
     }
 
     const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');

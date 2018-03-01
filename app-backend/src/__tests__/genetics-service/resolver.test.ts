@@ -10,6 +10,7 @@ jest.mock('../../genetics-service/models/Genetics');
 
 import {GeneticsAttributes, Genetics} from '../../genetics-service/models/Genetics';
 import {geneticsResolver, CreateOrUpdateAttributes} from '../../genetics-service/api/resolver';
+import {hasAuthorizedRoles} from '../../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -17,6 +18,8 @@ unroll.use(it);
 type ExecSuccess = {Items: GeneticsAttributes[]};
 
 describe('Genetics resolver tests.', () => {
+    hasAuthorizedRoles = jest.fn().mockReturnValue(true);
+
     const commonData: {gene: string, source: string, quality: string} = {
         gene: 'QWERTY2',
         source: 'helix',
