@@ -7,8 +7,7 @@
  */
 
 import * as AWS from 'aws-sdk';
-import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
-import { convertToCognitoFormat } from './index';
+import {setTokenInLocalStorage, removeTokenFromLocalStorage, convertToCognitoFormat} from 'src/utils';
 import {
     CognitoUserPool,
     AuthenticationDetails,
