@@ -8,6 +8,8 @@
 
 import {Query} from 'dynogels';
 import {Genetics, GeneticsAttributes} from '../models/Genetics';
+import {hasAuthorizedRoles} from '../../utils';
+import {AuthorizerAttributes} from '../../interfaces';
 
 const toSnakeCase = require('lodash.snakecase');
 
@@ -92,10 +94,11 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async get(args: {opaqueId: string, gene: string}): Promise<GeneticsAttributes> {
+    async get(args: {opaqueId: string, gene: string}, authorizer: AuthorizerAttributes): Promise<GeneticsAttributes> {
         let geneticsInstance: {attrs: GeneticsAttributes};
 
         try {
+            hasAuthorizedRoles(authorizer, ['ADMIN']);
             geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
             if (!geneticsInstance) {
                 throw new Error('No such record found');
@@ -108,11 +111,12 @@ export const geneticsResolver = {
         return geneticsInstance.attrs;
     },
 
-    async list(args: ListFilters = {}): Promise<ListObject> {
+    async list(args: ListFilters = {}, authorizer: AuthorizerAttributes): Promise<ListObject> {
         const {limit = 15, lastEvaluatedKeys, opaqueId, gene} = args;
         let result: ListObject;
 
         try {
+            hasAuthorizedRoles(authorizer, ['ADMIN']);
             let query: Query & {execAsync?: () => ListObject};
 
             if (opaqueId) {
@@ -141,8 +145,8 @@ export const geneticsResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args),
-    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args),
+    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args, root),
+    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args, root),
 };
 
 /* istanbul ignore next */

@@ -8,6 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import * as Bluebird from 'bluebird';
+import {AuthorizerAttributes} from './interfaces';
 
 type DecryptRequest = AWS.KMS.Types.DecryptRequest;
 type DecryptResponse = AWS.KMS.Types.DecryptResponse;
@@ -37,10 +38,22 @@ export function addEnvironmentToTableName(tableName: string, version: string): s
     return `${process.env.NODE_ENV}-${version}-${tableName}`;
 }
 
-export function test(allowedRoles: string[]) {
-    if (allowedRoles.indexOf('USER')) {
-        return true;
+export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {
+    let isAuthorized: boolean = true;
+
+    if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
+        isAuthorized = false;
     }
 
-    throw new Error('The user is unauthorized.');
+    const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
+
+    isAuthorized = currentUserRoles.some((role: string): boolean => {
+        return (allowedRoles.indexOf(role.trim()) > -1);
+    });
+
+    if (!isAuthorized) {
+        throw new Error('The user is unauthorized.');
+    }
+
+    return isAuthorized;
 }
