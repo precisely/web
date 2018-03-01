@@ -6,18 +6,22 @@
  * without modification, are not permitted.
  */
 
+import {toast} from 'react-toastify';
 import {
     isEmpty,
     getEnvironment,
     setTokenInLocalStorage,
     removeTokenFromLocalStorage,
-    validateEmailAndPassword
+    validateEmailAndPassword,
+    getTokenFromLocalStorage,
 } from 'src/utils';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('Tests for utils/index.ts', () => {
+
+    toast.isActive = jest.fn().mockReturnValueOnce(true).mockReturnValue(false);
 
     unroll('it should test the isEmpty function when the object is #condition', (
             done: () => void,
@@ -33,6 +37,9 @@ describe('Tests for utils/index.ts', () => {
 
     it('should test getEnvironment and return the correct environment', () => {
         expect(getEnvironment()).toEqual('test');
+
+        process.env.NODE_ENV = '';
+        expect(getEnvironment()).toEqual('');
     });
 
     unroll('it should #operation the authentication token in the local storage', (
@@ -59,6 +66,12 @@ describe('Tests for utils/index.ts', () => {
         expect(localStorage.removeItem).toBeCalledWith('AUTH_TOKEN');
     });
 
+    it('should get the token from the local storage.', () => {
+        localStorage.getItem = jest.fn().mockReturnValueOnce('DummyToken').mockReturnValueOnce(undefined);
+        expect(getTokenFromLocalStorage()).toEqual('DummyToken');
+        expect(getTokenFromLocalStorage()).toEqual('');
+    });
+
     unroll('it should return #result when the params are #params', (
             done: () => void,
             // tslint:disable-next-line
@@ -68,10 +81,10 @@ describe('Tests for utils/index.ts', () => {
         done();
     }, [ // tslint:disable-next-line
         ['params', 'result'],
-        [['', '', null], {isValid: false, toastId: 1}],
-        [['', 'dummyPassword', null], {isValid: false, toastId: 2}],
-        [['test@example.com', '', null], {isValid: false, toastId: 3}],
-        [['test@example.com', 'dummy', null], {isValid: false, toastId: 4}],
+        [['', '', 100], {isValid: false, toastId: 100}],
+        [['', 'dummyPassword', null], {isValid: false, toastId: 1}],
+        [['test@example.com', '', null], {isValid: false, toastId: 2}],
+        [['test@example.com', 'dummy', null], {isValid: false, toastId: 3}],
         [['test@example.com', 'dummyPassword', null], {isValid: true, toastId: null}],
     ]);
 });

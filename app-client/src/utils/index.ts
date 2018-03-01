@@ -7,7 +7,6 @@
 */
 
 import {toast, ToastType} from 'react-toastify';
-import { AttributeListType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
 /**
  * A method to check if the given object is empty
@@ -40,7 +39,7 @@ export const setTokenInLocalStorage = (token: string): boolean => {
 export const getTokenFromLocalStorage = (): string => {
     let token: string = localStorage.getItem('AUTH_TOKEN');
     return token || '';
-}
+};
 
 export const removeTokenFromLocalStorage = (): void => {
     localStorage.removeItem('AUTH_TOKEN');
@@ -83,19 +82,4 @@ export const validateEmailAndPassword = (
     }
 
     return {isValid: true, toastId};
-};
-
-export const convertToCognitoFormat = (data: Object): AttributeListType => {
-    const newList: AttributeListType = [];
-
-    for (const key of Object.keys(data)) {
-        newList.push(
-            {
-                Name: key,
-                Value: data[key]
-            }
-        );
-    }
-
-    return newList;
 };
