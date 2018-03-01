@@ -18,7 +18,7 @@ unroll.use(it);
 
 type ExecSuccess = {Items: ReportAttributes[]};
 
-describe('Report resolver tests.', (): void => {
+describe('Report resolver tests.', () => {
 
     const commonData: {title: string, slug: string, genes: string[]} = {
         title: 'demo-title',
@@ -26,7 +26,7 @@ describe('Report resolver tests.', (): void => {
         genes: ['demo', 'genes']
     };
 
-    const dummyRequestData: CreateOrUpdateAttributes = {...commonData, content: 'demo-content'};
+    const dummyRequestData: CreateOrUpdateAttributes = {...commonData, rawContent: 'demo-content'};
     const dummyResponseData: ReportAttributes = {...commonData, raw_content: 'demo-content'};
 
     Report.createAsync = jest.fn()
@@ -44,7 +44,7 @@ describe('Report resolver tests.', (): void => {
         startKey: mockedExecAsync,
     }));
 
-    geneticsResolver.list =  jest.fn();
+    geneticsResolver.list = jest.fn();
     
     Report.query = jest.fn(() => {
         return {
@@ -58,13 +58,13 @@ describe('Report resolver tests.', (): void => {
             .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
             .mockImplementationOnce(() => {throw new Error('userDataMapResolver mock error'); });
 
-    describe('Create tests', (): void => {
-        it('should throw an error when the record already exists.', async (): Promise<void> => {
+    describe('Create tests', () => {
+        it('should throw an error when the record already exists.', async () => {
             let response = await reportResolver.create(dummyRequestData);
             expect(response[`message`]).toEqual('createAsync mock error');
         });
 
-        it('should create a new record when there is no error', async (): Promise<void> => {
+        it('should create a new record when there is no error', async () => {
             let response = await reportResolver.create(dummyRequestData);
             expect(response).toEqual(dummyResponseData);
         });
@@ -86,7 +86,7 @@ describe('Report resolver tests.', (): void => {
             done();
         }, [ // tslint:disable-next-line
             ['params'],
-            [{slug: 'test'}],
+            [{slug: 'test', limit: 10}],
             [{slug: 'QWERTY2', lastEvaluatedKeys: {slug: 'test', id: 'test'}}],
         ]);
     });

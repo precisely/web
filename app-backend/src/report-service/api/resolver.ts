@@ -10,12 +10,12 @@ import {Query} from 'dynogels';
 import {Report, ReportAttributes} from '../models/Report';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
-import {geneticsResolver, ListGeneticsFilters} from '../../genetics-service/api/resolver';
+import {geneticsResolver, ListGeneticsFilters, ListGeneticsObject} from '../../genetics-service/api/resolver';
 
 export interface CreateOrUpdateAttributes {
     title: string;
     slug: string;
-    content: string;
+    rawContent: string;
     genes: string[];
 }
 
@@ -42,10 +42,10 @@ export interface ListReportObject {
 export const reportResolver = {
     async create(args: CreateOrUpdateAttributes): Promise<ReportAttributes> {
         let reportInstance: {attrs: ReportAttributes};
-        const {slug, title, genes, content} = args;
+        const {slug, title, genes, rawContent} = args;
 
         try {
-            reportInstance = await Report.createAsync({slug, title, genes, raw_content: content});
+            reportInstance = await Report.createAsync({slug, title, genes, raw_content: rawContent});
         } catch (error) {
             console.log('reportResolver-create: ', error.message);
             return error;
@@ -55,8 +55,9 @@ export const reportResolver = {
     },
 
     async list(args: ListReportFilters): Promise<ListReportObject> {
-        const {limit = 15, lastEvaluatedKeys, slug} = args;
+        const {lastEvaluatedKeys, slug, limit = 15} = args;
         let result: ListReportObject;
+        
         try {
             let query: Query & {execAsync?: () => ListReportObject};
 
@@ -75,7 +76,8 @@ export const reportResolver = {
         return result;
     },
 
-    async get(args: ListReportFilters): Promise<{}> {
+    async get(args: ListReportFilters): 
+        Promise<ListReportObject & { userData: (geneticArgs: ListGeneticsFilters) => Promise<ListGeneticsObject>; }> {
             
         const {slug, id, userId, vendorDataType, limit, lastEvaluatedKeys} = args;
         let reportInstance: ListReportObject;

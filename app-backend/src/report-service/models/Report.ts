@@ -35,7 +35,7 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
 
     schema: {
         id: dynogels.types.uuid(),
-        title: Joi.string(),
+        title: Joi.string().required(),
         slug: Joi.string().required(),
         raw_content: Joi.string(),
         parsed_content: Joi.string(),

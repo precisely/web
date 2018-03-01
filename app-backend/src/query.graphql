@@ -63,5 +63,5 @@ type Mutation {
             variantType: String!,
             quality: String!
     ): Genetics,
-    saveReport(slug: String!, title: String!, content: String!, genes: [String]): Report,
+    saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
 }
