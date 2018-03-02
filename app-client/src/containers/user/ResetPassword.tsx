@@ -14,6 +14,7 @@ import {PageContent} from 'src/components/PageContent';
 import {resetPassword} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {CSS} from 'src/interfaces';
 import {
     formButton,
     noBorderTop,
@@ -83,8 +84,32 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
         }));
     }
 
+    renderInput = (
+            type: 'text' | 'password',
+            id: string,
+            placeholder: string,
+            customStyle: CSS,
+            className?: string
+    ): JSX.Element => {
+        return (
+            <FormGroup style={alignCenter} className={className}>
+                <Input
+                        style={[customStyle, inputStyle]}
+                        required
+                        type={type}
+                        id={id}
+                        placeholder={placeholder}
+                        value={this.state[id]}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                            this.handleInputChange(e.target.id, e.target.value);
+                        }}
+                />
+            </FormGroup>
+        );
+    }
+
     render(): JSX.Element {
-        const {isLoading, verificationCode, newPassword, confirmPassword} = this.state;
+        const {isLoading} = this.state;
 
         return (
             <div>
@@ -93,45 +118,25 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
                     <h3 style={header}>Reset password</h3>
                     <PageContent>
                         <Form onSubmit={this.submitForm} style={formMargin}>
-                            <FormGroup style={alignCenter} className="mb-0">
-                                <Input
-                                        style={[removeBorderRadius, inputStyle]}
-                                        required
-                                        type="text"
-                                        id="verificationCode"
-                                        placeholder="Enter your verification code"
-                                        value={verificationCode}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
-                            <FormGroup style={alignCenter} className="mb-0">
-                                <Input
-                                        style={[noBorderTop, inputStyle]}
-                                        required
-                                        type="password"
-                                        id="newPassword"
-                                        placeholder="Enter your new password"
-                                        value={newPassword}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
-                            <FormGroup style={alignCenter}>
-                                <Input
-                                        style={[noBorderTop, inputStyle]}
-                                        required
-                                        type="password"
-                                        id="confirmPassword"
-                                        placeholder="Re-enter your new password"
-                                        value={confirmPassword}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
+                            {
+                                this.renderInput(
+                                        'text',
+                                        'verificationCode',
+                                        'Enter your verification code',
+                                        removeBorderRadius,
+                                        'mb-0'
+                                )
+                            }
+                            {
+                                this.renderInput(
+                                        'password',
+                                        'newPassword',
+                                        'Enter your new password',
+                                        noBorderTop,
+                                        'mb-0'
+                                )
+                            }
+                            {this.renderInput('password', 'confirmPassword', 'Re-enter your new password', noBorderTop)}
                             <Button style={formButton} disabled={isLoading} active={isLoading}>
                                 {isLoading ? 'Please wait...' : 'Reset Password'}
                             </Button>
