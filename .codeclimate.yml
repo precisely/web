@@ -17,26 +17,36 @@ checks:
       threshold: 20
   method-lines:
     config:
-      threshold: 25
+      threshold: 50
   nested-control-flow:
     config:
       threshold: 4
   return-statements:
     config:
       threshold: 4
-  similar-code:
-    config:
-      threshold: # language-specific defaults. an override will affect all languages.
+#  similar-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
   identical-code:
     config:
-      threshold: # language-specific defaults. an override will affect all languages.
+      threshold: 4
 plugins:
-  - "duplication"
-  - "fixme"
-  - "eslint"
-  - "tslint"
-  - "nodesecurity"
+  duplication:
+    enabled: true
+    count_threshold: 6
+  fixme:
+    enabled: true
+  eslint:
+    enabled: true
+    channel: "eslint-4"
+  tslint:
+    enabled: true
+    config: tslint.json
+  nodesecurity:
+    enabled: true
 exclude_patterns:
+  - "app-backend/build"
+  - "app-client/build"
   - "config/"
   - "db/"
   - "dist/"

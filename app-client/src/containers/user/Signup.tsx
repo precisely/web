@@ -92,8 +92,31 @@ export class Signup extends React.Component<RouteComponentProps<void>, SignupSta
         }));
     }
 
+    renderInput = (
+            type: 'email' | 'password',
+            id: string,
+            placeholder: string,
+            customStyle: CSS,
+            className?: string
+    ): JSX.Element => {
+        return (
+            <FormGroup style={alignCenter} className={className}>
+                <Input
+                        style={[customStyle, inputStyle]}
+                        type={type}
+                        id={id}
+                        placeholder={placeholder}
+                        value={this.state[id]}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                            this.handleInputChange(e.target.id, e.target.value);
+                        }}
+                />
+            </FormGroup>
+        );
+    }
+
     render(): JSX.Element {
-        const {isLoading, email, password, confirmPassword} = this.state;
+        const {isLoading} = this.state;
 
         return (
             <div>
@@ -102,42 +125,9 @@ export class Signup extends React.Component<RouteComponentProps<void>, SignupSta
                     <h3 style={header}>Sign Up</h3>
                     <PageContent>
                         <Form id="signupForm" onSubmit={this.submitForm} style={formMargin}>
-                            <FormGroup style={alignCenter} className="mb-0">
-                                <Input
-                                        style={[removeBorderRadius, inputStyle]}
-                                        type="email"
-                                        id="email"
-                                        placeholder="Email"
-                                        value={email}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
-                            <FormGroup style={alignCenter} className="mb-0">
-                                <Input
-                                        style={[noBorderTop, inputStyle]}
-                                        type="password"
-                                        id="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
-                            <FormGroup style={alignCenter}>
-                                <Input
-                                        style={[noBorderTop, inputStyle]}
-                                        type="password"
-                                        id="confirmPassword"
-                                        placeholder="Re-enter your password"
-                                        value={confirmPassword}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                                            this.handleInputChange(e.target.id, e.target.value);
-                                        }}
-                                />
-                            </FormGroup>
+                            {this.renderInput('email', 'email', 'Email', removeBorderRadius, 'mb-0')}
+                            {this.renderInput('password', 'password', 'Password', removeBorderRadius, 'mb-0')}
+                            {this.renderInput('password', 'confirmPassword', 'Re-enter your password', noBorderTop)}
                             <Button style={formButton} disabled={isLoading} active={isLoading}>
                                 {isLoading ? 'Please wait...' : 'Signup'}
                             </Button>
