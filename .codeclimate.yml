@@ -45,6 +45,8 @@ plugins:
   nodesecurity:
     enabled: true
 exclude_patterns:
+  - "app-backend/build"
+  - "app-client/build"
   - "config/"
   - "db/"
   - "dist/"
