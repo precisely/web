@@ -24,21 +24,21 @@ checks:
   return-statements:
     config:
       threshold: 4
-  similar-code:
-    config:
-      threshold: # language-specific defaults. an override will affect all languages.
+#  similar-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
   identical-code:
     config:
       threshold: 6
 plugins:
-  duplication:
-    enabled: true
   fixme:
     enabled: true
   eslint:
     enabled: true
+    channel: "eslint-4"
   tslint:
     enabled: true
+    config: tslint.json
   nodesecurity:
     enabled: true
 exclude_patterns:
