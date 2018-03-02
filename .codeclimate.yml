@@ -29,8 +29,11 @@ checks:
 #      threshold: # language-specific defaults. an override will affect all languages.
   identical-code:
     config:
-      threshold: 6
+      threshold: 4
 plugins:
+  duplication:
+    enabled: true
+    count_threshold: 6
   fixme:
     enabled: true
   eslint:
