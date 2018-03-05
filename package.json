@@ -16,10 +16,17 @@
     "deploy:stage": "cd app-backend && yarn deploy:stage && cd ../app-client && yarn deploy:stage",
     "deploy:prod": "cd app-backend && yarn deploy:prod && cd ../app-client && yarn deploy:prod"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run tslint && npm run eslint"
+    }
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/precisely/web" 
+    "url": "https://github.com/precisely/web"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "husky": "0.14.3"
+  }
 }
