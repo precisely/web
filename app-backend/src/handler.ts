@@ -26,7 +26,7 @@ export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context
     const handler: LambdaHandler = graphqlLambda({
         schema: myGraphQLSchema,
         tracing: true,
-        rootValue: event.requestContext.authorizer
+        rootValue: {authorizer: event.requestContext.authorizer}
     });
     return handler(event, context, callback);
 };

@@ -145,8 +145,8 @@ export const geneticsResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args, root),
-    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args, root),
+    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args, root.authorizer),
+    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */

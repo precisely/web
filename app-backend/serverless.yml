@@ -56,7 +56,7 @@ functions:
         method: post
         cors: true
         authorizer:
-          arn: arn:aws:cognito-idp:us-east-1:416000760642:userpool/us-east-1_d9LUcREOg
+          arn: ${env:COGNITO_ARN}
   playground:
     handler: src/handler.playgroundHandler
     events:
