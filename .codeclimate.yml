@@ -47,6 +47,9 @@ plugins:
 exclude_patterns:
   - "app-backend/build"
   - "app-client/build"
+  - "app-client/config"
+  - "app-client/scripts"
+  - "app-client/public"
   - "config/"
   - "db/"
   - "dist/"
