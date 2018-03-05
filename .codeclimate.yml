@@ -32,7 +32,7 @@ checks:
       threshold: 4
 plugins:
   duplication:
-    enabled: true
+    enabled: false
     count_threshold: 6
   fixme:
     enabled: true
