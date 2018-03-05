@@ -19,11 +19,17 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
 import {Basepage} from 'src/containers/basepage/Basepage';
+import {getTokenFromLocalStorage} from 'src/utils/index';
 
 initReactFastclick();
 
 const client = new ApolloClient({
-    link: new HttpLink({uri: process.env.REACT_APP_GRAPHQL_ENDPOINT}),
+    link: new HttpLink({
+        uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
+        headers: {
+            Authorization: getTokenFromLocalStorage()
+        }
+    }),
     cache: new InMemoryCache(),
 });
 

@@ -6,10 +6,14 @@
  * without modification, are not permitted.
  */
 
+/* istanbul ignore next */
 import logger from 'redux-logger';
+/* istanbul ignore next */
 import {createStore, applyMiddleware} from 'redux';
+/* istanbul ignore next */
 import {rootReducer} from 'src/reducers';
 
+/* istanbul ignore next */
 const middlewares = [
     logger,
 ];
@@ -20,6 +24,7 @@ const middlewares = [
  * config for redux-devtools-extension
  * saga and logger middleware
  */
+/* istanbul ignore next */
 export const store = createStore(
     rootReducer,
     typeof window !== 'undefined' && window[`__REDUX_DEVTOOLS_EXTENSION__`] && window[`__REDUX_DEVTOOLS_EXTENSION__`](),

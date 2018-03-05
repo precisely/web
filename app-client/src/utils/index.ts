@@ -36,6 +36,11 @@ export const setTokenInLocalStorage = (token: string): boolean => {
     return true;
 };
 
+export const getTokenFromLocalStorage = (): string => {
+    let token: string = localStorage.getItem('AUTH_TOKEN');
+    return token || '';
+};
+
 export const removeTokenFromLocalStorage = (): void => {
     localStorage.removeItem('AUTH_TOKEN');
 };

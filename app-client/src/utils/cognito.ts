@@ -14,6 +14,7 @@ import {
     CognitoUser,
     CognitoUserSession,
     ISignUpResult,
+    CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
 
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
@@ -87,7 +88,14 @@ export function signup(
         successCallback?: (result: ISignUpResult) => void,
         failureCallback?: (message: string) => void
 ): void {
-    userPool.signUp(email, password, null, null, (error: Error, result: ISignUpResult): void => {
+    const userRole: CognitoUserAttribute = new CognitoUserAttribute({Name: 'custom:roles', Value: 'USER'});
+
+    userPool.signUp(
+            email,
+            password,
+            [userRole],
+            null,
+            (error: Error, result: ISignUpResult): void => {
         if (error) {
             if (failureCallback) {
                 failureCallback(error.message);

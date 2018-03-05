@@ -23,8 +23,11 @@ const myGraphQLSchema = makeExecutableSchema({
 
 /* istanbul ignore next */
 export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    const handler: LambdaHandler = graphqlLambda({ schema: myGraphQLSchema, tracing: true });
+    const handler: LambdaHandler = graphqlLambda({
+        schema: myGraphQLSchema,
+        tracing: true,
+        rootValue: {authorizer: event.requestContext.authorizer}
+    });
     return handler(event, context, callback);
 };
 

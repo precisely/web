@@ -55,6 +55,8 @@ functions:
         path: api
         method: post
         cors: true
+        authorizer:
+          arn: ${env:COGNITO_ARN}
   playground:
     handler: src/handler.playgroundHandler
     events:

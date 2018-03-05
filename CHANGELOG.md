@@ -44,3 +44,6 @@
 
 ### Changed
 - The attributes of the Genetic model.
+
+### Added
+- A utility function to check the current user's roles.
