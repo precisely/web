@@ -15,6 +15,10 @@ provider:
     AWS_PROFILE: ${opt:stage, self:provider.stage}-profile-precisely 
     # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
   iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "s3:GetObject"
+       Resource: "*"
     - Effect: Allow
       Action:
         - KMS:Decrypt
@@ -28,7 +32,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:table/users"
+      Resource: "arn:aws:dynamodb:us-east-1:*:table/*"
 
 plugins:
   - serverless-webpack
@@ -65,6 +69,12 @@ functions:
           arn: ${env:COGNITO_ARN}
   setupDatabase:
     handler: src/setup.setupDatabase
+  ingester:
+    handler: src/ingest-service/geneticsIngester.geneticsIngester
+    events:
+    - s3:
+        bucket: ${opt:stage, 'dev'}-precisely-genetics-ga4gh
+        event: s3:ObjectCreated:*
   playground:
     handler: src/handler.playgroundHandler
     events:
