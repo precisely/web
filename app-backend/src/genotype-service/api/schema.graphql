@@ -1,9 +1,9 @@
-type LastEvaluatedGeneticsData {
+type LastEvaluatedGenotypeData {
     opaque_id: String
     gene: String
 }
 
-type Genetics {
+type Genotype {
     opaque_id: String
     sample_id: String
     source: String
@@ -18,11 +18,11 @@ type Genetics {
     updated_at: String
 }
 
-type GeneticsListItem {
-    attrs: Genetics
+type GenotypeListItem {
+    attrs: Genotype
 }
 
-type GeneticsList {
-    Items: [GeneticsListItem],
-    LastEvaluatedKey: LastEvaluatedGeneticsData
+type GenotypeList {
+    Items: [GenotypeListItem],
+    LastEvaluatedKey: LastEvaluatedGenotypeData
 }

@@ -39,7 +39,7 @@ export const vendorDataTypeList: string[] = [
     // Add vendorDataType here
     'precisely:demo',
     'precisely:test',
-    'precisely:genetics',
+    'precisely:genotype',
 ];
 
 export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> = 
