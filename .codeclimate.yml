@@ -29,7 +29,7 @@ checks:
 #      threshold: # language-specific defaults. an override will affect all languages.
   identical-code:
     config:
-      threshold: 4
+      threshold: 6
 plugins:
   duplication:
     enabled: true
