@@ -11,6 +11,7 @@ import {Report, ReportAttributes} from '../models/Report';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
 import {geneticsResolver, ListGeneticsFilters, ListGeneticsObject} from '../../genetics-service/api/resolver';
+import {AuthorizerAttributes} from '../../interfaces';
 
 export interface CreateOrUpdateAttributes {
     title: string;
@@ -40,7 +41,7 @@ export interface ListReportObject {
 }
 
 export const reportResolver = {
-    async create(args: CreateOrUpdateAttributes): Promise<ReportAttributes> {
+    async create(args: CreateOrUpdateAttributes, authorizer: AuthorizerAttributes): Promise<ReportAttributes> {
         let reportInstance: {attrs: ReportAttributes};
         const {slug, title, genes, rawContent} = args;
 
@@ -54,7 +55,7 @@ export const reportResolver = {
         return reportInstance.attrs;
     },
 
-    async list(args: ListReportFilters): Promise<ListReportObject> {
+    async list(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ListReportObject> {
         const {lastEvaluatedKeys, slug, limit = 15} = args;
         let result: ListReportObject;
         
@@ -76,7 +77,7 @@ export const reportResolver = {
         return result;
     },
 
-    async get(args: ListReportFilters): 
+    async get(args: ListReportFilters, authorizer: AuthorizerAttributes): 
         Promise<ListReportObject & { userData: (geneticArgs: ListGeneticsFilters) => Promise<ListGeneticsObject>; }> {
             
         const {slug, id, userId, vendorDataType, limit, lastEvaluatedKeys} = args;
@@ -110,7 +111,7 @@ export const reportResolver = {
             userData: (geneticArgs: ListGeneticsFilters) => geneticsResolver.list({
                 opaqueId: userInstance.opaque_id,
                 ...geneticArgs
-            }),
+            }, authorizer),
         };
     },
 };
@@ -119,12 +120,12 @@ export const reportResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    reports: (root: any, args: ListReportFilters) => reportResolver.list(args),
-    report: (root: any, args: ListReportFilters) => reportResolver.get(args),
+    reports: (root: any, args: ListReportFilters) => reportResolver.list(args, root.authorizer),
+    report: (root: any, args: ListReportFilters) => reportResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */
 export const mutations = {
     // TODO: will be fixed with https://github.com/precisely/web/issues/90
-    saveReport: (root: any, args: CreateOrUpdateAttributes) => reportResolver.create(args),
+    saveReport: (root: any, args: CreateOrUpdateAttributes) => reportResolver.create(args, root.authorizer),
 };

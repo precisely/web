@@ -116,7 +116,6 @@ export const geneticsResolver = {
         let result: ListGeneticsObject;
         
         try {
-            hasAuthorizedRoles(authorizer, ['ADMIN']);
             let query: Query & {execAsync?: () => ListGeneticsObject};
 
             if (opaqueId) {

@@ -12,8 +12,7 @@ import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
 
-AWS.config.update({region: 'us-east-1'});
-
+AWS.config.update({region: process.env.REGION});
 export interface GeneticsAttributes {
     opaque_id?: string;
     sample_id?: string;
@@ -57,11 +56,4 @@ export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-gen
         name: 'GeneticsGlobalIndex',
         type: 'global',
     }],
-});
-
-/* istanbul ignore next */
-dynogels.createTables((error: string): void => {
-    if (error) {
-        console.log('Error while creating the tables.', error);
-    }
 });

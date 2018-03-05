@@ -13,8 +13,7 @@ import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
 
-AWS.config.update({region: 'us-east-1'});
-
+AWS.config.update({region: process.env.REGION});
 export interface ReportAttributes {
     id?: string;
     title: string;
@@ -49,11 +48,4 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
         name: 'ReportGlobalIndex',
         type: 'global',
     }],
-});
-
-/* istanbul ignore next */
-dynogels.createTables((error: string): void => {
-    if (error) {
-        console.log('Error while creating the tables.', error);
-    }
 });
