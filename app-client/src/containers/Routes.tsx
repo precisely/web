@@ -83,7 +83,7 @@ export class Routes extends React.Component {
             redirectTo="/login"
             path="/view-report"
             exact
-            component={LoadComponent('ViewReport', 'report/ViewReport')}
+            component={LoadComponent('GeneReport', 'report/GeneReport')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound')} />

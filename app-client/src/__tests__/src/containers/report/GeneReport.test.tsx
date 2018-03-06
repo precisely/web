@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {ViewReportImpl, ViewReportProps} from 'src/containers/report/ViewReport';
+import {GeneReportImpl, GeneReportProps} from 'src/containers/report/GeneReport';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
 import {Container} from 'src/components/ReusableComponents';
@@ -21,12 +21,12 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('ViewReport tests.', () => {
+describe('GeneReport tests.', () => {
 
     store.dispatch = jest.fn();
 
     describe('When the report data is loading.', () => {
-        const componentTree: ShallowWrapper<ViewReportProps> = shallow(<ViewReportImpl isLoading={true} />);
+        const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl isLoading={true} />);
 
         it('should dispatch an action to set the loading state before the component is mounted', () => {
             expect(store.dispatch).toHaveBeenCalledWith(setLoadingState());
@@ -52,7 +52,7 @@ describe('ViewReport tests.', () => {
     });
 
     describe('When the report data is not loading.', () => {
-        const componentTree: ShallowWrapper<ViewReportProps> = shallow(<ViewReportImpl isLoading={false} />);
+        const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl isLoading={false} />);
 
         it('should display a loading message.', () => {
             expect(componentTree.contains('Data fetched.')).toBe(true);

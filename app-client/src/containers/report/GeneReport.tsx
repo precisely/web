@@ -21,11 +21,11 @@ import {store} from 'src/store';
 import {setLoadingState, setReportData} from 'src/containers/report/actions';
 import {ReportList} from 'src/containers/report/interfaces';
 
-export interface ViewReportProps extends RouteComponentProps<void> {
+export interface GeneReportProps extends RouteComponentProps<void> {
     isLoading: boolean;
 }
 
-export class ViewReportImpl extends React.Component<ViewReportProps> {
+export class GeneReportImpl extends React.Component<GeneReportProps> {
 
     componentWillMount(): void {
         store.dispatch(setLoadingState());
@@ -52,7 +52,7 @@ export class ViewReportImpl extends React.Component<ViewReportProps> {
 
 // TODO Figure out correct types for the exported component.
 // tslint:disable-next-line
-const withViewReport = graphql<any, any>(GetReport, {
+const withGeneReport = graphql<any, any>(GetReport, {
     options: () => ({
         // Dummy parameters to fetch the data.
         variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo'}
@@ -70,4 +70,4 @@ const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = cre
 
 // TODO Figure out correct types for the exported component.
 // tslint:disable-next-line
-export const ViewReport: any = connect(mapStateToProps)(withViewReport(ViewReportImpl));
+export const GeneReport: any = connect(mapStateToProps)(withGeneReport(GeneReportImpl));
