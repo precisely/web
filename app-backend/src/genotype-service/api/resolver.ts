@@ -7,7 +7,7 @@
 */
 
 import {Query} from 'dynogels';
-import {Genetics, GeneticsAttributes} from '../models/Genetics';
+import {Genotype, GenotypeAttributes} from '../models/Genotype';
 import {hasAuthorizedRoles} from '../../utils';
 import {AuthorizerAttributes} from '../../interfaces';
 
@@ -24,7 +24,7 @@ interface ListFilters {
 }
 
 interface ListObject {
-    Items: GeneticsAttributes[];
+    Items: GenotypeAttributes[];
     LastEvaluatedKey: {
         opaque_id: string;
         gene: string;
@@ -44,10 +44,10 @@ export interface CreateOrUpdateAttributes {
     quality?: string;
 }
 
-export const geneticsResolver = {
-    async create(args: CreateOrUpdateAttributes): Promise<GeneticsAttributes> {
-        let geneticsInstance: {attrs: GeneticsAttributes};
-        const dataForCreating: GeneticsAttributes = {};
+export const genotypeResolver = {
+    async create(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
+        let genotypeInstance: {attrs: GenotypeAttributes};
+        const dataForCreating: GenotypeAttributes = {};
 
         for (const key in args) {
             if (args[key]) {
@@ -56,22 +56,22 @@ export const geneticsResolver = {
         }
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
-            if (geneticsInstance) {
+            genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
+            if (genotypeInstance) {
                 throw new Error('Record already exists.');
             }
-            geneticsInstance = await Genetics.createAsync({...dataForCreating}, {overwrite: false});
+            genotypeInstance = await Genotype.createAsync({...dataForCreating}, {overwrite: false});
         } catch (error) {
-            console.log('geneticsResolver-create: ', error.message);
+            console.log('genotypeResolver-create: ', error.message);
             return error;
         }
 
-        return geneticsInstance.attrs;
+        return genotypeInstance.attrs;
     },
 
-    async update(args: CreateOrUpdateAttributes): Promise<GeneticsAttributes> {
-        let geneticsInstance: {attrs: GeneticsAttributes};
-        const dataToUpdate: GeneticsAttributes = {};
+    async update(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
+        let genotypeInstance: {attrs: GenotypeAttributes};
+        const dataToUpdate: GenotypeAttributes = {};
 
         for (const key in args) {
             if (args[key]) {
@@ -80,35 +80,35 @@ export const geneticsResolver = {
         }
 
         try {
-            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
-            if (!geneticsInstance) {
+            genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
+            if (!genotypeInstance) {
                 throw new Error('No such record found');
             }
 
-            geneticsInstance = await Genetics.updateAsync({...dataToUpdate});
+            genotypeInstance = await Genotype.updateAsync({...dataToUpdate});
         } catch (error) {
-            console.log('geneticsResolver-update:', error.message);
+            console.log('genotypeResolver-update:', error.message);
             return error;
         }
 
-        return geneticsInstance.attrs;
+        return genotypeInstance.attrs;
     },
 
-    async get(args: {opaqueId: string, gene: string}, authorizer: AuthorizerAttributes): Promise<GeneticsAttributes> {
-        let geneticsInstance: {attrs: GeneticsAttributes};
+    async get(args: {opaqueId: string, gene: string}, authorizer: AuthorizerAttributes): Promise<GenotypeAttributes> {
+        let genotypeInstance: {attrs: GenotypeAttributes};
 
         try {
             hasAuthorizedRoles(authorizer, ['ADMIN']);
-            geneticsInstance = await Genetics.getAsync(args.opaqueId, args.gene);
-            if (!geneticsInstance) {
+            genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
+            if (!genotypeInstance) {
                 throw new Error('No such record found');
             }
         } catch (error) {
-            console.log('geneticsResolver-get:', error.message);
+            console.log('genotypeResolver-get:', error.message);
             return error;
         }
 
-        return geneticsInstance.attrs;
+        return genotypeInstance.attrs;
     },
 
     async list(args: ListFilters = {}, authorizer: AuthorizerAttributes): Promise<ListObject> {
@@ -120,9 +120,9 @@ export const geneticsResolver = {
             let query: Query & {execAsync?: () => ListObject};
 
             if (opaqueId) {
-                query = Genetics.query(opaqueId).limit(limit);
+                query = Genotype.query(opaqueId).limit(limit);
             } else if (gene) {
-                query = Genetics.query(gene).usingIndex('GeneticsGlobalIndex').limit(limit);
+                query = Genotype.query(gene).usingIndex('GenotypeGlobalIndex').limit(limit);
             } else {
                 throw new Error('Required parameters not present.');
             }
@@ -133,7 +133,7 @@ export const geneticsResolver = {
 
             result = await query.execAsync();
         } catch (error) {
-            console.log('geneticsResolver-list:', error.message);
+            console.log('genotypeResolver-list:', error.message);
             return error;
         }
 
@@ -145,12 +145,12 @@ export const geneticsResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    geneticsList: (root: any, args: ListFilters) => geneticsResolver.list(args, root.authorizer),
-    getGeneticsData: (root: any, args: {opaqueId: string, gene: string}) => geneticsResolver.get(args, root.authorizer),
+    genotypeList: (root: any, args: ListFilters) => genotypeResolver.list(args, root.authorizer),
+    getGenotypeData: (root: any, args: {opaqueId: string, gene: string}) => genotypeResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-    createGenetics: (root: any, args: CreateOrUpdateAttributes) => geneticsResolver.create(args),
-    updateGenetics: (root: any, args: CreateOrUpdateAttributes) => geneticsResolver.update(args),
+    createGenotype: (root: any, args: CreateOrUpdateAttributes) => genotypeResolver.create(args),
+    updateGenotype: (root: any, args: CreateOrUpdateAttributes) => genotypeResolver.update(args),
 };
