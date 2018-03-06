@@ -78,6 +78,13 @@ export class Routes extends React.Component {
             exact
             component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
         />
+        <AuthRoute
+            onEnter={(): boolean => isLoggedIn()}
+            redirectTo="/login"
+            path="/view-report"
+            exact
+            component={LoadComponent('ViewReport', 'report/ViewReport')}
+        />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound')} />
       </Switch>

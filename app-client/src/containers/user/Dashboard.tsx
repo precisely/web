@@ -13,6 +13,7 @@ import {Container} from 'src/components/ReusableComponents';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
 import {header} from 'src/constants/styleGuide';
+import {Link} from 'src/components/ReusableComponents';
 
 @Radium
 export class Dashboard extends React.Component<RouteComponentProps<void>> {
@@ -29,7 +30,7 @@ export class Dashboard extends React.Component<RouteComponentProps<void>> {
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>Dashboard</h1>
           <PageContent>
-            <p>This is a dummy dashboard.</p>
+            <Link to="/view-report">Fetch dummy report</Link>
           </PageContent>
         </Container>
       </div>
