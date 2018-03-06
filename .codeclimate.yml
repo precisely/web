@@ -31,7 +31,7 @@ checks:
       threshold: 6
 plugins:
   duplication:
-    enabled: false
+    enabled: true
     count_threshold: 6
   fixme:
     enabled: true
