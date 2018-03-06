@@ -7,20 +7,28 @@
  */
 
 import {fromJS, Map} from 'immutable';
-import {SET_LOADING_STATE} from 'src/containers/report/actionTypes';
+import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/containers/report/actionTypes';
+import {GenericAction} from 'src/interfaces/index';
+import {ReportList} from 'src/containers/report/interfaces';
 
-export const inititalState = fromJS({isLoading: false});
+export const inititalState = fromJS({
+    isLoading: false,
+    data: {},
+});
 
 export function reportReducer(
         state:  Map<string, Object> = inititalState,
-        action: {type: string, payload?: string}
-    ):  Map<string, Object> {
+        action: GenericAction<ReportList>
+):  Map<string, Object> {
     switch (action.type) {
 
         case SET_LOADING_STATE:
             return state.set('isLoading', true);
 
+        case SET_REPORT_DATA:
+            return state.set('data', action.payload).set('isLoading', false);
+
         default:
             return state;
     }
-};
+}
