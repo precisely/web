@@ -7,7 +7,7 @@
  */
 
 import * as actionTypes from 'src/containers/report/actionTypes';
-import {GenericAction} from 'src/interfaces/index';
+import {GenericAction} from 'src/interfaces';
 import {ReportList} from 'src/containers/report/interfaces';
 
 export const setLoadingState = (): GenericAction => {
