@@ -68,7 +68,7 @@ functions:
         authorizer:
           arn: ${env:COGNITO_ARN}
   setupDatabase:
-    handler: src/dynamoSetup.setupDatabase
+    handler: src/dynogels-db/setup.setupDatabase
   ingester:
     handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:

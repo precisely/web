@@ -6,7 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {setupDatabase, dynogels} from '../dynamoSetup';
+import {dynogels} from '../../dynogels-db/connection';
+import {setupDatabase} from '../../dynogels-db/setup';
 
 describe('setupDatabase tests.', () => {
 

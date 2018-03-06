@@ -8,7 +8,7 @@
 
 import * as Joi from 'joi';
 import {addEnvironmentToTableName} from '../../utils';
-import {dynogels} from '../../dynamoSetup';
+import {dynogels} from '../../dynogels-db/connection';
 
 export interface GenotypeAttributes {
     opaque_id?: string;
