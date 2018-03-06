@@ -5,8 +5,11 @@
   "scripts": {
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
     "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless offline start",
-    "postinstall": "./node_modules/.bin/serverless dynamodb install",
+    "postinstall": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless dynamodb install",
     "setup:database": "./node_modules/.bin/serverless invoke local -f setupDatabase",
+    "seed:local": "NODE_ENV=dev DB=local ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
+    "seed:dev": "NODE_ENV=dev ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
+    "seed:stage": "NODE_ENV=stage ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless deploy -s dev",
     "deploy:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage ./node_modules/.bin/serverless deploy -s stage",
     "deploy:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",

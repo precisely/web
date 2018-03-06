@@ -1,0 +1,20 @@
+[
+    {
+        "id": "report-uid-1",
+        "title": "demo-title-1",
+        "slug": "demo-slug-1",
+        "raw_content": "demo-raw_content-1",
+        "parsed_content": "demo-parsed_content-1",
+        "top_level": true,
+        "genes": ["geneA-1", "geneB-1"]
+    },
+    {
+        "id": "report-uid-2",
+        "title": "demo-title-2",
+        "slug": "demo-slug-2",
+        "raw_content": "demo-raw_content-2",
+        "parsed_content": "demo-parsed_content-2",
+        "top_level": false,
+        "genes": ["geneA-2", "geneB-2"]
+    }
+]
