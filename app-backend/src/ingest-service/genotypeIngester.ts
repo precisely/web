@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
-import {geneticsResolver} from '../genetics-service/api/resolver';
+import {genotypeResolver} from '../genotype-service/api/resolver';
 
 interface GA4GH {
     referenceName: string;
@@ -12,7 +12,7 @@ interface GA4GH {
     };
 }
 
-export const geneticsIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
+export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     const sourceBucket: string = event.Records[0].s3.bucket.name;
     const sourceKey: string = event.Records[0].s3.object.key;
@@ -25,7 +25,7 @@ export const geneticsIngester: Handler = (event: S3CreateEvent, context: Context
         Key: sourceKey
     }, (err: Error, data: {Body: string}) => {
         if (err) {
-            console.log('geneticsIngester S3 ERROR:', err.message);
+            console.log('genotypeIngester S3 ERROR:', err.message);
             return;
         }
 
@@ -36,7 +36,7 @@ export const geneticsIngester: Handler = (event: S3CreateEvent, context: Context
 
                 console.log('Creating entry for opaqueID:', opaqueId, '& gene:', ga4ghAttributes.variant.gene_symbol);
                 
-                geneticsResolver.create({
+                genotypeResolver.create({
                     opaqueId,
                     sampleId: ga4ghAttributes.sample.id,
                     source: ga4ghAttributes.source,

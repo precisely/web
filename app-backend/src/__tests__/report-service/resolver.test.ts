@@ -11,7 +11,7 @@ jest.mock('../../report-service/models/Report');
 import {ReportAttributes, Report} from '../../report-service/models/Report';
 import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
-import {geneticsResolver} from '../../genetics-service/api/resolver';
+import {genotypeResolver} from '../../genotype-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -46,7 +46,7 @@ describe('Report resolver tests.', () => {
         startKey: mockedExecAsync,
     }));
 
-    geneticsResolver.list = jest.fn();
+    genotypeResolver.list = jest.fn();
     
     Report.query = jest.fn(() => {
         return {
@@ -110,7 +110,7 @@ describe('Report resolver tests.', () => {
         ) => {
             let response = await reportResolver.get(args.params, authorizer);
             response[`userData`]({});
-            expect(geneticsResolver.list).toBeCalled();
+            expect(genotypeResolver.list).toBeCalled();
             expect(response[`Items`]).toEqual([dummyResponseData]);
             expect(typeof response[`userData`]).toEqual('function');
             done();

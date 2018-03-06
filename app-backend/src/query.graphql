@@ -1,5 +1,5 @@
 #import "./user-data-map/api/schema.graphql"
-#import "./genetics-service/api/schema.graphql"
+#import "./genotype-service/api/schema.graphql"
 #import "./report-service/api/schema.graphql"
 
 type GenericResponse {
@@ -7,7 +7,7 @@ type GenericResponse {
     message: String
 }
 
-input LastEvaluatedGeneticsRecord {
+input LastEvaluatedGenotypeRecord {
     opaqueId: String
     gene: String
 }
@@ -19,13 +19,13 @@ input LastEvaluatedReportRecord {
 
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
-    geneticsList(
+    genotypeList(
             limit: Int,
-            lastEvaluatedKeys: LastEvaluatedGeneticsRecord,
+            lastEvaluatedKeys: LastEvaluatedGenotypeRecord,
             opaqueId: String,
             gene: String,
-    ): GeneticsList,
-    getGeneticsData(opaqueId: String!, gene: String!): Genetics,
+    ): GenotypeList,
+    getGenotypeData(opaqueId: String!, gene: String!): Genotype
     reports(slug: String!, limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord): ReportList,
     report(
             slug: String, 
@@ -39,7 +39,7 @@ type Query {
 
 type Mutation {
     findOrCreateUserDataMap(userId: String!, vendorDataType: String!): UserDataMap,
-    updateGenetics(
+    updateGenotype(
             opaqueId: String!, # Required while updating
             sampleId: String,
             source: String,
@@ -50,8 +50,8 @@ type Mutation {
             chromosomeName: String,
             variantType: String,
             quality: String
-    ): Genetics,
-    createGenetics(
+    ): Genotype,
+    createGenotype(
             opaqueId: String!, # All the fields are required while creating a record.
             sampleId: String!,
             source: String!,
@@ -62,6 +62,6 @@ type Mutation {
             chromosomeName: String!,
             variantType: String!,
             quality: String!
-    ): Genetics,
+    ): Genotype,
     saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
 }

@@ -1,18 +1,18 @@
 import * as AWS from 'aws-sdk';
-import {geneticsIngester} from '../../ingest-service/geneticsIngester';
-import {geneticsResolver} from '../../genetics-service/api/resolver';
+import {genotypeIngester} from '../../ingest-service/genotypeIngester';
+import {genotypeResolver} from '../../genotype-service/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('geneticsIngester tests', (): void => {
+describe('genotypeIngester tests', (): void => {
 
     beforeEach(() => {
-        geneticsResolver.create.mockClear();
+        genotypeResolver.create.mockClear();
     });
 
     const mockContext = jest.fn();
-    geneticsResolver.create = jest.fn();
+    genotypeResolver.create = jest.fn();
 
     AWS.S3 = () => ({
         getObject: jest.fn()
@@ -43,7 +43,7 @@ describe('geneticsIngester tests', (): void => {
             done: () => void,
             args: {fileName: string; expectedStatus: string; description: string; }
     ): void => {
-        geneticsIngester({
+        genotypeIngester({
             Records: [
                 {
                     s3: {
@@ -58,9 +58,9 @@ describe('geneticsIngester tests', (): void => {
             ]
         }, mockContext);
         if (args.expectedStatus === 'pass') {
-            expect(geneticsResolver.create).toBeCalled();
+            expect(genotypeResolver.create).toBeCalled();
         } else {
-            expect(geneticsResolver.create).not.toBeCalled();
+            expect(genotypeResolver.create).not.toBeCalled();
         }
         done();
     }, [

@@ -8,7 +8,7 @@
 
 import * as Joi from 'joi';
 import {AWS} from 'dynogels';
-import {GeneticsAttributes} from '../../genetics-service/models/Genetics';
+import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
 
 const dynogels = require('dynogels-promisified');
@@ -23,7 +23,7 @@ export interface ReportAttributes {
     parsed_content: string;
     top_level: boolean;
     genes: string[];
-    genetics: GeneticsAttributes[];
+    genotype: GenotypeAttributes[];
 }
 
 /* istanbul ignore next */

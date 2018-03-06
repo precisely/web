@@ -10,7 +10,7 @@ import {Query} from 'dynogels';
 import {Report, ReportAttributes} from '../models/Report';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
-import {geneticsResolver, ListGeneticsFilters, ListGeneticsObject} from '../../genetics-service/api/resolver';
+import {genotypeResolver, ListGenotypeFilters, ListGenotypeObject} from '../../genotype-service/api/resolver';
 import {AuthorizerAttributes} from '../../interfaces';
 
 export interface CreateOrUpdateAttributes {
@@ -78,7 +78,7 @@ export const reportResolver = {
     },
 
     async get(args: ListReportFilters, authorizer: AuthorizerAttributes): 
-        Promise<ListReportObject & { userData: (geneticArgs: ListGeneticsFilters) => Promise<ListGeneticsObject>; }> {
+        Promise<ListReportObject & { userData: (genotypeArgs: ListGenotypeFilters) => Promise<ListGenotypeObject>; }> {
             
         const {slug, id, userId, vendorDataType, limit, lastEvaluatedKeys} = args;
         let reportInstance: ListReportObject;
@@ -108,10 +108,13 @@ export const reportResolver = {
         
         return {
             ...reportInstance,
-            userData: (geneticArgs: ListGeneticsFilters) => geneticsResolver.list({
-                opaqueId: userInstance.opaque_id,
-                ...geneticArgs
-            }, authorizer),
+            userData: (genotypeArgs: ListGenotypeFilters) => genotypeResolver.list(
+                {
+                    opaqueId: userInstance.opaque_id,
+                    ...genotypeArgs
+                }, 
+                authorizer
+            ),
         };
     },
 };

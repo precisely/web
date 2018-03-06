@@ -70,7 +70,7 @@ functions:
   setupDatabase:
     handler: src/setup.setupDatabase
   ingester:
-    handler: src/ingest-service/geneticsIngester.geneticsIngester
+    handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:
     - s3:
         bucket: ${opt:stage, 'dev'}-precisely-genetics-ga4gh

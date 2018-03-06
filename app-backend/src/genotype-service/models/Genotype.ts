@@ -13,7 +13,8 @@ import {addEnvironmentToTableName} from '../../utils';
 const dynogels = require('dynogels-promisified');
 
 AWS.config.update({region: process.env.REGION});
-export interface GeneticsAttributes {
+
+export interface GenotypeAttributes {
     opaque_id?: string;
     sample_id?: string;
     source?: string;
@@ -29,7 +30,7 @@ export interface GeneticsAttributes {
 }
 
 /* istanbul ignore next */
-export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-genetics', '01'), {
+export const Genotype = dynogels.define(addEnvironmentToTableName('precisely-genotype', '01'), {
     hashKey : 'opaque_id',
     rangeKey: 'gene',
 
@@ -53,7 +54,7 @@ export const Genetics = dynogels.define(addEnvironmentToTableName('precisely-gen
     indexes: [{
         hashKey: 'gene',
         rangeKey: 'opaque_id',
-        name: 'GeneticsGlobalIndex',
+        name: 'GenotypeGlobalIndex',
         type: 'global',
     }],
 });

@@ -40,10 +40,12 @@
 ### Changed
 - Style of the app layout.
 
-## [0.0.5] - 2018-02-26
+## [0.0.5] - 2018-03-05
 
 ### Changed
 - The attributes of the Genetic model.
+- Renamed `Genetics` to `Genotype`.
 
 ### Added
+- Report Resolvers.
 - A utility function to check the current user's roles.

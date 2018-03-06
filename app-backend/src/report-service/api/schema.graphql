@@ -19,6 +19,6 @@ type ReportListItem {
 
 type ReportList {
     Items: [ReportListItem],
-    userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGeneticsRecord): GeneticsList,
+    userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
     LastEvaluatedKey: LastEvaluatedReportData
 }
