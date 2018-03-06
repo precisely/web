@@ -7,13 +7,9 @@
 */
 
 import * as Joi from 'joi';
-import {AWS} from 'dynogels';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
-
-const dynogels = require('dynogels-promisified');
-
-AWS.config.update({region: process.env.REGION});
+import {dynogels} from '../../dynamoSetup';
 
 export interface ReportAttributes {
     id?: string;

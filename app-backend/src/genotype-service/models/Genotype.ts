@@ -7,12 +7,8 @@
 */
 
 import * as Joi from 'joi';
-import {AWS} from 'dynogels';
 import {addEnvironmentToTableName} from '../../utils';
-
-const dynogels = require('dynogels-promisified');
-
-AWS.config.update({region: process.env.REGION});
+import {dynogels} from '../../dynamoSetup';
 
 export interface GenotypeAttributes {
     opaque_id?: string;

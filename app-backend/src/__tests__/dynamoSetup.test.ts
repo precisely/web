@@ -6,9 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {setupDatabase} from '../setup';
-
-const dynogels = require('dynogels-promisified');
+import {setupDatabase, dynogels} from '../dynamoSetup';
 
 describe('setupDatabase tests.', () => {
 
