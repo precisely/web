@@ -10,7 +10,7 @@ AWS.config.update({
     credentials: new AWS.SharedIniFileCredentials({ profile: process.env.NODE_ENV + '-profile-precisely' })
 });
 
-const connectionOptions: AWS.DynamoDB.DocumentClient.DocumentClientOptions & AWS.DynamoDB.Types.ClientConfiguration = {
+const connectionOptions: AWS.DynamoDB.Types.ClientConfiguration = {
     endpoint: process.env.DB === 'local' ? 'http://localhost:8000' : 'https://dynamodb.us-east-1.amazonaws.com'
 };
 
