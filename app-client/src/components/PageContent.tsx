@@ -12,26 +12,26 @@ import {CSS} from 'src/interfaces';
 import {Row, Col} from 'src/components/ReusableComponents';
 
 export interface PageContentProps {
-    children: React.ReactNode;
-    style?: CSS;
+  children: React.ReactNode;
+  style?: CSS;
 }
 
 export let PageContent: React.StatelessComponent<PageContentProps> = props => (
-    <Row style={[content, props.style]} className="p-5 mx-auto">
-        <Col style={formColumn}>
-            {props.children}
-        </Col>
-    </Row>
+  <Row style={[content, props.style]} className="p-5 mx-auto">
+    <Col style={formColumn}>
+      {props.children}
+    </Col>
+  </Row>
 );
 
 PageContent = Radium(PageContent);
 
 const formColumn: CSS = {
-    textAlign: 'center',
-    padding: 0,
+  textAlign: 'center',
+  padding: 0,
 };
 
 const content: CSS = {
-    backgroundColor: '#fff',
-    boxShadow: '0 2px 29px -8px rgba(192, 79, 127, 0.51)',
+  backgroundColor: '#fff',
+  boxShadow: '0 2px 29px -8px rgba(192, 79, 127, 0.51)',
 };

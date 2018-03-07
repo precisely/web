@@ -1,5 +1,5 @@
 declare module 'react-fastclick' {
-    export default function initReactFastclick(): void;
+  export default function initReactFastclick(): void;
 }
 
 declare module 'lodash.flowright';

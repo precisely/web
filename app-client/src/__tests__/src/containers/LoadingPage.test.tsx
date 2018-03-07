@@ -20,18 +20,18 @@ configure({adapter: new Adapter()});
 Radium.TestMode.enable();
 
 describe('Tests for LoadingPage', () => {
-    const componentTree: ShallowWrapper = shallow(<LoadingPage />);
+  const componentTree: ShallowWrapper = shallow(<LoadingPage />);
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['div', 'div', 2],
-        ['Loading icon', FontAwesome, 1],
-        ['Loading message', 'h4', 1],
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['div', 'div', 2],
+    ['Loading icon', FontAwesome, 1],
+    ['Loading message', 'h4', 1],
+  ]);
 });

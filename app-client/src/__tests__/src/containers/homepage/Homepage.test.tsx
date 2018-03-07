@@ -24,26 +24,26 @@ configure({adapter: new Adapter()});
 
 describe('Homepage tests.', () => {
 
-    const componentTree: ShallowWrapper = shallow(<Homepage />);
+  const componentTree: ShallowWrapper = shallow(<Homepage />);
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['NavigationBar', NavigationBar, 1],
-        ['ParallaxProvider', ParallaxProvider, 1],
-        ['Container', Container, 2],
-        ['Parallax', Parallax, 1],
-        ['img', 'img', 5],
-        ['div', 'div', 9],
-        ['h1', 'h1', 1],
-        ['h3', 'h3', 3],
-        ['h4', 'h4', 1],
-        ['p', 'p', 6],
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['NavigationBar', NavigationBar, 1],
+    ['ParallaxProvider', ParallaxProvider, 1],
+    ['Container', Container, 2],
+    ['Parallax', Parallax, 1],
+    ['img', 'img', 5],
+    ['div', 'div', 9],
+    ['h1', 'h1', 1],
+    ['h3', 'h3', 3],
+    ['h4', 'h4', 1],
+    ['p', 'p', 6],
+  ]);
 
 });

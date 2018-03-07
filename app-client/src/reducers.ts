@@ -14,5 +14,5 @@ import {routerReducer} from 'react-router-redux';
 // All the reducers should be combined here
 /* istanbul ignore next */
 export const rootReducer: Reducer<{}> = combineReducers({
-    router: routerReducer,
+  router: routerReducer,
 });

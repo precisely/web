@@ -24,25 +24,25 @@ import {getTokenFromLocalStorage} from 'src/utils/index';
 initReactFastclick();
 
 const client = new ApolloClient({
-    link: new HttpLink({
-        uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
-        headers: {
-            Authorization: getTokenFromLocalStorage()
-        }
-    }),
-    cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
+    headers: {
+      Authorization: getTokenFromLocalStorage()
+    }
+  }),
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
-    <Provider store={store}>
-        <ApolloProvider client={client}>
-            <StyleRoot>
-                <ToastContainer hideProgressBar />
-                <BrowserRouter>
-                    <Basepage />
-                </BrowserRouter>
-            </StyleRoot>
-        </ApolloProvider>
-    </Provider>,
-    document.getElementById('root') as HTMLElement
+  <Provider store={store}>
+    <ApolloProvider client={client}>
+      <StyleRoot>
+        <ToastContainer hideProgressBar />
+        <BrowserRouter>
+          <Basepage />
+        </BrowserRouter>
+      </StyleRoot>
+    </ApolloProvider>
+  </Provider>,
+  document.getElementById('root') as HTMLElement
 );

@@ -16,9 +16,9 @@ export const Col = Radium(Bootstrap.Col);
 export const Button = Radium(Bootstrap.Button);
 export const Input = Radium(Bootstrap.Input);
 export const InputGroupAddon: React.StatelessComponent<Bootstrap.InputGroupAddonProps & {style: CSS}> =
-        Radium(Bootstrap.InputGroupAddon);
+    Radium(Bootstrap.InputGroupAddon);
 export const InputGroup: React.StatelessComponent<Bootstrap.InputGroupProps & {style: CSS}> =
-        Radium(Bootstrap.InputGroup);
+    Radium(Bootstrap.InputGroup);
 export const Form = Radium(Bootstrap.Form);
 export const FormGroup = Radium(Bootstrap.FormGroup);
 export const FormText = Radium(Bootstrap.FormText);

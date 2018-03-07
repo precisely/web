@@ -14,7 +14,7 @@ import {toast, ToastType} from 'react-toastify';
  * @returns boolean - true if object is empty, else false
  */
 export function isEmpty(object: Object): boolean {
-    return (!object || !Object.keys(object).length);
+  return (!object || !Object.keys(object).length);
 }
 
 /**
@@ -22,64 +22,64 @@ export function isEmpty(object: Object): boolean {
  * @returns string - current NODE environment
  */
 export function getEnvironment(): string {
-    return process.env.NODE_ENV || '';
+  return process.env.NODE_ENV || '';
 }
 
 export const setTokenInLocalStorage = (token: string): boolean => {
-    if (!token) {
-        console.warn('No Token sent to setTokenInLocalStorage');
-        return false;
-    }
+  if (!token) {
+    console.warn('No Token sent to setTokenInLocalStorage');
+    return false;
+  }
 
-    localStorage.setItem('AUTH_TOKEN', token);
+  localStorage.setItem('AUTH_TOKEN', token);
 
-    return true;
+  return true;
 };
 
 export const getTokenFromLocalStorage = (): string => {
-    let token: string = localStorage.getItem('AUTH_TOKEN');
-    return token || '';
+  let token: string = localStorage.getItem('AUTH_TOKEN');
+  return token || '';
 };
 
 export const removeTokenFromLocalStorage = (): void => {
-    localStorage.removeItem('AUTH_TOKEN');
+  localStorage.removeItem('AUTH_TOKEN');
 };
 
 export const showAlert = (toastId: number, message: string, alertType?: ToastType): number => {
-    const type: ToastType = alertType || 'error';
-    if (!toast.isActive(toastId)) {
-        toastId = toast[type](message);
-    } else {
-        toast.update(toastId, {render: message, type: type});
-    }
+  const type: ToastType = alertType || 'error';
+  if (!toast.isActive(toastId)) {
+    toastId = toast[type](message);
+  } else {
+    toast.update(toastId, {render: message, type: type});
+  }
 
-    return toastId;
+  return toastId;
 };
 
 export const validateEmailAndPassword = (
-        email: string,
-        password: string,
-        toastId: number,
+    email: string,
+    password: string,
+    toastId: number,
 ): {isValid: boolean, toastId: number} => {
-    if (!email.trim() && !password) {
-        toastId = showAlert(toastId, 'Email and Password are required.');
-        return {isValid: false, toastId};
-    }
+  if (!email.trim() && !password) {
+    toastId = showAlert(toastId, 'Email and Password are required.');
+    return {isValid: false, toastId};
+  }
 
-    if (!email.trim()) {
-        toastId = showAlert(toastId, 'Email is required.');
-        return {isValid: false, toastId};
-    }
+  if (!email.trim()) {
+    toastId = showAlert(toastId, 'Email is required.');
+    return {isValid: false, toastId};
+  }
 
-    if (!password) {
-        toastId = showAlert(toastId, 'Password is required.');
-        return {isValid: false, toastId};
-    }
+  if (!password) {
+    toastId = showAlert(toastId, 'Password is required.');
+    return {isValid: false, toastId};
+  }
 
-    if (password.length < 6) {
-        toastId = showAlert(toastId, 'Password should contain atleast 6 characters.');
-        return {isValid: false, toastId};
-    }
+  if (password.length < 6) {
+    toastId = showAlert(toastId, 'Password should contain atleast 6 characters.');
+    return {isValid: false, toastId};
+  }
 
-    return {isValid: true, toastId};
+  return {isValid: true, toastId};
 };

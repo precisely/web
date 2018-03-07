@@ -21,20 +21,20 @@ configure({adapter: new Adapter()});
 
 describe('AboutUs tests.', () => {
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<AboutUs />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<AboutUs />);
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['NavigationBar', NavigationBar, 1],
-        ['h2', 'h2', 1],
-        ['h5', 'h5', 1],
-        ['p', 'p', 5],
-        ['PageContent', PageContent, 1]
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['NavigationBar', NavigationBar, 1],
+    ['h2', 'h2', 1],
+    ['h5', 'h5', 1],
+    ['p', 'p', 5],
+    ['PageContent', PageContent, 1]
+  ]);
 });

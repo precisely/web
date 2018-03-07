@@ -18,38 +18,38 @@ unroll.use(it);
 configure({adapter: new Adapter()});
 
 describe('Tests for AuthRoute', () => {
-    const onEnter = jest.fn<boolean>((value: boolean): boolean => {
-        return value;
+  const onEnter = jest.fn<boolean>((value: boolean): boolean => {
+    return value;
+  });
+
+  describe('When onEnter returns true', () => {
+    const componentTree: ShallowWrapper = shallow(
+        <AuthRoute 
+            onEnter={(): void => onEnter(true)}
+            path="/dummyPath"
+            redirectTo="dummyRedirectPath"
+            exact
+        />
+    );
+
+    it('should test for Route component', () => {
+      expect(componentTree.find(Route).length).toBe(1);
     });
+  });
 
-    describe('When onEnter returns true', () => {
-        const componentTree: ShallowWrapper = shallow(
-                <AuthRoute 
-                        onEnter={(): void => onEnter(true)}
-                        path="/dummyPath"
-                        redirectTo="dummyRedirectPath"
-                        exact
-                />
-        );
+  describe('When onEnter returns false', () => {
+    const componentTree: ShallowWrapper = shallow(
+        <AuthRoute 
+            onEnter={(): void => onEnter(false)}
+            path="/dummyPath"
+            redirectTo="dummyRedirectPath"
+            exact
+        />
+    );
 
-        it('should test for Route component', () => {
-            expect(componentTree.find(Route).length).toBe(1);
-        });
+    it('should test for Redirect component', () => {
+      expect(componentTree.find(Redirect).length).toBe(1);
     });
-
-    describe('When onEnter returns false', () => {
-        const componentTree: ShallowWrapper = shallow(
-                <AuthRoute 
-                        onEnter={(): void => onEnter(false)}
-                        path="/dummyPath"
-                        redirectTo="dummyRedirectPath"
-                        exact
-                />
-        );
-
-        it('should test for Redirect component', () => {
-            expect(componentTree.find(Redirect).length).toBe(1);
-        });
-    });
+  });
 
 });
