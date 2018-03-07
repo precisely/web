@@ -42,7 +42,7 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
                 <Container className="mx-auto mt-5 mb-5">
                     <h1 className="mt-5 mb-4" style={header}>Report data</h1>
                     <PageContent>
-                        {this.props.isLoading ? 'Fetching the data. Plesae wait...' : 'Data fetched.'}
+                        {this.props.isLoading ? 'Fetching data. Please wait...' : 'Data fetched.'}
                     </PageContent>
                 </Container>
             </div>
@@ -55,7 +55,7 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
 const withGeneReport = graphql<any, any>(GetReport, {
     options: () => ({
         // Dummy parameters to fetch the data.
-        variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo'}
+        variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo', userDataLimit: 2}
     }),
     props: (props: OptionProps<void, {report: ReportList}>): void => {
         if (props.data.report) {

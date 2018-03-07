@@ -11,8 +11,22 @@ import gql from 'graphql-tag';
 
 /* istanbul ignore next */
 export const GetReport = gql`
-    query getReport($slug: String, $id: String, $userId: String!, $vendorDataType: String!, $limit: Int,) {
-        report(id: $id, userId: $userId, vendorDataType: $vendorDataType, slug: $slug, limit: $limit) {
+    query getReport(
+            $slug: String,
+            $id: String,
+            $userId: String!,
+            $vendorDataType: String!,
+            $limit: Int,
+            $userDataLimit: userDataLimit
+    ) {
+        report(
+                id: $id,
+                userId: $userId,
+                vendorDataType: $vendorDataType,
+                slug: $slug,
+                limit: $limit,
+                userDataLimit: $userDataLimit
+        ) {
             Items {
                 attrs {
                     slug,
@@ -21,7 +35,7 @@ export const GetReport = gql`
                     genes
                 }
             },
-            userData(limit: 2) {
+            userData(limit: userDataLimit) {
                 Items{
                     attrs{
                         gene,

@@ -18,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run tslint && npm run eslint"
+      "pre-push": "yarn tslint && yarn eslint"
     }
   },
   "repository": {

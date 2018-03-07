@@ -19,7 +19,7 @@ export const initialState = fromJS({
 export function reportReducer(
         state:  Map<string, Object> = initialState,
         action: GenericAction<ReportList>
-):  Map<string, Object> {
+): Map<string, Object> {
     switch (action.type) {
 
         case SET_LOADING_STATE:

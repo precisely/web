@@ -47,7 +47,7 @@ describe('GeneReport tests.', () => {
         ]);
 
         it('should display a loading message.', () => {
-            expect(componentTree.contains('Fetching the data. Plesae wait...')).toBe(true);
+            expect(componentTree.contains('Fetching data. Please wait...')).toBe(true);
         });
     });
 
