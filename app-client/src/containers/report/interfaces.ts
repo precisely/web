@@ -7,19 +7,19 @@
  */
 
 export interface Report {
-    id: string;
-    title: string;
-    slug: string;
-    raw_content: string;
-    parsed_content: string;
-    top_level: boolean;
-    genes: string[];
+  id: string;
+  title: string;
+  slug: string;
+  raw_content: string;
+  parsed_content: string;
+  top_level: boolean;
+  genes: string[];
 }
 
 export interface ReportListItem {
-    attrs: Report;
+  attrs: Report;
 }
 
 export interface ReportList {
-    Items: ReportListItem[];
+  Items: ReportListItem[];
 }

@@ -11,11 +11,11 @@ import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/containers/report/actionTy
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
 
 describe('Tests for the report actions', () => {
-    it('should create an action to set loading state.', () => {
-        expect(setLoadingState()).toEqual({type: SET_LOADING_STATE});
-    });
+  it('should create an action to set loading state.', () => {
+    expect(setLoadingState()).toEqual({type: SET_LOADING_STATE});
+  });
 
-    it('should create an action to set the report data.', () => {
-        expect(setReportData(dummyData)).toEqual({type: SET_REPORT_DATA, payload: dummyData});
-    });
+  it('should create an action to set the report data.', () => {
+    expect(setReportData(dummyData)).toEqual({type: SET_REPORT_DATA, payload: dummyData});
+  });
 });

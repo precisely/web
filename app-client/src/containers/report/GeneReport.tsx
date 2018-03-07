@@ -22,50 +22,50 @@ import {setLoadingState, setReportData} from 'src/containers/report/actions';
 import {ReportList} from 'src/containers/report/interfaces';
 
 export interface GeneReportProps extends RouteComponentProps<void> {
-    isLoading: boolean;
+  isLoading: boolean;
 }
 
 export class GeneReportImpl extends React.Component<GeneReportProps> {
 
-    componentWillMount(): void {
-        store.dispatch(setLoadingState());
-    }
+  componentWillMount(): void {
+    store.dispatch(setLoadingState());
+  }
 
-    /**
-     * This is dummy container to fetch the results from the Report. 
-     * The actual implementation will be added in the next PR.
-     */
-    render(): JSX.Element {
-        return (
-            <div>
-                <NavigationBar {...this.props}/>
-                <Container className="mx-auto mt-5 mb-5">
-                    <h1 className="mt-5 mb-4" style={header}>Report data</h1>
-                    <PageContent>
-                        {this.props.isLoading ? 'Fetching data. Please wait...' : 'Data fetched.'}
-                    </PageContent>
-                </Container>
-            </div>
-        );
-    }
+  /**
+   * This is dummy container to fetch the results from the Report. 
+   * The actual implementation will be added in the next PR.
+   */
+  render(): JSX.Element {
+    return (
+      <div>
+        <NavigationBar {...this.props}/>
+        <Container className="mx-auto mt-5 mb-5">
+          <h1 className="mt-5 mb-4" style={header}>Report data</h1>
+          <PageContent>
+            {this.props.isLoading ? 'Fetching data. Please wait...' : 'Data fetched.'}
+          </PageContent>
+        </Container>
+      </div>
+    );
+  }
 }
 
 // TODO Figure out correct types for the exported component.
 // tslint:disable-next-line
 const withGeneReport = graphql<any, any>(GetReport, {
-    options: () => ({
-        // Dummy parameters to fetch the data.
-        variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo', userDataLimit: 2}
-    }),
-    props: (props: OptionProps<void, {report: ReportList}>): void => {
-        if (props.data.report) {
-            store.dispatch(setReportData(props.data.report));
-        }
+  options: () => ({
+    // Dummy parameters to fetch the data. Will be removed in the next PR.
+    variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo', userDataLimit: 2}
+  }),
+  props: (props: OptionProps<void, {report: ReportList}>): void => {
+    if (props.data.report) {
+      store.dispatch(setReportData(props.data.report));
     }
+  }
 });
 
 const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = createStructuredSelector({
-    isLoading: isLoading(),
+  isLoading: isLoading(),
 });
 
 // TODO Figure out correct types for the exported component.

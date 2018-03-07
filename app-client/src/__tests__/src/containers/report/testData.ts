@@ -9,15 +9,15 @@
 import {ReportList} from 'src/containers/report/interfaces';
 
 export const dummyData: ReportList = {
-    Items: [{
-        attrs: {
-            id: 'qwerty1234',
-            title: 'A title',
-            slug: 'demo',
-            raw_content: 'I am the RAW content',
-            parsed_content: 'And, I am the Parsed content.',
-            top_level: true,
-            genes: ['a', 'b'],
-        }
-    }]
+  Items: [{
+    attrs: {
+      id: 'qwerty1234',
+      title: 'A title',
+      slug: 'demo',
+      raw_content: 'I am the RAW content',
+      parsed_content: 'And, I am the Parsed content.',
+      top_level: true,
+      genes: ['a', 'b'],
+    }
+  }]
 };

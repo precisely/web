@@ -12,23 +12,23 @@ import {GenericAction} from 'src/interfaces';
 import {ReportList} from 'src/containers/report/interfaces';
 
 export const initialState = fromJS({
-    isLoading: false,
-    data: {},
+  isLoading: false,
+  data: {},
 });
 
 export function reportReducer(
-        state:  Map<string, Object> = initialState,
-        action: GenericAction<ReportList>
+    state:  Map<string, Object> = initialState,
+    action: GenericAction<ReportList>
 ): Map<string, Object> {
-    switch (action.type) {
+  switch (action.type) {
 
-        case SET_LOADING_STATE:
-            return state.set('isLoading', true);
+    case SET_LOADING_STATE:
+      return state.set('isLoading', true);
 
-        case SET_REPORT_DATA:
-            return state.set('data', action.payload).set('isLoading', false);
+    case SET_REPORT_DATA:
+      return state.set('data', action.payload).set('isLoading', false);
 
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 }

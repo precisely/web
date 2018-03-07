@@ -11,9 +11,9 @@ import {GenericAction} from 'src/interfaces';
 import {ReportList} from 'src/containers/report/interfaces';
 
 export const setLoadingState = (): GenericAction => {
-    return {type: actionTypes.SET_LOADING_STATE};
+  return {type: actionTypes.SET_LOADING_STATE};
 };
 
 export const setReportData = (payload: ReportList): GenericAction<ReportList> => {
-    return {type: actionTypes.SET_REPORT_DATA, payload};
+  return {type: actionTypes.SET_REPORT_DATA, payload};
 };
