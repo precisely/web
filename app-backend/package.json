@@ -6,6 +6,7 @@
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
     "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless offline start",
     "postinstall": "./node_modules/.bin/serverless dynamodb install",
+    "setup:database": "./node_modules/.bin/serverless invoke local -f setupDatabase",
     "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless deploy -s dev",
     "deploy:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage ./node_modules/.bin/serverless deploy -s stage",
     "deploy:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",
@@ -52,7 +53,7 @@
     "dynogels": "9.0.0",
     "dynogels-promisified": "1.0.4",
     "graphql": "0.10.5",
-    "graphql-playground-middleware-lambda": "1.2.0",
+    "graphql-playground-middleware-lambda": "1.4.3",
     "graphql-tag": "2.6.1",
     "graphql-tools": "2.7.2",
     "jest-transform-graphql": "2.1.0",
@@ -60,7 +61,8 @@
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
     "sequelize": "4.27.0",
-    "serverless-dynamodb-client": "0.0.2"
+    "serverless-dynamodb-client": "0.0.2",
+    "serverless-plugin-scripts": "1.0.2"
   },
   "devDependencies": {
     "@types/aws-lambda": "0.0.27",

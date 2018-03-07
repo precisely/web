@@ -21,14 +21,14 @@ const sequelize: Sequelize.Sequelize = new Sequelize(
             max: 1,
             min: 0,
             idle: 10000
-        }
+        },
     }
 );
 
 export interface UserDataMapAttributes {
     user_id: string;
     vendor_data_type: string;
-    data_type_user_id: string;
+    opaque_id: string;
 }
 
 export interface UserDataMapInstance extends Sequelize.Instance<UserDataMapAttributes>, UserDataMapAttributes {
@@ -52,7 +52,7 @@ export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttrib
                 unique: 'userIdAndVendorDataType'
             },
 
-            data_type_user_id: {
+            opaque_id: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 primaryKey: true

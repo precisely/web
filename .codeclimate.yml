@@ -24,16 +24,20 @@ checks:
   return-statements:
     config:
       threshold: 4
-#  similar-code:
-#    config:
-#      threshold: # language-specific defaults. an override will affect all languages.
+  similar-code:
+    enabled: false
   identical-code:
     config:
       threshold: 6
 plugins:
   duplication:
     enabled: true
-    count_threshold: 6
+    config:
+      languages:
+        javascript:    
+          count_threshold: 6
+        typescript:
+          count_threshold: 6
   fixme:
     enabled: true
   eslint:

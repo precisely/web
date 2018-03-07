@@ -15,7 +15,7 @@ export const UserDataMapMock = DBConnectionMock.define(
         'userDataMap',
         {
             user_id: 'test',
-            data_type_user_id: 'dummyId',
+            opaque_id: 'dummyId',
             vendor_data_type: 'test'
         },
         {});
@@ -28,6 +28,18 @@ UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): Pro
             resolve([UserDataMapMock.build()]);
         } else {
             reject(new Error('mock-findAll error'));
+        }
+    });
+});
+
+UserDataMapMock.findOne = jest.fn((params: {where: {user_id: string, vendor_data_type: string}}): 
+        PromiseLike<IUserDataMapInstance> => {
+
+    return new Promise((resolve, reject): void => {
+        if (params.where.user_id === 'test') {
+            resolve(UserDataMapMock.build());
+        } else {
+            resolve();
         }
     });
 });

@@ -13,7 +13,7 @@ import {AuthorizerAttributes} from '../../interfaces';
 
 const toSnakeCase = require('lodash.snakecase');
 
-interface ListFilters {
+export interface ListGenotypeFilters {
     limit?: number;
     lastEvaluatedKeys?: {
         opaqueId: string;
@@ -23,7 +23,7 @@ interface ListFilters {
     gene?: string;
 }
 
-interface ListObject {
+export interface ListGenotypeObject {
     Items: GenotypeAttributes[];
     LastEvaluatedKey: {
         opaque_id: string;
@@ -107,17 +107,16 @@ export const genotypeResolver = {
             console.log('genotypeResolver-get:', error.message);
             return error;
         }
-
+        
         return genotypeInstance.attrs;
     },
 
-    async list(args: ListFilters = {}, authorizer: AuthorizerAttributes): Promise<ListObject> {
+    async list(args: ListGenotypeFilters = {}, authorizer: AuthorizerAttributes): Promise<ListGenotypeObject> {
         const {limit = 15, lastEvaluatedKeys, opaqueId, gene} = args;
-        let result: ListObject;
-
+        let result: ListGenotypeObject;
+        
         try {
-            hasAuthorizedRoles(authorizer, ['ADMIN']);
-            let query: Query & {execAsync?: () => ListObject};
+            let query: Query & {execAsync?: () => ListGenotypeObject};
 
             if (opaqueId) {
                 query = Genotype.query(opaqueId).limit(limit);
@@ -145,7 +144,7 @@ export const genotypeResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-    genotypeList: (root: any, args: ListFilters) => genotypeResolver.list(args, root.authorizer),
+    genotypeList: (root: any, args: ListGenotypeFilters) => genotypeResolver.list(args, root.authorizer),
     getGenotypeData: (root: any, args: {opaqueId: string, gene: string}) => genotypeResolver.get(args, root.authorizer),
 };
 

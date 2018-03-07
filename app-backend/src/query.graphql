@@ -1,5 +1,6 @@
 #import "./user-data-map/api/schema.graphql"
 #import "./genotype-service/api/schema.graphql"
+#import "./report-service/api/schema.graphql"
 
 type GenericResponse {
     success: Boolean,
@@ -11,6 +12,11 @@ input LastEvaluatedGenotypeRecord {
     gene: String
 }
 
+input LastEvaluatedReportRecord {
+    id: String!
+    slug: String!
+}
+
 type Query {
     listUserDataMap(limit: Int, offset: Int): [UserDataMap],
     genotypeList(
@@ -20,6 +26,15 @@ type Query {
             gene: String,
     ): GenotypeList,
     getGenotypeData(opaqueId: String!, gene: String!): Genotype
+    reports(slug: String!, limit: Int, lastEvaluatedKeys: LastEvaluatedReportRecord): ReportList,
+    report(
+            slug: String, 
+            id: String, 
+            userId: String!,
+            vendorDataType: String!,
+            limit: Int,
+            lastEvaluatedKeys: LastEvaluatedReportRecord,
+    ): ReportList,
 }
 
 type Mutation {
@@ -47,5 +62,6 @@ type Mutation {
             chromosomeName: String!,
             variantType: String!,
             quality: String!
-    ): Genotype
+    ): Genotype,
+    saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
 }

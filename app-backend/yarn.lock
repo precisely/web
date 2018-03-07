@@ -1768,6 +1768,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cross-fetch@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.0.0.tgz#a17475449561e0f325146cea636a8619efb9b382"
+  dependencies:
+    node-fetch "2.0.0"
+    whatwg-fetch "2.0.3"
+
 cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -2886,6 +2893,16 @@ graphql-anywhere@^3.0.1:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-3.1.0.tgz#3ea0d8e8646b5cee68035016a9a7557c15c21e96"
 
+graphql-config@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-2.0.0.tgz#daf69091055c6f675d63893a2d14c48f3fec3327"
+  dependencies:
+    graphql-import "^0.4.0"
+    graphql-request "^1.4.0"
+    js-yaml "^3.10.0"
+    lodash "^4.17.4"
+    minimatch "^3.0.4"
+
 graphql-extensions@^0.0.x:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/graphql-extensions/-/graphql-extensions-0.0.8.tgz#d14d6e06db466a7f90fb97d75b657ae730278b09"
@@ -2893,9 +2910,29 @@ graphql-extensions@^0.0.x:
     core-js "^2.5.3"
     source-map-support "^0.5.1"
 
-graphql-playground-middleware-lambda@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.2.0.tgz#518106fb4e8759ca3cf20d0ca14e27c47fd0c644"
+graphql-import@^0.4.0:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.4.5.tgz#e2f18c28d335733f46df8e0733d8deb1c6e2a645"
+  dependencies:
+    lodash "^4.17.4"
+
+graphql-playground-html@1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.5.5.tgz#e2aca543eb66b435ead495b45244b2604d6b2d48"
+  dependencies:
+    graphql-config "2.0.0"
+
+graphql-playground-middleware-lambda@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.4.3.tgz#017ed8124eac7360f676ccc6a23b1e4e24a04c50"
+  dependencies:
+    graphql-playground-html "1.5.5"
+
+graphql-request@^1.4.0:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.5.1.tgz#cccdf5cce6432ca062b90f7b63793c77c821ff9a"
+  dependencies:
+    cross-fetch "2.0.0"
 
 graphql-tag@2.6.1:
   version "2.6.1"
@@ -4062,7 +4099,7 @@ js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
-js-yaml@^3.6.1, js-yaml@^3.7.0, js-yaml@^3.8.3, js-yaml@^3.9.1:
+js-yaml@^3.10.0, js-yaml@^3.6.1, js-yaml@^3.7.0, js-yaml@^3.8.3, js-yaml@^3.9.1:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   dependencies:
@@ -4689,6 +4726,10 @@ nigel@2.x.x:
   dependencies:
     hoek "4.x.x"
     vise "2.x.x"
+
+node-fetch@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.0.0.tgz#982bba43ecd4f2922a29cc186a6bbb0bb73fcba6"
 
 node-fetch@^1.0.1, node-fetch@^1.6.0:
   version "1.7.3"
@@ -5824,6 +5865,10 @@ serverless-offline@3.15.3:
     lodash "^4.17.4"
     velocityjs "^0.9.3"
 
+serverless-plugin-scripts@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-scripts/-/serverless-plugin-scripts-1.0.2.tgz#21808c3cfd0a1a84e48c0660b0f6f370b5665486"
+
 serverless-webpack@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/serverless-webpack/-/serverless-webpack-4.1.0.tgz#c5fbbe1eb8677536a0ed7d15ec4fc1ab9b784ba6"
@@ -6912,7 +6957,7 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   dependencies:
     iconv-lite "0.4.19"
 
-whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.0:
+whatwg-fetch@2.0.3, whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
 

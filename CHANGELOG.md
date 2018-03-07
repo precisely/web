@@ -47,4 +47,5 @@
 - Renamed `Genetics` to `Genotype`.
 
 ### Added
+- Report Resolvers.
 - A utility function to check the current user's roles.

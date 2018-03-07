@@ -7,12 +7,8 @@
 */
 
 import * as Joi from 'joi';
-import {AWS} from 'dynogels';
 import {addEnvironmentToTableName} from '../../utils';
-
-const dynogels = require('dynogels-promisified');
-
-AWS.config.update({region: 'us-east-1'});
+import {dynogels} from '../../dynogels-db/connection';
 
 export interface GenotypeAttributes {
     opaque_id?: string;
@@ -57,11 +53,4 @@ export const Genotype = dynogels.define(addEnvironmentToTableName('precisely-gen
         name: 'GenotypeGlobalIndex',
         type: 'global',
     }],
-});
-
-/* istanbul ignore next */
-dynogels.createTables((error: string): void => {
-    if (error) {
-        console.log('Error while creating the tables.', error);
-    }
 });

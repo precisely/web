@@ -23,7 +23,7 @@ describe('Genotype resolver tests.', () => {
     const commonData: {gene: string, source: string, quality: string} = {
         gene: 'QWERTY2',
         source: 'helix',
-        quality: 'demo',
+        quality: undefined,
     };
 
     const dummyRequestData: CreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
