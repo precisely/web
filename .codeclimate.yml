@@ -31,8 +31,13 @@ checks:
       threshold: 6
 plugins:
   duplication:
-    enabled: false
-    count_threshold: 6
+    enabled: true
+    config:
+      languages:
+        javascript:    
+          count_threshold: 6
+        typescript:
+          count_threshold: 6
   fixme:
     enabled: true
   eslint:
