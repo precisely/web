@@ -19,5 +19,15 @@ export const dummyData: ReportList = {
       top_level: true,
       genes: ['a', 'b'],
     }
-  }]
+  }],
+  userData: {
+    Items: [{
+      attrs: {
+        gene: 'demo',
+        opaque_id: 'qwerty',
+        sample_id: 'test',
+        quality: 'good'
+      }
+    }],
+  },
 };

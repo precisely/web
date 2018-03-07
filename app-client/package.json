@@ -181,6 +181,7 @@
     "@types/react-transition-group": "2.0.6",
     "@types/reactstrap": "5.0.12",
     "@types/redux-logger": "3.0.5",
+    "apollo-mocknetworkinterface": "2.0.0",
     "babel-eslint": "7.2.3",
     "enzyme": "3.1.0",
     "enzyme-adapter-react-16": "1.0.2",

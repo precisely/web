@@ -52,22 +52,21 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
 
 // TODO Figure out correct types for the exported component.
 // tslint:disable-next-line
-const withGeneReport = graphql<any, any>(GetReport, {
+export const GeneReportWithApollo = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in the next PR.
-    variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo', userDataLimit: 2}
+    variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo'}
   }),
   props: (props: OptionProps<void, {report: ReportList}>): void => {
     if (props.data.report) {
+      // storing the data in the redux for now.
       store.dispatch(setReportData(props.data.report));
     }
   }
-});
+})(GeneReportImpl);
 
 const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = createStructuredSelector({
   isLoading: isLoading(),
 });
 
-// TODO Figure out correct types for the exported component.
-// tslint:disable-next-line
-export const GeneReport: any = connect(mapStateToProps)(withGeneReport(GeneReportImpl));
+export const GeneReport = connect(mapStateToProps)(GeneReportWithApollo);

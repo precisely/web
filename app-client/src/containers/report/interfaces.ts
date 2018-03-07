@@ -16,10 +16,18 @@ export interface Report {
   genes: string[];
 }
 
-export interface ReportListItem {
-  attrs: Report;
+export interface UserData {
+  gene: string;
+  opaque_id: string;
+  sample_id: string;
+  quality: string;
+}
+
+export interface ListItem<DataType> {
+  attrs: DataType;
 }
 
 export interface ReportList {
-  Items: ReportListItem[];
+  Items: ListItem<Report>[];
+  userData?: {Items: ListItem<UserData>[]};
 }

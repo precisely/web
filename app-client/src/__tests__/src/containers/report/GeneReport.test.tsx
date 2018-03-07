@@ -9,16 +9,21 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper, shallow, configure, EnzymePropSelector, mount} from 'enzyme';
-import {MockedProvider} from 'react-apollo/test-utils';
-import {GeneReportImpl, GeneReportProps} from 'src/containers/report/GeneReport';
+import {ShallowWrapper, shallow, configure, EnzymePropSelector, mount, ReactWrapper} from 'enzyme';
+import {ApolloProvider} from 'react-apollo';
+import {ApolloClient} from 'apollo-client';
+import {createHttpLink} from 'apollo-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {GeneReportImpl, GeneReportProps, GeneReportWithApollo} from 'src/containers/report/GeneReport';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
 import {Container} from 'src/components/ReusableComponents';
 import {store} from 'src/store';
 import {setLoadingState} from 'src/containers/report/actions';
-import {GetReport} from 'src/containers/report/queries';
+import {ReportList} from 'src/containers/report/interfaces';
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
+
+const createMockedNetworkFetch = require('apollo-mocknetworkinterface');
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -65,33 +70,25 @@ describe('GeneReport tests.', () => {
     });
   });
 
-  describe('When the ', () => {
-    it('your test case message', async () => {
-      const componentTree = mount(
-        <MockedProvider
-            mocks={[{
-              request: {
-                query: GetReport,
-                variables: {
-                  slug: 'demo',
-                  userId: 'test-id',
-                  vendorDataType: 'precisely:demo',
-                  userDataLimit: 2,
-                }
-              },
-              result: {
-                data: {report: dummyData}
-              },
-            }]}
-        >
-          <GeneReportImpl isLoading={false} />
-        </MockedProvider>
-      );
-      await new Promise(resolve => setTimeout(resolve));
-      componentTree.update();
-      console.log(`componentTree.find('GeneReportImpl')`, componentTree.props());
-      
-      expect(componentTree.find(GeneReportImpl).props().isLoading).toEqual(false);            
+  describe('When the component is wrapped with the graphql', () => {
+    const createResponse = (): {data: {report: ReportList}} => ({data: {report: dummyData}});
+
+    const mockedNetworkFetch = createMockedNetworkFetch(createResponse, {timeout: 1});
+
+    const client = new ApolloClient({
+      link: createHttpLink({uri: 'http://localhost:3000', fetch: mockedNetworkFetch}),
+      cache: new InMemoryCache({addTypename: false}),
     });
+
+    const componentTree: ReactWrapper = mount(
+      <ApolloProvider client={client}>
+        <GeneReportWithApollo/>
+      </ApolloProvider>
+    );
+
+    it('should render the GeneReport data successfully.', () => {
+      expect(componentTree.find(GeneReportImpl).length).toEqual(1);
+    });
+
   });
 });

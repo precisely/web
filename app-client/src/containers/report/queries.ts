@@ -16,16 +16,14 @@ export const GetReport = gql`
       $id: String,
       $userId: String!,
       $vendorDataType: String!,
-      $limit: Int,
-      $userDataLimit: userDataLimit
+      $limit: Int
   ) {
     report(
         id: $id,
         userId: $userId,
         vendorDataType: $vendorDataType,
         slug: $slug,
-        limit: $limit,
-        userDataLimit: $userDataLimit
+        limit: $limit
     ) {
       Items {
         attrs {
@@ -35,7 +33,7 @@ export const GetReport = gql`
           genes
         }
       },
-      userData(limit: userDataLimit) {
+      userData(limit: 10) {
         Items{
           attrs{
             gene,
@@ -44,14 +42,6 @@ export const GetReport = gql`
             quality
           }
         },
-        LastEvaluatedKey {
-          opaque_id,
-          gene
-        }
-      }
-      LastEvaluatedKey {
-        id,
-        slug
       }
     }
   }
