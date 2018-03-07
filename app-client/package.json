@@ -124,6 +124,8 @@
     "iscroll": "5.2.0",
     "iscroll-react": "1.0.3",
     "jest": "22.0.4",
+    "markdown-components": "1.2.0",
+    "memory-streams": "0.1.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
