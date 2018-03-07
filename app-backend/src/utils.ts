@@ -20,43 +20,43 @@ const decryptAsync: (params: DecryptRequest) => Bluebird<Object> = Bluebird.prom
  * Utility function to decrypt the variables stored in process.env
  */
 export async function getEnvironmentVariables(): Promise<Object | void> {
-    try {
-        const result: DecryptResponse = 
-                await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
-                
-        return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
-    } catch (error) {
-        console.log('Error while decrypting secrets:', error.message);
-        return null;
-    }
+  try {
+    const result: DecryptResponse = 
+        await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
+        
+    return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
+  } catch (error) {
+    console.log('Error while decrypting secrets:', error.message);
+    return null;
+  }
 }
 
 /**
  * Utility function to add the environment to the database table name.
  */
 export function addEnvironmentToTableName(tableName: string, version: string): string {
-    return `${process.env.NODE_ENV}-${version}-${tableName}`;
+  return `${process.env.NODE_ENV}-${version}-${tableName}`;
 }
 
 /**
  * Utility function to check if a user is authorized or not.
  */
 export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {
-    let isAuthorized: boolean = true;
+  let isAuthorized: boolean = true;
 
-    if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
-        throw new Error('The user is unauthorized.');
-    }
+  if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
+    throw new Error('The user is unauthorized.');
+  }
 
-    const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
+  const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
 
-    isAuthorized = currentUserRoles.some((role: string): boolean => {
-        return (allowedRoles.indexOf(role.trim()) > -1);
-    });
+  isAuthorized = currentUserRoles.some((role: string): boolean => {
+    return (allowedRoles.indexOf(role.trim()) > -1);
+  });
 
-    if (!isAuthorized) {
-        throw new Error('The user is unauthorized.');
-    }
+  if (!isAuthorized) {
+    throw new Error('The user is unauthorized.');
+  }
 
-    return isAuthorized;
+  return isAuthorized;
 }

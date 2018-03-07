@@ -1,24 +1,24 @@
 type Report {
-    id: String,
-    title: String,
-    slug: String,
-    raw_content: String,
-    parsed_content: String,
-    top_level: Boolean,
-    genes: [String],
+  id: String,
+  title: String,
+  slug: String,
+  raw_content: String,
+  parsed_content: String,
+  top_level: Boolean,
+  genes: [String],
 }
 
 type LastEvaluatedReportData {
-    id: String,
-    slug: String
+  id: String,
+  slug: String
 }
 
 type ReportListItem {
-    attrs: Report
+  attrs: Report
 }
 
 type ReportList {
-    Items: [ReportListItem],
-    userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
-    LastEvaluatedKey: LastEvaluatedReportData
+  Items: [ReportListItem],
+  userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
+  LastEvaluatedKey: LastEvaluatedReportData
 }
