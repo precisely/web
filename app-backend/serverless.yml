@@ -44,7 +44,7 @@ plugins:
 custom:
   scripts:
     hooks:
-      'deploy:finalize': yarn setup:database -s ${opt:stage, self:provider.stage}
+      'deploy:finalize': yarn setup:database -- -s ${opt:stage, self:provider.stage}
   serverless-offline:
     port: 4000
   webpackIncludeModules: true
