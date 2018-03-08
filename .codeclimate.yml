@@ -61,6 +61,7 @@ exclude_patterns:
   - "config/"
   - "db/"
   - "dist/"
+  - "app-client/src/containers/Routes.tsx"
   - "features/"
   - "**/node_modules/"
   - "script/"
