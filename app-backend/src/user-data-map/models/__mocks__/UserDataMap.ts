@@ -12,17 +12,17 @@ const SequelizeMock = require('sequelize-mock');
 const DBConnectionMock = new SequelizeMock();
 
 export const UserDataMapMock = DBConnectionMock.define(
-    'userDataMap',
-    {
-      user_id: 'test',
-      opaque_id: 'dummyId',
-      vendor_data_type: 'test'
-    },
-    {});
+  'userDataMap',
+  {
+    user_id: 'test',
+    opaque_id: 'dummyId',
+    vendor_data_type: 'test'
+  },
+  {});
 
 export const UserDataMap = UserDataMapMock;
 
-UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): PromiseLike<UserDataMapInstance[]> => {
+UserDataMapMock.findAll = jest.fn((params: { limit: number, offset: number }): PromiseLike<UserDataMapInstance[]> => {
   return new Promise((resolve, reject): void => {
     if (params.limit > 0) {
       resolve([UserDataMapMock.build()]);
@@ -32,8 +32,8 @@ UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): Pro
   });
 });
 
-UserDataMapMock.findOne = jest.fn((params: {where: {user_id: string, vendor_data_type: string}}): 
-    PromiseLike<IUserDataMapInstance> => {
+UserDataMapMock.findOne = jest.fn((params: { where: { user_id: string, vendor_data_type: string } }):
+  PromiseLike<UserDataMapInstance> => {
 
   return new Promise((resolve, reject): void => {
     if (params.where.user_id === 'test') {
@@ -44,16 +44,26 @@ UserDataMapMock.findOne = jest.fn((params: {where: {user_id: string, vendor_data
   });
 });
 
-UserDataMapMock.findCreateFind = jest.fn((params: {where: {user_id: string}}) => {
+UserDataMapMock.findCreateFind = jest.fn((params: { where: { user_id: string } }) => {
   return {
-    spread: (callback: ((user: UserDataMapInstance) => UserDataMapInstance)): Promise<UserDataMapInstance> => 
-        new Promise((resolve, reject): void => {
-          
-      if (params.where.user_id === 'dummyId') {
-        resolve(callback(UserDataMapMock.build()));
-      } else {
-        reject(new Error('mock-findCreateFind error'));
-      }
-    }),
+    spread: (callback: ((user: UserDataMapInstance) => UserDataMapInstance)): Promise<UserDataMapInstance> =>
+      new Promise((resolve, reject): void => {
+
+        if (params.where.user_id === 'dummyId') {
+          resolve(callback(UserDataMapMock.build()));
+        } else {
+          reject(new Error('mock-findCreateFind error'));
+        }
+      }),
   };
+});
+
+UserDataMapMock.upsert = jest.fn((params: { user_id: string }): PromiseLike<boolean> => {
+  return new Promise((resolve, reject): void => {
+    if (params.user_id === 'dummyId') {
+      resolve(true);
+    } else {
+      reject();
+    }
+  });
 });
