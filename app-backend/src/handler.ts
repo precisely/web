@@ -16,30 +16,30 @@ import {resolvers} from './resolvers';
 const typeDefs: ITypeDefinitions = require('./query.graphql');
 
 const myGraphQLSchema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-    logger: console,
+  typeDefs,
+  resolvers,
+  logger: console,
 });
 
 /* istanbul ignore next */
 export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
-    const handler: LambdaHandler = graphqlLambda({
-        schema: myGraphQLSchema,
-        tracing: true,
-        rootValue: {authorizer: event.requestContext.authorizer}
-    });
-    return handler(event, context, callback);
+  const handler: LambdaHandler = graphqlLambda({
+    schema: myGraphQLSchema,
+    tracing: true,
+    rootValue: {authorizer: event.requestContext.authorizer}
+  });
+  return handler(event, context, callback);
 };
 
 // for local endpointURL is /graphql and for prod it is /stage/graphql
 export const playgroundHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
-        = lambdaPlayground({
+    = lambdaPlayground({
 
-    endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
+  endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
 });
 
 export const graphiqlHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
-        = graphiqlLambda({
+    = graphiqlLambda({
 
-    endpointURL: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
+  endpointURL: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
 });

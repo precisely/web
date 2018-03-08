@@ -14,27 +14,27 @@ import {CSS} from 'src/interfaces';
 
 export class Basepage extends React.Component {
 
-    render(): JSX.Element {
-        return (
-            <div style={container}>
-                <div style={routes}>
-                    <Routes />
-                </div>
-                <Footer />
-            </div>
-        );
-    }
+  render(): JSX.Element {
+    return (
+      <div style={container}>
+        <div style={routes}>
+          <Routes />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 }
 
 const container: CSS = {
-    ...helveticaFont,
-    backgroundColor: defaultBackground,
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
+  ...helveticaFont,
+  backgroundColor: defaultBackground,
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
 };
 
 const routes: CSS = {
-    flex: '1 0 auto',
-    width: '100%',
+  flex: '1 0 auto',
+  width: '100%',
 };

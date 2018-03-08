@@ -23,20 +23,20 @@ configure({adapter: new Adapter()});
 
 describe('Footer tests.', () => {
 
-    const componentTree: ShallowWrapper = shallow(
-        <Footer />
-    );
+  const componentTree: ShallowWrapper = shallow(
+    <Footer />
+  );
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['div', 'div', 3],
-        ['Col', Col, 6],
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['div', 'div', 3],
+    ['Col', Col, 6],
+  ]);
 
 });

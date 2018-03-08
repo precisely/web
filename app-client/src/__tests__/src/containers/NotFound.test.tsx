@@ -19,19 +19,19 @@ unroll.use(it);
 configure({adapter: new Adapter()});
 
 describe('Tests for NotFound', () => {
-    const componentTree: ShallowWrapper = shallow(<NotFound />);
+  const componentTree: ShallowWrapper = shallow(<NotFound />);
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['div', 'div', 2],
-        ['Error icon', FontAwesome, 1],
-        ['Error message', 'h4', 1],
-        ['Link to the homepage', Link, 1],
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['div', 'div', 2],
+    ['Error icon', FontAwesome, 1],
+    ['Error message', 'h4', 1],
+    ['Link to the homepage', Link, 1],
+  ]);
 });

@@ -19,23 +19,23 @@ configure({adapter: new Adapter()});
 
 describe('SignupLoginContainer tests.', () => {
 
-    const componentTree: ShallowWrapper = shallow(
-        <PageContent>I am a dummy child.</PageContent>
-    );
+  const componentTree: ShallowWrapper = shallow(
+    <PageContent>I am a dummy child.</PageContent>
+  );
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['Row', Row, 1],
-        ['Col', Col, 1],
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['Row', Row, 1],
+    ['Col', Col, 1],
+  ]);
 
-    it('should render the children correctly.', () => {
-        expect(componentTree.contains('I am a dummy child.')).toBe(true);
-    });
+  it('should render the children correctly.', () => {
+    expect(componentTree.contains('I am a dummy child.')).toBe(true);
+  });
 });

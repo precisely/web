@@ -7,11 +7,11 @@
  */
 
 export const mockedHistory: {
-    push: jest.Mock<void>, 
-    goBack: jest.Mock<void>,
-    replace: jest.Mock<void>
+  push: jest.Mock<void>, 
+  goBack: jest.Mock<void>,
+  replace: jest.Mock<void>
 } = {
-    push: jest.fn<void>(),
-    goBack: jest.fn<void>(),
-    replace: jest.fn<void>()
+  push: jest.fn<void>(),
+  goBack: jest.fn<void>(),
+  replace: jest.fn<void>()
 };

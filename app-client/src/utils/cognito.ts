@@ -9,153 +9,153 @@
 import * as AWS from 'aws-sdk';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
 import {
-    CognitoUserPool,
-    AuthenticationDetails,
-    CognitoUser,
-    CognitoUserSession,
-    ISignUpResult,
-    CognitoUserAttribute,
+  CognitoUserPool,
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserSession,
+  ISignUpResult,
+  CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
 
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
-    console.warn('Cognito configuration missing.');
+  console.warn('Cognito configuration missing.');
 }
 
 const poolData: {UserPoolId: string, ClientId: string} = {
-    UserPoolId : process.env.REACT_APP_USER_POOL_ID,
-    ClientId : process.env.REACT_APP_CLIENT_APP_ID,
+  UserPoolId : process.env.REACT_APP_USER_POOL_ID,
+  ClientId : process.env.REACT_APP_CLIENT_APP_ID,
 };
 
 const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
 export const isLoggedIn = (): boolean => {
-    return !!userPool.getCurrentUser();
+  return !!userPool.getCurrentUser();
 };
 
 export const getCognitoUser = (email: string): CognitoUser => {
-    const userData: {Username: string, Pool: CognitoUserPool} = {
-        Username : email,
-        Pool : userPool
-    };
+  const userData: {Username: string, Pool: CognitoUserPool} = {
+    Username : email,
+    Pool : userPool
+  };
 
-    return new CognitoUser(userData);
+  return new CognitoUser(userData);
 };
 
 export function login(
-    email: string,
-    password: string,
-    successCallback?: () => void,
-    failureCallback?: (message: string) => void
+  email: string,
+  password: string,
+  successCallback?: () => void,
+  failureCallback?: (message: string) => void
 ): void {
-    const authenticationData: {Username: string, Password: string} = {
-        Username : email,
-        Password : password,
-    };
+  const authenticationData: {Username: string, Password: string} = {
+    Username : email,
+    Password : password,
+  };
 
-    const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-    const cognitoUser: CognitoUser = getCognitoUser(email);
+  const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
+  const cognitoUser: CognitoUser = getCognitoUser(email);
 
-    cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (result: CognitoUserSession): void => {
-            setTokenInLocalStorage(result.getIdToken().getJwtToken());
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: (result: CognitoUserSession): void => {
+      setTokenInLocalStorage(result.getIdToken().getJwtToken());
 
-            AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
+      AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
 
-            const jwtToken: string = result.getIdToken().getJwtToken();
-            AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
-                Logins : {
-                    [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
-                }
-            });
+      const jwtToken: string = result.getIdToken().getJwtToken();
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
+        Logins : {
+          [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
+        }
+      });
 
-            if (successCallback) {
-                successCallback();
-            }
-        },
+      if (successCallback) {
+        successCallback();
+      }
+    },
 
-        onFailure: (error: Error): void => {
-            if (failureCallback) {
-                failureCallback(error.message);
-            }
-        },
-    });
+    onFailure: (error: Error): void => {
+      if (failureCallback) {
+        failureCallback(error.message);
+      }
+    },
+  });
 }
 
 export function signup(
-        email: string,
-        password: string,
-        successCallback?: (result: ISignUpResult) => void,
-        failureCallback?: (message: string) => void
+    email: string,
+    password: string,
+    successCallback?: (result: ISignUpResult) => void,
+    failureCallback?: (message: string) => void
 ): void {
-    const userRole: CognitoUserAttribute = new CognitoUserAttribute({Name: 'custom:roles', Value: 'USER'});
+  const userRole: CognitoUserAttribute = new CognitoUserAttribute({Name: 'custom:roles', Value: 'USER'});
 
-    userPool.signUp(
-            email,
-            password,
-            [userRole],
-            null,
-            (error: Error, result: ISignUpResult): void => {
-        if (error) {
-            if (failureCallback) {
-                failureCallback(error.message);
-            }
+  userPool.signUp(
+      email,
+      password,
+      [userRole],
+      null,
+      (error: Error, result: ISignUpResult): void => {
+    if (error) {
+      if (failureCallback) {
+        failureCallback(error.message);
+      }
 
-            return;
-        }
+      return;
+    }
 
-        if (successCallback) {
-            successCallback(result);
-        }
-    });
+    if (successCallback) {
+      successCallback(result);
+    }
+  });
 }
 
 export function logOut(): void {
-    const cognitoUser = userPool.getCurrentUser();
-    cognitoUser.signOut();
-    removeTokenFromLocalStorage();
+  const cognitoUser = userPool.getCurrentUser();
+  cognitoUser.signOut();
+  removeTokenFromLocalStorage();
 }
 
 export function getResetPasswordCode(
-        email: string,
-        successCallback?: () => void,
-        failureCallback?: (message: string) => void
+    email: string,
+    successCallback?: () => void,
+    failureCallback?: (message: string) => void
 ): void {
-    const cognitoUser: CognitoUser = getCognitoUser(email);
+  const cognitoUser: CognitoUser = getCognitoUser(email);
 
-    cognitoUser.forgotPassword({
-        onSuccess: (): void => {
-            if (successCallback) {
-                successCallback();
-            }
-        },
-        onFailure: (error: Error): void => {
-            if (failureCallback) {
-                failureCallback(error.message);
-            }
-        },
-    });
+  cognitoUser.forgotPassword({
+    onSuccess: (): void => {
+      if (successCallback) {
+        successCallback();
+      }
+    },
+    onFailure: (error: Error): void => {
+      if (failureCallback) {
+        failureCallback(error.message);
+      }
+    },
+  });
 }
 
 export function resetPassword(
-        email: string,
-        verificationCode: string,
-        newPassword: string,
-        successCallback?: () => void,
-        failureCallback?: (message: string) => void
+    email: string,
+    verificationCode: string,
+    newPassword: string,
+    successCallback?: () => void,
+    failureCallback?: (message: string) => void
 ): void {
-    const cognitoUser: CognitoUser = getCognitoUser(email);
+  const cognitoUser: CognitoUser = getCognitoUser(email);
 
-    cognitoUser.confirmPassword(verificationCode, newPassword, {
-        onSuccess(): void {
-            if (successCallback) {
-                successCallback();
-            }
-        },
-        onFailure(error: Error): void {
-            if (failureCallback) {
-                failureCallback(error.message);
-            }
-        },
-    });
+  cognitoUser.confirmPassword(verificationCode, newPassword, {
+    onSuccess(): void {
+      if (successCallback) {
+        successCallback();
+      }
+    },
+    onFailure(error: Error): void {
+      if (failureCallback) {
+        failureCallback(error.message);
+      }
+    },
+  });
 }

@@ -17,22 +17,22 @@ import {header} from 'src/constants/styleGuide';
 @Radium
 export class Dashboard extends React.Component<RouteComponentProps<void>> {
 
-    /**
-     * This is a dummy component for demonstration purpose only.
-     * It will be removed in future.
-     */
+  /**
+   * This is a dummy component for demonstration purpose only.
+   * It will be removed in future.
+   */
 
-    render(): JSX.Element {
-        return (
-            <div>
-                <NavigationBar {...this.props}/>
-                <Container className="mx-auto mt-5 mb-5">
-                    <h1 className="mt-5 mb-4" style={header}>Dashboard</h1>
-                    <PageContent>
-                        <p>This is a dummy dashboard.</p>
-                    </PageContent>
-                </Container>
-            </div>
-        );
-    }
+  render(): JSX.Element {
+    return (
+      <div>
+        <NavigationBar {...this.props}/>
+        <Container className="mx-auto mt-5 mb-5">
+          <h1 className="mt-5 mb-4" style={header}>Dashboard</h1>
+          <PageContent>
+            <p>This is a dummy dashboard.</p>
+          </PageContent>
+        </Container>
+      </div>
+    );
+  }
 }

@@ -14,22 +14,22 @@ import {CSS} from 'src/interfaces';
 @Radium
 export class LoadingPage extends React.Component {
 
-    render(): JSX.Element {
-        return(
-            <div style={loadingWrapper}>.
-                <div style={{textAlign: 'center'}}>
-                    <FontAwesome name="circle-o-notch" spin={true} size="3x" />
-                    <h4 style={{fontSize: 20}}>Loading...</h4>
-                </div>
-            </div>
-        );
-    }
+  render(): JSX.Element {
+    return(
+      <div style={loadingWrapper}>.
+        <div style={{textAlign: 'center'}}>
+          <FontAwesome name="circle-o-notch" spin={true} size="3x" />
+          <h4 style={{fontSize: 20}}>Loading...</h4>
+        </div>
+      </div>
+    );
+  }
 }
 
 const loadingWrapper: CSS = {
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F1F1F1',
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#F1F1F1',
 };

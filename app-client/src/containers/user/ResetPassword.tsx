@@ -16,134 +16,134 @@ import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {CSS} from 'src/interfaces';
 import {
-    formButton,
-    noBorderTop,
-    removeBorderRadius,
-    header,
-    loginAndSignupPanel,
-    inputStyle,
-    alignCenter,
-    formMargin,
+  formButton,
+  noBorderTop,
+  removeBorderRadius,
+  header,
+  loginAndSignupPanel,
+  inputStyle,
+  alignCenter,
+  formMargin,
 } from 'src/constants/styleGuide';
 
 export interface ResetPasswordState {
-    verificationCode?: string;
-    isLoading?: boolean;
-    newPassword?: string;
-    confirmPassword?: string;
+  verificationCode?: string;
+  isLoading?: boolean;
+  newPassword?: string;
+  confirmPassword?: string;
 }
 
 @Radium
 export class ResetPassword extends React.Component<RouteComponentProps<{email: string}>, ResetPasswordState> {
 
-    toastId: number = null;
+  toastId: number = null;
 
-    state: ResetPasswordState = {verificationCode: '', isLoading: false, newPassword: '', confirmPassword: ''};
+  state: ResetPasswordState = {verificationCode: '', isLoading: false, newPassword: '', confirmPassword: ''};
 
-    componentWillMount(): void {
-        const {match, history} = this.props;
+  componentWillMount(): void {
+    const {match, history} = this.props;
 
-        if (!match.params || !match.params.email) {
-            history.push('/forgot-password');
-        }
+    if (!match.params || !match.params.email) {
+      history.push('/forgot-password');
+    }
+  }
+
+  updateLoadingState = (isLoading: boolean): void => {
+    this.setState({isLoading});
+  }
+
+  onSuccess = (): void => {
+    this.updateLoadingState(false);
+    this.props.history.push('/login');
+    this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
+  }
+
+  onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
+    this.updateLoadingState(false);
+    this.toastId = showAlert(this.toastId, message);
+  }
+
+  submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const {verificationCode, newPassword, confirmPassword} = this.state;
+
+    if (newPassword !== confirmPassword) {
+      this.toastId = showAlert(this.toastId, 'Password does not match.');
+      return;
     }
 
-    updateLoadingState = (isLoading: boolean): void => {
-        this.setState({isLoading});
-    }
+    this.updateLoadingState(true);
 
-    onSuccess = (): void => {
-        this.updateLoadingState(false);
-        this.props.history.push('/login');
-        this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
-    }
+    // Not adding a null check for the email here, since it's already added in the componentWillMount method
+    resetPassword(this.props.match.params.email, verificationCode, newPassword, this.onSuccess, this.onFailure);
+  }
 
-    onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
-        this.updateLoadingState(false);
-        this.toastId = showAlert(this.toastId, message);
-    }
+  handleInputChange(inputType: string, value: string): void {
+    this.setState((): ResetPasswordState => ({
+      [inputType]: value,
+    }));
+  }
 
-    submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
-        e.preventDefault();
-        const {verificationCode, newPassword, confirmPassword} = this.state;
+  renderInput = (
+      type: 'text' | 'password',
+      id: string,
+      placeholder: string,
+      customStyle: CSS,
+      className?: string
+  ): JSX.Element => {
+    return (
+      <FormGroup style={alignCenter} className={className}>
+        <Input
+            style={[customStyle, inputStyle]}
+            required
+            type={type}
+            id={id}
+            placeholder={placeholder}
+            value={this.state[id]}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+              this.handleInputChange(e.target.id, e.target.value);
+            }}
+        />
+      </FormGroup>
+    );
+  }
 
-        if (newPassword !== confirmPassword) {
-            this.toastId = showAlert(this.toastId, 'Password does not match.');
-            return;
-        }
+  render(): JSX.Element {
+    const {isLoading} = this.state;
 
-        this.updateLoadingState(true);
-
-        // Not adding a null check for the email here, since it's already added in the componentWillMount method
-        resetPassword(this.props.match.params.email, verificationCode, newPassword, this.onSuccess, this.onFailure);
-    }
-
-    handleInputChange(inputType: string, value: string): void {
-        this.setState((): ResetPasswordState => ({
-            [inputType]: value,
-        }));
-    }
-
-    renderInput = (
-            type: 'text' | 'password',
-            id: string,
-            placeholder: string,
-            customStyle: CSS,
-            className?: string
-    ): JSX.Element => {
-        return (
-            <FormGroup style={alignCenter} className={className}>
-                <Input
-                        style={[customStyle, inputStyle]}
-                        required
-                        type={type}
-                        id={id}
-                        placeholder={placeholder}
-                        value={this.state[id]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                            this.handleInputChange(e.target.id, e.target.value);
-                        }}
-                />
-            </FormGroup>
-        );
-    }
-
-    render(): JSX.Element {
-        const {isLoading} = this.state;
-
-        return (
-            <div>
-                <NavigationBar {...this.props} />
-                <div className="mx-auto" style={loginAndSignupPanel}>
-                    <h3 style={header}>Reset password</h3>
-                    <PageContent>
-                        <Form onSubmit={this.submitForm} style={formMargin}>
-                            {
-                                this.renderInput(
-                                        'text',
-                                        'verificationCode',
-                                        'Enter your verification code',
-                                        removeBorderRadius,
-                                        'mb-0'
-                                )
-                            }
-                            {
-                                this.renderInput(
-                                        'password',
-                                        'newPassword',
-                                        'Enter your new password',
-                                        noBorderTop,
-                                        'mb-0'
-                                )
-                            }
-                            {this.renderInput('password', 'confirmPassword', 'Re-enter your new password', noBorderTop)}
-                            <Button style={formButton} disabled={isLoading} active={isLoading}>
-                                {isLoading ? 'Please wait...' : 'Reset Password'}
-                            </Button>
-                        </Form>
-                    </PageContent>
-                </div>
-            </div>
-        );
-    }
+    return (
+      <div>
+        <NavigationBar {...this.props} />
+        <div className="mx-auto" style={loginAndSignupPanel}>
+          <h3 style={header}>Reset password</h3>
+          <PageContent>
+            <Form onSubmit={this.submitForm} style={formMargin}>
+              {
+                this.renderInput(
+                    'text',
+                    'verificationCode',
+                    'Enter your verification code',
+                    removeBorderRadius,
+                    'mb-0'
+                )
+              }
+              {
+                this.renderInput(
+                    'password',
+                    'newPassword',
+                    'Enter your new password',
+                    noBorderTop,
+                    'mb-0'
+                )
+              }
+              {this.renderInput('password', 'confirmPassword', 'Re-enter your new password', noBorderTop)}
+              <Button style={formButton} disabled={isLoading} active={isLoading}>
+                {isLoading ? 'Please wait...' : 'Reset Password'}
+              </Button>
+            </Form>
+          </PageContent>
+        </div>
+      </div>
+    );
+  }
 }

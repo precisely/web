@@ -1,28 +1,28 @@
 type LastEvaluatedGenotypeData {
-    opaque_id: String
-    gene: String
+  opaque_id: String
+  gene: String
 }
 
 type Genotype {
-    opaque_id: String
-    sample_id: String
-    source: String
-    gene: String
-    variant_call: String
-    zygosity: String
-    start_base: String
-    chromosome_name: String
-    variant_type: String
-    quality: String
-    created_at: String
-    updated_at: String
+  opaque_id: String
+  sample_id: String
+  source: String
+  gene: String
+  variant_call: String
+  zygosity: String
+  start_base: String
+  chromosome_name: String
+  variant_type: String
+  quality: String
+  created_at: String
+  updated_at: String
 }
 
 type GenotypeListItem {
-    attrs: Genotype
+  attrs: Genotype
 }
 
 type GenotypeList {
-    Items: [GenotypeListItem],
-    LastEvaluatedKey: LastEvaluatedGenotypeData
+  Items: [GenotypeListItem],
+  LastEvaluatedKey: LastEvaluatedGenotypeData
 }

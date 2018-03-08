@@ -21,19 +21,19 @@ configure({adapter: new Adapter()});
 
 describe('Dashboard tests.', () => {
 
-    const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<Dashboard />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<Dashboard />);
 
-    unroll('it should display #count #elementName elements', (
-            done: () => void,
-            args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-        expect(componentTree.find(args.element).length).toBe(args.count);
-        done();
-    }, [ // tslint:disable-next-line
-        ['elementName', 'element', 'count'],
-        ['NavigationBar', NavigationBar, 1],
-        ['h1', 'h1', 1],
-        ['p', 'p', 1],
-        ['PageContent', PageContent, 1]
-    ]);
+  unroll('it should display #count #elementName elements', (
+      done: () => void,
+      args: {elementName: string, element: EnzymePropSelector, count: number}
+  ) => {
+    expect(componentTree.find(args.element).length).toBe(args.count);
+    done();
+  }, [ // tslint:disable-next-line
+    ['elementName', 'element', 'count'],
+    ['NavigationBar', NavigationBar, 1],
+    ['h1', 'h1', 1],
+    ['p', 'p', 1],
+    ['PageContent', PageContent, 1]
+  ]);
 });

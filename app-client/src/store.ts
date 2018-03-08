@@ -15,7 +15,7 @@ import {rootReducer} from 'src/reducers';
 
 /* istanbul ignore next */
 const middlewares = [
-    logger,
+  logger,
 ];
 
 /**
@@ -26,7 +26,7 @@ const middlewares = [
  */
 /* istanbul ignore next */
 export const store = createStore(
-    rootReducer,
-    typeof window !== 'undefined' && window[`__REDUX_DEVTOOLS_EXTENSION__`] && window[`__REDUX_DEVTOOLS_EXTENSION__`](),
-    applyMiddleware(...middlewares)
+  rootReducer,
+  typeof window !== 'undefined' && window[`__REDUX_DEVTOOLS_EXTENSION__`] && window[`__REDUX_DEVTOOLS_EXTENSION__`](),
+  applyMiddleware(...middlewares)
 );
