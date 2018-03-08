@@ -28,7 +28,11 @@ checks:
     enabled: false
   identical-code:
     config:
-      threshold: 4
+      languages:
+        javascript:    
+          threshold: 6
+        typescript:
+          threshold: 6
 plugins:
   duplication:
     enabled: true
