@@ -16,6 +16,7 @@ const jsonfile = require('jsonfile');
 const userData: UserDataMapAttributes[] = [];
 const reportData: ReportAttributes[] = [];
 const genotypeData: GenotypeAttributes[] = [];
+const cognitoData: any[] = [];
 const opaqueIdList: string[] = [];
 const userIdList: string[] = [];
 const genesList: string[] = [];
@@ -50,6 +51,16 @@ for (let i = 0; i < limit; i++) {
 }
 
 for (let i = 0; i < limit; i++) {
+  cognitoData.push({
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    get email() {
+      return faker.internet.email(this.firstName, this.lastName, 'demo-precisely.com');
+    },
+    password: 'test@12345',
+    roles: faker.random.arrayElement(['USER', 'ADMIN'])
+  });
+
   userData.push({
     user_id: faker.random.arrayElement(userIdList),
     opaque_id: opaqueIdList[i],
@@ -85,6 +96,7 @@ for (let i = 0; i < limit; i++) {
   });
 }
 
-saveJSONfile('UserData', userData);
-saveJSONfile('ReportData', reportData);
-saveJSONfile('GenotypeData', genotypeData);
+saveJSONfile('CognitoData', cognitoData);
+// saveJSONfile('UserData', userData);
+// saveJSONfile('ReportData', reportData);
+// saveJSONfile('GenotypeData', genotypeData);

@@ -1,0 +1,16 @@
+[
+  {
+    "firstName": "Tomas",
+    "lastName": "Jenkins",
+    "email": "Tomas_Jenkins@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "USER"
+  },
+  {
+    "firstName": "Keegan",
+    "lastName": "Senger",
+    "email": "Keegan_Senger@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "USER"
+  }
+]

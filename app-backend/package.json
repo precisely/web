@@ -11,6 +11,7 @@
     "seed:local": "NODE_ENV=dev DB=local ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "seed:dev": "sls decrypt | NODE_ENV=dev xargs ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "seed:stage": "sls decrypt -s stage | NODE_ENV=stage xargs ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
+    "seed:cognito": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedCognito.ts",
     "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless deploy -s dev",
     "deploy:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage ./node_modules/.bin/serverless deploy -s stage",
     "deploy:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",
