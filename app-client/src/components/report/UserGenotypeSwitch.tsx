@@ -7,14 +7,8 @@
  */
 
 import * as React from 'react';
-import {UserDataList, UserData} from 'src/containers/report/interfaces';
+import {UserData} from 'src/containers/report/interfaces';
 import {getUserDataByGene, hasMatchingSvnForGene} from 'src/containers/report/utils';
-
-export interface UserGenotypeSwitchProps {
-  gene: string;
-  userData: UserDataList;
-  __children: React.ReactNode[];
-}
 
 // tslint:disable-next-line
 export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: any): any => {

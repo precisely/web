@@ -6,13 +6,6 @@
  * without modification, are not permitted.
  */
 
-import * as React from 'react';
-
-export interface GenotypeCaseProps {
-  children: React.ReactNode;
-  svn?: string;
-}
-
 // tslint:disable-next-line
 export const GenotypeCase = ({__children}: any, render: any) => {
   render('<div>');
