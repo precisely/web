@@ -37,49 +37,49 @@ export class Routes extends React.Component {
     return (
       <Switch>
         <AuthRoute
-            onEnter={(): boolean => !isLoggedIn()}
+            onEnter={() => !isLoggedIn()}
             redirectTo="/dashboard"
             path="/"
             exact
             component={LoadComponent('Homepage', 'homepage/Homepage')}
         />
         <AuthRoute
-            onEnter={(): boolean => !isLoggedIn()}
+            onEnter={() => !isLoggedIn()}
             redirectTo="/dashboard"
             path="/login"
             exact
             component={LoadComponent('Login', 'user/Login')}
         />
         <AuthRoute
-            onEnter={(): boolean => !isLoggedIn()}
+            onEnter={() => !isLoggedIn()}
             redirectTo="/dashboard"
             path="/signup"
             exact
             component={LoadComponent('Signup', 'user/Signup')}
         />
         <AuthRoute
-            onEnter={(): boolean => isLoggedIn()}
+            onEnter={isLoggedIn}
             redirectTo="/login"
             path="/dashboard"
             exact
             component={LoadComponent('Dashboard', 'user/Dashboard')}
         />
         <AuthRoute
-            onEnter={(): boolean => !isLoggedIn()}
+            onEnter={() => !isLoggedIn()}
             redirectTo="/dashboard"
             path="/reset-password/:email"
             exact
             component={LoadComponent('ResetPassword', 'user/ResetPassword')}
         />
         <AuthRoute
-            onEnter={(): boolean => !isLoggedIn()}
+            onEnter={() => !isLoggedIn()}
             redirectTo="/dashboard"
             path="/forgot-password"
             exact
             component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
         />
         <AuthRoute
-            onEnter={(): boolean => isLoggedIn()}
+            onEnter={isLoggedIn}
             redirectTo="/login"
             path="/view-report"
             exact

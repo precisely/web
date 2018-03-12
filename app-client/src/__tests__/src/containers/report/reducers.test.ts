@@ -28,7 +28,7 @@ describe('Report reducers tests.', () => {
       title: string,
       stateData: Map<string, Object>,
     }
-  ): void => {
+  ) => {
     expect(reportReducer(args.stateData, {type: 'TEST_ACTION'})).toEqual(initialState);
     done();
   }, [ // tslint:disable-next-line
@@ -50,7 +50,7 @@ describe('Report reducers tests.', () => {
         actionPayload: ReportList,
         result: {data: ReportList, isLaoding: boolean}
       }
-  ): void => {
+  ) => {
     expect(reportReducer(initialState, getActionData(args.actionType, args.actionPayload)).toJS())
         .toEqual(args.result);
     done();
