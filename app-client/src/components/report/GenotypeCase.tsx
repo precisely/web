@@ -7,18 +7,15 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
-import {Col} from 'src/components/ReusableComponents';
 
 export interface GenotypeCaseProps {
-    children: React.ReactNode;
-    svn: string;
+  children: React.ReactNode;
+  svn?: string;
 }
 
-export let GenotypeCase: React.StatelessComponent<GenotypeCaseProps> = props => (
-    <Col>
-        {props.children}
-    </Col>
-);
-
-GenotypeCase = Radium(GenotypeCase);
+// tslint:disable-next-line
+export const GenotypeCase = ({__children}: any, render: any) => {
+  render('<div>');
+  render(__children);
+  render('</div>');
+};

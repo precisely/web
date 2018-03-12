@@ -30,7 +30,8 @@ export const GetReport = gql`
           slug,
           id,
           title,
-          genes
+          genes,
+          parsed_content
         }
       },
       userData(limit: 10) {
@@ -39,7 +40,8 @@ export const GetReport = gql`
             gene,
             opaque_id,
             sample_id,
-            quality
+            quality,
+            variant_call
           }
         },
       }

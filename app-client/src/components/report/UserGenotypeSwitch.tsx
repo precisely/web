@@ -7,18 +7,38 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
-import {Row} from 'src/components/ReusableComponents';
+import {UserDataList, UserData} from 'src/containers/report/interfaces';
+import {getUserDataByGene, hasMatchingSvnForGene} from 'src/containers/report/utils';
 
 export interface UserGenotypeSwitchProps {
-    children: React.ReactNode;
-    gene: string;
+  gene: string;
+  userData: UserDataList;
+  __children: React.ReactNode[];
 }
 
-export let UserGenotypeSwitch: React.StatelessComponent<UserGenotypeSwitchProps> = props => (
-    <Row>
-        {props.children}
-    </Row>
-);
+// tslint:disable-next-line
+export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: any): any => {
 
-UserGenotypeSwitch = Radium(UserGenotypeSwitch);
+    let userDataByGene: UserData[] = getUserDataByGene(gene, userData);    
+
+    if (!__children) {
+      return null;
+    }
+
+    let genotypeCase: React.ReactNode;
+
+    __children.map((child: {attrs: {svn: string}}): JSX.Element | void => {
+      if (hasMatchingSvnForGene(child.attrs.svn, userDataByGene)) {
+        genotypeCase = child;
+        return;
+      }
+    });
+
+    if (!genotypeCase) {
+      genotypeCase = __children[__children.length - 1];
+    }
+
+    render('<div>');
+    render(genotypeCase);
+    render('</div>');
+};

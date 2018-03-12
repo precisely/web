@@ -7,32 +7,26 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
 import {UserGenotypeSwitch} from 'src/components/report/UserGenotypeSwitch';
 import {GenotypeCase} from 'src/components/report/GenotypeCase';
+import {UserDataList} from 'src/containers/report/interfaces';
 
 const {Renderer} = require('markdown-components');
+const streams = require('memory-streams'); 
 
 const renderer = new Renderer({
-    components: {UserGenotypeSwitch, GenotypeCase}
+  components: {GenotypeCase, UserGenotypeSwitch}
 });
 
 export interface TemplateRendererProps {
-    parsedContent: string;
-    context: string;
-    // tslint:disable-next-line
-    stream: any;
+  parsedContent: string;
+  userData: UserDataList;
 }
 
-@Radium
-export class TemplateRenderer extends React.Component<TemplateRendererProps> {
+export const TemplateRenderer: React.StatelessComponent<TemplateRendererProps> = props => {
+  const {parsedContent, userData} = props;
+  const stream = new streams.WritableStream();
+  renderer.write(parsedContent, {userData}, stream);
 
-    render(): JSX.Element {
-        let {parsedContent, context, stream} = this.props;
-        renderer.write(parsedContent, context, stream);
-
-        return (
-            <div dangerouslySetInnerHTML={stream.toString()}/>
-        );
-    }
-}
+  return <div dangerouslySetInnerHTML={{__html: stream}} />;
+};
