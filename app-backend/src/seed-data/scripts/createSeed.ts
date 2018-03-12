@@ -60,12 +60,12 @@ for (let i = 0; i < limit; i++) {
     id: faker.random.uuid(),
     title: faker.lorem.sentence(),
     slug: faker.random.arrayElement(slugList),
-    raw_content: '--',
-    parsed_content: '--',
+    raw_content: '--', // demo content not yet provided, will be updated
+    parsed_content: '--', // demo content not yet provided, will be updated
     top_level: faker.random.boolean(),
     genes: removeDuplicate(
       Array.from(
-        { length: Math.floor(Math.random() * 5) + 1 },
+        {length: Math.floor(Math.random() * 5) + 1},
         () => faker.random.arrayElement(genesList)
       )
     )
@@ -74,14 +74,14 @@ for (let i = 0; i < limit; i++) {
   genotypeData.push({
     opaque_id: faker.random.arrayElement(opaqueIdList),
     sample_id: faker.random.alphaNumeric(10),
-    source: '--',
+    source: '--', // although data type is clear, data format isn't. Will be updated once provided.
     gene: faker.random.arrayElement(genesList),
     variant_call: faker.lorem.slug(),
-    zygosity: '--',
-    start_base: '--',
+    zygosity: '--', // same as above
+    start_base: '--', // same as above
     chromosome_name: faker.random.alphaNumeric(4).toUpperCase(),
     variant_type: faker.random.word(),
-    quality: '--',
+    quality: '--', // same as above
   });
 }
 

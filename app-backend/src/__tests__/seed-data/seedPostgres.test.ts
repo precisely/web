@@ -29,7 +29,7 @@ describe('seedPostgres tests', () => {
       return JSON.stringify([{ ...dummyUser, user_id: 'invalid' }]);
     });
 
-  it('should pass when user is updated/inserted successfully', async () => {
+  it('should fail when error occurs while updation/insertion', async () => {
     try {
       await seedUser();
     } catch (error) {
@@ -37,7 +37,7 @@ describe('seedPostgres tests', () => {
     }
   });
 
-  it('should pass when user is updated/inserted successfully', async () => {
+  it('should exit successfully when updated/inserted successfully', async () => {
     await seedUser();
     expect(process.exit).toBeCalled();
   });

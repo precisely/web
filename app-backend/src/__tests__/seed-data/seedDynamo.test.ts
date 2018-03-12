@@ -11,6 +11,9 @@ jest.mock('fs');
 import * as fs from 'fs';
 import {seedReport, dynamodbDocClient, seedGenotype} from '../../seed-data/scripts/seedDynamo';
 
+const unroll = require('unroll');
+unroll.use(it);
+
 describe('seedDynamo tests', () => {
 
   const dummyReport = {
@@ -63,32 +66,24 @@ describe('seedDynamo tests', () => {
     console.log.mockClear();
   });
 
-  describe('seedReport test', () => {
-    it('should not call console.log when pass', () => {
-      mockReadFileSync(dummyReport);
-      seedReport();
+  unroll('it should #expectedResult for #case file', async (
+      done: () => void,
+      args: {case: string, mockReadData: object, functionName: () => void, expectedResult: string}
+  ) => {
+    mockReadFileSync(args.mockReadData);
+    args.functionName();
+    if (args.expectedResult === 'not call console.log when pass') {
       expect(console.log).not.toBeCalled();
-    });
-
-    it('should log error when fail', () => {
-      mockReadFileSync({ ...dummyReport, id: 'invalid' });
-      seedReport();
-      expect(console.log).toBeCalledWith('Unable to add Report', 'invalid', '. Error JSON:', '{}');
-    });
-  });
-
-  describe('seedGenotype test', () => {
-    it('should not call console.log when pass', () => {
-      mockReadFileSync(dummyGenotype);
-      seedGenotype();
-      expect(console.log).not.toBeCalled();
-    });
-
-    it('should log error when fail', () => {
-      mockReadFileSync({ ...dummyGenotype, opaque_id: 'invalid' });
-      seedGenotype();
-      expect(console.log).toBeCalledWith('Unable to add Genotype', 'invalid', '. Error JSON:', '{}');
-    });
-  });
+    } else {
+      expect(console.log).toBeCalledWith(`Unable to add ${args.case}`, 'invalid', '. Error JSON:', '{}');
+    }
+    done();
+  }, [ // tslint:disable-next-line
+    ['case', 'functionName', 'mockReadData', 'expectedResult'],
+    ['Report', seedReport, dummyReport, 'not call console.log when pass'],
+    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'console.log error when fail'],
+    ['Genotype', seedGenotype, dummyGenotype, 'not call console.log when pass'],
+    ['Genotype', seedGenotype, { ...dummyGenotype, opaque_id: 'invalid' }, 'console.log error when fail']
+  ]);
 
 });

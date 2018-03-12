@@ -32,7 +32,7 @@ const jsonPath = path.join(__dirname, '..', 'data/');
 export const seedReport = () => {
   const docClient = dynamodbDocClient();
   const tableName = addEnvironmentToTableName('precisely-report', '01');
-  const allReports = JSON.parse(fs.readFileSync(jsonPath + 'ReportData.json', 'utf8'));
+  const allReports: ReportAttributes[] = JSON.parse(fs.readFileSync(jsonPath + 'ReportData.json', 'utf8'));
 
   allReports.forEach((report: ReportAttributes) => {
     const ReportParams = {
@@ -64,7 +64,7 @@ export const seedReport = () => {
 export const seedGenotype = () => {
   const docClient = dynamodbDocClient();
   const tableName = addEnvironmentToTableName('precisely-genotype', '01');
-  const allGenotypes = JSON.parse(fs.readFileSync(jsonPath + 'GenotypeData.json', 'utf8'));
+  const allGenotypes: GenotypeAttributes[] = JSON.parse(fs.readFileSync(jsonPath + 'GenotypeData.json', 'utf8'));
 
   allGenotypes.forEach((genotype: GenotypeAttributes) => {
     const GenotypeParams = {

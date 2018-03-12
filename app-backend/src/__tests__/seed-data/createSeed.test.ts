@@ -7,7 +7,10 @@
 */
 
 import {saveJSONfile} from '../../seed-data/scripts/createSeed';
+
 const jsonfile = require('jsonfile');
+const unroll = require('unroll');
+unroll.use(it);
 
 describe('createSeed test', () => {
 
@@ -26,15 +29,18 @@ describe('createSeed test', () => {
       }
     });
 
-  it('should pass for valid file', () => {
-    saveJSONfile('valid', []);
+  unroll('it should #expectedResult for #filetype file', async (
+      done: () => void,
+      args: {expectedResult: string, filetype: string, params: string[]}
+  ) => {
+    saveJSONfile(args.filetype, []);
     expect(jsonfile.writeFile).toBeCalled();
-    expect(console.log).toBeCalledWith('valid', 'created successfully.');
-  });
+    expect(console.log).toBeCalledWith(...args.params);
+    done();
+  }, [ // tslint:disable-next-line
+    ['expectedResult', 'filetype', 'params'],
+    ['pass', 'valid', ['valid', 'created successfully.']],
+    ['throw error', 'invalid', ['Error:', 'createSeed mock error']]
+  ]);
 
-  it('should throw error for invalid file', () => {
-    saveJSONfile('invalid', []);
-    expect(jsonfile.writeFile).toBeCalled();
-    expect(console.log).toBeCalledWith('Error:', 'createSeed mock error');
-  });
 });
