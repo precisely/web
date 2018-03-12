@@ -6,41 +6,59 @@
 * without modification, are not permitted.
 */
 
-import {saveJSONfile} from '../../seed-data/scripts/createSeed';
-
+import {seedCognito} from '../../seed-data/scripts/seedCognito';
+import {
+  saveJSONfile, 
+  removeDuplicate, 
+  createCognitoDataWithUser, 
+  createDBData
+} from '../../seed-data/scripts/createSeed';
 const jsonfile = require('jsonfile');
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('createSeed test', () => {
+  
+  jsonfile.writeFileSync = jest.fn();
+  
+  beforeEach(() => {
+    jsonfile.writeFileSync.mockClear();
+  });
 
-  console.log = jest.fn();
-  jsonfile.writeFile = jest.fn()
-    .mockImplementation((
-      filename: string,
-      data: object[],
-      options: object,
-      callback: (error: Error) => void,
-    ) => {
-      if (filename.includes('invalid')) {
-        callback(new Error('createSeed mock error'));
-      } else {
-        callback(null);
-      }
+  describe('removeDuplicate tests', () => {
+    const duplicateElements = ['a', 'a', 'b', 'c', 'a'];
+
+    it('should remove duplicates from the array passed', () => {
+      expect(removeDuplicate(duplicateElements)).toEqual(['a', 'b', 'c']);
     });
+  });
 
-  unroll('it should #expectedResult for #filetype file', async (
-      done: () => void,
-      args: {expectedResult: string, filetype: string, params: string[]}
-  ) => {
-    saveJSONfile(args.filetype, []);
-    expect(jsonfile.writeFile).toBeCalled();
-    expect(console.log).toBeCalledWith(...args.params);
-    done();
-  }, [ // tslint:disable-next-line
-    ['expectedResult', 'filetype', 'params'],
-    ['pass', 'valid', ['valid', 'created successfully.']],
-    ['throw error', 'invalid', ['Error:', 'createSeed mock error']]
-  ]);
+  describe('saveJSONfile tests', () => {
+    console.log = jest.fn();
+
+    it('should create file with data passed', () => {
+      saveJSONfile('test', [{demo: 'data'}]);
+      expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
+      expect(console.log).toBeCalledWith('test', 'created successfully.');
+    });
+  });
+  
+  describe('createCognitoDataWithUser tests', () => {
+    seedCognito = jest.fn(() => ['demo', 'test']);
+
+    it('should save JSON file and call seedCognito', async () => {
+      const userIdList = await createCognitoDataWithUser(2);
+      expect(userIdList.length).toBe(2);
+      expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
+      expect(seedCognito).toBeCalled();
+    });
+  });
+
+  describe('createDBData tests', () => {
+    it('should populate array with fake data and save it to JSON', () => {
+      createDBData(1, ['demo-username']);
+      expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(3);
+    });
+  });
 
 });

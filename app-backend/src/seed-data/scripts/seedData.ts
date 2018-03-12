@@ -21,7 +21,7 @@ export const setEnvironment = (secrets: string) => {
 (async () => {
   console.log('Seeding started for', process.env.DB || process.env.NODE_ENV, 'environment.');
   setEnvironment(process.argv.pop());
-  const { seedUser } = await import('./seedPostgres');
+  const {seedUser} = await import('./seedPostgres');
 
   seedReport();
   seedGenotype();
