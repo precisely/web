@@ -22,19 +22,6 @@ import {setLoadingState, setReportData} from 'src/containers/report/actions';
 import {ReportList, UserDataList, Report, ListItem} from 'src/containers/report/interfaces';
 import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 
-const {Parser, markdownItEngine} = require('markdown-components');
-
-const customizedMarkdown: string = `
-<UserGenotypeSwitch gene="demo-gene-2">
-<GenotypeCase svn="demo-variant_ca-test">This is a dummy text.</GenotypeCase>
-<GenotypeCase>This is a fallback text.</GenotypeCase>
-</UserGenotypeSwitch>
-`;
-
-const parser = new Parser({markdownEngine: markdownItEngine()});
-
-const parsedElements = parser.parse(customizedMarkdown);
-
 export interface GeneReportProps extends RouteComponentProps<void> {
   isLoading?: boolean;
   userData?: UserDataList;
