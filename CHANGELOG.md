@@ -49,3 +49,9 @@
 ### Added
 - Report Resolvers.
 - A utility function to check the current user's roles.
+
+## [0.0.6] - 2018-03-12
+
+### Added
+- A component to fetch the report data.
+- The react types path in the tsconfig.
