@@ -16,6 +16,7 @@ import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableCompo
 import {login} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {Email} from 'src/components/Email';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
@@ -79,7 +80,8 @@ describe('Tests for Login', () => {
     ['Form', Form, 1],
     ['Button', Button, 1],
     ['FormGroup', FormGroup, 2],
-    ['Input', Input, 2],
+    ['Input', Input, 1],
+    ['Email', Email, 1],
     ['Link', Link, 2],
     ['SignupLoginContainer', PageContent, 1]
   ]);
@@ -91,15 +93,15 @@ describe('Tests for Login', () => {
 
   unroll('It should change state value onChange of #id', (
       done: () => void,
-      args: {id: string, value: string}
+      args: {id: string, value: string, selector: EnzymePropSelector}
   ) => {
-    componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
+    componentTree.find(args.selector).simulate('change', {target: {id: args.id, value: args.value}});
     expect(componentTree.state(args.id)).toEqual(args.value);
     done();
   }, [ // tslint:disable-next-line
-    ['id', 'value'],
-    ['email', 'dummyUsername'],
-    ['password', 'dummyPassword']
+    ['id', 'value', 'selector'],
+    ['email', 'dummyUsername', Email],
+    ['password', 'dummyPassword', Input]
   ]);
 
   it('should change the route to the dashboard when the form is submitted successfully.', async () => {

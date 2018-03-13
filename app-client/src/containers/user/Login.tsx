@@ -15,9 +15,9 @@ import {PageContent} from 'src/components/PageContent';
 import {login} from 'src/utils/cognito';
 import {validateEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {Email} from 'src/components/Email';
 import {
   formButton,
-  removeBorderRadius,
   noBorderTop,
   loginAndSignupPanel,
   header,
@@ -86,12 +86,9 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
           <PageContent>
             <Form id="loginForm" onSubmit={this.submitForm} style={formMargin}>
               <FormGroup className="mb-0" style={alignCenter}>
-                <Input
-                    style={[removeBorderRadius, inputStyle]}
-                    type="email"
-                    id="email"
+                <Email
                     placeholder="Email"
-                    value={email}
+                    value={email} 
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}
