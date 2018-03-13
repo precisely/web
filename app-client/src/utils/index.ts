@@ -56,21 +56,39 @@ export const showAlert = (toastId: number, message: string, alertType?: ToastTyp
   return toastId;
 };
 
-export const validateEmailAndPassword = (
+export const checkEmailAndPassword = (
     email: string,
     password: string,
-    toastId: number,
+    toastId: number
 ): {isValid: boolean, toastId: number} => {
+  let validationInfo: {isValid: boolean, toastId: number} = {isValid: true, toastId};
+
   if (!email.trim() && !password) {
     toastId = showAlert(toastId, 'Email and Password are required.');
-    return {isValid: false, toastId};
+    validationInfo = {isValid: false, toastId};
   }
 
+  if (validationInfo.isValid) {
+    validationInfo = validateEmail(email, toastId);
+  }
+
+  if (validationInfo.isValid) {
+    validationInfo = validatePassword(password, toastId);
+  }
+
+  return validationInfo;
+};
+
+export const validateEmail = (email: string, toastId: number): {isValid: boolean, toastId: number} => {
   if (!email.trim()) {
     toastId = showAlert(toastId, 'Email is required.');
     return {isValid: false, toastId};
   }
 
+  return {isValid: true, toastId};
+};
+
+export const validatePassword = (password: string, toastId: number): {isValid: boolean, toastId: number} => {
   if (!password) {
     toastId = showAlert(toastId, 'Password is required.');
     return {isValid: false, toastId};

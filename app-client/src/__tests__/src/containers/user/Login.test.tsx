@@ -15,7 +15,7 @@ import {Login, LoginState} from 'src/containers/user/Login';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {login} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {checkEmailAndPassword, showAlert} from 'src/utils';
 import {Email} from 'src/components/Email';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -55,7 +55,7 @@ describe('Tests for Login', () => {
         });
       });
 
-  validateEmailAndPassword = jest.fn()
+  checkEmailAndPassword = jest.fn()
       .mockImplementationOnce(() => {
         return {isValid: false, toastId: 1};
       })
