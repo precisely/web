@@ -23,6 +23,6 @@ export const getUserData = () => createSelector(
 );
 
 export const getReportData = () => createSelector(
-  selectReportsDomain,
+  selectReportsDomain,  
   (report: {data: {Items: ListItem<Report>[]}}) => report.data.Items,
 );

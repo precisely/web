@@ -78,7 +78,7 @@ describe('GeneReport tests.', () => {
     ]);
   });
 
-  describe('When the report data is not loading and the report data is present.', () => {
+  describe('When the report data is present.', () => {
     it('It should not render the TemplateRendered', () => {
       const componentTree: ShallowWrapper<GeneReportProps> =
           shallow(<GeneReportImpl isLoading={false} reportData={dummyData.Items} />);

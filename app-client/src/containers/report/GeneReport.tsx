@@ -34,11 +34,11 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
     store.dispatch(setLoadingState());
   }
 
-  renderReports = (): JSX.Element[] => {
+  renderReports = (): JSX.Element[] | JSX.Element => {
     const {reportData, userData} = this.props;
 
     if (!reportData || !reportData.length) {
-      return null;
+      return <p>No reports found</p>;
     }
 
     return reportData.map((data: ListItem<Report>, index: number): JSX.Element => {

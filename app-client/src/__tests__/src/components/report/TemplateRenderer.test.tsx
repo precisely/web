@@ -21,7 +21,7 @@ describe('TemplateRenderer tests.', () => {
   const componentTree: ShallowWrapper<TemplateRendererProps> =
       shallow(<TemplateRenderer parsedContent={dummyParsedContent} userData={dummyData.userData} />);
 
-  it('should render the html div.', () => {
+  it('should render the div element.', () => {
     expect(componentTree.find('div').length).toBe(1);
   });
 });
