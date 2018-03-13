@@ -9,7 +9,7 @@
 import * as AWS from 'aws-sdk';
 import * as Bluebird from 'bluebird';
 import {AuthorizerAttributes} from './interfaces';
-import {logger} from './logger';
+import {log} from './logger';
 
 type DecryptRequest = AWS.KMS.Types.DecryptRequest;
 type DecryptResponse = AWS.KMS.Types.DecryptResponse;
@@ -27,7 +27,7 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
         
     return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
   } catch (error) {
-    logger.error(`Error while decrypting secrets: ${error.message}`);
+    log.error(`Error while decrypting secrets: ${error.message}`);
     return null;
   }
 }

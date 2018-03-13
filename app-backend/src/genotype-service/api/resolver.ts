@@ -10,7 +10,7 @@ import {Query} from 'dynogels';
 import {Genotype, GenotypeAttributes} from '../models/Genotype';
 import {hasAuthorizedRoles} from '../../utils';
 import {AuthorizerAttributes} from '../../interfaces';
-import {logger} from '../../logger';
+import {log} from '../../logger';
 
 const toSnakeCase = require('lodash.snakecase');
 
@@ -63,7 +63,7 @@ export const genotypeResolver = {
       }
       genotypeInstance = await Genotype.createAsync({...dataForCreating}, {overwrite: false});
     } catch (error) {
-      logger.error(`genotypeResolver-create: ${error.message}`);
+      log.error(`genotypeResolver-create: ${error.message}`);
       return error;
     }
 
@@ -88,7 +88,7 @@ export const genotypeResolver = {
 
       genotypeInstance = await Genotype.updateAsync({...dataToUpdate});
     } catch (error) {
-      logger.error(`genotypeResolver-update: ${error.message}`);
+      log.error(`genotypeResolver-update: ${error.message}`);
       return error;
     }
 
@@ -105,7 +105,7 @@ export const genotypeResolver = {
         throw new Error('No such record found');
       }
     } catch (error) {
-      logger.error(`genotypeResolver-get: ${error.message}`);
+      log.error(`genotypeResolver-get: ${error.message}`);
       return error;
     }
     
@@ -133,7 +133,7 @@ export const genotypeResolver = {
 
       result = await query.execAsync();
     } catch (error) {
-      logger.error(`genotypeResolver-list: ${error.message}`);
+      log.error(`genotypeResolver-list: ${error.message}`);
       return error;
     }
 

@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
 import {genotypeResolver} from '../genotype-service/api/resolver';
-import {logger} from '../logger';
+import {log} from '../logger';
 
 interface GA4GH {
   referenceName: string;
@@ -26,7 +26,7 @@ export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context
     Key: sourceKey
   }, (err: Error, data: {Body: string}) => {
     if (err) {
-      logger.error(`genotypeIngester S3 ERROR: ${err.message}`);
+      log.error(`genotypeIngester S3 ERROR: ${err.message}`);
       return;
     }
 
@@ -35,7 +35,7 @@ export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context
       parsedJSON.forEach((ga4gh: GA4GH) => {
         const ga4ghAttributes: GA4GH['attributes'] = ga4gh && ga4gh.attributes;
 
-        logger.info(`Creating entry for opaqueID: ${opaqueId} & gene: ${ga4ghAttributes.variant.gene_symbol}`);
+        log.info(`Creating entry for opaqueID: ${opaqueId} & gene: ${ga4ghAttributes.variant.gene_symbol}`);
         
         genotypeResolver.create({
           opaqueId,
@@ -51,10 +51,10 @@ export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context
         });
       });
 
-      logger.info('Entries created for uploaded file.');
+      log.info('Entries created for uploaded file.');
 
     } catch (error) {
-      logger.error(`Error: ${error.message}`);
+      log.error(`Error: ${error.message}`);
     }
   });
 };

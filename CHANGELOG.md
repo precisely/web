@@ -53,4 +53,4 @@
 ## [0.0.6] - 2018-03-13
 
 ### Added
-- Winsten logger
+- Winston logger

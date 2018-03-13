@@ -10,7 +10,7 @@
 const winston =  require('winston');
 
 /* istanbul ignore next */
-export const logger = winston.createLogger({
+export const log = winston.createLogger({
   transports: [
     new winston.transports.Console(),
   ]
