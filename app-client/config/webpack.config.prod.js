@@ -156,7 +156,8 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
-            loader: require.resolve('ts-loader')
+            loader: require.resolve('ts-loader'),
+            options: {configFile: 'tsconfig.build.json'}
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
