@@ -12,12 +12,12 @@ import {
   removeDuplicate, 
   createCognitoDataWithUser, 
   createDBData
-} from '../../seed-data/scripts/createSeed';
+} from '../../seed-data/scripts/createFakeData';
 const jsonfile = require('jsonfile');
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('createSeed test', () => {
+describe('createFakeData test', () => {
   
   jsonfile.writeFileSync = jest.fn();
   

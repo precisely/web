@@ -15,7 +15,8 @@
     "deploy:dev": "cd app-backend && yarn deploy:dev && cd ../app-client && yarn deploy:dev",
     "deploy:stage": "cd app-backend && yarn deploy:stage && cd ../app-client && yarn deploy:stage",
     "deploy:prod": "cd app-backend && yarn deploy:prod && cd ../app-client && yarn deploy:prod",
-    "seed:create": "cd app-backend && yarn seed:create",
+    "seed:create:dev": "cd app-backend && yarn seed:create:dev",
+    "seed:create:stage": "cd app-backend && yarn seed:create:stage",
     "seed:local": "cd app-backend && yarn seed:local",
     "seed:dev": "cd app-backend && yarn seed:dev",
     "seed:stage": "cd app-backend && yarn seed:stage"
