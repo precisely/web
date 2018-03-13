@@ -14,7 +14,7 @@ import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
 
 AWS.config.update({
-  region: 'us-east-1',
+  region: process.env.REACT_APP_AWS_AUTH_REGION,
   credentials: new AWS.SharedIniFileCredentials({ profile: process.env.NODE_ENV + '-profile-precisely' })
 });
 
@@ -27,7 +27,7 @@ export const dynamodbDocClient = () => {
   return new AWS.DynamoDB.DocumentClient(connectionOptions);
 };
 
-const jsonPath = path.join(__dirname, '..', 'data/');
+const jsonPath = path.join(__dirname, '../data/');
 
 export const seedReport = () => {
   const docClient = dynamodbDocClient();
