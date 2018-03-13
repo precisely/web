@@ -49,3 +49,8 @@
 ### Added
 - Report Resolvers.
 - A utility function to check the current user's roles.
+
+## [0.0.6] - 2018-03-13
+
+### Added
+- Winsten logger
