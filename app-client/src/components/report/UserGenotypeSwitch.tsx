@@ -21,8 +21,8 @@ export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: an
 
     let genotypeCase: React.ReactNode;
 
-    __children.map((child: {attrs: {svn: string}}): JSX.Element | void => {
-      if (hasMatchingSvnForGene(child.attrs.svn, userDataByGene)) {
+    __children.map((child: {rawName: string, attrs: {svn: string}}): JSX.Element | void => {
+      if (child.rawName === 'GenotypeCase' && hasMatchingSvnForGene(child.attrs.svn, userDataByGene)) {
         genotypeCase = child;
         return;
       }
