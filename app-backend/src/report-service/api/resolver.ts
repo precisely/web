@@ -12,6 +12,7 @@ import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
 import {genotypeResolver, ListGenotypeFilters, ListGenotypeObject} from '../../genotype-service/api/resolver';
 import {AuthorizerAttributes} from '../../interfaces';
+import {logger} from '../../logger';
 
 export interface CreateOrUpdateAttributes {
   title: string;
@@ -48,7 +49,7 @@ export const reportResolver = {
     try {
       reportInstance = await Report.createAsync({slug, title, genes, raw_content: rawContent});
     } catch (error) {
-      console.log('reportResolver-create: ', error.message);
+      logger.error(`reportResolver-create: ${error.message}`);
       return error;
     }
     
@@ -70,7 +71,7 @@ export const reportResolver = {
 
       result = await query.execAsync();
     } catch (error) {
-      console.log('reportResolver-list:', error.message);
+      logger.error(`reportResolver-list: ${error.message}`);
       return error;
     }
 
@@ -102,7 +103,7 @@ export const reportResolver = {
 
       reportInstance = await query.execAsync();
     } catch (error) {
-      console.log('reportResolver-get:', error.message);
+      logger.error(`reportResolver-get: ${error.message}`);
       return error;
     }
     
