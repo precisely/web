@@ -11,6 +11,7 @@ import {Genotype, GenotypeAttributes} from '../models/Genotype';
 import {hasAuthorizedRoles} from '../../utils';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
+import {execAsync} from '../../utils';
 
 const toSnakeCase = require('lodash.snakecase');
 
@@ -131,7 +132,7 @@ export const genotypeResolver = {
         query = query.startKey(lastEvaluatedKeys.opaqueId, lastEvaluatedKeys.gene);
       }
 
-      result = await query.execAsync();
+      result = await execAsync(query);
     } catch (error) {
       log.error(`genotypeResolver-list: ${error.message}`);
       return error;

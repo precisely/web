@@ -1,21 +1,21 @@
 type LastEvaluatedGenotypeData {
-  opaque_id: String
+  opaqueId: String
   gene: String
 }
 
 type Genotype {
-  opaque_id: String
-  sample_id: String
+  opaqueId: String
+  sampleId: String
   source: String
   gene: String
-  variant_call: String
+  variantCall: String
   zygosity: String
-  start_base: String
-  chromosome_name: String
-  variant_type: String
+  startBase: String
+  chromosomeName: String
+  variantType: String
   quality: String
-  created_at: String
-  updated_at: String
+  createdAt: String
+  updatedAt: String
 }
 
 type GenotypeListItem {
@@ -23,6 +23,6 @@ type GenotypeListItem {
 }
 
 type GenotypeList {
-  Items: [GenotypeListItem],
-  LastEvaluatedKey: LastEvaluatedGenotypeData
+  items: [GenotypeListItem],
+  lastEvaluatedKey: LastEvaluatedGenotypeData
 }

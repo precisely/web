@@ -50,6 +50,7 @@
     "aws-sdk": "2.188.0",
     "babel-polyfill": "6.26.0",
     "bluebird": "3.5.1",
+    "camelcase-keys": "4.2.0",
     "dynogels": "9.0.0",
     "dynogels-promisified": "1.0.4",
     "graphql": "0.10.5",

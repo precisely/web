@@ -15,9 +15,9 @@ export interface ReportAttributes {
   id?: string;
   title: string;
   slug: string;
-  raw_content: string;
-  parsed_content: string;
-  top_level: boolean;
+  rawContent: string;
+  parsedContent: string;
+  topLevel: boolean;
   genes: string[];
   genotype: GenotypeAttributes[];
 }
@@ -33,9 +33,9 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
     id: dynogels.types.uuid(),
     title: Joi.string().required(),
     slug: Joi.string().required(),
-    raw_content: Joi.string(),
-    parsed_content: Joi.string(),
-    top_level: Joi.boolean(),
+    rawContent: Joi.string(),
+    parsedContent: Joi.string(),
+    topLevel: Joi.boolean(),
     genes: Joi.array().items(Joi.string()),
   },
 

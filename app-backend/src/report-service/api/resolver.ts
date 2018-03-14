@@ -13,6 +13,7 @@ import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
 import {genotypeResolver, ListGenotypeFilters, ListGenotypeObject} from '../../genotype-service/api/resolver';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
+import {execAsync} from '../../utils';
 
 export interface CreateOrUpdateAttributes {
   title: string;
@@ -34,8 +35,8 @@ export interface ListReportFilters {
 }
 
 export interface ListReportObject {
-  Items: ReportAttributes[];
-  LastEvaluatedKey: {
+  items: ReportAttributes[];
+  lastEvaluatedKey: {
     slug: string;
     id: string;
   };
@@ -68,8 +69,8 @@ export const reportResolver = {
       if (lastEvaluatedKeys) {
         query = query.startKey(lastEvaluatedKeys.id, lastEvaluatedKeys.slug);
       }
-
-      result = await query.execAsync();
+      
+      result = await execAsync(query);
     } catch (error) {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
@@ -101,7 +102,7 @@ export const reportResolver = {
         query = query.startKey(lastEvaluatedKeys.slug, lastEvaluatedKeys.id);
       }
 
-      reportInstance = await query.execAsync();
+      reportInstance = await execAsync(query);
     } catch (error) {
       log.error(`reportResolver-get: ${error.message}`);
       return error;

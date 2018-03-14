@@ -8,12 +8,14 @@
 
 import * as AWS from 'aws-sdk';
 import * as Bluebird from 'bluebird';
+import {Query} from 'dynogels';
 import {AuthorizerAttributes} from './interfaces';
 import {log} from './logger';
 
 type DecryptRequest = AWS.KMS.Types.DecryptRequest;
 type DecryptResponse = AWS.KMS.Types.DecryptResponse;
 
+const camelcaseKeys = require('camelcase-keys');
 const KMS: AWS.KMS = new AWS.KMS({ region: process.env.REGION as string });
 const decryptAsync: (params: DecryptRequest) => Bluebird<Object> = Bluebird.promisify(KMS.decrypt.bind(KMS));
 
@@ -61,3 +63,9 @@ export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRole
 
   return isAuthorized;
 }
+
+// tslint:disable-next-line:no-any
+export const execAsync = async (query: Query & {execAsync?: () => any}) => {
+  const result = await query.execAsync();
+  return camelcaseKeys(result);
+};

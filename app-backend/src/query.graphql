@@ -34,7 +34,7 @@ type Query {
       vendorDataType: String!,
       limit: Int,
       lastEvaluatedKeys: LastEvaluatedReportRecord,
-  ): ReportList,
+  ): ReportGet,
 }
 
 type Mutation {
@@ -63,5 +63,5 @@ type Mutation {
       variantType: String!,
       quality: String!
   ): Genotype,
-  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
+  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): ReportAttributes,
 }

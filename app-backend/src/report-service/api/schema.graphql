@@ -1,11 +1,14 @@
-type Report {
+type ReportAttributes {
   id: String,
   title: String,
   slug: String,
-  raw_content: String,
-  parsed_content: String,
-  top_level: Boolean,
+  rawContent: String,
+  parsedContent: String,
+  topLevel: Boolean,
   genes: [String],
+  createdAt: String
+  updatedAt: String
+  userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
 }
 
 type LastEvaluatedReportData {
@@ -14,11 +17,15 @@ type LastEvaluatedReportData {
 }
 
 type ReportListItem {
-  attrs: Report
+  attrs: ReportAttributes
 }
 
 type ReportList {
-  Items: [ReportListItem],
-  userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
-  LastEvaluatedKey: LastEvaluatedReportData
+  items: [ReportListItem],
+  lastEvaluatedKey: LastEvaluatedReportData
+}
+
+type ReportGet {
+  items: [ReportListItem],
+  lastEvaluatedKey: LastEvaluatedReportData
 }
