@@ -24,8 +24,15 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.ts(x?)$/, loader: 'ts-loader' },
-      { test: /\.graphql|gql?$/, loader: 'webpack-graphql-loader' }
+      {
+        test: /\.ts(x?)$/,
+        loader: 'ts-loader',
+        options: {configFile: 'tsconfig.build.json'}
+      },
+      {
+        test: /\.graphql|gql?$/,
+        loader: 'webpack-graphql-loader'
+      }
     ],
   },
   output: {

@@ -67,7 +67,8 @@
     "pg-hstore": "2.3.2",
     "sequelize": "4.35.2",
     "serverless-dynamodb-client": "0.0.2",
-    "serverless-plugin-scripts": "1.0.2"
+    "serverless-plugin-scripts": "1.0.2",
+    "winston": "3.0.0-rc2"
   },
   "devDependencies": {
     "@types/aws-lambda": "0.0.27",

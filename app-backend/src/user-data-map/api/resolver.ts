@@ -8,6 +8,7 @@
 
 import {UserDataMap} from '../models/UserDataMap';
 import {UserDataMapInstance, UserDataMapAttributes} from '../models/UserDataMap';
+import {log} from '../../logger';
 
 export interface ListUserDataMapFilters {
   limit?: number;
@@ -23,7 +24,7 @@ export const userDataMapResolver = {
     try {
       userDataMapInstances = await UserDataMap.findAll({limit, offset});
     } catch (error) {
-      console.log('UserDataMap-list:', error.message);
+      log.error(`UserDataMap-list: ${error.message}`);
       return error;
     }
     
@@ -63,7 +64,7 @@ export const userDataMapResolver = {
           return user;
         });
     } catch (error) {
-      console.log('UserDataMap-findOrCreate:', error.message);
+      log.error(`UserDataMap-findOrCreate: ${error.message}`);
       return error;
     }
 

@@ -12,7 +12,7 @@ import {
   getEnvironment,
   setTokenInLocalStorage,
   removeTokenFromLocalStorage,
-  validateEmailAndPassword,
+  checkEmailAndPassword,
   getTokenFromLocalStorage,
 } from 'src/utils';
 
@@ -77,7 +77,7 @@ describe('Tests for utils/index.ts', () => {
       // tslint:disable-next-line
       args: {condition: string, params: Array<any>, result: boolean}
   ) => {
-    expect(validateEmailAndPassword(...args.params)).toEqual(args.result);
+    expect(checkEmailAndPassword(...args.params)).toEqual(args.result);
     done();
   }, [ // tslint:disable-next-line
     ['params', 'result'],
