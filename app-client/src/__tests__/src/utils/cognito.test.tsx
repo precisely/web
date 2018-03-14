@@ -24,9 +24,17 @@ describe('Cognito tests', () => {
     failureCallback.mockReset();
   });
 
-  it('should return true if the user is logged in.', () => {
-    expect(Cognito.isLoggedIn()).toBe(true);
-  });
+  unroll('It should return #value if the user is #condition', (
+        done: () => void,
+        args: {value: string, condition: string}
+  ) => {
+    expect(Cognito.isLoggedIn()).toBe(args.value);
+    done();
+  }, [ // tslint:disable-next-line
+    ['value', 'condition'],
+    [false, 'not logged in'],
+    [true, 'logged in'],
+  ]);
 
   it('should return the current user details', () => {
     const currentUser = Cognito.getCognitoUser('test@example.com');

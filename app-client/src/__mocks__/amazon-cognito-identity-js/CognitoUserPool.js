@@ -10,7 +10,7 @@ function CognitoUserPool(data) {
   const {UserPoolId, ClientId} = data;
   this.userPoolId = UserPoolId;
   this.clientId = ClientId;
-  this.getCurrentUser = jest.fn().mockImplementation(() => {
+  this.getCurrentUser = jest.fn().mockReturnValueOnce(null).mockImplementation(() => {
     return {
       user: 'cognitouserpool',
       signOut: jest.fn(),
