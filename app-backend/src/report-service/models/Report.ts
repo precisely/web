@@ -25,7 +25,6 @@ export interface ReportAttributes {
 /* istanbul ignore next */
 export const Report = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
   hashKey: 'id',
-  rangeKey: 'slug',
 
   timestamps : true,
 
@@ -41,7 +40,6 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
 
   indexes: [{
     hashKey: 'slug',
-    rangeKey: 'id',
     name: 'ReportGlobalIndex',
     type: 'global',
   }],

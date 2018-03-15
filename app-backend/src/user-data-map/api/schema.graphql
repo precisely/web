@@ -1,5 +1,5 @@
 type UserDataMap {
-  user_id: String,
-  vendor_data_type: String,
-  opaque_id: String
+  userId: String,
+  vendorDataType: String,
+  opaqueId: String
 }

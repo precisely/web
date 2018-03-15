@@ -25,7 +25,7 @@ const sequelize: Sequelize.Sequelize = new Sequelize(
   }
 );
 
-export interface UserDataMapAttributes {
+interface UserDataMapAttributes {
   user_id: string;
   vendor_data_type: string;
   opaque_id: string;

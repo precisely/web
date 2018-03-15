@@ -17,20 +17,12 @@ const toSnakeCase = require('lodash.snakecase');
 
 export interface ListGenotypeFilters {
   limit?: number;
-  lastEvaluatedKeys?: {
-    opaqueId: string;
-    gene: string;
-  };
   opaqueId?: string;
   gene?: string;
 }
 
 export interface ListGenotypeObject {
-  Items: GenotypeAttributes[];
-  LastEvaluatedKey: {
-    opaque_id: string;
-    gene: string;
-  };
+  items: {attrs: GenotypeAttributes}[];
 }
 
 export interface CreateOrUpdateAttributes {
@@ -113,9 +105,10 @@ export const genotypeResolver = {
     return genotypeInstance.attrs;
   },
 
-  async list(args: ListGenotypeFilters = {}, authorizer: AuthorizerAttributes): Promise<ListGenotypeObject> {
-    const {limit = 15, lastEvaluatedKeys, opaqueId, gene} = args;
-    let result: ListGenotypeObject;
+  async list(args: ListGenotypeFilters = {}): Promise<GenotypeAttributes[]> {
+    const {limit = 15, opaqueId, gene} = args;
+    const result: GenotypeAttributes[] = [];
+    let genotypeList: ListGenotypeObject;
     
     try {
       let query: Query & {execAsync?: () => ListGenotypeObject};
@@ -128,15 +121,15 @@ export const genotypeResolver = {
         throw new Error('Required parameters not present.');
       }
 
-      if (lastEvaluatedKeys && lastEvaluatedKeys.opaqueId && lastEvaluatedKeys.gene) {
-        query = query.startKey(lastEvaluatedKeys.opaqueId, lastEvaluatedKeys.gene);
-      }
-
-      result = await execAsync(query);
+      genotypeList = await execAsync(query);
     } catch (error) {
       log.error(`genotypeResolver-list: ${error.message}`);
       return error;
     }
+
+    genotypeList.items.forEach((report: {attrs: GenotypeAttributes}) => {
+      result.push(report.attrs);
+    });
 
     return result;
   },
@@ -146,8 +139,8 @@ export const genotypeResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  genotypeList: (root: any, args: ListGenotypeFilters) => genotypeResolver.list(args, root.authorizer),
-  getGenotypeData: (root: any, args: {opaqueId: string, gene: string}) => genotypeResolver.get(args, root.authorizer),
+  genotypes: (root: any, args: ListGenotypeFilters) => genotypeResolver.list(args),
+  genotype: (root: any, args: {opaqueId: string, gene: string}) => genotypeResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */

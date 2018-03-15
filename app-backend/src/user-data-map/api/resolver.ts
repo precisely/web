@@ -7,8 +7,11 @@
 */
 
 import {UserDataMap} from '../models/UserDataMap';
-import {UserDataMapInstance, UserDataMapAttributes} from '../models/UserDataMap';
+import {UserDataMapInstance} from '../models/UserDataMap';
 import {log} from '../../logger';
+import {UserDataMapAttributes} from '../../report-service/api/resolver';
+
+const camelcaseKeys = require('camelcase-keys');
 
 export interface ListUserDataMapFilters {
   limit?: number;
@@ -17,9 +20,10 @@ export interface ListUserDataMapFilters {
 
 export const userDataMapResolver = {
 
-  async list(args: ListUserDataMapFilters = {}): Promise<UserDataMapInstance[]> {
+  async list(args: ListUserDataMapFilters = {}): Promise<UserDataMapAttributes[]> {
     let userDataMapInstances: UserDataMapInstance[];
     const {limit = 15, offset = 0} = args;
+    const result: UserDataMapAttributes[] = [];
 
     try {
       userDataMapInstances = await UserDataMap.findAll({limit, offset});
@@ -27,21 +31,24 @@ export const userDataMapResolver = {
       log.error(`UserDataMap-list: ${error.message}`);
       return error;
     }
+    userDataMapInstances.forEach((userDataMapInstance) => {
+      result.push(camelcaseKeys(userDataMapInstance.get({plain: true})));
+    });
     
-    return userDataMapInstances;
+    return result;
   },
 
-  async get(args: {user_id: string, vendor_data_type: string}): Promise<UserDataMapAttributes> {
+  async get(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
     let userDataMapInstance: UserDataMapInstance;
-    const {user_id, vendor_data_type} = args;
+    const {userId, vendorDataType} = args;
 
-    userDataMapInstance = await UserDataMap.findOne({where: {user_id, vendor_data_type}});
+    userDataMapInstance = await UserDataMap.findOne({where: {user_id: userId, vendor_data_type: vendorDataType}});
 
     if (!userDataMapInstance) {
       throw new Error('No such user record found');
     }
     
-    return userDataMapInstance.get({plain: true});
+    return camelcaseKeys(userDataMapInstance.get({plain: true}));
   },
 
   async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
@@ -68,7 +75,7 @@ export const userDataMapResolver = {
       return error;
     }
 
-    return userDataMapInstance.get({plain: true});
+    return camelcaseKeys(userDataMapInstance.get({plain: true}));
   }
 };
 
@@ -76,11 +83,11 @@ export const userDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  listUserDataMap: (root: any, args: ListUserDataMapFilters) => userDataMapResolver.list(args),
+  userDataMaps: (root: any, args: ListUserDataMapFilters) => userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-  findOrCreateUserDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
+  userDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
     userDataMapResolver.findOrCreate(args),
 };

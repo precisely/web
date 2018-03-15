@@ -8,6 +8,7 @@
 
 export interface AuthorizerAttributes {
   claims?: {
+    sub: string;
     'custom:roles'?: string;
   };
 }

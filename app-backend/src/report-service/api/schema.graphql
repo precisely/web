@@ -1,4 +1,4 @@
-type ReportAttributes {
+type Report {
   id: String,
   title: String,
   slug: String,
@@ -8,24 +8,9 @@ type ReportAttributes {
   genes: [String],
   createdAt: String
   updatedAt: String
-  userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
+  userData(vendorDataType: String!): UserData,
 }
 
-type LastEvaluatedReportData {
-  id: String,
-  slug: String
-}
-
-type ReportListItem {
-  attrs: ReportAttributes
-}
-
-type ReportList {
-  items: [ReportListItem],
-  lastEvaluatedKey: LastEvaluatedReportData
-}
-
-type ReportGet {
-  items: [ReportListItem],
-  lastEvaluatedKey: LastEvaluatedReportData
+type UserData {
+  genotypes: [Genotype]
 }

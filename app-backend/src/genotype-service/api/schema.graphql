@@ -1,8 +1,3 @@
-type LastEvaluatedGenotypeData {
-  opaqueId: String
-  gene: String
-}
-
 type Genotype {
   opaqueId: String
   sampleId: String
@@ -16,13 +11,4 @@ type Genotype {
   quality: String
   createdAt: String
   updatedAt: String
-}
-
-type GenotypeListItem {
-  attrs: Genotype
-}
-
-type GenotypeList {
-  items: [GenotypeListItem],
-  lastEvaluatedKey: LastEvaluatedGenotypeData
 }

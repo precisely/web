@@ -8,12 +8,11 @@
 
 import {Query} from 'dynogels';
 import {Report, ReportAttributes} from '../models/Report';
-import {userDataMapResolver} from '../../user-data-map/api/resolver';
-import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
-import {genotypeResolver, ListGenotypeFilters, ListGenotypeObject} from '../../genotype-service/api/resolver';
+import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
 import {execAsync} from '../../utils';
+import {UserData} from './util/UserData';
 
 export interface CreateOrUpdateAttributes {
   title: string;
@@ -24,10 +23,6 @@ export interface CreateOrUpdateAttributes {
 
 export interface ListReportFilters {
   limit?: number;
-  lastEvaluatedKeys?: {
-    id: string;
-    slug: string;
-  };
   id?: string;
   slug?: string;
   userId?: string;
@@ -35,11 +30,13 @@ export interface ListReportFilters {
 }
 
 export interface ListReportObject {
-  items: ReportAttributes[];
-  lastEvaluatedKey: {
-    slug: string;
-    id: string;
-  };
+  items: {attrs: ReportAttributes}[];
+}
+
+export interface UserDataMapAttributes {
+  userId: string;
+  vendorDataType: string;
+  opaqueId: string;
 }
 
 export const reportResolver = {
@@ -57,66 +54,62 @@ export const reportResolver = {
     return reportInstance.attrs;
   },
 
-  async list(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ListReportObject> {
-    const {lastEvaluatedKeys, slug, limit = 15} = args;
-    let result: ListReportObject;
+  async list(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
+    const {slug, limit = 15} = args;
+    const result: ReportAttributes[] = [];
+    let reportList: ListReportObject;
     
     try {
       let query: Query & {execAsync?: () => ListReportObject};
 
       query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
 
-      if (lastEvaluatedKeys) {
-        query = query.startKey(lastEvaluatedKeys.id, lastEvaluatedKeys.slug);
-      }
-      
-      result = await execAsync(query);
+      reportList = await execAsync(query);
     } catch (error) {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
     }
 
+    reportList.items.forEach((report: {attrs: ReportAttributes}) => {
+      result.push(report.attrs);
+    });
+
     return result;
   },
 
-  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): 
-    Promise<ListReportObject & { userData: (genotypeArgs: ListGenotypeFilters) => Promise<ListGenotypeObject>; }> {
+  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes & 
+      {userData: (userArgs: {vendorDataType: string}) => {genotypes: Promise<GenotypeAttributes[]>}}> {
       
-    const {slug, id, userId, vendorDataType, limit, lastEvaluatedKeys} = args;
+    const {slug} = args;
     let reportInstance: ListReportObject;
-    let userInstance: UserDataMapAttributes;
 
     try {
-      userInstance = await userDataMapResolver.get({user_id: userId, vendor_data_type: vendorDataType});
       let query: Query & {execAsync?: () => ListReportObject};
 
-      if (id) {
-        query = Report.query(id).limit(limit);
-      } else if (slug) {
-        query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
-      } else {
-        throw new Error('Required parameters not present.');
-      }
-
-      if (lastEvaluatedKeys) {
-        query = query.startKey(lastEvaluatedKeys.slug, lastEvaluatedKeys.id);
-      }
-
+      query = Report.query(slug).usingIndex('ReportGlobalIndex');
       reportInstance = await execAsync(query);
+
+      if (!reportInstance) {
+        throw new Error('No such record found');
+      }
     } catch (error) {
       log.error(`reportResolver-get: ${error.message}`);
       return error;
     }
-    
+    console.log(reportInstance);
     return {
-      ...reportInstance,
-      userData: (genotypeArgs: ListGenotypeFilters) => genotypeResolver.list(
-        {
-          opaqueId: userInstance.opaque_id,
-          ...genotypeArgs
-        }, 
-        authorizer
-      ),
+      ...reportInstance.items[0].attrs, 
+      userData: (userArgs: {vendorDataType: string}) => {
+        const userData = new UserData(
+            authorizer.claims.sub, 
+            userArgs.vendorDataType, 
+            reportInstance.items[0].attrs.genes
+          );
+        
+        return {
+          genotypes: userData.genotypes(),
+        };
+      }
     };
   },
 };
