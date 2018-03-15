@@ -67,8 +67,8 @@ functions:
         cors: true
         authorizer:
           arn: ${env:COGNITO_ARN}
-  setupDatabase:
-    handler: src/dynogels-db/setup.setupDatabase
+  setupDynamo:
+    handler: src/data-source/dynogels-db/setup.setupDatabase
   ingester:
     handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:

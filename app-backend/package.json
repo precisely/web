@@ -3,10 +3,12 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
+    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts --collectCoverageFrom=!src/data-source/postgres/**",
     "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless offline start",
     "postinstall": "./node_modules/.bin/serverless dynamodb install",
-    "setup:database": "./node_modules/.bin/serverless invoke local -f setupDatabase",
+    "setup:database": "yarn setup:database:postgres && yarn setup:database:dynamo",
+    "setup:database:dynamo": "./node_modules/.bin/serverless invoke local -f setupDynamo",
+    "setup:database:postgres": "./node_modules/.bin/sequelize db:migrate",
     "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless deploy -s dev",
     "deploy:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage ./node_modules/.bin/serverless deploy -s stage",
     "deploy:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",
@@ -61,6 +63,7 @@
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
     "sequelize": "4.27.0",
+    "sequelize-cli": "4.0.0",
     "serverless-dynamodb-client": "0.0.2",
     "serverless-plugin-scripts": "1.0.2",
     "winston": "3.0.0-rc2"

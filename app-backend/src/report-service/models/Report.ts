@@ -9,7 +9,7 @@
 import * as Joi from 'joi';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
-import {dynogels} from '../../dynogels-db/connection';
+import {dynogels} from '../../data-source/dynogels-db/connection';
 
 export interface ReportAttributes {
   id?: string;
