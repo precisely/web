@@ -1,7 +1,6 @@
 const path = require('path');
 
 module.exports = {
-  'config': path.resolve('src', 'data-source', 'postgres', 'config', 'config.json'),
   'models-path': path.resolve('src', 'user-data-map', 'models'),
   'migrations-path': path.resolve('src', 'data-source', 'postgres', 'migrations')
 }

@@ -8,8 +8,10 @@
     "postinstall": "./node_modules/.bin/serverless dynamodb install",
     "setup:database": "yarn setup:database:postgres && yarn setup:database:dynamo",
     "setup:database:dynamo": "./node_modules/.bin/serverless invoke local -f setupDynamo",
-    "setup:database:postgres": "./node_modules/.bin/sequelize db:migrate",
-    "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless deploy -s dev",
+    "setup:database:dynamo:local": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless invoke local -f setupDynamo",
+    "setup:database:postgres:local": "./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless invoke local -f setupPostgres -d local",
+    "setup:database:postgres": "./node_modules/.bin/serverless invoke local -f setupPostgres",
+    "deploy:dev": "./node_modules/.bin/env-cmd ../config/security.env.dev ./node_modules/.bin/serverless deploy -s dev",
     "deploy:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage ./node_modules/.bin/serverless deploy -s stage",
     "deploy:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
@@ -66,6 +68,7 @@
     "sequelize-cli": "4.0.0",
     "serverless-dynamodb-client": "0.0.2",
     "serverless-plugin-scripts": "1.0.2",
+    "shelljs": "0.8.1",
     "winston": "3.0.0-rc2"
   },
   "devDependencies": {
@@ -76,6 +79,7 @@
     "@types/jest": "21.1.4",
     "@types/node": "9.3.0",
     "@types/sequelize": "4.27.4",
+    "@types/shelljs": "0.7.8",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",

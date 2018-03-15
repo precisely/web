@@ -44,6 +44,7 @@ plugins:
 custom:
   scripts:
     hooks:
+      'before:deploy:deploy': ./node_modules/.bin/serverless invoke local -f setEnvironment -d ${opt:stage, self:provider.stage}
       'deploy:finalize': yarn setup:database -- -s ${opt:stage, self:provider.stage}
   serverless-offline:
     port: 4000
@@ -66,9 +67,11 @@ functions:
         method: post
         cors: true
         authorizer:
-          arn: ${env:COGNITO_ARN}
+          arn: ${env:COGNITO_ARN, ''}
   setupDynamo:
     handler: src/data-source/dynogels-db/setup.setupDatabase
+  setupPostgres:
+    handler: src/data-source/postgres/setup.migrate
   ingester:
     handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:

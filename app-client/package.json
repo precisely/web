@@ -8,7 +8,7 @@
   "scripts": {
     "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
     "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
-    "build:dev": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/build.js",
+    "build:dev": "./node_modules/.bin/env-cmd ../config/security.env.dev node scripts/build.js",
     "build:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage node scripts/build.js",
     "build:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "compile": "yarn run clean && tsc",
