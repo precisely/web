@@ -1,5 +1,6 @@
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {dynogels} from './connection';
+import {log} from '../../logger';
 
 // @ts-ignore:no-unused-local -ignored as importing schema is necessary before creating but is not used explicitly
 const {Report} = require('../../report-service/models/Report');
@@ -11,7 +12,7 @@ export const setupDatabase: Handler = (event: APIGatewayEvent, context: Context,
   
   dynogels.createTables((error: Error): void => {
     if (error) {
-      console.log('Error while creating the tables.', error.message);
+      log.error(`Error while creating the tables: ${error.message}`);
       return callback(new Error('Error while creating the tables.'), null);
     }
 
