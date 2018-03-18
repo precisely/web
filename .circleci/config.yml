@@ -68,7 +68,7 @@ ALIASES:
         run:
             name: Upload Coverage Report
             command: |
-                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --prefix ${PWD##*/}
+                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --add-prefix ${PWD##*/}
                 AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
 workflows:
