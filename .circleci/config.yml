@@ -2,6 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
+version: 2
 
 ALIASES:
     defaults: &defaults
@@ -14,6 +15,10 @@ ALIASES:
             # documented at https://circleci.com/docs/2.0/circleci-images/
             # - image: circleci/mongo:3.4.4
 
+    checkout: &checkout
+        checkout:
+            path: ~/repo
+
     frontend_defaults: &frontend_defaults
         <<: *defaults
         working_directory: ~/repo/app-client
@@ -21,13 +26,6 @@ ALIASES:
     backend_defaults: &backend_defaults
         <<: *defaults
         working_directory: ~/repo/app-backend
-
-    upload_codeclimate_results: &upload_codeclimate_results
-        run:
-            name: Upload Code Climate Results
-            command: |
-                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json"
-                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
@@ -53,71 +51,78 @@ ALIASES:
                 - node_modules
             key: v1-dependencies-backend-{{ checksum "package.json" }}
 
-    checkout: &checkout
-        checkout:
-            path: ~/repo
+    yarn_install: &yarn_install
+        run:
+            name: Installing Dependencies
+            command: yarn install
 
-version: 2
+    run_tests: &run_tests
+        run:
+            name: Run Tests
+            command: |
+                yarn test
+                yarn tslint
+                yarn eslint
+
+    upload_coverage_report: &upload_coverage_report
+        run:
+            name: Upload Coverage Report
+            command: |
+                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --prefix ${PWD##*/}
+                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
+
+workflows:
+    version: 2
+    build-test-and-deploy:
+        jobs:
+            - build-frontend
+            - build-backend
+
+            - report-codeclimate:
+                requires:
+                    - build-frontend
+                    - build-backend
+
+            # run this job only when dev branch is build
+            - stage-deploy-backend:
+                filters:
+                    branches:
+                        only:
+                            - dev
+                requires:
+                    - build-backend
+                    - build-frontend
+
+            - stage-deploy-frontend:
+                filters:
+                    branches:
+                        only:
+                            - dev
+                requires:
+                    - stage-deploy-backend
+
 jobs:
     build-frontend:
         <<: *frontend_defaults
 
         steps:
             - *checkout
-
             - *restore_frontend_cache
-
-            - run:
-                name: Installing Dependencies
-                command: yarn install
-
+            - *yarn_install
             - *save_frontend_cache
-
-            - run:
-                name: Frontend Tests
-                command: |
-                    cc-test-reporter before-build
-                    yarn test
-                    cc-test-reporter after-build --debug -t lcov --exit-code $?
-
-            - run:
-                name: TSLint
-                command: yarn tslint
-            - run:
-                name: ESLint
-                command: yarn eslint
-
-            - *upload_codeclimate_results
+            - *run_tests
+            - *upload_coverage_report
 
     build-backend:
         <<: *backend_defaults
 
         steps:
             - *checkout
-
             - *restore_backend_cache
-
-            - run:
-                name: Installing Dependencies
-                command: yarn install
-
+            - *yarn_install
             - *save_backend_cache
-
-            - run:
-                name: Backend Tests
-                command: |
-                    cc-test-reporter before-build
-                    yarn test
-                    cc-test-reporter after-build --debug -t lcov --exit-code $?
-
-            - run:
-                name: TSLint
-                command: yarn tslint
-            - run:
-                name: ESLint
-                command: yarn eslint
-
-            - *upload_codeclimate_results
+            - *run_tests
+            - *upload_coverage_report
 
     report-codeclimate:
         <<: *defaults
@@ -159,33 +164,3 @@ jobs:
             - run:
                 name: Deploying backend on Staging
                 command: yarn deploy:stage
-
-workflows:
-    version: 2
-    build-test-and-deploy:
-        jobs:
-            - build-frontend
-            - build-backend
-
-            - report-codeclimate:
-                requires:
-                    - build-frontend
-                    - build-backend
-
-            # run this job only when dev branch is build
-            - stage-deploy-backend:
-                filters:
-                    branches:
-                        only:
-                            - dev
-                requires:
-                    - build-backend
-                    - build-frontend
-
-            - stage-deploy-frontend:
-                filters:
-                    branches:
-                        only:
-                            - dev
-                requires:
-                    - stage-deploy-backend
