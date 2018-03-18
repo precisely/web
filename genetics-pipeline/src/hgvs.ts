@@ -71,12 +71,12 @@ function hgvsSingleSubstitution(input: HGVSArguments): string {
   }
 }
 
-export function makeHGVS(input : HGVSArguments): string {
-  if (input.altBases.length===1) {
+export function makeHGVS(input: HGVSArguments): string {
+  if (input.altBases.length === 1) {
     return hgvsSingleSubstitution(input);
-  } else if (input.altBases.length===2) {
+  } else if (input.altBases.length === 2) {
     return head(input) + substitution(input, 0) + substitution(input, 1);
-  } else if (input.altBases==='<NON_REF>' && input.zygosity==='haploid') {
+  } else if (input.altBases === '<NON_REF>' && input.zygosity === 'haploid') {
     return head(input) + wildType(input);
   } else {
     throw new Error(`Unexpected inputs to makeHGVS zygosity: ${input.zygosity}, altBases: ${input.altBases}`);
