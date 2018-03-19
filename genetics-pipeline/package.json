@@ -1,0 +1,36 @@
+{
+  "name": "precisely-web",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js"
+  },
+  "devDependencies": {
+    "jest": "^22.4.2",
+    "ts-jest": "^22.4.1",
+    "typescript": "^2.7.2"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "html",
+      "text",
+      "lcov",
+      "json"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!**/node_modules/**",
+      "!src/__tests__/**"
+    ],
+    "transform": {
+      "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
+  }
+}
