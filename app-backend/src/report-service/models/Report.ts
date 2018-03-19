@@ -19,7 +19,7 @@ export interface ReportAttributes {
   parsedContent: string;
   topLevel: boolean;
   genes: string[];
-  genotype: GenotypeAttributes[];
+  genotype?: GenotypeAttributes[];
 }
 
 /* istanbul ignore next */

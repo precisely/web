@@ -1,3 +1,11 @@
+/*
+* Copyright (c) 2011-Present, Precise.ly, Inc.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or
+* without modification, are not permitted.
+*/
+
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
 import {genotypeResolver} from '../genotype-service/api/resolver';
@@ -52,7 +60,6 @@ export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context
       });
 
       log.info('Entries created for uploaded file.');
-
     } catch (error) {
       log.error(`Error: ${error.message}`);
     }

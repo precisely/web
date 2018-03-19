@@ -1,4 +1,4 @@
-### Precisely-web (v0.0.3)
+### Precisely-web (v0.0.6)
 [![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/test_coverage)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/maintainability)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/maintainability)
 
 ---
@@ -59,6 +59,26 @@ This will run both concurrently but is not recommended when you want to view bac
 * All the secrets are managed using AWS KMS. To know more about how to encrypt new secrets or update/use them, read [wiki](https://github.com/precisely/web/wiki/AWS-Key-Management#usage).
 
 * Currently available environment variables are listed [here](https://github.com/precisely/web/wiki/AWS-Key-Management#list-of-the-environment-variables-stored-currently-for-reference). Please do not forget to update the list if (and when) you add new variables.
+
+### Seeding Data
+
+* To create seed data and cognito users,
+    * For `dev` environment:
+        * `yarn seed:create:dev [LIMIT]`: will create users in cognito pool of dev account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
+    * For `stage` environment:
+        * `yarn seed:create:stage [LIMIT]`: will create users in cognito pool of stage account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
+    * LIMIT is optional here with default value of 10. E.g: `yarn seed:create:stage 100`
+
+* To seed data in Database:
+    * For `local` databases (helpful during active development):
+        * `yarn seed:local`: will put the created seed data from JSON files to appropriate tables.
+        * NOTE: Make sure to run postgres and dynamoDB locally before seeding data.
+    * For `dev` databases:
+        * `yarn seed:dev`: will put the created seed data from JSON files to appropriate tables.'
+        * Will pick up credentials from `dev-profile-precisely` set [here](#setup-for-deployment).
+    * For `stage` databases:
+        * `yarn seed:stage`: will put the created seed data from JSON files to appropriate tables.
+        * Will pick up credentials from `stage-profile-precisely` set [here](#setup-for-deployment).
 
 ## Managing Roles
 

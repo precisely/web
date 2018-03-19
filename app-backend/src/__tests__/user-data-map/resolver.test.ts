@@ -39,7 +39,7 @@ describe('UserDataMap resolver tests.', () => {
   describe('tests for get', () => {
 
     it('should pass when valid params are passed', async () => {
-      let response: IUserDataMapAttributes = await userDataMapResolver.get({
+      let response: UserDataMapAttributes = await userDataMapResolver.get({
         user_id: 'test', 
         vendor_data_type: 'test'
       });
@@ -50,7 +50,7 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should throw error invalid params are passed', async () => {
       try {
-        let response: IUserDataMapAttributes = await userDataMapResolver.get({
+        let response: UserDataMapAttributes = await userDataMapResolver.get({
           user_id: 'invalid', 
           vendor_data_type: 'test'
         });

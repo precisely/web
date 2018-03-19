@@ -54,3 +54,4 @@
 
 ### Added
 - Winston logger
+- Commands for seeding user and data.
