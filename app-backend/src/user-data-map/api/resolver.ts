@@ -9,9 +9,14 @@
 import {UserDataMap} from '../models/UserDataMap';
 import {UserDataMapInstance} from '../models/UserDataMap';
 import {log} from '../../logger';
-import {UserDataMapAttributes} from '../../report-service/api/resolver';
 
 const camelcaseKeys = require('camelcase-keys');
+
+export interface UserDataMapAttributes {
+  userId: string;
+  vendorDataType: string;
+  opaqueId: string;
+}
 
 export interface ListUserDataMapFilters {
   limit?: number;
@@ -83,7 +88,6 @@ export const userDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  userDataMaps: (root: any, args: ListUserDataMapFilters) => userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */

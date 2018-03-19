@@ -9,14 +9,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Bluebird from 'bluebird';
-import {UserDataMap, UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
+import {UserDataMap} from '../../user-data-map/models/UserDataMap';
 
 const jsonPath = path.join(__dirname, '../data/');
 
 export const seedUser = async () => {
   const promises: Bluebird<boolean>[] = [];
   const allUsers = JSON.parse(fs.readFileSync(jsonPath + 'UserData.json', 'utf8'));
-  allUsers.forEach((user: UserDataMapAttributes) => {
+  allUsers.forEach((user: any) => {
     promises.push(UserDataMap.upsert(user));
   });
   await Promise.all(promises);

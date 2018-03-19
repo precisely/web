@@ -9,19 +9,19 @@
 import * as path from 'path';
 import * as faker from 'faker';
 import {seedCognito} from './seedCognito';
-import {vendorDataTypeList, UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
+import {vendorDataTypeList} from '../../user-data-map/models/UserDataMap';
 import {ReportAttributes} from '../../report-service/models/Report';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
+import {log} from '../../logger';
 const jsonfile = require('jsonfile');
 
 let limit = parseInt(process.argv.pop(), 10);
 const jsonPath = path.join(__dirname, '../data/');
-const userData: UserDataMapAttributes[] = [];
+const userData: {[key: string]: string}[] = [];
 const reportData: ReportAttributes[] = [];
 const genotypeData: GenotypeAttributes[] = [];
 const cognitoData: {[key: string]: string}[] = [];
 const opaqueIdList: string[] = [];
-const slugList: string[] = [];
 const genesList: string[] = [
   'MTHFR',
   // more genes can be added here
@@ -50,7 +50,6 @@ if (isNaN(limit)) {
 
 for (let i = 0; i < limit; i++) {
   opaqueIdList.push(faker.random.uuid());
-  slugList.push(faker.lorem.slug());
 }
 
 export const removeDuplicate = (array: string[]) => {
@@ -59,7 +58,7 @@ export const removeDuplicate = (array: string[]) => {
 
 export const saveJSONfile = (fileName: string, data: object[]) => {
   jsonfile.writeFileSync(jsonPath + fileName + '.json', data, { spaces: 2 });
-  console.log(fileName, 'created successfully.');
+  log.error(`${fileName} created successfully.`);
 };
 
 export const createParsedContent = () => { // tslint:disable-next-line:max-line-length
@@ -93,12 +92,13 @@ export const createDBData = (max: number, userIdList: string[]) => {
     });
   
     reportData.push({
+      hashKey: 'report',
       id: faker.random.uuid(),
       title: faker.lorem.sentence(),
-      slug: faker.random.arrayElement(slugList),
-      raw_content: '--', // demo content not yet provided, will be updated
-      parsed_content: createParsedContent(),
-      top_level: faker.random.boolean(),
+      slug: faker.lorem.slug(),
+      rawContent: '--', // demo content not yet provided, will be updated
+      parsedContent: createParsedContent(),
+      topLevel: faker.random.boolean(),
       genes: removeDuplicate(
         Array.from(
           {length: Math.floor(Math.random() * 5) + 1},
@@ -108,15 +108,15 @@ export const createDBData = (max: number, userIdList: string[]) => {
     });
   
     genotypeData.push({
-      opaque_id: faker.random.arrayElement(opaqueIdList),
-      sample_id: '--', // although data type is clear, data format isn't. Will be updated once provided.
+      opaqueId: faker.random.arrayElement(opaqueIdList),
+      sampleId: '--', // although data type is clear, data format isn't. Will be updated once provided.
       source: '--', // same as above
       gene: faker.random.arrayElement(genesList),
-      variant_call: faker.random.arrayElement(variantCallList),
+      variantCall: faker.random.arrayElement(variantCallList),
       zygosity: '--', // same as above
-      start_base: '--', // same as above
-      chromosome_name: faker.random.arrayElement(chromosomeNameList),
-      variant_type: '--', // same as above
+      startBase: '--', // same as above
+      chromosomeName: faker.random.arrayElement(chromosomeNameList),
+      variantType: '--', // same as above
       quality: '--', // same as above
     });
   }

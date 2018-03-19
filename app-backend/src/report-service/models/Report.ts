@@ -12,6 +12,7 @@ import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
 
 export interface ReportAttributes {
+  hashKey: 'report';
   id?: string;
   title: string;
   slug: string;
@@ -24,11 +25,13 @@ export interface ReportAttributes {
 
 /* istanbul ignore next */
 export const Report = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
-  hashKey: 'id',
+  hashKey: 'hashKey',
+  rangeKey: 'slug',
 
   timestamps : true,
 
   schema: {
+    hashKey: Joi.string().default('report'),
     id: dynogels.types.uuid(),
     title: Joi.string().required(),
     slug: Joi.string().required(),
@@ -36,11 +39,5 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
     parsedContent: Joi.string(),
     topLevel: Joi.boolean(),
     genes: Joi.array().items(Joi.string()),
-  },
-
-  indexes: [{
-    hashKey: 'slug',
-    name: 'ReportGlobalIndex',
-    type: 'global',
-  }],
+  }
 });

@@ -16,9 +16,8 @@ import {execAsync} from '../../utils';
 const toSnakeCase = require('lodash.snakecase');
 
 export interface ListGenotypeFilters {
-  limit?: number;
-  opaqueId?: string;
-  gene?: string;
+  opaqueId: string;
+  genes: string[];
 }
 
 export interface ListGenotypeObject {
@@ -105,22 +104,14 @@ export const genotypeResolver = {
     return genotypeInstance.attrs;
   },
 
-  async list(args: ListGenotypeFilters = {}): Promise<GenotypeAttributes[]> {
-    const {limit = 15, opaqueId, gene} = args;
+  async list(args: ListGenotypeFilters): Promise<GenotypeAttributes[]> {
+    const {opaqueId, genes} = args;
     const result: GenotypeAttributes[] = [];
     let genotypeList: ListGenotypeObject;
     
     try {
       let query: Query & {execAsync?: () => ListGenotypeObject};
-
-      if (opaqueId) {
-        query = Genotype.query(opaqueId).limit(limit);
-      } else if (gene) {
-        query = Genotype.query(gene).usingIndex('GenotypeGlobalIndex').limit(limit);
-      } else {
-        throw new Error('Required parameters not present.');
-      }
-
+      query = Genotype.query(opaqueId).filter('geneFilter').in(genes);
       genotypeList = await execAsync(query);
     } catch (error) {
       log.error(`genotypeResolver-list: ${error.message}`);
@@ -139,12 +130,8 @@ export const genotypeResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  genotypes: (root: any, args: ListGenotypeFilters) => genotypeResolver.list(args),
-  genotype: (root: any, args: {opaqueId: string, gene: string}) => genotypeResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-  createGenotype: (root: any, args: CreateOrUpdateAttributes) => genotypeResolver.create(args),
-  updateGenotype: (root: any, args: CreateOrUpdateAttributes) => genotypeResolver.update(args),
 };

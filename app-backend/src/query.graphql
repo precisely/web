@@ -8,8 +8,7 @@ type GenericResponse {
 }
 
 type Query {
-  userDataMaps(limit: Int, offset: Int): [UserDataMap],
-  reports(slug: String!, limit: Int): [Report],
+  reports: [Report],
   report(slug: String!): Report,
 }
 

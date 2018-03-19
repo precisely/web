@@ -35,6 +35,7 @@ export const Genotype = dynogels.define(addEnvironmentToTableName('precisely-gen
     sampleId: Joi.string(),
     source: Joi.string(),
     gene: Joi.string(),
+    geneFilter: Joi.string(),
     variantCall: Joi.string(),
     zygosity: Joi.string(),
     startBase: Joi.string(),

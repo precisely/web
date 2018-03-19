@@ -8,10 +8,8 @@
 
 jest.mock('../../user-data-map/models/UserDataMap');
 
-import {userDataMapResolver} from '../../user-data-map/api/resolver';
+import {userDataMapResolver, UserDataMapAttributes} from '../../user-data-map/api/resolver';
 import {UserDataMapInstance} from '../../user-data-map/models/UserDataMap';
-import {UserDataMapAttributes} from '../../report-service/api/resolver';
-
 describe('UserDataMap resolver tests.', () => {
 
   describe('tests for list', () => {

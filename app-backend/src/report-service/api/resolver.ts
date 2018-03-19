@@ -33,12 +33,6 @@ export interface ListReportObject {
   items: {attrs: ReportAttributes}[];
 }
 
-export interface UserDataMapAttributes {
-  userId: string;
-  vendorDataType: string;
-  opaqueId: string;
-}
-
 export const reportResolver = {
   async create(args: CreateOrUpdateAttributes, authorizer: AuthorizerAttributes): Promise<ReportAttributes> {
     let reportInstance: {attrs: ReportAttributes};
@@ -54,22 +48,19 @@ export const reportResolver = {
     return reportInstance.attrs;
   },
 
-  async list(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
-    const {slug, limit = 15} = args;
+  async list(authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
     const result: ReportAttributes[] = [];
     let reportList: ListReportObject;
     
     try {
       let query: Query & {execAsync?: () => ListReportObject};
-
-      query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
-
+      query = Report.query('report');
       reportList = await execAsync(query);
     } catch (error) {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
     }
-
+    
     reportList.items.forEach((report: {attrs: ReportAttributes}) => {
       result.push(report.attrs);
     });
@@ -81,14 +72,11 @@ export const reportResolver = {
       {userData: (userArgs: {vendorDataType: string}) => {genotypes: Promise<GenotypeAttributes[]>}}> {
       
     const {slug} = args;
-    let reportInstance: ListReportObject;
+    let reportInstance: {attrs: ReportAttributes};
 
     try {
-      let query: Query & {execAsync?: () => ListReportObject};
-
-      query = Report.query(slug).usingIndex('ReportGlobalIndex');
-      reportInstance = await execAsync(query);
-
+      reportInstance = await Report.getAsync('report', slug);
+      
       if (!reportInstance) {
         throw new Error('No such record found');
       }
@@ -96,14 +84,14 @@ export const reportResolver = {
       log.error(`reportResolver-get: ${error.message}`);
       return error;
     }
-    console.log(reportInstance);
+    
     return {
-      ...reportInstance.items[0].attrs, 
+      ...reportInstance.attrs, 
       userData: (userArgs: {vendorDataType: string}) => {
         const userData = new UserData(
             authorizer.claims.sub, 
             userArgs.vendorDataType, 
-            reportInstance.items[0].attrs.genes
+            reportInstance.attrs.genes
           );
         
         return {
@@ -118,7 +106,7 @@ export const reportResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  reports: (root: any, args: ListReportFilters) => reportResolver.list(args, root.authorizer),
+  reports: (root: any, args: ListReportFilters) => reportResolver.list(root.authorizer),
   report: (root: any, args: ListReportFilters) => reportResolver.get(args, root.authorizer),
 };
 

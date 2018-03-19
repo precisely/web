@@ -12,6 +12,7 @@ import * as AWS from 'aws-sdk';
 import {ReportAttributes} from '../../report-service/models/Report';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
+import {log} from '../../logger';
 
 AWS.config.update({
   region: process.env.REACT_APP_AWS_AUTH_REGION,
@@ -38,24 +39,20 @@ export const seedReport = () => {
     const ReportParams = {
       TableName: tableName,
       Item: {
+        hashKey: report.hashKey,
         id: report.id,
         title: report.title,
         slug: report.slug,
-        raw_content: report.raw_content,
-        parsed_content: report.parsed_content,
-        top_level: report.top_level,
+        rawContent: report.rawContent,
+        parsedContent: report.parsedContent,
+        topLevel: report.topLevel,
         genes: report.genes
       },
     };
 
     docClient.put(ReportParams, (err: Error) => {
       if (err) {
-        console.log(
-          'Unable to add Report',
-          report.id,
-          '. Error JSON:',
-          JSON.stringify(err, null, 2)
-        );
+        log.error(`Unable to add Report ${report.id}. Error JSON: ${JSON.stringify(err, null, 2)}`);
       }
     });
   });
@@ -70,27 +67,23 @@ export const seedGenotype = () => {
     const GenotypeParams = {
       TableName: tableName,
       Item: {
-        opaque_id: genotype.opaque_id,
-        sample_id: genotype.sample_id,
+        opaqueId: genotype.opaqueId,
+        sampleId: genotype.sampleId,
         source: genotype.source,
         gene: genotype.gene,
-        variant_call: genotype.variant_call,
+        geneFilter: genotype.gene,
+        variantCall: genotype.variantCall,
         zygosity: genotype.zygosity,
-        start_base: genotype.start_base,
-        chromosome_name: genotype.chromosome_name,
-        variant_type: genotype.variant_type,
+        startBase: genotype.startBase,
+        chromosomeName: genotype.chromosomeName,
+        variantType: genotype.variantType,
         quality: genotype.quality,
       },
     };
 
     docClient.put(GenotypeParams, (err: Error) => {
       if (err) {
-        console.log(
-          'Unable to add Genotype',
-          genotype.opaque_id,
-          '. Error JSON:',
-          JSON.stringify(err, null, 2)
-        );
+        log.error(`Unable to add Genotype ${genotype.opaqueId}. Error JSON: ${JSON.stringify(err, null, 2)}`);
       }
     });
   });
