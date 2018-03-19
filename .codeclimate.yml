@@ -55,6 +55,7 @@ plugins:
 exclude_patterns:
   - "app-backend/build"
   - "app-client/build"
+  - "app-backend/data-source"
   - "app-client/config"
   - "app-client/scripts"
   - "app-client/public"
