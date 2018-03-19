@@ -80,6 +80,29 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
     );
   }
 
+  renderMoreInformation = (): JSX.Element => {
+    return (
+      <Container className="pt-5 pb-4 ">
+        <h3 style={headingStyle}>
+          Third Section of the website
+        </h3>
+        <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
+        <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
+          <Col md={{size: 6, offset: 3}}>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+              eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </Col>
+        </div>
+      </Container>
+    );
+  }
+
   render(): JSX.Element {
     return (
       <div>
@@ -102,24 +125,7 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
         <div style={homepageSection} className="text-center">
           {this.renderProductDescription()}
           {this.renderProcessDescription()}
-          <Container className="pt-5 pb-4 ">
-            <h3 style={headingStyle}>
-              Third Section of the website
-            </h3>
-            <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
-            <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-              <Col md={{size: 6, offset: 3}}>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-                  eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-                  sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-              </Col>
-            </div>
-          </Container>
+          {this.renderMoreInformation()}
         </div>
       </div>
     );

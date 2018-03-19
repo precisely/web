@@ -9,17 +9,16 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, FormText} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, FormText} from 'src/components/ReusableComponents';
 import {PageContent} from 'src/components/PageContent';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {Email} from 'src/components/Email';
 import {
   formButton,
-  removeBorderRadius,
   header,
   loginAndSignupPanel,
-  inputStyle,
   alignCenter,
   formMargin,
 } from 'src/constants/styleGuide';
@@ -84,12 +83,9 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
                   Please enter the email you use for your account.<br/>
                   We will send a verification code on your email.
                 </FormText><br/>
-                <Input
-                    style={[removeBorderRadius, inputStyle]}
-                    type="email"
-                    id="email"
+                <Email
                     placeholder="Enter your email"
-                    value={email}
+                    value={email} 
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}

@@ -54,6 +54,7 @@ plugins:
     enabled: true
 exclude_patterns:
   - "app-backend/build"
+  - "app-backend/data-source"
   - "app-client/build"
   - "app-client/config"
   - "app-client/scripts"
@@ -68,3 +69,4 @@ exclude_patterns:
   - "**/spec/"
   - "**/test/"
   - "**/__tests__/"
+  - "**/__mocks__/"

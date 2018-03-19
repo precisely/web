@@ -13,11 +13,11 @@ import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/components/PageContent';
 import {login} from 'src/utils/cognito';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {checkEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {Email} from 'src/components/Email';
 import {
   formButton,
-  removeBorderRadius,
   noBorderTop,
   loginAndSignupPanel,
   header,
@@ -57,8 +57,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     e.preventDefault();
     const {email, password} = this.state;
 
-    const validationInfo: {isValid: boolean, toastId: number} =
-        validateEmailAndPassword(email, password, this.toastId);
+    const validationInfo: {isValid: boolean, toastId: number} = checkEmailAndPassword(email, password, this.toastId);
 
     // This is needed to prevent multiple toast from getting rendered.
     this.toastId = validationInfo.toastId;
@@ -86,12 +85,9 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
           <PageContent>
             <Form id="loginForm" onSubmit={this.submitForm} style={formMargin}>
               <FormGroup className="mb-0" style={alignCenter}>
-                <Input
-                    style={[removeBorderRadius, inputStyle]}
-                    type="email"
-                    id="email"
+                <Email
                     placeholder="Email"
-                    value={email}
+                    value={email} 
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}

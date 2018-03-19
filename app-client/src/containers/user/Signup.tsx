@@ -13,7 +13,7 @@ import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableCompo
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/components/PageContent';
 import {signup} from 'src/utils/cognito';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {checkEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {
   formButton,
@@ -64,8 +64,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, SignupSta
     e.preventDefault();
     const {email, password, confirmPassword} = this.state;
 
-    const validationInfo: {isValid: boolean, toastId: number} =
-      validateEmailAndPassword(email, password, this.toastId);
+    const validationInfo: {isValid: boolean, toastId: number} = checkEmailAndPassword(email, password, this.toastId);
 
     // This is needed to prevent multiple toast from getting rendered.
     this.toastId = validationInfo.toastId;

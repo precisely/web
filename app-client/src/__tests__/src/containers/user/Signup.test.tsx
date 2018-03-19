@@ -15,7 +15,7 @@ import {Signup, SignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
-import {validateEmailAndPassword, showAlert} from 'src/utils';
+import {checkEmailAndPassword, showAlert} from 'src/utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -52,7 +52,7 @@ describe('Tests for Signup', () => {
         });
       });
 
-  validateEmailAndPassword = jest.fn()
+  checkEmailAndPassword = jest.fn()
       .mockImplementationOnce(() => {
         return {isValid: false, toastId: 1};
       })

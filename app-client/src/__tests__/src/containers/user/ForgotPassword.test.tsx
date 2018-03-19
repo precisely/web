@@ -12,9 +12,10 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ForgotPassword, ForgotPasswordState} from 'src/containers/user/ForgotPassword';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup} from 'src/components/ReusableComponents';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
+import {Email} from 'src/components/Email';
 import {showAlert} from 'src/utils';
 import {mockedHistory} from 'src/__tests__/testSetup';
 
@@ -69,7 +70,7 @@ describe('Tests for ForgotPassword', () => {
     ['Form', Form, 1],
     ['Button', Button, 1],
     ['FormGroup', FormGroup, 1],
-    ['Input', Input, 1],
+    ['Email', Email, 1],
     ['SignupLoginContainer', PageContent, 1]
   ]);
 
@@ -83,7 +84,7 @@ describe('Tests for ForgotPassword', () => {
       done: () => void,
       args: {id: string, value: string}
   ) => {
-    componentTree.find(`#${args.id}`).simulate('change', {target: {id: args.id, value: args.value}});
+    componentTree.find(Email).simulate('change', {target: {id: args.id, value: args.value}});
     expect(componentTree.state(args.id)).toEqual(args.value);
     done();
   }, [ // tslint:disable-next-line
