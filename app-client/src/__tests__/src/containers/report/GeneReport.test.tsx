@@ -21,6 +21,7 @@ import {Container} from 'src/components/ReusableComponents';
 import {store} from 'src/store';
 import {setLoadingState} from 'src/containers/report/actions';
 import {ReportList} from 'src/containers/report/interfaces';
+import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
 
 const createMockedNetworkFetch = require('apollo-mocknetworkinterface');
@@ -62,11 +63,26 @@ describe('GeneReport tests.', () => {
     });
   });
 
-  describe('When the report data is not loading.', () => {
-    const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl isLoading={false} />);
+  describe('When the report data is not loading and the report data is not present.', () => {
+    unroll('It should not render the TemplateRendered when the props are: #props', (
+        done: () => void,
+        args: {props: GeneReportProps}
+    ) => {
+      const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl {...args.props} />);
+      expect(componentTree.find(TemplateRenderer).length).toBe(0);
+      done();
+    }, [ // tslint:disable-next-line
+      ['props'],
+      [{isLoading: false}],
+      [{isLoading: false, reportData: []}]
+    ]);
+  });
 
-    it('should display a loading message.', () => {
-      expect(componentTree.contains('Data fetched.')).toBe(true);
+  describe('When the report data is present.', () => {
+    it('It should not render the TemplateRendered', () => {
+      const componentTree: ShallowWrapper<GeneReportProps> =
+          shallow(<GeneReportImpl isLoading={false} reportData={dummyData.Items} />);
+      expect(componentTree.find(TemplateRenderer).length).toBe(1);
     });
   });
 

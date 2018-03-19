@@ -21,10 +21,15 @@ export interface UserData {
   opaque_id: string;
   sample_id: string;
   quality: string;
+  variant_call: string;
 }
 
 export interface ListItem<DataType> {
   attrs: DataType;
+}
+
+export interface UserDataList {
+  Items: ListItem<UserData>[];
 }
 
 export interface ReportList {

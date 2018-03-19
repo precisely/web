@@ -26,8 +26,55 @@ export const dummyData: ReportList = {
         gene: 'demo',
         opaque_id: 'qwerty',
         sample_id: 'test',
-        quality: 'good'
+        quality: 'good',
+        variant_call: 'dummy'
       }
     }],
   },
 };
+
+export const dummyParsedContent: Array<Object> = [
+  {
+    'type': 'tag',
+    'name': 'usergenotypeswitch',
+    'children': [
+      {
+        'type': 'tag',
+        'name': 'genotypecase',
+        'children': [
+          {
+              'type': 'text',
+              'blocks': [
+                '<p>This is a dummy text.<\/p>'
+              ]
+          }
+        ],
+        'rawName': 'GenotypeCase',
+        'attrs': {
+          'svn': 'demo-variant_call-2'
+        },
+        'selfClosing': false
+      },
+      {
+        'type': 'tag',
+        'name': 'genotypecase',
+        'children': [
+          {
+              'type': 'text',
+              'blocks': [
+                '<p>This is a fallback text.<\/p>'
+              ]
+          }
+        ],
+        'rawName': 'GenotypeCase',
+        'attrs': {},
+        'selfClosing': false
+      }
+    ],
+    'rawName': 'UserGenotypeSwitch',
+    'attrs': {
+      'gene': 'demo-gene-2'
+    },
+    'selfClosing': false
+  }
+];

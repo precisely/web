@@ -16,13 +16,16 @@ import {Container} from 'src/components/ReusableComponents';
 import {PageContent} from 'src/components/PageContent';
 import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/containers/report/queries';
-import {isLoading} from 'src/containers/report/selectors';
+import {isLoading, getUserData, getReportData} from 'src/containers/report/selectors';
 import {store} from 'src/store';
 import {setLoadingState, setReportData} from 'src/containers/report/actions';
-import {ReportList} from 'src/containers/report/interfaces';
+import {ReportList, UserDataList, Report, ListItem} from 'src/containers/report/interfaces';
+import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 
 export interface GeneReportProps extends RouteComponentProps<void> {
-  isLoading: boolean;
+  isLoading?: boolean;
+  userData?: UserDataList;
+  reportData?: ListItem<Report>[];
 }
 
 export class GeneReportImpl extends React.Component<GeneReportProps> {
@@ -31,10 +34,18 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
     store.dispatch(setLoadingState());
   }
 
-  /**
-   * This is dummy container to fetch the results from the Report. 
-   * The actual implementation will be added in the next PR.
-   */
+  renderReports = (): JSX.Element[] | JSX.Element => {
+    const {reportData, userData} = this.props;
+
+    if (!reportData || !reportData.length) {
+      return <p>No reports found</p>;
+    }
+
+    return reportData.map((data: ListItem<Report>, index: number): JSX.Element => {
+      return <TemplateRenderer parsedContent={data.attrs.parsed_content} userData={userData} key={index} />;
+    });
+  }
+
   render(): JSX.Element {
     return (
       <div>
@@ -42,7 +53,7 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>Report data</h1>
           <PageContent>
-            {this.props.isLoading ? 'Fetching data. Please wait...' : 'Data fetched.'}
+            {this.props.isLoading ? 'Fetching data. Please wait...' : this.renderReports()}
           </PageContent>
         </Container>
       </div>
@@ -55,7 +66,7 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
 export const GeneReportWithApollo = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in the next PR.
-    variables: {slug: 'demo', userId: 'test-id', vendorDataType: 'precisely:demo'}
+    variables: {slug: 'demo-slug-2', userId: 'user_id-1', vendorDataType: 'precisely:test'}
   }),
   props: (props: OptionProps<void, {report: ReportList}>): void => {
     if (props.data.report) {
@@ -67,6 +78,8 @@ export const GeneReportWithApollo = graphql<any, any>(GetReport, {
 
 const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = createStructuredSelector({
   isLoading: isLoading(),
+  userData: getUserData(),
+  reportData: getReportData(),
 });
 
 export const GeneReport = connect(mapStateToProps)(GeneReportWithApollo);

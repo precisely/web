@@ -7,11 +7,22 @@
  */
 
 import {createSelector, OutputSelector} from 'reselect';
+import {UserDataList, Report, ListItem} from 'src/containers/report/interfaces';
 
 type Selector<T> = OutputSelector<Map<string, Object>, T, (res: boolean) => void>;
 
 export const selectReportsDomain = (state: Map<string, {isLoading: boolean}>) => state[`report`].toJS();
 
 export const isLoading = (): Selector<boolean> => createSelector(
-  selectReportsDomain, (data: {isLoading: boolean}): boolean => data.isLoading
+  selectReportsDomain, (report: {isLoading: boolean}): boolean => report.isLoading
+);
+
+export const getUserData = () => createSelector(
+  selectReportsDomain,
+  (report: {data: {userData: UserDataList}}) => report.data.userData,
+);
+
+export const getReportData = () => createSelector(
+  selectReportsDomain,  
+  (report: {data: {Items: ListItem<Report>[]}}) => report.data.Items,
 );
