@@ -7,7 +7,7 @@
 */
 
 import {seedReport, seedGenotype} from './seedDynamo';
-import {log} from 'util';
+import {log} from '../../logger';
 
 export const setEnvironment = (secrets: string) => {
   const lines: string[] = secrets.slice(1, secrets.length - 1).split(',');
@@ -19,6 +19,7 @@ export const setEnvironment = (secrets: string) => {
   });
 };
 
+/* istanbul ignore next */
 (async () => {
   log.error(`Seeding started for ${process.env.DB || process.env.NODE_ENV} environment.`);
   setEnvironment(process.argv.pop());

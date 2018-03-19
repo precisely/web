@@ -39,7 +39,7 @@ export const reportResolver = {
     const {slug, title, genes, rawContent} = args;
 
     try {
-      reportInstance = await Report.createAsync({slug, title, genes, raw_content: rawContent});
+      reportInstance = await Report.createAsync({slug, title, genes, rawContent: rawContent});
     } catch (error) {
       log.error(`reportResolver-create: ${error.message}`);
       return error;
@@ -76,7 +76,7 @@ export const reportResolver = {
 
     try {
       reportInstance = await Report.getAsync('report', slug);
-      
+
       if (!reportInstance) {
         throw new Error('No such record found');
       }

@@ -10,7 +10,7 @@ jest.mock('../../genotype-service/models/Genotype');
 
 import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
 import {genotypeResolver, CreateOrUpdateAttributes} from '../../genotype-service/api/resolver';
-import {hasAuthorizedRoles} from '../../utils';
+import {hasAuthorizedRoles, execAsync} from '../../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -27,12 +27,12 @@ describe('Genotype resolver tests.', () => {
   };
 
   const dummyRequestData: CreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
-  const dummyResponseData: GenotypeAttributes = {...commonData, opaque_id: 'PQR03'};
+  const dummyResponseData: GenotypeAttributes = {...commonData, opaqueId: 'PQR03'};
 
   Genotype.getAsync = jest.fn()
-      .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
+      .mockImplementationOnce(() => ({opaqueId: 'PQR03'}))
       .mockImplementationOnce(() => null)
-      .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
+      .mockImplementationOnce(() => ({opaqueId: 'PQR03'}))
       .mockImplementationOnce(() => null)
       .mockImplementationOnce((): {attrs: GenotypeAttributes} => ({attrs: dummyResponseData}))
       .mockImplementationOnce(() => null);
@@ -54,7 +54,8 @@ describe('Genotype resolver tests.', () => {
   Genotype.query = jest.fn(() => {
     return {
       limit: mockedLimit,
-      usingIndex: jest.fn(() => ({limit: mockedLimit}))
+      usingIndex: jest.fn(() => ({limit: mockedLimit})),
+      filter: jest.fn(() => ({in: jest.fn()})),
     };
   });
 
@@ -76,7 +77,7 @@ describe('Genotype resolver tests.', () => {
       expect(response).toEqual(dummyResponseData);
     });
 
-    it('should throw an error when the opaque_id is invalid.', async () => {
+    it('should throw an error when the opaqueId is invalid.', async () => {
       let response = await genotypeResolver
           .update({opaqueId: 'abcd', gene: 'XXXXX', source: 'helix'});
       expect(response[`message`]).toEqual('No such record found');
@@ -89,31 +90,33 @@ describe('Genotype resolver tests.', () => {
       expect(response).toEqual(dummyResponseData);
     });
 
-    it('should throw an error when the opaque_id is invalid.', async () => {
+    it('should throw an error when the opaqueId is invalid.', async () => {
       let response = await genotypeResolver.get({opaqueId: 'abcd', gene: 'XXXX'});
       expect(response[`message`]).toEqual('No such record found');
     });
   });
 
   describe('List test', () => {
-    it('should return an error message if required parameters are not present.', async () => {
-      let response = await genotypeResolver.list();
-      expect(response[`message`]).toEqual('Required parameters not present.');
+    execAsync = jest.fn()
+      .mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          resolve({items: [{attrs: {...commonData, opaqueId: 'PQR03'}}]});
+        });
+      })
+      .mockImplementationOnce(() => {
+        return new Promise((resolve, reject) => {
+          reject(new Error('genotypeResolver-list: mock error'));
+        });
+      });
+
+    it('should return an error message when it occurs.', async () => {
+      let response = await genotypeResolver.list({opaqueId: 'demo', genes: []});
+      expect(response[`message`]).toEqual('genotypeResolver-list: mock error');
     });
 
-    unroll('It should respond with the genotype data list when #params are present.', async (
-        done: () => void,
-        args: {params: {[key: string]: string | number}}
-    ) => {
-      let response = await genotypeResolver.list(args.params);
-      expect(response).toEqual({Items: [dummyResponseData]});
-      done();
-    }, [ // tslint:disable-next-line
-      ['params'],
-      [{opaqueId: 'PQR03'}],
-      [{gene: 'QWERTY2'}],
-      [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}}],
-      [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}, limit: 10}],
-    ]);
+    it('should return camelCased result when successful', async () => {
+      let response = await genotypeResolver.list({opaqueId: 'PQR03', genes: []});
+      expect(response).toEqual([dummyResponseData]);
+    });
   });
 });

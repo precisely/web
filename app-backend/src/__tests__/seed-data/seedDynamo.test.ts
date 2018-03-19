@@ -10,6 +10,7 @@ jest.mock('fs');
 
 import * as fs from 'fs';
 import {seedReport, dynamodbDocClient, seedGenotype} from '../../seed-data/scripts/seedDynamo';
+import {log} from '../../logger';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -20,22 +21,22 @@ describe('seedDynamo tests', () => {
     id: 'dummy-id',
     title: 'dummy-title',
     slug: 'dummy-slug',
-    raw_content: 'dummy-raw_content',
-    parsed_content: 'dummy-parsed_content',
-    top_level: false,
+    rawContent: 'dummy-rawContent',
+    parsedContent: 'dummy-parsedContent',
+    topLevel: false,
     genes: ['dummy-genes']
   };
 
   const dummyGenotype = {
-    opaque_id: 'dummy-opaque_id',
-    sample_id: 'dummy-sample_id',
+    opaqueId: 'dummy-opaqueId',
+    sampleId: 'dummy-sampleId',
     source: 'dummy-source',
     gene: 'dummy-gene',
-    variant_call: 'dummy-variant_call',
+    variantCall: 'dummy-variantCall',
     zygosity: 'dummy-zygosity',
-    start_base: 'dummy-start_base',
-    chromosome_name: 'dummy-chromosome_name',
-    variant_type: 'dummy-variant_type',
+    startBase: 'dummy-startBase',
+    chromosomeName: 'dummy-chromosomeName',
+    variantType: 'dummy-variantType',
     quality: 'dummy-quality'
   };
 
@@ -46,14 +47,14 @@ describe('seedDynamo tests', () => {
       });
   };
 
-  console.log = jest.fn();
+  log.error = jest.fn();
 
   dynamodbDocClient = jest.fn()
     .mockImplementation(() => {
       return {
         put: jest.fn()
           .mockImplementation((data, callback) => {
-            if (data.Item.id === 'dummy-id' || data.Item.opaque_id === 'dummy-opaque_id') {
+            if (data.Item.id === 'dummy-id' || data.Item.opaqueId === 'dummy-opaqueId') {
               callback(null);
             } else {
               callback(new Error('failed'));
@@ -63,7 +64,7 @@ describe('seedDynamo tests', () => {
     });
 
   beforeEach(() => {
-    console.log.mockClear();
+    log.error.mockClear();
   });
 
   unroll('it should #expectedResult for #case file', async (
@@ -72,18 +73,18 @@ describe('seedDynamo tests', () => {
   ) => {
     mockReadFileSync(args.mockReadData);
     args.functionName();
-    if (args.expectedResult === 'not call console.log when pass') {
-      expect(console.log).not.toBeCalled();
+    if (args.expectedResult === 'not call log.error when pass') {
+      expect(log.error).not.toBeCalled();
     } else {
-      expect(console.log).toBeCalledWith(`Unable to add ${args.case}`, 'invalid', '. Error JSON:', '{}');
+      expect(log.error).toBeCalledWith(`Unable to add ${args.case} invalid. Error JSON: {}`);
     }
     done();
   }, [ // tslint:disable-next-line
     ['case', 'functionName', 'mockReadData', 'expectedResult'],
-    ['Report', seedReport, dummyReport, 'not call console.log when pass'],
-    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'console.log error when fail'],
-    ['Genotype', seedGenotype, dummyGenotype, 'not call console.log when pass'],
-    ['Genotype', seedGenotype, { ...dummyGenotype, opaque_id: 'invalid' }, 'console.log error when fail']
+    ['Report', seedReport, dummyReport, 'not call log.error when pass'],
+    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'log.error error when fail'],
+    ['Genotype', seedGenotype, dummyGenotype, 'not call log.error when pass'],
+    ['Genotype', seedGenotype, { ...dummyGenotype, opaqueId: 'invalid' }, 'log.error error when fail']
   ]);
 
 });

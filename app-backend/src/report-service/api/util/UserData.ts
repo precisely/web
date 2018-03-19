@@ -9,18 +9,18 @@ export class UserData {
     this.genes = genes;
   }
   
-  private userData: UserDataMapAttributes;
+  private userDataMap: UserDataMapAttributes;
   private userId: string;
   private genes: string[];
   private vendorDataType: string;
   
   public genotypes = async() => {
     await this.getUserInstance();
-    return genotypeResolver.list({opaqueId: this.userData.opaqueId, genes: this.genes});
+    return genotypeResolver.list({opaqueId: this.userDataMap.opaqueId, genes: this.genes});
   }
 
   private getUserInstance = async () => {
-    this.userData = await userDataMapResolver.get({
+    this.userDataMap = await userDataMapResolver.get({
       userId: this.userId, 
       vendorDataType: this.vendorDataType
     });

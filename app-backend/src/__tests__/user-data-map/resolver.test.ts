@@ -16,16 +16,16 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should pass when no params are passed', async () => {
       let responseList: UserDataMapInstance[] = await userDataMapResolver.list();
-      let response: UserDataMapAttributes = responseList[0].get({plain: true});
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+      let response: UserDataMapAttributes = responseList[0];
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should pass when valid params are passed', async () => {
       let responseList: UserDataMapInstance[] = await userDataMapResolver.list({limit: 10, offset: 10});
-      let response: UserDataMapAttributes = responseList[0].get({plain: true});
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+      let response: UserDataMapAttributes = responseList[0];
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should throw error invalid params are passed', async () => {
@@ -38,19 +38,19 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should pass when valid params are passed', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.get({
-        user_id: 'test', 
-        vendor_data_type: 'test'
+        userId: 'test', 
+        vendorDataType: 'test'
       });
       
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should throw error invalid params are passed', async () => {
       try {
         let response: UserDataMapAttributes = await userDataMapResolver.get({
-          user_id: 'invalid', 
-          vendor_data_type: 'test'
+          userId: 'invalid', 
+          vendorDataType: 'test'
         });
       } catch (error) {
         expect(error.message).toEqual('No such user record found');
@@ -65,8 +65,8 @@ describe('UserDataMap resolver tests.', () => {
           userId: 'dummyId', 
           vendorDataType: 'test'
         });
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should throw error when data is missing', async () => {

@@ -13,10 +13,16 @@ import {UserDataMap} from '../../user-data-map/models/UserDataMap';
 
 const jsonPath = path.join(__dirname, '../data/');
 
+interface UserDataMapAttributes {
+  user_id: string;
+  vendor_data_type: string;
+  opaque_id: string;
+}
+
 export const seedUser = async () => {
   const promises: Bluebird<boolean>[] = [];
   const allUsers = JSON.parse(fs.readFileSync(jsonPath + 'UserData.json', 'utf8'));
-  allUsers.forEach((user: any) => {
+  allUsers.forEach((user: UserDataMapAttributes) => {
     promises.push(UserDataMap.upsert(user));
   });
   await Promise.all(promises);

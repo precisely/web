@@ -12,6 +12,7 @@ import {ReportAttributes, Report} from '../../report-service/models/Report';
 import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
 import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {genotypeResolver} from '../../genotype-service/api/resolver';
+import {execAsync} from '../../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -29,11 +30,15 @@ describe('Report resolver tests.', () => {
   };
 
   const dummyRequestData: CreateOrUpdateAttributes = {...commonData, rawContent: 'demo-content'};
-  const dummyResponseData: ReportAttributes = {...commonData, raw_content: 'demo-content'};
+  const dummyResponseData: ReportAttributes = {...commonData, rawContent: 'demo-content'};
 
   Report.createAsync = jest.fn()
       .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
       .mockImplementationOnce(() => {throw new Error('createAsync mock error'); });
+
+  Report.getAsync = jest.fn()
+      .mockImplementation((report, slug): {attrs: ReportAttributes} => (slug && {attrs: dummyResponseData}))
+      .mockImplementationOnce(() => {throw new Error('getAsync mock error'); });
 
   const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
     return {
@@ -56,10 +61,6 @@ describe('Report resolver tests.', () => {
   })
   .mockImplementationOnce(() => {throw new Error('query mock error'); });
 
-  userDataMapResolver.get = jest.fn()
-      .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
-      .mockImplementationOnce(() => {throw new Error('userDataMapResolver mock error'); });
-
   describe('Create tests', () => {
     it('should throw an error when the record already exists.', async () => {
       let response = await reportResolver.create(dummyRequestData, authorizer);
@@ -74,8 +75,15 @@ describe('Report resolver tests.', () => {
 
   describe('List test', () => {
 
+    execAsync = jest.fn()
+      .mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          resolve({items: [{attrs: {...commonData, rawContent: 'demo-content'}}]});
+        });
+      });
+
     it('should fail if an error occurs', async () => {
-      let response = await reportResolver.list({}, authorizer);
+      let response = await reportResolver.list({});
       expect(response[`message`]).toEqual('query mock error');
     });
   
@@ -83,8 +91,8 @@ describe('Report resolver tests.', () => {
         done: () => void,
         args: {params: {[key: string]: string | number}}
     ) => {
-      let response = await reportResolver.list(args.params, authorizer);
-      expect(response).toEqual({Items: [dummyResponseData]});
+      let response = await reportResolver.list(args.params);
+      expect(response).toEqual([dummyResponseData]);
       done();
     }, [ // tslint:disable-next-line
       ['params'],
@@ -96,30 +104,24 @@ describe('Report resolver tests.', () => {
   describe('Get tests', () => {
     it('should throw an error when the if user is not found.', async () => {
       let response = await reportResolver.get({}, authorizer);
-      expect(response[`message`]).toEqual('userDataMapResolver mock error');
+      expect(response[`message`]).toEqual('getAsync mock error');
     });
 
     it('should return an error message if required parameters are not present.', async () => {
       let response = await reportResolver.get({}, authorizer);
-      expect(response[`message`]).toEqual('Required parameters not present.');
+      expect(response[`message`]).toEqual('No such record found');
     });
 
-    unroll('it should respond with the report data list when #params are present.', async (
-        done: () => void,
-        args: {params: {[key: string]: string | number}}
-    ) => {
-      let response = await reportResolver.get(args.params, authorizer);
-      response[`userData`]({});
-      expect(genotypeResolver.list).toBeCalled();
-      expect(response[`Items`]).toEqual([dummyResponseData]);
-      expect(typeof response[`userData`]).toEqual('function');
-      done();
-    }, [ // tslint:disable-next-line
-      ['params'],
-      [{id: 'test'}],
-      [{slug: 'test'}],
-      [{slug: 'test', lastEvaluatedKeys: {slug: 'test', id: 'test'}}],
-    ]);
+    it('should return data successfully when no error occurs', async () => {
+      let response = await reportResolver.get({slug: 'test'}, {claims: {sub: 'demo-id'}});
+      let userData = response.userData({vendorDataType: 'demo'});
+      
+      expect(userData.genotypes).toBeInstanceOf(Promise);
+      expect(response[`userData`]).toBeInstanceOf(Function);
+      expect(response).toHaveProperty('title', 'demo-title');
+      expect(response).toHaveProperty('slug', 'demo-slug');
+      expect(response).toHaveProperty('genes', [ 'demo', 'genes' ]);
+    });
   });
 
 });

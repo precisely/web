@@ -13,6 +13,7 @@ import {
   createCognitoDataWithUser, 
   createDBData
 } from '../../seed-data/scripts/createFakeData';
+import {log} from '../../logger';
 const jsonfile = require('jsonfile');
 const unroll = require('unroll');
 unroll.use(it);
@@ -34,12 +35,12 @@ describe('createFakeData test', () => {
   });
 
   describe('saveJSONfile tests', () => {
-    console.log = jest.fn();
+    log.error = jest.fn();
 
     it('should create file with data passed', () => {
       saveJSONfile('test', [{demo: 'data'}]);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
-      expect(console.log).toBeCalledWith('test', 'created successfully.');
+      expect(log.error).toBeCalledWith('test created successfully.');
     });
   });
   

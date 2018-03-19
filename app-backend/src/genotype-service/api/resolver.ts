@@ -13,8 +13,6 @@ import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
 import {execAsync} from '../../utils';
 
-const toSnakeCase = require('lodash.snakecase');
-
 export interface ListGenotypeFilters {
   opaqueId: string;
   genes: string[];
@@ -40,20 +38,13 @@ export interface CreateOrUpdateAttributes {
 export const genotypeResolver = {
   async create(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
     let genotypeInstance: {attrs: GenotypeAttributes};
-    const dataForCreating: GenotypeAttributes = {};
-
-    for (const key in args) {
-      if (args[key]) {
-        dataForCreating[toSnakeCase(key)] = args[key];
-      }
-    }
 
     try {
       genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
       if (genotypeInstance) {
         throw new Error('Record already exists.');
       }
-      genotypeInstance = await Genotype.createAsync({...dataForCreating}, {overwrite: false});
+      genotypeInstance = await Genotype.createAsync(args, {overwrite: false});
     } catch (error) {
       log.error(`genotypeResolver-create: ${error.message}`);
       return error;
@@ -64,13 +55,6 @@ export const genotypeResolver = {
 
   async update(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
     let genotypeInstance: {attrs: GenotypeAttributes};
-    const dataToUpdate: GenotypeAttributes = {};
-
-    for (const key in args) {
-      if (args[key]) {
-        dataToUpdate[toSnakeCase(key)] = args[key];
-      }
-    }
 
     try {
       genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
@@ -78,7 +62,7 @@ export const genotypeResolver = {
         throw new Error('No such record found');
       }
 
-      genotypeInstance = await Genotype.updateAsync({...dataToUpdate});
+      genotypeInstance = await Genotype.updateAsync(args);
     } catch (error) {
       log.error(`genotypeResolver-update: ${error.message}`);
       return error;
