@@ -50,9 +50,12 @@
 - Report Resolvers.
 - A utility function to check the current user's roles.
 
-## [0.0.6] - 2018-03-13
+## [0.0.6] - 2018-03-19
 
 ### Added
 - Winston logger
 - A component to fetch the report data.
 - The react types path in the tsconfig.
+- Setup for the postgres.
+- A function to decrypt the secrets while performing migrations.
+- A script to set the environment before deployment.
