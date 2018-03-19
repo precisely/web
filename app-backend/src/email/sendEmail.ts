@@ -7,37 +7,31 @@
 */
 
 import * as AWS from 'aws-sdk';
+import {log} from '../logger';
 
 AWS.config.update({region: process.env.REGION});
 
-const params: AWS.SES.Types.SendEmailRequest = {
-  Destination: {
-    ToAddresses: ['shishir.anshuman@causecode.com'] // We can send email from a verified email only.
-  },
-  Message: {
-    Body: {
-      Html: {
-       Charset: 'UTF-8',
-       Data: 'Hello! This is a test email from dev.'
+export const sendEmail = async (recipients: string[], senderUsername: string, subject: string, message: string) => {
+
+  const params: AWS.SES.Types.SendEmailRequest = {
+    Destination: {ToAddresses: recipients},
+    Message: {
+      Body: {
+        /**
+         * This is just for the demonstration purpose. The email templates can be added when the email content and the
+         * design is decided.
+         */
+        Text: {Charset: 'UTF-8', Data: message},
       },
-      Text: {
-       Charset: 'UTF-8',
-       Data: '<h3>Hello! This is a test email from dev.</h3>'
-      }
-     },
-     Subject: {
-      Charset: 'UTF-8',
-      Data: 'Test email'
-     }
+      Subject: {Charset: 'UTF-8', Data: subject}
     },
-  Source: 'shishir.anshuman@causecode.com',
-};       
+    Source: `${senderUsername}@precise.ly`,
+  };
 
-const sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
-
-sendPromise.then((data) => {
-  // The console.log will be replaced with the logger once that PR is merged.
-  console.log('Message sent', data.MessageId);
-}).catch((err) => {
-  console.error(err, err.stack);
-});
+  try {
+    const sendPromise = await new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
+    log.info(`Email sent: ${sendPromise.MessageId}`);
+  } catch (error) {
+    log.error(`Error occured while sending email: ${error.stack}`);
+  }
+};
