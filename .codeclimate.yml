@@ -69,3 +69,4 @@ exclude_patterns:
   - "**/spec/"
   - "**/test/"
   - "**/__tests__/"
+  - "**/__mocks__/"

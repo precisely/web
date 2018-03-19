@@ -52,7 +52,8 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$"
     ],
     "moduleNameMapper": {
-      "^react-native$": "react-native-web"
+      "^react-native$": "react-native-web",
+      "amazon-cognito-identity-js": "<rootDir>/src/__mocks__/amazon-cognito-identity-js/index.js"
     },
     "moduleFileExtensions": [
       "web.ts",
