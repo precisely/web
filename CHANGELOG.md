@@ -50,7 +50,8 @@
 - Report Resolvers.
 - A utility function to check the current user's roles.
 
-## [0.0.6] - 2018-03-13
+## [0.0.6] - 2018-03-19
 
 ### Added
 - Winston logger
+- A function to send a sample email via SES.
