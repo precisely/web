@@ -7,12 +7,6 @@ type GenericResponse {
   message: String
 }
 
-type Query {
-  reports: [Report],
-  report(slug: String!): Report,
-}
+type Query
 
-type Mutation {
-  userDataMap(userId: String!, vendorDataType: String!): UserDataMap,
-  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
-}
+type Mutation

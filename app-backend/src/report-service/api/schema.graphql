@@ -14,3 +14,12 @@ type Report {
 type UserData {
   genotypes: [Genotype]
 }
+
+extend type Query {
+  reports: [Report],
+  report(slug: String!): Report,
+}
+
+extend type Mutation {
+  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
+}
