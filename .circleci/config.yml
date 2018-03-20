@@ -132,8 +132,9 @@ jobs:
                 name: Reporting CodeClimate results
                 command: |
                     AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
-                    cc-test-reporter sum-coverage coverage/codeclimate.*.json
-                    cc-test-reporter upload-coverage
+                    cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
+                    cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
+
 
     stage-deploy-frontend:
         <<: *frontend_defaults
