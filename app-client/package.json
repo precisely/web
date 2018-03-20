@@ -8,7 +8,7 @@
   "scripts": {
     "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
     "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
-    "build:dev": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/build.js",
+    "build:dev": "./node_modules/.bin/env-cmd ../config/security.env.dev node scripts/build.js",
     "build:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage node scripts/build.js",
     "build:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
     "compile": "yarn run clean && tsc",
@@ -182,6 +182,7 @@
     "@types/react-transition-group": "2.0.6",
     "@types/reactstrap": "5.0.12",
     "@types/redux-logger": "3.0.5",
+    "apollo-mocknetworkinterface": "2.0.0",
     "babel-eslint": "7.2.3",
     "enzyme": "3.1.0",
     "enzyme-adapter-react-16": "1.0.2",

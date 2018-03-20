@@ -446,6 +446,10 @@ apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.0.7, apollo-link@^1.2.1:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.6"
 
+apollo-mocknetworkinterface@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-mocknetworkinterface/-/apollo-mocknetworkinterface-2.0.0.tgz#5c0c8cc85255e365e65ecba7dcdfcc61ffdea7a8"
+
 apollo-utilities@^1.0.0, apollo-utilities@^1.0.4, apollo-utilities@^1.0.5, apollo-utilities@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.8.tgz#74d797d38953d2ba35e16f880326e2abcbc8b016"

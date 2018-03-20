@@ -1,4 +1,4 @@
-### Precisely-web (v0.0.3)
+### Precisely-web (v0.0.6)
 [![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/test_coverage)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/e00c72ba626c116fd8cf/maintainability)](https://codeclimate.com/repos/5a8b3859ebe4ae027e0022e2/maintainability)
 
 ---

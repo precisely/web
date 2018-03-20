@@ -32,6 +32,17 @@ module.exports = {
       {
         test: /\.graphql|gql?$/,
         loader: 'webpack-graphql-loader'
+      },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: "html-loader"
+          },
+          {
+            loader: "markdown-loader"
+          }
+        ]
       }
     ],
   },

@@ -13,6 +13,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Dashboard} from 'src/containers/user/Dashboard';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
+import {Container, Link} from 'src/components/ReusableComponents';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -33,7 +34,8 @@ describe('Dashboard tests.', () => {
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
     ['h1', 'h1', 1],
-    ['p', 'p', 1],
+    ['Link', Link, 1],
+    ['Container', Container, 1],
     ['PageContent', PageContent, 1]
   ]);
 });

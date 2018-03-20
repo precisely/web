@@ -33,7 +33,7 @@ UserDataMapMock.findAll = jest.fn((params: {limit: number, offset: number}): Pro
 });
 
 UserDataMapMock.findOne = jest.fn((params: {where: {user_id: string, vendor_data_type: string}}): 
-    PromiseLike<IUserDataMapInstance> => {
+    PromiseLike<UserDataMapInstance> => {
 
   return new Promise((resolve, reject): void => {
     if (params.where.user_id === 'test') {
