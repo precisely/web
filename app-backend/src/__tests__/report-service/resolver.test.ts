@@ -45,20 +45,10 @@ describe('Report resolver tests.', () => {
     };
   });
 
-  const mockedLimit = jest.fn((limit: number) => ({
-    execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),
-    startKey: mockedExecAsync,
-  }));
-
   genotypeResolver.list = jest.fn();
 
-  Report.query = jest.fn(() => {
-    return {
-      limit: mockedLimit,
-      usingIndex: jest.fn(() => ({limit: mockedLimit}))
-    };
-  })
-  .mockImplementationOnce(() => {throw new Error('query mock error'); });
+  Report.query = jest.fn()
+    .mockImplementationOnce(() => {throw new Error('query mock error'); });
 
   describe('Create tests', () => {
     it('should throw an error when the record already exists.', async () => {
@@ -95,8 +85,8 @@ describe('Report resolver tests.', () => {
       done();
     }, [ // tslint:disable-next-line
       ['params'],
-      [{slug: 'test', limit: 10}],
-      [{slug: 'QWERTY2', lastEvaluatedKeys: {slug: 'test', id: 'test'}}],
+      [{slug: 'test'}],
+      [{slug: 'QWERTY2'}],
     ]);
   });
 

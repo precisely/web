@@ -18,41 +18,18 @@ export interface UserDataMapAttributes {
   opaqueId: string;
 }
 
-export interface ListUserDataMapFilters {
-  limit?: number;
-  offset?: number;
-}
-
 export const userDataMapResolver = {
 
-  async list(args: ListUserDataMapFilters = {}): Promise<UserDataMapAttributes[]> {
-    let userDataMapInstances: UserDataMapInstance[];
-    const {limit = 15, offset = 0} = args;
-    const result: UserDataMapAttributes[] = [];
-
-    try {
-      userDataMapInstances = await UserDataMap.findAll({limit, offset});
-    } catch (error) {
-      log.error(`UserDataMap-list: ${error.message}`);
-      return error;
-    }
-    userDataMapInstances.forEach((userDataMapInstance) => {
-      result.push(camelcaseKeys(userDataMapInstance.get({plain: true})));
-    });
-    
-    return result;
-  },
-
-  async get(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
+  async get(args: {userId: string}): Promise<UserDataMapAttributes> {
     let userDataMapInstance: UserDataMapInstance;
-    const {userId, vendorDataType} = args;
+    const {userId} = args;
 
-    userDataMapInstance = await UserDataMap.findOne({where: {user_id: userId, vendor_data_type: vendorDataType}});
+    userDataMapInstance = await UserDataMap.findOne({where: {user_id: userId, vendor_data_type: 'precisely:genetics'}});
 
     if (!userDataMapInstance) {
       throw new Error('No such user record found');
     }
-    
+
     return camelcaseKeys(userDataMapInstance.get({plain: true}));
   },
 
@@ -68,10 +45,10 @@ export const userDataMapResolver = {
           }
         })
         .spread((user: UserDataMapInstance): UserDataMapInstance => {
-          /* 
+          /*
            *  findCreateFind returns [Instance, created]. Since we don't need created attribute,
            *  returning the user instance directly
-           */ 
+           */
 
           return user;
         });
@@ -92,6 +69,6 @@ export const queries = {
 
 /* istanbul ignore next */
 export const mutations = {
-  userDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
+  userDataMap: (root: any, args: {userId: string, vendorDataType: string}) =>
     userDataMapResolver.findOrCreate(args),
 };

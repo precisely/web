@@ -21,12 +21,8 @@ export interface CreateOrUpdateAttributes {
   genes: string[];
 }
 
-export interface ListReportFilters {
-  limit?: number;
-  id?: string;
+interface ReportInterface {
   slug?: string;
-  userId?: string;
-  vendorDataType?: string;
 }
 
 export interface ListReportObject {
@@ -68,8 +64,8 @@ export const reportResolver = {
     return result;
   },
 
-  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes &
-      {userData: (userArgs: {vendorDataType: string}) => {genotypes: Promise<GenotypeAttributes[]>}}> {
+  async get(args: ReportInterface, authorizer: AuthorizerAttributes): Promise<ReportAttributes &
+      {userData: () => {genotypes: Promise<GenotypeAttributes[]>}}> {
 
     const {slug} = args;
     let reportInstance: {attrs: ReportAttributes};
@@ -87,10 +83,9 @@ export const reportResolver = {
 
     return {
       ...reportInstance.attrs,
-      userData: (userArgs: {vendorDataType: string}) => {
+      userData: () => {
         const userData = new UserData(
             authorizer.claims.sub,
-            userArgs.vendorDataType,
             reportInstance.attrs.genes
           );
 
@@ -106,8 +101,8 @@ export const reportResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  reports: (root: any, args: ListReportFilters) => reportResolver.list(root.authorizer),
-  report: (root: any, args: ListReportFilters) => reportResolver.get(args, root.authorizer),
+  reports: (root: any) => reportResolver.list(root.authorizer),
+  report: (root: any, args: ReportInterface) => reportResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */

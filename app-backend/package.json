@@ -104,7 +104,7 @@
     "typescript": "2.6.2",
     "unroll": "1.5.0",
     "webpack": "3.8.1",
-    "webpack-graphql-loader": "0.0.23",
+    "webpack-graphql-loader": "0.1.0",
     "webpack-node-externals": "1.6.0"
   }
 }

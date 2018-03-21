@@ -21,7 +21,7 @@ describe('UserData tests.', () => {
     .mockImplementation(() => ({opaqueId: 'demo-id', vendorDataType: 'demo-vendor'}))
     .mockImplementationOnce(() => { throw new Error('No such user record found'); });
 
-  let userData = new UserData('demo-id', 'demo-vendorDataType', ['demo', 'gene']);
+  let userData = new UserData('demo-id', ['demo', 'gene']);
 
   it('should be an instance', () => {
     expect(userData).toBeInstanceOf(UserData);

@@ -8,7 +8,7 @@ type Report {
   genes: [String],
   createdAt: String
   updatedAt: String
-  userData(vendorDataType: String!): UserData,
+  userData: UserData,
 }
 
 type UserData {

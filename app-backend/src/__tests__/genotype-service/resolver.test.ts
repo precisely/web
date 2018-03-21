@@ -46,15 +46,8 @@ describe('Genotype resolver tests.', () => {
   Genotype.createAsync = Genotype.updateAsync = jest.fn()
       .mockImplementation((data: GenotypeAttributes): {attrs: GenotypeAttributes} => ({attrs: data}));
 
-  const mockedLimit = jest.fn((limit: number) => ({
-    execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),
-    startKey: mockedExecAsync,
-  }));
-
   Genotype.query = jest.fn(() => {
     return {
-      limit: mockedLimit,
-      usingIndex: jest.fn(() => ({limit: mockedLimit})),
       filter: jest.fn(() => ({in: jest.fn()})),
     };
   });
