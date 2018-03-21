@@ -19,7 +19,7 @@ export interface Genotype {
   quality: string;
 }
 
-export interface Genotypes {
+export interface UserData {
   genotypes: Genotype[];
 }
 
@@ -31,5 +31,5 @@ export interface ReportData {
   parsedContent: string;
   topLevel: boolean;
   genes: string[];
-  userData: Genotypes;
+  userData: UserData;
 }

@@ -7,9 +7,9 @@
  */
 
 import * as React from 'react';
-import {Genotype} from '../../containers/report/interfaces';
+import {Genotype} from 'src/containers/report/interfaces';
 
-const hasMatchingSvnForGene = (svn: string, genotypes: Genotype[]): boolean => {
+const findGenotype = (svn: string, genotypes: Genotype[]): boolean => {
   return genotypes.some(genotype => {
     return genotype.variantCall === svn;
   });
@@ -25,7 +25,7 @@ export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: an
     let genotypeCase: React.ReactNode;
 
     __children.map((child: {rawName: string, attrs: {svn: string}}): JSX.Element | void => {
-      if (child.rawName === 'GenotypeCase' && hasMatchingSvnForGene(child.attrs.svn, userData.genotypes)) {
+      if (child.rawName === 'GenotypeCase' && findGenotype(child.attrs.svn, userData.genotypes)) {
         genotypeCase = child;
         return;
       }
