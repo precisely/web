@@ -21,7 +21,7 @@ import {Container} from 'src/components/ReusableComponents';
 import {store} from 'src/store';
 import {setLoadingState} from 'src/containers/report/actions';
 import {ReportData} from 'src/containers/report/interfaces';
-import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
+import {MarkdownComponentRenderer} from 'src/components/report/MarkdownComponentRenderer';
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
 
 const createMockedNetworkFetch = require('apollo-mocknetworkinterface');
@@ -69,7 +69,7 @@ describe('Report tests.', () => {
         args: {props: ReportProps}
     ) => {
       const componentTree: ShallowWrapper<ReportProps> = shallow(<ReportImpl {...args.props} />);
-      expect(componentTree.find(TemplateRenderer).length).toBe(0);
+      expect(componentTree.find(MarkdownComponentRenderer).length).toBe(0);
       done();
     }, [ // tslint:disable-next-line
       ['props'],
@@ -79,10 +79,10 @@ describe('Report tests.', () => {
   });
 
   describe('When the report data is present.', () => {
-    it('It should not render the TemplateRendered', () => {
+    it('It should not render the MarkdownComponentRenderer', () => {
       const componentTree: ShallowWrapper<ReportProps> =
-          shallow(<ReportImpl isLoading={false} reportData={dummyData.Items} />);
-      expect(componentTree.find(TemplateRenderer).length).toBe(1);
+          shallow(<ReportImpl isLoading={false} reportData={dummyData} />);
+      expect(componentTree.find(MarkdownComponentRenderer).length).toBe(1);
     });
   });
 

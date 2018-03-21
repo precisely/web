@@ -7,8 +7,7 @@
  */
 
 import {UserGenotypeSwitch} from 'src/components/report/UserGenotypeSwitch';
-import {getUserDataByGene, hasMatchingSvnForGene} from 'src/containers/report/utils';
-import {dummyData} from 'src/__tests__/src/containers/report/testData';
+import {dummyData, parsedContentJson} from 'src/__tests__/src/containers/report/testData';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -17,31 +16,30 @@ describe('UserGenotypeSwitch tests', () => {
 
   const mockedRender: jest.Mock<void> = jest.fn<void>();
 
-  getUserDataByGene = jest.fn().mockReturnValue([dummyData.userData.Items[0].attrs]);
-  hasMatchingSvnForGene = jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false);
+  beforeEach(() => {
+    mockedRender.mockClear();
+  });
 
   it('should not call the render method when the children are not present', () => {
     UserGenotypeSwitch({gene: 'demo', userData: dummyData.userData}, mockedRender);
     expect(mockedRender).not.toBeCalled();
   });
 
-  unroll('It should render the children when the matching element is #condition', (
-      done: () => void,
-      args
-    ) => {
+  it('should render the correct child when the matching gene is found', () => {
     UserGenotypeSwitch(
-      {__children: [{attrs: {svn: 'dummy'}}], gene: 'demo', userData: dummyData.userData},
+      {__children: parsedContentJson[`children`], gene: 'MTHFR', userData: dummyData.userData},
       mockedRender
     );
 
-    ['<div>', {'attrs': {'svn': 'dummy'}}, '</div>'].forEach(element => {
-      expect(mockedRender).toBeCalledWith(element);
-    });
+    const genotypeCase = {
+      attrs: {svn: 'NC_000001.11:g.[11796322C>T];[11796322C>T]'},
+      children: [{blocks: ['<p>Et esse debitis minus et saepe.</p>'], type: 'text'}],
+      name: 'genotypecase',
+      rawName: 'GenotypeCase',
+      selfClosing: false,
+      type: 'tag'
+    };
 
-    done();
-  }, [ // tslint:disable-next-line
-    ['condition'],
-    ['found'],
-    ['not found']
-  ]);
+    expect(mockedRender).toBeCalledWith(genotypeCase);
+  });
 });

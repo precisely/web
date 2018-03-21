@@ -27,19 +27,6 @@ export interface ReportProps extends RouteComponentProps<void> {
   reportData?: ReportData;
 }
 
-const {Parser, markdownItEngine} = require('markdown-components');
-const customizedMarkdown: string = `
-<UserGenotypeSwitch gene="demo-gene-2">
-<GenotypeCase svn="NC_000001.11:g.[11796322C>T];[11796322C>T]">This is a dummy text.</GenotypeCase>
-<GenotypeCase>This is a fallback text.</GenotypeCase>
-</UserGenotypeSwitch>
-`;
-
-const parser = new Parser({markdownEngine: markdownItEngine()});
-let parsedElements = parser.parse(customizedMarkdown);
-parsedElements = JSON.stringify(parsedElements);
-console.log('parsedElements', parsedElements);
-
 export class ReportImpl extends React.Component<ReportProps> {
 
   componentWillMount(): void {
