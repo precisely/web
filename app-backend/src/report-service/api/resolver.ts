@@ -44,14 +44,14 @@ export const reportResolver = {
       log.error(`reportResolver-create: ${error.message}`);
       return error;
     }
-    
+
     return reportInstance.attrs;
   },
 
   async list(authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
     const result: ReportAttributes[] = [];
     let reportList: ListReportObject;
-    
+
     try {
       let query: Query & {execAsync?: () => ListReportObject};
       query = Report.query('report');
@@ -60,7 +60,7 @@ export const reportResolver = {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
     }
-    
+
     reportList.items.forEach((report: {attrs: ReportAttributes}) => {
       result.push(report.attrs);
     });
@@ -68,9 +68,9 @@ export const reportResolver = {
     return result;
   },
 
-  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes & 
+  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ReportAttributes &
       {userData: (userArgs: {vendorDataType: string}) => {genotypes: Promise<GenotypeAttributes[]>}}> {
-      
+
     const {slug} = args;
     let reportInstance: {attrs: ReportAttributes};
 
@@ -84,16 +84,16 @@ export const reportResolver = {
       log.error(`reportResolver-get: ${error.message}`);
       return error;
     }
-    
+
     return {
-      ...reportInstance.attrs, 
+      ...reportInstance.attrs,
       userData: (userArgs: {vendorDataType: string}) => {
         const userData = new UserData(
-            authorizer.claims.sub, 
-            userArgs.vendorDataType, 
+            authorizer.claims.sub,
+            userArgs.vendorDataType,
             reportInstance.attrs.genes
           );
-        
+
         return {
           genotypes: userData.genotypes(),
         };

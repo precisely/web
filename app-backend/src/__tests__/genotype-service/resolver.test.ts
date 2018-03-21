@@ -109,7 +109,7 @@ describe('Genotype resolver tests.', () => {
         });
       });
 
-    it('should return an error message when it occurs.', async () => {
+    it('should return an error message on error.', async () => {
       let response = await genotypeResolver.list({opaqueId: 'demo', genes: []});
       expect(response[`message`]).toEqual('genotypeResolver-list: mock error');
     });

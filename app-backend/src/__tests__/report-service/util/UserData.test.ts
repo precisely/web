@@ -1,3 +1,11 @@
+/*
+* Copyright (c) 2011-Present, Precise.ly, Inc.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or
+* without modification, are not permitted.
+*/
+
 import {UserData} from '../../../report-service/api/util/UserData';
 import {genotypeResolver} from '../../../genotype-service/api/resolver';
 import {userDataMapResolver} from '../../../user-data-map/api/resolver';
@@ -18,14 +26,11 @@ describe('UserData tests.', () => {
   it('should be an instance', () => {
     expect(userData).toBeInstanceOf(UserData);
     expect(userData.genotypes).toBeInstanceOf(Function);
-    expect(userData.genes).toEqual(['demo', 'gene']);
-    expect(userData.userId).toEqual('demo-id');
-    expect(userData.vendorDataType).toEqual('demo-vendorDataType');
   });
 
-  unroll('it should return #action if #case', async (
+  unroll('it should return #action if #condition', async (
       done: () => void,
-      args: {action: string; case: string}
+      args: {action: string; condition: string}
   ) => {
     try {
       await userData.genotypes();
@@ -35,8 +40,8 @@ describe('UserData tests.', () => {
     }
     done();
   }, [
-    ['action', 'case'],
-    ['Error', 'no user Found'],
+    ['action', 'condition'],
+    ['error', 'no user Found'],
     ['genotype list', 'successful']
   ]);
 

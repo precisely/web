@@ -31,7 +31,7 @@ export const Report = dynogels.define(addEnvironmentToTableName('precisely-repor
   timestamps : true,
 
   schema: {
-    hashKey: Joi.string().default('report'),
+    hashKey: Joi.string().default('report'), // Added to make list work without args
     id: dynogels.types.uuid(),
     title: Joi.string().required(),
     slug: Joi.string().required(),

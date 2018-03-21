@@ -24,9 +24,9 @@ const decryptAsync: (params: DecryptRequest) => Bluebird<Object> = Bluebird.prom
  */
 export async function getEnvironmentVariables(): Promise<Object | void> {
   try {
-    const result: DecryptResponse = 
+    const result: DecryptResponse =
         await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
-        
+
     return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
   } catch (error) {
     log.error(`Error while decrypting secrets: ${error.message}`);
@@ -64,6 +64,9 @@ export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRole
   return isAuthorized;
 }
 
+/**
+ * Utility function to execute dynamo query and returns object with lowerCamelCase keys
+ */
 // tslint:disable-next-line:no-any
 export const execAsync = async (query: Query & {execAsync?: () => any}) => {
   const result = await query.execAsync();

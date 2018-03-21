@@ -84,7 +84,7 @@ export const genotypeResolver = {
       log.error(`genotypeResolver-get: ${error.message}`);
       return error;
     }
-    
+
     return genotypeInstance.attrs;
   },
 
@@ -92,7 +92,7 @@ export const genotypeResolver = {
     const {opaqueId, genes} = args;
     const result: GenotypeAttributes[] = [];
     let genotypeList: ListGenotypeObject;
-    
+
     try {
       let query: Query & {execAsync?: () => ListGenotypeObject};
       query = Genotype.query(opaqueId).filter('geneFilter').in(genes);

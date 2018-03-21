@@ -10,7 +10,6 @@ jest.mock('../../report-service/models/Report');
 
 import {ReportAttributes, Report} from '../../report-service/models/Report';
 import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
-import {userDataMapResolver} from '../../user-data-map/api/resolver';
 import {genotypeResolver} from '../../genotype-service/api/resolver';
 import {execAsync} from '../../utils';
 
@@ -52,7 +51,7 @@ describe('Report resolver tests.', () => {
   }));
 
   genotypeResolver.list = jest.fn();
-  
+
   Report.query = jest.fn(() => {
     return {
       limit: mockedLimit,
@@ -86,7 +85,7 @@ describe('Report resolver tests.', () => {
       let response = await reportResolver.list({});
       expect(response[`message`]).toEqual('query mock error');
     });
-  
+
     unroll('it should respond with the report data list when #params are present.', async (
         done: () => void,
         args: {params: {[key: string]: string | number}}
@@ -115,7 +114,7 @@ describe('Report resolver tests.', () => {
     it('should return data successfully when no error occurs', async () => {
       let response = await reportResolver.get({slug: 'test'}, {claims: {sub: 'demo-id'}});
       let userData = response.userData({vendorDataType: 'demo'});
-      
+
       expect(userData.genotypes).toBeInstanceOf(Promise);
       expect(response[`userData`]).toBeInstanceOf(Function);
       expect(response).toHaveProperty('title', 'demo-title');
