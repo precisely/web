@@ -21,7 +21,7 @@ export const setEnvironment = (secrets: string) => {
 
 /* istanbul ignore next */
 (async () => {
-  log.error(`Seeding started for ${process.env.DB || process.env.NODE_ENV} environment.`);
+  log.info(`Seeding started for ${process.env.DB || process.env.NODE_ENV} environment.`);
   setEnvironment(process.argv.pop());
   const {seedUser} = await import('./seedPostgres');
 

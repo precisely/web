@@ -58,7 +58,7 @@ export const removeDuplicate = (array: string[]) => {
 
 export const saveJSONfile = (fileName: string, data: object[]) => {
   jsonfile.writeFileSync(jsonPath + fileName + '.json', data, { spaces: 2 });
-  log.error(`${fileName} created successfully.`);
+  log.info(`${fileName} created successfully.`);
 };
 
 export const createParsedContent = () => { // tslint:disable-next-line:max-line-length
@@ -78,7 +78,7 @@ export const createCognitoDataWithUser = async (max: number): Promise<string[]> 
     });
   }
   saveJSONfile('CognitoData', cognitoData);
-  
+
   return await seedCognito();
 };
 
@@ -90,7 +90,7 @@ export const createDBData = (max: number, userIdList: string[]) => {
       opaque_id: opaqueIdList[i],
       vendor_data_type: faker.random.arrayElement(vendorDataTypeList)
     });
-  
+
     reportData.push({
       hashKey: 'report',
       id: faker.random.uuid(),
@@ -103,10 +103,9 @@ export const createDBData = (max: number, userIdList: string[]) => {
         Array.from(
           {length: Math.floor(Math.random() * 5) + 1},
           () => faker.random.arrayElement(genesList)
-        )
-      )
+        ))
     });
-  
+
     genotypeData.push({
       opaqueId: faker.random.arrayElement(opaqueIdList),
       sampleId: '--', // although data type is clear, data format isn't. Will be updated once provided.

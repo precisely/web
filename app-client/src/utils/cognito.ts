@@ -17,6 +17,7 @@ import {
   CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
 
+/* istanbul ignore next */
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
   console.warn('Cognito configuration missing.');
 }
@@ -26,7 +27,7 @@ const poolData: {UserPoolId: string, ClientId: string} = {
   ClientId : process.env.REACT_APP_CLIENT_APP_ID,
 };
 
-const userPool: CognitoUserPool = new CognitoUserPool(poolData);
+export const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
 export const isLoggedIn = (): boolean => {
   return !!userPool.getCurrentUser();

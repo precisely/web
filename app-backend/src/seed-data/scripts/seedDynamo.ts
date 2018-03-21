@@ -20,11 +20,11 @@ AWS.config.update({
 });
 
 /* istanbul ignore next */
-export const dynamodbDocClient = () => { 
+export const dynamodbDocClient = () => {
   const connectionOptions: AWS.DynamoDB.Types.ClientConfiguration = {
     endpoint: process.env.DB === 'local' ? 'http://localhost:8000' : 'https://dynamodb.us-east-1.amazonaws.com'
   };
-  
+
   return new AWS.DynamoDB.DocumentClient(connectionOptions);
 };
 

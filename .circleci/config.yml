@@ -2,6 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
+version: 2
 
 ALIASES:
     defaults: &defaults
@@ -14,6 +15,10 @@ ALIASES:
             # documented at https://circleci.com/docs/2.0/circleci-images/
             # - image: circleci/mongo:3.4.4
 
+    checkout: &checkout
+        checkout:
+            path: ~/repo
+
     frontend_defaults: &frontend_defaults
         <<: *defaults
         working_directory: ~/repo/app-client
@@ -21,13 +26,6 @@ ALIASES:
     backend_defaults: &backend_defaults
         <<: *defaults
         working_directory: ~/repo/app-backend
-
-    upload_codeclimate_results: &upload_codeclimate_results
-        run:
-            name: Upload Code Climate Results
-            command: |
-                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json"
-                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
@@ -53,112 +51,25 @@ ALIASES:
                 - node_modules
             key: v1-dependencies-backend-{{ checksum "package.json" }}
 
-    checkout: &checkout
-        checkout:
-            path: ~/repo
+    yarn_install: &yarn_install
+        run:
+            name: Installing Dependencies
+            command: yarn install
 
-version: 2
-jobs:
-    build-frontend:
-        <<: *frontend_defaults
+    run_tests: &run_tests
+        run:
+            name: Run Tests
+            command: |
+                yarn test
+                yarn tslint
+                yarn eslint
 
-        steps:
-            - *checkout
-
-            - *restore_frontend_cache
-
-            - run:
-                name: Installing Dependencies
-                command: yarn install
-
-            - *save_frontend_cache
-
-            - run:
-                name: Frontend Tests
-                command: |
-                    cc-test-reporter before-build
-                    yarn test
-                    cc-test-reporter after-build --debug -t lcov --exit-code $?
-
-            - run:
-                name: TSLint
-                command: yarn tslint
-            - run:
-                name: ESLint
-                command: yarn eslint
-
-            - *upload_codeclimate_results
-
-    build-backend:
-        <<: *backend_defaults
-
-        steps:
-            - *checkout
-
-            - *restore_backend_cache
-
-            - run:
-                name: Installing Dependencies
-                command: yarn install
-
-            - *save_backend_cache
-
-            - run:
-                name: Backend Tests
-                command: |
-                    cc-test-reporter before-build
-                    yarn test
-                    cc-test-reporter after-build --debug -t lcov --exit-code $?
-
-            - run:
-                name: TSLint
-                command: yarn tslint
-            - run:
-                name: ESLint
-                command: yarn eslint
-
-            - *upload_codeclimate_results
-
-    report-codeclimate:
-        <<: *defaults
-        work_directory: ~/repo
-        steps:
-            - run:
-                name: Reporting CodeClimate results
-                command: |
-                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
-                    cc-test-reporter sum-coverage coverage/codeclimate.*.json
-                    cc-test-reporter upload-coverage
-
-    stage-deploy-frontend:
-        <<: *frontend_defaults
-
-        steps:
-            - *checkout
-
-            - *restore_frontend_cache
-
-            - run:
-                name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying frontend on Staging
-                command: yarn deploy:stage
-
-    stage-deploy-backend:
-        <<: *backend_defaults
-
-        steps:
-            - *checkout
-
-            - *restore_backend_cache
-
-            - run:
-                name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying backend on Staging
-                command: yarn deploy:stage
+    upload_coverage_report: &upload_coverage_report
+        run:
+            name: Save Coverage Report in S3
+            command: |
+                cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --add-prefix ${PWD##*/}
+                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
 workflows:
     version: 2
@@ -189,3 +100,68 @@ workflows:
                             - dev
                 requires:
                     - stage-deploy-backend
+
+jobs:
+    build-frontend:
+        <<: *frontend_defaults
+
+        steps:
+            - *checkout
+            - *restore_frontend_cache
+            - *yarn_install
+            - *save_frontend_cache
+            - *run_tests
+            - *upload_coverage_report
+
+    build-backend:
+        <<: *backend_defaults
+
+        steps:
+            - *checkout
+            - *restore_backend_cache
+            - *yarn_install
+            - *save_backend_cache
+            - *run_tests
+            - *upload_coverage_report
+
+    report-codeclimate:
+        <<: *defaults
+        work_directory: ~/repo
+        steps:
+            - run:
+                name: Reporting CodeClimate results
+                command: |
+                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
+                    cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
+                    cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
+
+
+    stage-deploy-frontend:
+        <<: *frontend_defaults
+
+        steps:
+            - *checkout
+
+            - *restore_frontend_cache
+
+            - run:
+                name: Set AWS Profile
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+            - run:
+                name: Deploying frontend on Staging
+                command: yarn deploy:stage
+
+    stage-deploy-backend:
+        <<: *backend_defaults
+
+        steps:
+            - *checkout
+
+            - *restore_backend_cache
+
+            - run:
+                name: Set AWS Profile
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+            - run:
+                name: Deploying backend on Staging
+                command: yarn deploy:stage
