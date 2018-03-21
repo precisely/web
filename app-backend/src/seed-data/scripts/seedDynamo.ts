@@ -12,6 +12,7 @@ import * as AWS from 'aws-sdk';
 import {ReportAttributes} from '../../report-service/models/Report';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
+import {log} from '../../logger';
 
 AWS.config.update({
   region: process.env.REACT_APP_AWS_AUTH_REGION,
@@ -50,12 +51,7 @@ export const seedReport = () => {
 
     docClient.put(ReportParams, (err: Error) => {
       if (err) {
-        console.log(
-          'Unable to add Report',
-          report.id,
-          '. Error JSON:',
-          JSON.stringify(err, null, 2)
-        );
+        log.error(`Unable to add Report ${report.id}. Error JSON: ${JSON.stringify(err, null, 2)}`);
       }
     });
   });
@@ -85,12 +81,7 @@ export const seedGenotype = () => {
 
     docClient.put(GenotypeParams, (err: Error) => {
       if (err) {
-        console.log(
-          'Unable to add Genotype',
-          genotype.opaque_id,
-          '. Error JSON:',
-          JSON.stringify(err, null, 2)
-        );
+        log.error(`Unable to add Genotype ${genotype.opaque_id}. Error JSON: ${JSON.stringify(err, null, 2)}`);
       }
     });
   });

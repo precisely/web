@@ -12,6 +12,7 @@ import {seedCognito} from './seedCognito';
 import {vendorDataTypeList, UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
 import {ReportAttributes} from '../../report-service/models/Report';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
+import {log} from '../../logger';
 const jsonfile = require('jsonfile');
 
 let limit = parseInt(process.argv.pop(), 10);
@@ -59,7 +60,7 @@ export const removeDuplicate = (array: string[]) => {
 
 export const saveJSONfile = (fileName: string, data: object[]) => {
   jsonfile.writeFileSync(jsonPath + fileName + '.json', data, { spaces: 2 });
-  console.log(fileName, 'created successfully.');
+  log.info(`${fileName} created successfully.`);
 };
 
 export const createParsedContent = () => { // tslint:disable-next-line:max-line-length
@@ -103,8 +104,7 @@ export const createDBData = (max: number, userIdList: string[]) => {
         Array.from(
           {length: Math.floor(Math.random() * 5) + 1},
           () => faker.random.arrayElement(genesList)
-        )
-      )
+        ))
     });
   
     genotypeData.push({

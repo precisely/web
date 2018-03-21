@@ -10,6 +10,7 @@ jest.mock('fs');
 
 import * as fs from 'fs';
 import {seedReport, dynamodbDocClient, seedGenotype} from '../../seed-data/scripts/seedDynamo';
+import {log} from '../../logger';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -46,7 +47,7 @@ describe('seedDynamo tests', () => {
       });
   };
 
-  console.log = jest.fn();
+  log.error = jest.fn();
 
   dynamodbDocClient = jest.fn()
     .mockImplementation(() => {
@@ -63,7 +64,7 @@ describe('seedDynamo tests', () => {
     });
 
   beforeEach(() => {
-    console.log.mockClear();
+    log.error.mockClear();
   });
 
   unroll('it should #expectedResult for #case file', async (
@@ -72,18 +73,18 @@ describe('seedDynamo tests', () => {
   ) => {
     mockReadFileSync(args.mockReadData);
     args.functionName();
-    if (args.expectedResult === 'not call console.log when pass') {
-      expect(console.log).not.toBeCalled();
+    if (args.expectedResult === 'not call log.error when pass') {
+      expect(log.error).not.toBeCalled();
     } else {
-      expect(console.log).toBeCalledWith(`Unable to add ${args.case}`, 'invalid', '. Error JSON:', '{}');
+      expect(log.error).toBeCalledWith(`Unable to add ${args.case} invalid. Error JSON: {}`);
     }
     done();
   }, [ // tslint:disable-next-line
     ['case', 'functionName', 'mockReadData', 'expectedResult'],
-    ['Report', seedReport, dummyReport, 'not call console.log when pass'],
-    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'console.log error when fail'],
-    ['Genotype', seedGenotype, dummyGenotype, 'not call console.log when pass'],
-    ['Genotype', seedGenotype, { ...dummyGenotype, opaque_id: 'invalid' }, 'console.log error when fail']
+    ['Report', seedReport, dummyReport, 'not call log.error when pass'],
+    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'log.error error when fail'],
+    ['Genotype', seedGenotype, dummyGenotype, 'not call log.error when pass'],
+    ['Genotype', seedGenotype, { ...dummyGenotype, opaque_id: 'invalid' }, 'log.error error when fail']
   ]);
 
 });
