@@ -14,13 +14,13 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {createHttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {GeneReportImpl, GeneReportProps, GeneReportWithApollo} from 'src/containers/report/GeneReport';
+import {ReportImpl, ReportProps, ReportWithApollo} from 'src/containers/report/Report';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
 import {Container} from 'src/components/ReusableComponents';
 import {store} from 'src/store';
 import {setLoadingState} from 'src/containers/report/actions';
-import {ReportList} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/containers/report/interfaces';
 import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
 
@@ -33,12 +33,12 @@ configure({adapter: new Adapter()});
 
 Radium.TestMode.enable();
 
-describe('GeneReport tests.', () => {
+describe('Report tests.', () => {
 
   store.dispatch = jest.fn();
 
   describe('When the report data is loading.', () => {
-    const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl isLoading={true} />);
+    const componentTree: ShallowWrapper<ReportProps> = shallow(<ReportImpl isLoading={true} />);
 
     it('should dispatch an action to set the loading state before the component is mounted', () => {
       expect(store.dispatch).toHaveBeenCalledWith(setLoadingState());
@@ -66,9 +66,9 @@ describe('GeneReport tests.', () => {
   describe('When the report data is not loading and the report data is not present.', () => {
     unroll('It should not render the TemplateRendered when the props are: #props', (
         done: () => void,
-        args: {props: GeneReportProps}
+        args: {props: ReportProps}
     ) => {
-      const componentTree: ShallowWrapper<GeneReportProps> = shallow(<GeneReportImpl {...args.props} />);
+      const componentTree: ShallowWrapper<ReportProps> = shallow(<ReportImpl {...args.props} />);
       expect(componentTree.find(TemplateRenderer).length).toBe(0);
       done();
     }, [ // tslint:disable-next-line
@@ -80,14 +80,14 @@ describe('GeneReport tests.', () => {
 
   describe('When the report data is present.', () => {
     it('It should not render the TemplateRendered', () => {
-      const componentTree: ShallowWrapper<GeneReportProps> =
-          shallow(<GeneReportImpl isLoading={false} reportData={dummyData.Items} />);
+      const componentTree: ShallowWrapper<ReportProps> =
+          shallow(<ReportImpl isLoading={false} reportData={dummyData.Items} />);
       expect(componentTree.find(TemplateRenderer).length).toBe(1);
     });
   });
 
   describe('When the component is wrapped with the graphql', () => {
-    const createResponse = (): {data: {report: ReportList}} => ({data: {report: dummyData}});
+    const createResponse = (): {data: {report: ReportData}} => ({data: {report: dummyData}});
 
     const mockedNetworkFetch = createMockedNetworkFetch(createResponse, {timeout: 1});
 
@@ -98,12 +98,12 @@ describe('GeneReport tests.', () => {
 
     const componentTree: ReactWrapper = mount(
       <ApolloProvider client={client}>
-        <GeneReportWithApollo/>
+        <ReportWithApollo/>
       </ApolloProvider>
     );
 
-    it('should render the GeneReport data successfully.', () => {
-      expect(componentTree.find(GeneReportImpl).length).toEqual(1);
+    it('should render the Report data successfully.', () => {
+      expect(componentTree.find(ReportImpl).length).toEqual(1);
     });
 
   });

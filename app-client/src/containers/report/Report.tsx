@@ -22,7 +22,7 @@ import {setLoadingState, setReportData} from 'src/containers/report/actions';
 import {ReportData} from 'src/containers/report/interfaces';
 import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 
-export interface GeneReportProps extends RouteComponentProps<void> {
+export interface ReportProps extends RouteComponentProps<void> {
   isLoading?: boolean;
   reportData?: ReportData;
 }
@@ -39,7 +39,7 @@ const parser = new Parser({markdownEngine: markdownItEngine()});
 const parsedElements = parser.parse(customizedMarkdown);
 console.log('parsedElements', parsedElements);
 
-export class GeneReportImpl extends React.Component<GeneReportProps> {
+export class ReportImpl extends React.Component<ReportProps> {
 
   componentWillMount(): void {
     store.dispatch(setLoadingState());
@@ -77,7 +77,7 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
 
 // TODO Figure out correct types for the exported component.
 // tslint:disable-next-line
-export const GeneReportWithApollo = graphql<any, any>(GetReport, {
+export const ReportWithApollo = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.
     variables: {slug: 'dolorem-error-minima', vendorDataType: 'precisely:test'}
@@ -88,11 +88,11 @@ export const GeneReportWithApollo = graphql<any, any>(GetReport, {
       store.dispatch(setReportData(props.data.report));
     }
   }
-})(GeneReportImpl);
+})(ReportImpl);
 
 const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = createStructuredSelector({
   isLoading: isLoading(),
   reportData: getReportData(),
 });
 
-export const GeneReport = connect(mapStateToProps)(GeneReportWithApollo);
+export const Report = connect(mapStateToProps)(ReportWithApollo);
