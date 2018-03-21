@@ -16,17 +16,28 @@ import {Container} from 'src/components/ReusableComponents';
 import {PageContent} from 'src/components/PageContent';
 import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/containers/report/queries';
-import {isLoading, getUserData, getReportData} from 'src/containers/report/selectors';
+import {isLoading, getReportData} from 'src/containers/report/selectors';
 import {store} from 'src/store';
 import {setLoadingState, setReportData} from 'src/containers/report/actions';
-import {ReportList, UserDataList, Report, ListItem} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/containers/report/interfaces';
 import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
 
 export interface GeneReportProps extends RouteComponentProps<void> {
   isLoading?: boolean;
-  userData?: UserDataList;
-  reportData?: ListItem<Report>[];
+  reportData?: ReportData;
 }
+
+const {Parser, markdownItEngine} = require('markdown-components');
+const customizedMarkdown: string = `
+<UserGenotypeSwitch gene="demo-gene-2">
+<GenotypeCase svn="NC_000001.11:g.[11796322C>T];[11796322C>T]">This is a dummy text.</GenotypeCase>
+<GenotypeCase>This is a fallback text.</GenotypeCase>
+</UserGenotypeSwitch>
+`;
+
+const parser = new Parser({markdownEngine: markdownItEngine()});
+const parsedElements = parser.parse(customizedMarkdown);
+console.log('parsedElements', parsedElements);
 
 export class GeneReportImpl extends React.Component<GeneReportProps> {
 
@@ -34,16 +45,19 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
     store.dispatch(setLoadingState());
   }
 
-  renderReports = (): JSX.Element[] | JSX.Element => {
-    const {reportData, userData} = this.props;
+  renderReports = (): JSX.Element => {
+    const {reportData} = this.props;
 
-    if (!reportData || !reportData.length) {
+    if (!reportData || !reportData.parsedContent) {
       return <p>No reports found</p>;
     }
 
-    return reportData.map((data: ListItem<Report>, index: number): JSX.Element => {
-      return <TemplateRenderer parsedContent={data.attrs.parsed_content} userData={userData} key={index} />;
-    });
+    return (
+      <div>
+        <h6>{reportData.title}</h6>
+        <TemplateRenderer parsedContent={parsedElements} userData={reportData.userData} />
+      </div>
+    );
   }
 
   render(): JSX.Element {
@@ -65,10 +79,10 @@ export class GeneReportImpl extends React.Component<GeneReportProps> {
 // tslint:disable-next-line
 export const GeneReportWithApollo = graphql<any, any>(GetReport, {
   options: () => ({
-    // Dummy parameters to fetch the data. Will be removed in the next PR.
-    variables: {slug: 'demo-slug-2', userId: 'user_id-1', vendorDataType: 'precisely:test'}
+    // Dummy parameters to fetch the data. Will be removed in future.
+    variables: {slug: 'dolorem-error-minima', vendorDataType: 'precisely:test'}
   }),
-  props: (props: OptionProps<void, {report: ReportList}>): void => {
+  props: (props: OptionProps<void, {report: ReportData}>): void => {
     if (props.data.report) {
       // storing the data in the redux for now.
       store.dispatch(setReportData(props.data.report));
@@ -78,7 +92,6 @@ export const GeneReportWithApollo = graphql<any, any>(GetReport, {
 
 const mapStateToProps: Selector<Map<string, Object>, {isLoading: boolean}> = createStructuredSelector({
   isLoading: isLoading(),
-  userData: getUserData(),
   reportData: getReportData(),
 });
 

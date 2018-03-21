@@ -9,7 +9,7 @@
 import {fromJS, Map} from 'immutable';
 import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/containers/report/actionTypes';
 import {GenericAction} from 'src/interfaces';
-import {ReportList} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/containers/report/interfaces';
 
 export const initialState = fromJS({
   isLoading: false,
@@ -18,7 +18,7 @@ export const initialState = fromJS({
 
 export function reportReducer(
     state:  Map<string, Object> = initialState,
-    action: GenericAction<ReportList>
+    action: GenericAction<ReportData>
 ): Map<string, Object> {
   switch (action.type) {
 

@@ -9,14 +9,14 @@
 import * as React from 'react';
 import {UserGenotypeSwitch} from 'src/components/report/UserGenotypeSwitch';
 import {GenotypeCase} from 'src/components/report/GenotypeCase';
-import {UserDataList} from 'src/containers/report/interfaces';
+import {Genotypes} from 'src/containers/report/interfaces';
 
 const {Renderer} = require('markdown-components');
 const streams = require('memory-streams'); 
 
 export interface TemplateRendererProps {
   parsedContent: string;
-  userData: UserDataList;
+  userData: Genotypes;
 }
 
 const renderer = new Renderer({

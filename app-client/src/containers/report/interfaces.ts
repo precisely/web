@@ -6,33 +6,30 @@
  * without modification, are not permitted.
  */
 
-export interface Report {
+export interface Genotype {
+  opaqueId: string;
+  sampleId: string;
+  source: string;
+  gene: string;
+  variantCall: string;
+  zygosity: string;
+  startBase: string;
+  chromosomeName: string;
+  variantType: string;
+  quality: string;
+}
+
+export interface Genotypes {
+  genotypes: Genotype[];
+}
+
+export interface ReportData {
   id: string;
   title: string;
   slug: string;
-  raw_content: string;
-  parsed_content: string;
-  top_level: boolean;
+  rawContent: string;
+  parsedContent: string;
+  topLevel: boolean;
   genes: string[];
-}
-
-export interface UserData {
-  gene: string;
-  opaque_id: string;
-  sample_id: string;
-  quality: string;
-  variant_call: string;
-}
-
-export interface ListItem<DataType> {
-  attrs: DataType;
-}
-
-export interface UserDataList {
-  Items: ListItem<UserData>[];
-}
-
-export interface ReportList {
-  Items: ListItem<Report>[];
-  userData?: {Items: ListItem<UserData>[]};
+  userData: Genotypes;
 }
