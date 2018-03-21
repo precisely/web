@@ -10,6 +10,7 @@ import * as React from 'react';
 import {Genotype} from 'src/containers/report/interfaces';
 
 const findGenotype = (svn: string, genotypes: Genotype[]): boolean => {
+  console.log('genotypes', genotypes);
   return genotypes.some(genotype => {
     return genotype.variantCall === svn;
   });

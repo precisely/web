@@ -9,17 +9,20 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure} from 'enzyme';
-import {TemplateRenderer, TemplateRendererProps} from 'src/components/report/TemplateRenderer';
-import {dummyParsedContent, dummyData} from 'src/__tests__/src/containers/report/testData';
+import {dummyData} from 'src/__tests__/src/containers/report/testData';
+import {
+  MarkdownComponentRenderer,
+  MarkdownComponentRendererProps,
+} from 'src/components/report/MarkdownComponentRenderer';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('TemplateRenderer tests.', () => {
-  const componentTree: ShallowWrapper<TemplateRendererProps> =
-      shallow(<TemplateRenderer parsedContent={dummyParsedContent} userData={dummyData.userData} />);
+describe('MarkdownComponentRenderer tests.', () => {
+  const componentTree: ShallowWrapper<MarkdownComponentRendererProps> =
+      shallow(<MarkdownComponentRenderer parsedContent={dummyData.parsedContent} userData={dummyData.userData} />);
 
   it('should render the div element.', () => {
     expect(componentTree.find('div').length).toBe(1);

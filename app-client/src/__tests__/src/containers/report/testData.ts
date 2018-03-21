@@ -6,75 +6,26 @@
  * without modification, are not permitted.
  */
 
-import {ReportList} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/containers/report/interfaces';
 
-export const dummyData: ReportList = {
-  Items: [{
-    attrs: {
-      id: 'qwerty1234',
-      title: 'A title',
-      slug: 'demo',
-      raw_content: 'I am the RAW content',
-      parsed_content: 'And, I am the Parsed content.',
-      top_level: true,
-      genes: ['a', 'b'],
-    }
-  }],
+export const dummyData: ReportData = {
+  slug: 'dolorem-error-minima',
+  id: 'cb1f87a2-f201-44f7-8cc6-4fbf4c859d8c',
+  title: 'Accusamus vitae quo excepturi voluptas esse.',
+  genes: [
+    'MTHFR'
+  ],
+  rawContent: '--',
+  parsedContent: "[{\"type\":\"tag\",\"name\":\"usergenotypeswitch\",\"children\":[{\"type\":\"tag\",\"name\":\"genotypecase\",\"children\":[{\"type\":\"text\",\"blocks\":[\"<p>Et esse debitis minus et saepe.</p>\"]}],\"rawName\":\"GenotypeCase\",\"attrs\":{\"svn\":\"NC_000001.11:g.[11796322C>T];[11796322C>T]\"},\"selfClosing\":false},{\"type\":\"tag\",\"name\":\"genotypecase\",\"children\":[{\"type\":\"text\",\"blocks\":[\"<p>This is a fallback text.</p>\"]}],\"rawName\":\"GenotypeCase\",\"attrs\":{},\"selfClosing\":false}],\"rawName\":\"UserGenotypeSwitch\",\"attrs\":{\"gene\":\"MTHFR\"},\"selfClosing\":false}]",
   userData: {
-    Items: [{
-      attrs: {
-        gene: 'demo',
-        opaque_id: 'qwerty',
-        sample_id: 'test',
-        quality: 'good',
-        variant_call: 'dummy'
-      }
-    }],
-  },
-};
-
-export const dummyParsedContent: Array<Object> = [
-  {
-    'type': 'tag',
-    'name': 'usergenotypeswitch',
-    'children': [
+    genotypes: [
       {
-        'type': 'tag',
-        'name': 'genotypecase',
-        'children': [
-          {
-              'type': 'text',
-              'blocks': [
-                '<p>This is a dummy text.<\/p>'
-              ]
-          }
-        ],
-        'rawName': 'GenotypeCase',
-        'attrs': {
-          'svn': 'demo-variant_call-2'
-        },
-        'selfClosing': false
-      },
-      {
-        'type': 'tag',
-        'name': 'genotypecase',
-        'children': [
-          {
-              'type': 'text',
-              'blocks': [
-                '<p>This is a fallback text.<\/p>'
-              ]
-          }
-        ],
-        'rawName': 'GenotypeCase',
-        'attrs': {},
-        'selfClosing': false
+        opaqueId: '2550d9a7-a04f-4246-a171-00f4e6b4b0d6',
+        quality: '--',
+        gene: 'MTHFR',
+        zygosity: '--',
+        variantCall: 'NC_000001.11:g.[11796322C>T];[11796322C>T]',
       }
     ],
-    'rawName': 'UserGenotypeSwitch',
-    'attrs': {
-      'gene': 'demo-gene-2'
-    },
-    'selfClosing': false
-  }
-];
+  },
+};

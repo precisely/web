@@ -8,14 +8,14 @@
 
 export interface Genotype {
   opaqueId: string;
-  sampleId: string;
-  source: string;
+  sampleId?: string;
+  source?: string;
   gene: string;
   variantCall: string;
   zygosity: string;
-  startBase: string;
-  chromosomeName: string;
-  variantType: string;
+  startBase?: string;
+  chromosomeName?: string;
+  variantType?: string;
   quality: string;
 }
 
@@ -29,7 +29,7 @@ export interface ReportData {
   slug: string;
   rawContent: string;
   parsedContent: string;
-  topLevel: boolean;
+  topLevel?: boolean;
   genes: string[];
   userData: UserData;
 }

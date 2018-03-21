@@ -20,7 +20,7 @@ import {isLoading, getReportData} from 'src/containers/report/selectors';
 import {store} from 'src/store';
 import {setLoadingState, setReportData} from 'src/containers/report/actions';
 import {ReportData} from 'src/containers/report/interfaces';
-import {TemplateRenderer} from 'src/components/report/TemplateRenderer';
+import {MarkdownComponentRenderer} from 'src/components/report/MarkdownComponentRenderer';
 
 export interface ReportProps extends RouteComponentProps<void> {
   isLoading?: boolean;
@@ -36,7 +36,8 @@ const customizedMarkdown: string = `
 `;
 
 const parser = new Parser({markdownEngine: markdownItEngine()});
-const parsedElements = parser.parse(customizedMarkdown);
+let parsedElements = parser.parse(customizedMarkdown);
+parsedElements = JSON.stringify(parsedElements);
 console.log('parsedElements', parsedElements);
 
 export class ReportImpl extends React.Component<ReportProps> {
@@ -55,7 +56,7 @@ export class ReportImpl extends React.Component<ReportProps> {
     return (
       <div>
         <h6>{reportData.title}</h6>
-        <TemplateRenderer parsedContent={parsedElements} userData={reportData.userData} />
+        <MarkdownComponentRenderer parsedContent={reportData.parsedContent} userData={reportData.userData} />
       </div>
     );
   }
