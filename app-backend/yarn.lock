@@ -38,14 +38,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/dynogels@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@types/dynogels/-/dynogels-8.0.0.tgz#6f4ee60565c3417a656a821ff38b2a38a4ac05c9"
-  dependencies:
-    "@types/joi" "*"
-    "@types/node" "*"
-    aws-sdk "^2.58.0"
-
 "@types/faker@4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@types/faker/-/faker-4.1.2.tgz#f8ab50c9f9af68c160dd71b63f83e24b712d0df5"
@@ -66,9 +58,9 @@
   version "21.1.4"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.4.tgz#83c5c474dd6dee5bef9d014ff36787edfd4ab5a7"
 
-"@types/joi@*":
-  version "13.0.5"
-  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.0.5.tgz#50829402204e8fec8ee287eeb37d79fbff34913c"
+"@types/joi@^13.0.6":
+  version "13.0.6"
+  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.0.6.tgz#3a34a8573e36b33fdf37b9b54d8f9ecbc3153888"
 
 "@types/lodash@*":
   version "4.14.104"
@@ -534,7 +526,7 @@ aws-sdk@2.188.0:
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
 
-aws-sdk@^2.3.19, aws-sdk@^2.58.0, aws-sdk@^2.7.0, aws-sdk@^2.72.0, aws-sdk@^2.75.0:
+aws-sdk@^2.3.19, aws-sdk@^2.7.0, aws-sdk@^2.72.0, aws-sdk@^2.75.0:
   version "2.203.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.203.0.tgz#7573c1274a4350bd5d78a6db93c9eeab40940acb"
   dependencies:

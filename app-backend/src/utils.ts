@@ -8,7 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import * as Bluebird from 'bluebird';
-import {Query} from 'dynogels';
+import {Query} from 'dynogels-promisified';
 import {AuthorizerAttributes} from './interfaces';
 import {log} from './logger';
 
@@ -68,7 +68,7 @@ export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRole
  * Utility function to execute dynamo query and returns object with lowerCamelCase keys
  */
 // tslint:disable-next-line:no-any
-export const execAsync = async (query: Query & {execAsync?: () => any}) => {
-  const result = await query.execAsync();
+export async function execAsync<T>(query: Query) {
+  const result : T = await query.execAsync();
   return camelcaseKeys(result);
 };

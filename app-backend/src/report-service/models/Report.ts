@@ -10,6 +10,7 @@ import * as Joi from 'joi';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
+import {Model} from 'dynogels';
 
 export interface ReportAttributes {
   hashKey: 'report';
@@ -24,7 +25,7 @@ export interface ReportAttributes {
 }
 
 /* istanbul ignore next */
-export const Report = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
+export const Report : Model<ReportAttributes> = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
   hashKey: 'hashKey',
   rangeKey: 'slug',
 
