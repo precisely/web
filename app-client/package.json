@@ -6,17 +6,17 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/start.js",
-    "test": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
-    "build:dev": "./node_modules/.bin/env-cmd ../config/security.env.local node scripts/build.js",
-    "build:stage": "./node_modules/.bin/env-cmd ../config/security.env.stage node scripts/build.js",
-    "build:prod": "./node_modules/.bin/env-cmd ../config/security.env.prod node scripts/build.js",
+    "start": "env-cmd ../config/security.env.local node scripts/start.js",
+    "test": "env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
+    "build:dev": "env-cmd ../config/security.env.local node scripts/build.js",
+    "build:stage": "env-cmd ../config/security.env.stage node scripts/build.js",
+    "build:prod": "env-cmd ../config/security.env.prod node scripts/build.js",
     "compile": "yarn run clean && tsc",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
-    "deploy:dev": "yarn run build:dev && ./node_modules/.bin/serverless client deploy -s dev",
-    "deploy:stage": "yarn run build:stage && ./node_modules/.bin/serverless client deploy -s stage",
-    "deploy:prod": "yarn run build:prod && ./node_modules/.bin/serverless client deploy -s prod"
+    "deploy:dev": "yarn run build:dev && serverless client deploy -s dev",
+    "deploy:stage": "yarn run build:stage && serverless client deploy -s stage",
+    "deploy:prod": "yarn run build:prod && serverless client deploy -s prod"
   },
   "jest": {
     "collectCoverage": true,

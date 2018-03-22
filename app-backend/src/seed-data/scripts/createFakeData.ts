@@ -56,7 +56,7 @@ export const removeDuplicate = (array: string[]) => {
   return Array.from(new Set(array));
 };
 
-export const saveJSONfile = (fileName: string, data: object[]) => {
+export const saveJSONFile = (fileName: string, data: object[]) => {
   jsonfile.writeFileSync(jsonPath + fileName + '.json', data, { spaces: 2 });
   log.info(`${fileName} created successfully.`);
 };
@@ -77,7 +77,7 @@ export const createCognitoDataWithUser = async (max: number): Promise<string[]> 
       roles: faker.random.arrayElement(['USER', 'ADMIN'])
     });
   }
-  saveJSONfile('CognitoData', cognitoData);
+  saveJSONFile('CognitoData', cognitoData);
 
   return await seedCognito();
 };
@@ -120,9 +120,9 @@ export const createDBData = (max: number, userIdList: string[]) => {
     });
   }
 
-  saveJSONfile('UserData', userData);
-  saveJSONfile('ReportData', reportData);
-  saveJSONfile('GenotypeData', genotypeData);
+  saveJSONFile('UserData', userData);
+  saveJSONFile('ReportData', reportData);
+  saveJSONFile('GenotypeData', genotypeData);
 };
 
 /* istanbul ignore next */

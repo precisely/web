@@ -8,7 +8,7 @@
 
 import {seedCognito} from '../../seed-data/scripts/seedCognito';
 import {
-  saveJSONfile,
+  saveJSONFile,
   removeDuplicate,
   createCognitoDataWithUser,
   createDBData
@@ -34,11 +34,11 @@ describe('createFakeData test', () => {
     });
   });
 
-  describe('saveJSONfile tests', () => {
+  describe('saveJSONFile tests', () => {
     log.info = jest.fn();
 
     it('should create file with data passed', () => {
-      saveJSONfile('test', [{demo: 'data'}]);
+      saveJSONFile('test', [{demo: 'data'}]);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
       expect(log.info).toBeCalledWith('test created successfully.');
     });
