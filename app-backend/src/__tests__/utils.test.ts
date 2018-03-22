@@ -26,9 +26,8 @@ jest.mock('aws-sdk', () => {
   };
 });
 
-import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles, execAsync} from '../utils';
+import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../utils';
 import {AuthorizerAttributes} from '../interfaces';
-import {Query} from 'dynogels';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -87,22 +86,5 @@ describe('Tests for hasAuthorizedRoles', () => {
   it('should return true when the current user is an admin.', () => {
     const result: boolean = hasAuthorizedRoles({claims: {'custom:roles': 'USER, ADMIN', sub: ''}}, ['ADMIN']);
     expect(result).toEqual(true);
-  });
-});
-
-describe('Tests for execAsync', () => {
-
-  const fakeQuery: Query & {execAsync: Mock<{}>} = {
-    execAsync: jest.fn(() => {
-      return {
-        demo_key: 'value',
-        camel_case: 'demo'
-      };
-    })
-  };
-
-  it('should return camelcased result of executed query.', async () => {
-    const result = await execAsync(fakeQuery);
-    expect(result).toEqual({demoKey: 'value', camelCase: 'demo'});
   });
 });

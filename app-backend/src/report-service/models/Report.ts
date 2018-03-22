@@ -10,22 +10,22 @@ import * as Joi from 'joi';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
-import {Model} from 'dynogels';
+import {Model} from 'dynogels-promisified';
 
 export interface ReportAttributes {
-  hashKey: 'report';
+  hashKey?: 'report';
   id?: string;
   title: string;
   slug: string;
-  rawContent: string;
-  parsedContent: string;
-  topLevel: boolean;
-  genes: string[];
+  rawContent?: string;
+  parsedContent?: string;
+  topLevel?: boolean;
+  genes?: string[];
   genotype?: GenotypeAttributes[];
 }
 
 /* istanbul ignore next */
-export const Report : Model<ReportAttributes> = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
+export const Report: Model<ReportAttributes> = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
   hashKey: 'hashKey',
   rangeKey: 'slug',
 

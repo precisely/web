@@ -11,7 +11,6 @@ jest.mock('../../report-service/models/Report');
 import {ReportAttributes, Report} from '../../report-service/models/Report';
 import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
 import {genotypeResolver} from '../../genotype-service/api/resolver';
-import {execAsync} from '../../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -32,23 +31,22 @@ describe('Report resolver tests.', () => {
   const dummyResponseData: ReportAttributes = {...commonData, rawContent: 'demo-content'};
 
   Report.createAsync = jest.fn()
-      .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
+      .mockImplementation((data: ReportAttributes) => ({
+        get: (): ReportAttributes => data
+      }))
       .mockImplementationOnce(() => {throw new Error('createAsync mock error'); });
 
   Report.getAsync = jest.fn()
-      .mockImplementation((report, slug): {attrs: ReportAttributes} => (slug && {attrs: dummyResponseData}))
+      .mockImplementation((report, slug) => (slug && {get: (): ReportAttributes => dummyResponseData}))
       .mockImplementationOnce(() => {throw new Error('getAsync mock error'); });
-
-  const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
-    return {
-      execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
-    };
-  });
 
   genotypeResolver.list = jest.fn();
 
   Report.query = jest.fn()
-    .mockImplementationOnce(() => {throw new Error('query mock error'); });
+    .mockImplementationOnce(() => {throw new Error('query mock error'); })
+    .mockImplementation(() => ({
+      execAsync: jest.fn(() => ({Items: [{get: () => ({...commonData, rawContent: 'demo-content'})}]}))
+    })
 
   describe('Create tests', () => {
     it('should throw an error when the record already exists.', async () => {
@@ -63,13 +61,6 @@ describe('Report resolver tests.', () => {
   });
 
   describe('List test', () => {
-
-    execAsync = jest.fn()
-      .mockImplementation(() => {
-        return new Promise((resolve, reject) => {
-          resolve({items: [{attrs: {...commonData, rawContent: 'demo-content'}}]});
-        });
-      });
 
     it('should fail if an error occurs', async () => {
       let response = await reportResolver.list({});
@@ -103,7 +94,7 @@ describe('Report resolver tests.', () => {
 
     it('should return data successfully when no error occurs', async () => {
       let response = await reportResolver.get({slug: 'test'}, {claims: {sub: 'demo-id'}});
-      let userData = response.userData({vendorDataType: 'demo'});
+      let userData = response.userData();
 
       expect(userData.genotypes).toBeInstanceOf(Promise);
       expect(response[`userData`]).toBeInstanceOf(Function);

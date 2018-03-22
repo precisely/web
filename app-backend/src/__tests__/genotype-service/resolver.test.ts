@@ -10,7 +10,7 @@ jest.mock('../../genotype-service/models/Genotype');
 
 import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
 import {genotypeResolver, CreateOrUpdateAttributes} from '../../genotype-service/api/resolver';
-import {hasAuthorizedRoles, execAsync} from '../../utils';
+import {hasAuthorizedRoles} from '../../utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -30,27 +30,29 @@ describe('Genotype resolver tests.', () => {
   const dummyResponseData: GenotypeAttributes = {...commonData, opaqueId: 'PQR03'};
 
   Genotype.getAsync = jest.fn()
-      .mockImplementationOnce(() => ({opaqueId: 'PQR03'}))
+      .mockImplementationOnce(() => ({get: () => ({opaqueId: 'PQR03'})}))
       .mockImplementationOnce(() => null)
-      .mockImplementationOnce(() => ({opaqueId: 'PQR03'}))
+      .mockImplementationOnce(() => ({get: () => ({opaqueId: 'PQR03'})}))
       .mockImplementationOnce(() => null)
-      .mockImplementationOnce((): {attrs: GenotypeAttributes} => ({attrs: dummyResponseData}))
+      .mockImplementationOnce(() => ({get: () => dummyResponseData}))
       .mockImplementationOnce(() => null);
 
-  const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
-    return {
-      execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
-    };
-  });
-
   Genotype.createAsync = Genotype.updateAsync = jest.fn()
-      .mockImplementation((data: GenotypeAttributes): {attrs: GenotypeAttributes} => ({attrs: data}));
+      .mockImplementation((data: GenotypeAttributes) => ({
+        get: (): GenotypeAttributes => data
+      }));
 
-  Genotype.query = jest.fn(() => {
-    return {
-      filter: jest.fn(() => ({in: jest.fn()})),
-    };
-  });
+  const execAsync = jest.fn()
+    .mockImplementation(() => ({Items: [{get: () => ({...commonData, opaqueId: 'PQR03'})}]}))
+    .mockImplementationOnce(() => {throw new Error('genotypeResolver-list: mock error'); });
+
+  Genotype.query = jest.fn(() => ({
+      filter: jest.fn(() => ({
+        in: jest.fn(() => ({
+          execAsync
+        }))
+      })),
+  }));
 
   describe('Create tests', () => {
     it('should throw an error when the record already exists.', async () => {
@@ -90,24 +92,12 @@ describe('Genotype resolver tests.', () => {
   });
 
   describe('List test', () => {
-    execAsync = jest.fn()
-      .mockImplementation(() => {
-        return new Promise((resolve, reject) => {
-          resolve({items: [{attrs: {...commonData, opaqueId: 'PQR03'}}]});
-        });
-      })
-      .mockImplementationOnce(() => {
-        return new Promise((resolve, reject) => {
-          reject(new Error('genotypeResolver-list: mock error'));
-        });
-      });
-
     it('should return an error message on error.', async () => {
       let response = await genotypeResolver.list({opaqueId: 'demo', genes: []});
       expect(response[`message`]).toEqual('genotypeResolver-list: mock error');
     });
 
-    it('should return camelCased result when successful', async () => {
+    it('should return result when successful', async () => {
       let response = await genotypeResolver.list({opaqueId: 'PQR03', genes: []});
       expect(response).toEqual([dummyResponseData]);
     });

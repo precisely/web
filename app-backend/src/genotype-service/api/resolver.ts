@@ -6,20 +6,15 @@
 * without modification, are not permitted.
 */
 
-import {Query} from 'dynogels';
+import {Query, ExecResult, Item} from 'dynogels-promisified';
 import {Genotype, GenotypeAttributes} from '../models/Genotype';
 import {hasAuthorizedRoles} from '../../utils';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
-import {execAsync} from '../../utils';
 
 export interface ListGenotypeFilters {
   opaqueId: string;
   genes: string[];
-}
-
-export interface ListGenotypeObject {
-  items: {attrs: GenotypeAttributes}[];
 }
 
 export interface CreateOrUpdateAttributes {
@@ -37,7 +32,7 @@ export interface CreateOrUpdateAttributes {
 
 export const genotypeResolver = {
   async create(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
-    let genotypeInstance: {attrs: GenotypeAttributes};
+    let genotypeInstance: Item<GenotypeAttributes>;
 
     try {
       genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
@@ -50,11 +45,11 @@ export const genotypeResolver = {
       return error;
     }
 
-    return genotypeInstance.attrs;
+    return genotypeInstance.get();
   },
 
   async update(args: CreateOrUpdateAttributes): Promise<GenotypeAttributes> {
-    let genotypeInstance: {attrs: GenotypeAttributes};
+    let genotypeInstance: Item<GenotypeAttributes>;
 
     try {
       genotypeInstance = await Genotype.getAsync(args.opaqueId, args.gene);
@@ -68,11 +63,11 @@ export const genotypeResolver = {
       return error;
     }
 
-    return genotypeInstance.attrs;
+    return genotypeInstance.get();
   },
 
   async get(args: {opaqueId: string, gene: string}, authorizer: AuthorizerAttributes): Promise<GenotypeAttributes> {
-    let genotypeInstance: {attrs: GenotypeAttributes};
+    let genotypeInstance: Item<GenotypeAttributes>;
 
     try {
       hasAuthorizedRoles(authorizer, ['ADMIN']);
@@ -85,25 +80,25 @@ export const genotypeResolver = {
       return error;
     }
 
-    return genotypeInstance.attrs;
+    return genotypeInstance.get();
   },
 
   async list(args: ListGenotypeFilters): Promise<GenotypeAttributes[]> {
     const {opaqueId, genes} = args;
     const result: GenotypeAttributes[] = [];
-    let genotypeList: ListGenotypeObject;
+    let genotypeList: ExecResult<GenotypeAttributes>;
 
     try {
-      let query: Query & {execAsync?: () => ListGenotypeObject};
+      let query: Query<GenotypeAttributes>;
       query = Genotype.query(opaqueId).filter('geneFilter').in(genes);
-      genotypeList = await execAsync(query);
+      genotypeList = await query.execAsync();
     } catch (error) {
       log.error(`genotypeResolver-list: ${error.message}`);
       return error;
     }
 
-    genotypeList.items.forEach((report: {attrs: GenotypeAttributes}) => {
-      result.push(report.attrs);
+    genotypeList.Items.forEach((genotype: Item<GenotypeAttributes>) => {
+      result.push(genotype.get());
     });
 
     return result;

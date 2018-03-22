@@ -151,7 +151,7 @@ declare module "dynogels" {
 
   // Dynogels Item
   export interface Item<Attributes={any:any}> {
-      get(key?: string): { [key: string]: any };
+      get(key?: string): Attributes;
       set(params: {}): Item<Attributes>;
       save(callback?: DynogelsItemCallback<Attributes>): void;
       update(options: UpdateItemOptions, callback?: DynogelsItemCallback<Attributes>): void;
@@ -270,10 +270,10 @@ declare module "dynogels" {
 
 declare module "dynogels-promisified" {
   import {
-    Model, Scan, Query, Item,
+    Scan as DynogelScan, Query as DynogelQuery, Item as DynogelItem,
     GetItemOptions, CreateItemOptions, UpdateItemOptions, DestroyItemOptions,
     CreateTablesOptions, DynogelsGlobalOptions, Throughput,
-    QueryWhereChain, ScanWhereChain, QueryFilterChain, ExecResult
+    ScanWhereChain, ExecResult, BaseChain, ExtendedChain
   } from "dynogels";
 
   import stream = require("stream");
@@ -306,9 +306,13 @@ declare module "dynogels-promisified" {
     updateTableAsync(): Promise<AWS.DynamoDB.UpdateTableOutput>;
     describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
     deleteTableAsync(): void;
+    query(hashKey: any): Query<Attributes>;
   }
 
-  export interface Item <Attributes={any:any}> {
+  export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
+  export type QueryFilterChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
+
+  export interface Item<Attributes={any:any}> extends DynogelItem<Attributes> {
     saveAsync(): Promise<Item<Attributes>>;
     updateAsync(options: UpdateItemOptions): Promise<Item<Attributes>>;
     updateAsync(): Promise<Item<Attributes>>;
@@ -316,10 +320,13 @@ declare module "dynogels-promisified" {
     destroyAsync(): Promise<Item<Attributes>>;
   }
 
-  export interface Query<Attributes={any:any}> {
+  export interface Query<Attributes={any:any}> extends DynogelQuery<Attributes> {
     execAsync(): Promise<ExecResult<Attributes>>;
+    where(keyName: string): QueryWhereChain<Attributes>;
+    filter(keyName: string): QueryFilterChain<Attributes>;
   }
 
-  export interface Scan<Attributes={any:any}> {
+  export interface Scan<Attributes={any:any}> extends DynogelScan<Attributes> {
     execAsync(): Promise<ExecResult<Attributes>>;
+  }
 }

@@ -6,12 +6,11 @@
 * without modification, are not permitted.
 */
 
-import {Query} from 'dynogels';
+import {Query, ExecResult, Item} from 'dynogels-promisified';
 import {Report, ReportAttributes} from '../models/Report';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
-import {execAsync} from '../../utils';
 import {UserData} from './util/UserData';
 
 export interface CreateOrUpdateAttributes {
@@ -25,13 +24,9 @@ interface ReportInterface {
   slug?: string;
 }
 
-export interface ListReportObject {
-  items: {attrs: ReportAttributes}[];
-}
-
 export const reportResolver = {
   async create(args: CreateOrUpdateAttributes, authorizer: AuthorizerAttributes): Promise<ReportAttributes> {
-    let reportInstance: {attrs: ReportAttributes};
+    let reportInstance: Item<ReportAttributes>;
     const {slug, title, genes, rawContent} = args;
 
     try {
@@ -41,24 +36,24 @@ export const reportResolver = {
       return error;
     }
 
-    return reportInstance.attrs;
+    return reportInstance.get();
   },
 
   async list(authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
     const result: ReportAttributes[] = [];
-    let reportList: ListReportObject;
+    let reportList: ExecResult<ReportAttributes>;
 
     try {
-      let query: Query & {execAsync?: () => ListReportObject};
+      let query: Query<ReportAttributes>;
       query = Report.query('report');
-      reportList = await execAsync(query);
+      reportList = await query.execAsync();
     } catch (error) {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
     }
 
-    reportList.items.forEach((report: {attrs: ReportAttributes}) => {
-      result.push(report.attrs);
+    reportList.Items.forEach((report: Item<ReportAttributes>) => {
+      result.push(report.get());
     });
 
     return result;
@@ -68,7 +63,7 @@ export const reportResolver = {
       {userData: () => {genotypes: Promise<GenotypeAttributes[]>}}> {
 
     const {slug} = args;
-    let reportInstance: {attrs: ReportAttributes};
+    let reportInstance: Item<ReportAttributes>;
 
     try {
       reportInstance = await Report.getAsync('report', slug);
@@ -82,11 +77,11 @@ export const reportResolver = {
     }
 
     return {
-      ...reportInstance.attrs,
+      ...reportInstance.get(),
       userData: () => {
         const userData = new UserData(
             authorizer.claims.sub,
-            reportInstance.attrs.genes
+            reportInstance.get().genes
           );
 
         return {

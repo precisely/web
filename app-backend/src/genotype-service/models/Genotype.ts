@@ -9,6 +9,7 @@
 import * as Joi from 'joi';
 import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
+import {Model} from 'dynogels-promisified';
 
 export interface GenotypeAttributes {
   opaqueId?: string;
@@ -24,7 +25,9 @@ export interface GenotypeAttributes {
 }
 
 /* istanbul ignore next */
-export const Genotype = dynogels.define(addEnvironmentToTableName('precisely-genotype', '01'), {
+export const Genotype: Model<GenotypeAttributes> =
+    dynogels.define(addEnvironmentToTableName('precisely-genotype', '01'), {
+
   hashKey : 'opaqueId',
   rangeKey: 'gene',
 
