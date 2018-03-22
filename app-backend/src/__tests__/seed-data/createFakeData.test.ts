@@ -8,9 +8,9 @@
 
 import {seedCognito} from '../../seed-data/scripts/seedCognito';
 import {
-  saveJSONfile, 
-  removeDuplicate, 
-  createCognitoDataWithUser, 
+  saveJSONFile,
+  removeDuplicate,
+  createCognitoDataWithUser,
   createDBData
 } from '../../seed-data/scripts/createFakeData';
 import {log} from '../../logger';
@@ -19,9 +19,9 @@ const unroll = require('unroll');
 unroll.use(it);
 
 describe('createFakeData test', () => {
-  
+
   jsonfile.writeFileSync = jest.fn();
-  
+
   beforeEach(() => {
     jsonfile.writeFileSync.mockClear();
   });
@@ -34,16 +34,16 @@ describe('createFakeData test', () => {
     });
   });
 
-  describe('saveJSONfile tests', () => {
+  describe('saveJSONFile tests', () => {
     log.info = jest.fn();
 
     it('should create file with data passed', () => {
-      saveJSONfile('test', [{demo: 'data'}]);
+      saveJSONFile('test', [{demo: 'data'}]);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
       expect(log.info).toBeCalledWith('test created successfully.');
     });
   });
-  
+
   describe('createCognitoDataWithUser tests', () => {
     seedCognito = jest.fn(() => ['demo', 'test']);
 
