@@ -7,3 +7,8 @@
 */
 
 export {CSSProperties as CSS} from 'react';
+
+export interface GenericAction<Payload = {}> {
+    type: string;
+    payload?: Payload;
+}
