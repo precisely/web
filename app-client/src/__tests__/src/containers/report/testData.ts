@@ -15,7 +15,7 @@ export const dummyData: ReportData = {
   genes: [
     'MTHFR'
   ],
-  rawContent: '--',
+  rawContent: '--', // tslint:disable-next-line
   parsedContent: "[{\"type\":\"tag\",\"name\":\"usergenotypeswitch\",\"children\":[{\"type\":\"tag\",\"name\":\"genotypecase\",\"children\":[{\"type\":\"text\",\"blocks\":[\"<p>Et esse debitis minus et saepe.</p>\"]}],\"rawName\":\"GenotypeCase\",\"attrs\":{\"svn\":\"NC_000001.11:g.[11796322C>T];[11796322C>T]\"},\"selfClosing\":false},{\"type\":\"tag\",\"name\":\"genotypecase\",\"children\":[{\"type\":\"text\",\"blocks\":[\"<p>This is a fallback text.</p>\"]}],\"rawName\":\"GenotypeCase\",\"attrs\":{},\"selfClosing\":false}],\"rawName\":\"UserGenotypeSwitch\",\"attrs\":{\"gene\":\"MTHFR\"},\"selfClosing\":false}]",
   userData: {
     genotypes: [

@@ -7,7 +7,7 @@
  */
 
 import {Map, fromJS} from 'immutable';
-import {ReportList} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/containers/report/interfaces';
 import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/containers/report/actionTypes';
 import {GenericAction} from 'src/interfaces';
 import {reportReducer, initialState} from 'src/containers/report/reducers';
@@ -18,7 +18,7 @@ unroll.use(it);
 
 describe('Report reducers tests.', () => {
 
-  const getActionData = (type: string, payload?: ReportList): GenericAction<ReportList> => {
+  const getActionData = (type: string, payload?: ReportData): GenericAction<ReportData> => {
     return {type, payload};
   };
 
@@ -37,7 +37,7 @@ describe('Report reducers tests.', () => {
     ['not available.', undefined],
   ]);
 
-  it('should set the  when the type is SET_LOADING_STATE.', () => {
+  it('should set the isLoading to true when the type is SET_LOADING_STATE.', () => {
     expect(reportReducer(initialState, getActionData(SET_LOADING_STATE)))
         .toEqual(fromJS({data: {}, isLoading: true}));
   });
@@ -47,8 +47,8 @@ describe('Report reducers tests.', () => {
       args: {
         condition: string,
         actionType: string,
-        actionPayload: ReportList,
-        result: {data: ReportList, isLaoding: boolean}
+        actionPayload: ReportData,
+        result: {data: ReportData, isLaoding: boolean}
       }
   ) => {
     expect(reportReducer(initialState, getActionData(args.actionType, args.actionPayload)).toJS())

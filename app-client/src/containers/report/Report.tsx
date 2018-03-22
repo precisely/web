@@ -68,7 +68,7 @@ export class ReportImpl extends React.Component<ReportProps> {
 export const ReportWithApollo = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.
-    variables: {slug: 'dolorem-error-minima', vendorDataType: 'precisely:test'}
+    variables: {slug: 'dolorem-error-minima'}
   }),
   props: (props: OptionProps<void, {report: ReportData}>): void => {
     if (props.data.report) {

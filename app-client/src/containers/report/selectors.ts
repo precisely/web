@@ -14,7 +14,7 @@ type Selector<T> = OutputSelector<Map<string, Object>, T, (res: boolean) => void
 export const selectReportsDomain = (state: Map<string, {isLoading: boolean}>) => state[`report`].toJS();
 
 export const isLoading = (): Selector<boolean> => createSelector(
-  selectReportsDomain, (report: {isLoading: boolean}): boolean => report.isLoading
+  selectReportsDomain, (report: {isLoading: boolean}) => report.isLoading
 );
 
 export const getReportData = () => createSelector(

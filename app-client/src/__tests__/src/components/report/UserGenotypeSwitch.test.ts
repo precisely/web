@@ -17,7 +17,7 @@ describe('UserGenotypeSwitch tests', () => {
   const mockedRender: jest.Mock<void> = jest.fn<void>();
 
   beforeEach(() => {
-    mockedRender.mockClear();
+    mockedRender.mockReset();
   });
 
   it('should not call the render method when the children are not present', () => {
@@ -34,6 +34,24 @@ describe('UserGenotypeSwitch tests', () => {
     const genotypeCase = {
       attrs: {svn: 'NC_000001.11:g.[11796322C>T];[11796322C>T]'},
       children: [{blocks: ['<p>Et esse debitis minus et saepe.</p>'], type: 'text'}],
+      name: 'genotypecase',
+      rawName: 'GenotypeCase',
+      selfClosing: false,
+      type: 'tag'
+    };
+
+    expect(mockedRender).toBeCalledWith(genotypeCase);
+  });
+
+  it('should render the fallback child when the matching gene is not found', () => {
+    UserGenotypeSwitch(
+      {__children: parsedContentJson[`children`], gene: 'TEST', userData: dummyData.userData},
+      mockedRender
+    );
+
+    const genotypeCase = {
+      attrs: {},
+      children: [{blocks: ['<p>This is a fallback text.</p>'], type: 'text'}],
       name: 'genotypecase',
       rawName: 'GenotypeCase',
       selfClosing: false,

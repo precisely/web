@@ -11,7 +11,7 @@ import gql from 'graphql-tag';
 
 /* istanbul ignore next */
 export const GetReport = gql`
-  query Report($slug: String!, $vendorDataType: String!) {
+  query Report($slug: String!) {
     report(slug: $slug) {
       slug
       id
@@ -19,7 +19,7 @@ export const GetReport = gql`
       genes
       rawContent
       parsedContent
-      userData(vendorDataType: $vendorDataType) {
+      userData {
         genotypes {
           opaqueId
           quality
