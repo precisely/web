@@ -1,43 +1,22 @@
-import * as AWS from 'aws-sdk';
+import '../../__mocks__/awsSdkMocks';
+import {Context} from 'aws-lambda';
 import {genotypeIngester} from '../../ingest-service/genotypeIngester';
 import {genotypeResolver} from '../../genotype-service/api/resolver';
 
+const MockContext = require('mock-lambda-context');
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('genotypeIngester tests', (): void => {
 
+  let ctx: Context;
+
   beforeEach(() => {
-    genotypeResolver.create.mockClear();
+    jest.resetAllMocks();
+    ctx = new MockContext();
   });
 
-  const mockContext = jest.fn();
   genotypeResolver.create = jest.fn();
-
-  AWS.S3 = () => ({
-    getObject: jest.fn()
-      .mockImplementation((
-        params: AWS.S3.Types.GetObjectRequest,
-        callback: (error: Error, data: AWS.S3.Types.GetObjectOutput) => void
-      ) => {
-        if (params.Key === 'valid') {
-          callback(null, {
-            Body: JSON.stringify([{
-              attributes: {
-                sample: 'demo',
-                source: 'demo',
-                variant: 'demo',
-                variant_call: 'demo',
-              }
-            }])
-          });
-        } else if (params.Key === 'invalid') {
-          callback(null, {Body: undefined});
-        } else {
-          callback(new Error('mock error'), null);
-        }
-      })
-  });
 
   unroll('it should #expectedStatus with #description', (
       done: () => void,
@@ -56,7 +35,7 @@ describe('genotypeIngester tests', (): void => {
           }
         }
       ]
-    }, mockContext);
+    }, ctx);
     if (args.expectedStatus === 'pass') {
       expect(genotypeResolver.create).toBeCalled();
     } else {

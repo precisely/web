@@ -6,6 +6,8 @@
 * without modification, are not permitted.
 */
 
+import {AuthorizerAttributes} from '../../interfaces';
+
 jest.mock('../../report-service/models/Report');
 
 import {ReportAttributes, Report} from '../../report-service/models/Report';
@@ -20,14 +22,13 @@ type ExecSuccess = {Items: ReportAttributes[]};
 
 describe('Report resolver tests.', () => {
 
-  const authorizer = jest.fn();
-
   const commonData: {title: string, slug: string, genes: string[]} = {
     title: 'demo-title',
     slug: 'demo-slug',
-    genes: ['demo', 'genes']
+    genes: ['demo', 'genes'],
   };
 
+  const authorizer: AuthorizerAttributes = {claims: {'custom:roles': 'USER'}};
   const dummyRequestData: CreateOrUpdateAttributes = {...commonData, rawContent: 'demo-content'};
   const dummyResponseData: ReportAttributes = {...commonData, raw_content: 'demo-content'};
 
@@ -35,11 +36,12 @@ describe('Report resolver tests.', () => {
       .mockImplementation((data: ReportAttributes): {attrs: ReportAttributes} => ({attrs: data}))
       .mockImplementationOnce(() => {throw new Error('createAsync mock error'); });
 
-  const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
-    return {
-      execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
-    };
-  });
+  const mockedExecAsync: jest.Mock<{execAsync: jest.Mock<ExecSuccess>}> =
+      jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
+        return {
+          execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
+        };
+      });
 
   const mockedLimit = jest.fn((limit: number) => ({
     execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),
@@ -47,7 +49,7 @@ describe('Report resolver tests.', () => {
   }));
 
   genotypeResolver.list = jest.fn();
-  
+
   Report.query = jest.fn(() => {
     return {
       limit: mockedLimit,
@@ -78,7 +80,7 @@ describe('Report resolver tests.', () => {
       let response = await reportResolver.list({}, authorizer);
       expect(response[`message`]).toEqual('query mock error');
     });
-  
+
     unroll('it should respond with the report data list when #params are present.', async (
         done: () => void,
         args: {params: {[key: string]: string | number}}

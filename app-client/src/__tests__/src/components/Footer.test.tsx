@@ -12,10 +12,6 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Footer} from 'src/components/Footer';
 import {Col} from 'src/components/ReusableComponents';
 
-const scrollParallax = require('react-scroll-parallax');
-const Parallax = scrollParallax.Parallax;
-const ParallaxProvider = scrollParallax.ParallaxProvider;
-
 const unroll = require('unroll');
 unroll.use(it);
 

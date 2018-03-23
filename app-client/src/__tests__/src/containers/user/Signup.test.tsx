@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+import 'src/__mocks__/utilsMocks';
+import 'src/__mocks__/cognitoMocks';
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -15,7 +17,8 @@ import {Signup, SignupState} from 'src/containers/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
 import {signup} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
-import {checkEmailAndPassword, showAlert} from 'src/utils';
+import {checkEmailAndPassword} from 'src/utils';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -26,47 +29,10 @@ describe('Tests for Signup', () => {
 
   Radium.TestMode.enable();
 
-  beforeEach(() => {
-    showAlert = jest.fn<number>().mockReturnValue(1);
-  });
-
-  signup = jest.fn<void>()
-      .mockImplementationOnce((
-        email: string,
-        password: string,
-        successCallback?: () => void,
-        failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          resolve(successCallback());
-        });
-      })
-      .mockImplementationOnce((
-        email: string,
-        password: string,
-        successCallback?: () => void,
-        failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          reject(failureCallback());
-        });
-      });
-
-  checkEmailAndPassword = jest.fn()
-      .mockImplementationOnce(() => {
-        return {isValid: false, toastId: 1};
-      })
-      .mockImplementation(() => {
-        return {isValid: true, toastId: 1};
-      });
-
   const preventDefault: jest.Mock<void> = jest.fn<void>();
-  const mockedHistory: {push: jest.Mock<void>} = {
-    push: jest.fn<void>(),
-  };
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>, SignupState> = shallow(
-      <Signup history={mockedHistory} />
+      <Signup history={mockedHistory} match={mockedMatch()} location={mockedLocation} />
   );
 
   unroll('it should display #count #elementName elements', (
@@ -105,7 +71,7 @@ describe('Tests for Signup', () => {
 
   it('should not submit the form when the confirm password is null.', () => {
     componentTree.find('#signupForm').simulate('submit', {preventDefault});
-    expect(showAlert).toBeCalledWith(1, 'Please confirm your password.');
+    expect(checkEmailAndPassword).toBeCalledWith('dummyUsername', 'dummyPassword', 1);
     expect(signup).not.toBeCalled();
   });
 

@@ -13,6 +13,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Dashboard} from 'src/containers/user/Dashboard';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -21,7 +22,8 @@ configure({adapter: new Adapter()});
 
 describe('Dashboard tests.', () => {
 
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<Dashboard />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> =
+      shallow(<Dashboard history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

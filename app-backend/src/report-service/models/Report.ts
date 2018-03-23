@@ -16,8 +16,8 @@ export interface ReportAttributes {
   title: string;
   slug: string;
   raw_content: string;
-  parsed_content: string;
-  top_level: boolean;
+  parsed_content?: string;
+  top_level?: boolean;
   genes: string[];
   genotype?: GenotypeAttributes[];
 }

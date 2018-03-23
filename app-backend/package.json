@@ -37,7 +37,7 @@
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": "\/__tests__\/.*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"
@@ -91,6 +91,7 @@
     "jest": "21.2.1",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
+    "mock-lambda-context": "0.0.1",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
     "serverless-dynamodb-local": "0.2.26",
