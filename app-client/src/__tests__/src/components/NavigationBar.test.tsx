@@ -17,7 +17,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar, NavigationBarState} from 'src/components/navigationBar/NavigationBar';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup.ts';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 import {
   Collapse,
   Navbar,

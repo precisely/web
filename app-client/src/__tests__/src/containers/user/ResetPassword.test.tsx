@@ -6,31 +6,8 @@
  * without modification, are not permitted.
  */
 
-import {mockedHistory, mockedMatch, mockedLocation, mockedShowAlert} from 'src/__tests__/testSetup.ts';
-
-jest.doMock('src/utils', () => ({
-  showAlert: mockedShowAlert,
-}));
-
-jest.mock('src/utils/cognito', () => ({
-  resetPassword: jest.fn<void>()
-      .mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-      ) => { successCallback(); })
-      .mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ) => {
-        failureCallback();
-      }),
-}));
-
+import 'src/__mocks__/utilsMocks';
+import 'src/__mocks__/cognitoMocks';
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -41,6 +18,7 @@ import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents'
 import {resetPassword} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
 import {showAlert} from 'src/utils';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 
 const unroll = require('unroll');
 unroll.use(it);

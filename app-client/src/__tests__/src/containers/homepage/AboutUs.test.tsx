@@ -13,7 +13,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {AboutUs} from 'src/containers/homepage/AboutUs';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup.ts';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 
 const unroll = require('unroll');
 unroll.use(it);

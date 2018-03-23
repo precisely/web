@@ -6,25 +6,8 @@
  * without modification, are not permitted.
  */
 
-import {mockedHistory, mockedMatch, mockedLocation, mockedCheckEmailAndPassword} from 'src/__tests__/testSetup.ts';
-
-jest.doMock('src/utils', () => ({
-  checkEmailAndPassword: mockedCheckEmailAndPassword
-}));
-
-jest.mock('src/utils/cognito', () => ({
-  login: jest.fn<void>()
-      .mockImplementationOnce((email: string, password: string, successCallback?: () => void) => { successCallback(); })
-      .mockImplementationOnce((
-          email: string,
-          password: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ) => {
-        failureCallback();
-      }),
-}));
-
+import 'src/__mocks__/utilsMocks';
+import 'src/__mocks__/cognitoMocks';
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -36,6 +19,7 @@ import {login} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
 import {checkEmailAndPassword} from 'src/utils';
 import {Email} from 'src/components/Email';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__mocks__/routeProps';
 
 const unroll = require('unroll');
 unroll.use(it);

@@ -38,13 +38,3 @@ export function mockedMatch<P=void>(params?: P): match<P> {
     url: 'dummyUrl',
   };
 }
-
-export const mockedCheckEmailAndPassword: jest.Mock = jest.fn()
-    .mockImplementationOnce(() => {
-      return {isValid: false, toastId: 1};
-    })
-    .mockImplementation(() => {
-      return {isValid: true, toastId: 1};
-    });
-
-export const mockedShowAlert: jest.Mock = jest.fn<number>().mockReturnValue(1);
