@@ -22,48 +22,38 @@ export const UserDataMapMock = DBConnectionMock.define(
 
 export const UserDataMap = UserDataMapMock;
 
-UserDataMapMock.findAll = jest.fn((params: { limit: number, offset: number }): PromiseLike<UserDataMapInstance[]> => {
-  return new Promise((resolve, reject): void => {
-    if (params.limit > 0) {
-      resolve([UserDataMapMock.build()]);
-    } else {
-      reject(new Error('mock-findAll error'));
-    }
-  });
+UserDataMapMock.findAll = jest.fn((params: { limit: number, offset: number }): UserDataMapInstance[] => {
+  if (params.limit > 0) {
+    return [UserDataMapMock.build()];
+  } else {
+    throw new Error('mock-findAll error');
+  }
 });
 
 UserDataMapMock.findOne = jest.fn((params: { where: { user_id: string, vendor_data_type: string } }):
   PromiseLike<UserDataMapInstance> => {
-
-  return new Promise((resolve, reject): void => {
     if (params.where.user_id === 'test') {
-      resolve(UserDataMapMock.build());
+      return UserDataMapMock.build();
     } else {
-      resolve();
+      return null;
     }
-  });
 });
 
 UserDataMapMock.findCreateFind = jest.fn((params: { where: { user_id: string } }) => {
   return {
-    spread: (callback: ((user: UserDataMapInstance) => UserDataMapInstance)): Promise<UserDataMapInstance> =>
-      new Promise((resolve, reject): void => {
-
-        if (params.where.user_id === 'dummyId') {
-          resolve(callback(UserDataMapMock.build()));
-        } else {
-          reject(new Error('mock-findCreateFind error'));
-        }
-      }),
+    spread: (callback: ((user: UserDataMapInstance) => UserDataMapInstance)): UserDataMapInstance => {
+      if (params.where.user_id === 'dummyId') {
+        return UserDataMapMock.build();
+      } else {
+        throw new Error('mock-findCreateFind error');
+      }}
   };
 });
 
-UserDataMapMock.upsert = jest.fn((params: { user_id: string }): PromiseLike<boolean> => {
-  return new Promise((resolve, reject): void => {
+UserDataMapMock.upsert = jest.fn((params: { user_id: string }): boolean => {
     if (params.user_id === 'dummyId') {
-      resolve(true);
+      return true;
     } else {
-      reject();
+      throw new Error();
     }
-  });
 });

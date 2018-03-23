@@ -11,10 +11,13 @@ jest.mock('aws-sdk', () => {
     SES: (params: {apiVersion: string}) => ({
       sendEmail: jest.fn().mockImplementationOnce((emailData: AWS.SES.Types.SendEmailRequest) => ({
         promise: jest.fn().mockImplementation(() => {
-          return new Promise((resolve, reject) => {
-            process.nextTick(() => emailData.Source !== 'test@precise.ly'
-                ? resolve({MessageId: 'dummyMessage'}) : reject({stack: 'A dummy stacktrace.'}));
-          });
+          if (emailData.Source !== 'test@precise.ly') {
+            return {MessageId: 'dummyMessage'};
+          } else {
+            let error = new Error();
+            error.stack = 'A dummy stacktrace.';
+            throw error;
+          }
         })
       }))
     }),

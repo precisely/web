@@ -270,7 +270,7 @@ declare module "dynogels" {
 
 declare module "dynogels-promisified" {
   import {
-    Scan as DynogelScan, Query as DynogelQuery, Item as DynogelItem,
+    Model as DynogelModel, Scan as DynogelScan, Query as DynogelQuery, Item as DynogelItem,
     GetItemOptions, CreateItemOptions, UpdateItemOptions, DestroyItemOptions,
     CreateTablesOptions, DynogelsGlobalOptions, Throughput,
     ScanWhereChain, ExecResult, BaseChain, ExtendedChain
@@ -280,7 +280,7 @@ declare module "dynogels-promisified" {
 
   export * from 'dynogels';
 
-  export interface Model<Attributes={any:any}> {
+  export interface Model<Attributes={any:any}> extends DynogelModel<Attributes> {
     getAsync(hashKey: any, rangeKey: any, options: GetItemOptions): Promise<Item<Attributes>>;
     getAsync(haskKey: any, options: GetItemOptions): Promise<Item<Attributes>>;
     getASync(hashKey: any): Promise<Item<Attributes>>;

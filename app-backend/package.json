@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
-    "start": "AWS_PROFILE=dev-profile-precisely ./node_modules/.bin/env-cmd ../config/security.env.local ./node_modules/.bin/serverless offline start",
-    "postinstall": "env-cmd ../config/security.env.local ./node_modules/.bin/serverless dynamodb install",
+    "start": "AWS_PROFILE=dev-profile-precisely env-cmd ../config/security.env.local serverless offline start",
+    "postinstall": "env-cmd ../config/security.env.local serverless dynamodb install",
     "setup:database": "serverless invoke local -f setupDatabase",
     "seed:create:dev": "env-cmd ../config/security.env.local ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/createFakeData.ts",
     "seed:create:stage": "env-cmd ../config/security.env.stage ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/createFakeData.ts",
@@ -14,7 +14,7 @@
     "seed:stage": "sls decrypt -s stage | env-cmd ../config/security.env.stage xargs ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "deploy:dev": "env-cmd ../config/security.env.local serverless deploy -s dev",
     "deploy:stage": "env-cmd ../config/security.env.stage serverless deploy -s stage",
-    "deploy:prod": "env-cmd ../config/security.env.prod ./node_modules/.bin/serverless deploy -s prod",
+    "deploy:prod": "env-cmd ../config/security.env.prod serverless deploy -s prod",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src"
   },
