@@ -11,12 +11,12 @@ import {ReportData} from 'src/containers/report/interfaces';
 
 type Selector<T> = OutputSelector<Map<string, Object>, T, (res: boolean) => void>;
 
-export const selectReportsDomain = (state: Map<string, {isLoading: boolean}>) => state[`report`].toJS();
+export const getReportFromStore = (state: Map<string, {isLoading: boolean}>) => state[`report`].toJS();
 
 export const isLoading = (): Selector<boolean> => createSelector(
-  selectReportsDomain, (report: {isLoading: boolean}) => report.isLoading
+  getReportFromStore, (report: {isLoading: boolean}) => report.isLoading
 );
 
 export const getReportData = () => createSelector(
-  selectReportsDomain, (report: {data: ReportData}) => report.data
+  getReportFromStore, (report: {data: ReportData}) => report.data
 );

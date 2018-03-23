@@ -11,9 +11,6 @@ import * as Radium from 'radium';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector, mount, ReactWrapper} from 'enzyme';
 import {ApolloProvider} from 'react-apollo';
-import {ApolloClient} from 'apollo-client';
-import {createHttpLink} from 'apollo-link-http';
-import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ReportImpl, ReportProps, ReportWithApollo} from 'src/containers/report/Report';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
@@ -23,8 +20,7 @@ import {setLoadingState} from 'src/containers/report/actions';
 import {ReportData} from 'src/containers/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/components/report/MarkdownComponentRenderer';
 import {dummyData} from 'src/__tests__/src/containers/report/testData';
-
-const createMockedNetworkFetch = require('apollo-mocknetworkinterface');
+import {getApolloClient} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -89,15 +85,8 @@ describe('Report tests.', () => {
   describe('When the component is wrapped with the graphql', () => {
     const createResponse = (): {data: {report: ReportData}} => ({data: {report: dummyData}});
 
-    const mockedNetworkFetch = createMockedNetworkFetch(createResponse, {timeout: 1});
-
-    const client = new ApolloClient({
-      link: createHttpLink({uri: 'http://localhost:3000', fetch: mockedNetworkFetch}),
-      cache: new InMemoryCache({addTypename: false}),
-    });
-
     const componentTree: ReactWrapper = mount(
-      <ApolloProvider client={client}>
+      <ApolloProvider client={getApolloClient<{data: {report: ReportData}}>(createResponse)}>
         <ReportWithApollo/>
       </ApolloProvider>
     );

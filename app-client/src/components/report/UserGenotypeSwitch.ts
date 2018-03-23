@@ -15,7 +15,7 @@ const findGenotype = (svn: string, genotypes: Genotype[]): boolean => {
   });
 };
 
-const getUserDataByGene = (gene: string, userData: UserData): Genotype[] => {
+const getGenotypesByGene = (gene: string, userData: UserData): Genotype[] => {
   // Using an array was necessary because gene is not a unique attribute in the model.
   return userData.genotypes.filter((genotype) => gene === genotype.gene);
 };
@@ -23,7 +23,7 @@ const getUserDataByGene = (gene: string, userData: UserData): Genotype[] => {
 // tslint:disable-next-line
 export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: any): any => {
 
-  let userDataByGene: Genotype[] = getUserDataByGene(gene, userData);
+  let userDataByGene: Genotype[] = getGenotypesByGene(gene, userData);
 
   if (!__children) {
     return null;
