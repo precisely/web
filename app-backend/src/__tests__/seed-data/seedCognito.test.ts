@@ -30,42 +30,26 @@ describe('seedCognito tests', () => {
   cognito.adminCreateUser = jest.fn()
     .mockImplementation(() => {
       return {
-        promise: jest.fn(() => {
-          return new Promise((resolve, reject) => {
-            resolve({ User: { Username: 'demo-username' } });
-          });
-        })
+        promise: jest.fn(() => ({ User: { Username: 'demo-username' } }))
       };
     })
     .mockImplementationOnce(() => {
       return {
-        promise: jest.fn(() => {
-          return new Promise((resolve, reject) => {
-            reject(new Error('mock Error'));
-          });
-        })
+        promise: jest.fn(() => { throw new Error('mock Error'); })
       };
     });
 
   cognito.adminInitiateAuth = jest.fn()
     .mockImplementation(() => {
       return {
-        promise: jest.fn(() => {
-          return new Promise((resolve, reject) => {
-            resolve({ Session: 'demo-session' });
-          });
-        })
+        promise: jest.fn(() => ({ Session: 'demo-session' }))
       };
     });
 
   cognito.adminRespondToAuthChallenge = jest.fn()
     .mockImplementation(() => {
       return {
-        promise: jest.fn(() => {
-          return new Promise((resolve, reject) => {
-            resolve();
-          });
-        })
+        promise: jest.fn()
       };
     });
 

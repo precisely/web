@@ -9,8 +9,10 @@
 jest.mock('fs');
 
 import * as fs from 'fs';
-import {seedReport, dynamodbDocClient, seedGenotype} from '../../seed-data/scripts/seedDynamo';
+import {seedReport, seedGenotype} from '../../seed-data/scripts/seedDynamo';
 import {log} from '../../logger';
+import {Report} from '../../report-service/models/Report';
+import {Genotype} from '../../genotype-service/models/Genotype';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -49,18 +51,13 @@ describe('seedDynamo tests', () => {
 
   log.error = jest.fn();
 
-  dynamodbDocClient = jest.fn()
-    .mockImplementation(() => {
-      return {
-        put: jest.fn()
-          .mockImplementation((data, callback) => {
-            if (data.Item.id === 'dummy-id' || data.Item.opaque_id === 'dummy-opaque_id') {
-              callback(null);
-            } else {
-              callback(new Error('failed'));
-            }
-          })
-      };
+  Report.create = Genotype.create = jest.fn()
+    .mockImplementation((data, callback) => {
+      if (data.id === 'dummy-id' || data.opaque_id === 'dummy-opaque_id') {
+        callback(null);
+      } else {
+        callback(new Error('failed'));
+      }
     });
 
   beforeEach(() => {

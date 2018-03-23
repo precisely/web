@@ -39,18 +39,18 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should pass when valid params are passed', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.get({
-        user_id: 'test', 
+        user_id: 'test',
         vendor_data_type: 'test'
       });
-      
+
       expect(response.user_id).toEqual('test');
       expect(response.vendor_data_type).toEqual('test');
     });
 
     it('should throw error invalid params are passed', async () => {
       try {
-        let response: UserDataMapAttributes = await userDataMapResolver.get({
-          user_id: 'invalid', 
+        await userDataMapResolver.get({
+          user_id: 'invalid',
           vendor_data_type: 'test'
         });
       } catch (error) {
@@ -63,7 +63,7 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should pass when all data is passed', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.findOrCreate({
-          userId: 'dummyId', 
+          userId: 'dummyId',
           vendorDataType: 'test'
         });
       expect(response.user_id).toEqual('test');
@@ -72,7 +72,7 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should throw error when data is missing', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.findOrCreate({
-          userId: 'invalid', 
+          userId: 'invalid',
           vendorDataType: 'test'
         });
       expect(response.message).toEqual('mock-findCreateFind error');
