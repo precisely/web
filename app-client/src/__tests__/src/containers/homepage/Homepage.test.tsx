@@ -12,6 +12,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Homepage} from 'src/containers/homepage/Homepage';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Container} from 'src/components/ReusableComponents';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup.ts';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
@@ -24,7 +25,8 @@ configure({adapter: new Adapter()});
 
 describe('Homepage tests.', () => {
 
-  const componentTree: ShallowWrapper = shallow(<Homepage />);
+  const componentTree: ShallowWrapper =
+      shallow(<Homepage history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

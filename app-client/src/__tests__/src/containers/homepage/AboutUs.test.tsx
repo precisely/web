@@ -13,6 +13,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {AboutUs} from 'src/containers/homepage/AboutUs';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {PageContent} from 'src/components/PageContent';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup.ts';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -21,7 +22,8 @@ configure({adapter: new Adapter()});
 
 describe('AboutUs tests.', () => {
 
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<AboutUs />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> =
+      shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

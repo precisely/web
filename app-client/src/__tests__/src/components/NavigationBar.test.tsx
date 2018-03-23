@@ -6,13 +6,18 @@
  * without modification, are not permitted.
  */
 
+jest.mock('src/utils/cognito', () => ({
+  logOut: jest.fn<void>(),
+  isLoggedIn: jest.fn<boolean>().mockReturnValueOnce(true).mockReturnValue(false),
+}));
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar, NavigationBarState} from 'src/components/navigationBar/NavigationBar';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
-import {mockedHistory} from 'src/__tests__/testSetup.ts';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup.ts';
 import {
   Collapse,
   Navbar,
@@ -32,21 +37,22 @@ type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>,
 
 describe('NavigationBar tests.', () => {
 
-  logOut = jest.fn<void>();
-  isLoggedIn = jest.fn<boolean>()
-    .mockImplementationOnce((): boolean => {
-      return true;
-    })
-    .mockImplementation((): boolean => {
-      return false;
-    });
-
   const getComponentTree = (): ComponentTree => {
-    return shallow(<NavigationBar history={mockedHistory} />);
+    return shallow(
+        <NavigationBar
+            history={mockedHistory}
+            match={mockedMatch<{email: string}>({email: 'test@example.com'})}
+            location={mockedLocation}
+        />
+    );
   };
 
   describe('When user is logged in', () => {
     const componentTree: ComponentTree = getComponentTree();
+
+    it('should call the isLoggedIn function when the component is mounted', () => {
+      expect(isLoggedIn).toBeCalled();
+    });
 
     it('should log out when button is clicked', () => {
       componentTree.find(NavLink).at(1).simulate('click');
@@ -62,7 +68,7 @@ describe('NavigationBar tests.', () => {
       componentTree.find(NavLink).at(1).simulate('click');
       expect(mockedHistory.replace).toBeCalledWith('/');
     });
-  
+
     unroll('it should display #count #elementName elements', (
         done: () => void,
         args: {elementName: string, element: EnzymePropSelector, count: number}
@@ -79,7 +85,7 @@ describe('NavigationBar tests.', () => {
       ['NavItem', NavItem, 2],
       ['NavLink', NavLink, 2],
     ]);
-  
+
     it('should set the state of isOpen to true', () => {
       componentTree.find(NavbarToggler).simulate('click');
       expect(componentTree.state().isOpen).toBeTruthy();

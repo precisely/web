@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
+import {ShallowWrapper, shallow, configure} from 'enzyme';
 import {Route, Redirect} from 'react-router-dom';
 import {AuthRoute} from 'src/components/AuthRoute';
 
@@ -22,13 +22,21 @@ describe('Tests for AuthRoute', () => {
     return value;
   });
 
+  class DummyComponent extends React.Component {
+    // tslint:disable-next-line
+    constructor(props: any) {
+      super(props);
+    }
+  }
+
   describe('When onEnter returns true', () => {
     const componentTree: ShallowWrapper = shallow(
-        <AuthRoute 
-            onEnter={(): void => onEnter(true)}
+        <AuthRoute
+            onEnter={() => onEnter(true)}
             path="/dummyPath"
             redirectTo="dummyRedirectPath"
             exact
+            component={DummyComponent}
         />
     );
 
@@ -39,11 +47,12 @@ describe('Tests for AuthRoute', () => {
 
   describe('When onEnter returns false', () => {
     const componentTree: ShallowWrapper = shallow(
-        <AuthRoute 
-            onEnter={(): void => onEnter(false)}
+        <AuthRoute
+            onEnter={() => onEnter(false)}
             path="/dummyPath"
             redirectTo="dummyRedirectPath"
             exact
+            component={DummyComponent}
         />
     );
 

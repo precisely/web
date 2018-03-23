@@ -6,6 +6,20 @@
  * without modification, are not permitted.
  */
 
+import {mockedHistory, mockedMatch, mockedLocation, mockedShowAlert} from 'src/__tests__/testSetup.ts';
+
+jest.doMock('src/utils', () => ({
+  showAlert: mockedShowAlert,
+}));
+
+jest.mock('src/utils/cognito', () => ({
+  getResetPasswordCode: jest.fn<void>()
+      .mockImplementationOnce((email: string, successCallback?: () => void) => { successCallback(); })
+      .mockImplementationOnce((email: string, successCallback?: () => void, failureCallback?: () => void) => {
+        failureCallback();
+      }),
+}));
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -17,7 +31,6 @@ import {getResetPasswordCode} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
 import {Email} from 'src/components/Email';
 import {showAlert} from 'src/utils';
-import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -29,34 +42,13 @@ describe('Tests for ForgotPassword', () => {
   Radium.TestMode.enable();
 
   beforeEach(() => {
-    showAlert = jest.fn<number>().mockReturnValue(1);
     mockedHistory.push = jest.fn<void>();
   });
-
-  getResetPasswordCode = jest.fn<void>()
-      .mockImplementationOnce((
-          email: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          resolve(successCallback());
-        });
-      })
-      .mockImplementationOnce((
-          email: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          reject(failureCallback());
-        });
-      });
 
   const preventDefault: jest.Mock<void> = jest.fn<void>();
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>, ForgotPasswordState> = shallow(
-      <ForgotPassword history={mockedHistory} />
+      <ForgotPassword history={mockedHistory} match={mockedMatch()} location={mockedLocation} />
   );
 
   unroll('it should display #count #elementName elements', (

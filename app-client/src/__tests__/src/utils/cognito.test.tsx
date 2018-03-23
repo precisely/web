@@ -9,7 +9,6 @@
 jest.mock('src/utils');
 
 import * as Cognito from 'src/utils/cognito';
-import {CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
 
 const unroll = require('unroll');
