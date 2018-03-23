@@ -4,7 +4,7 @@ import {log} from '../logger';
 
 export const deploy = (environment: string) => {
   shell.cd('../../'); // Changing the working directory to the app root;
-  shell.exec(`./node_modules/.bin/serverless decrypt -s ${environment}`, (code, stdout) => {
+  shell.exec(`serverless decrypt -s ${environment}`, (code, stdout: string) => {
     const position: number = stdout.indexOf('SECRETS');
 
     if (position > -1) {
@@ -19,7 +19,7 @@ export const deploy = (environment: string) => {
        * This a workaround to set the environment variables in the AWS Lambda during deployment.
        */
       // tslint:disable-next-line
-      shell.exec(`./node_modules/.bin/env-cmd ../config/security.env.dev ./node_modules/.bin/serverless deploy -s ${environment}`, (deployCode, deployStdout) => {
+      shell.exec(`env-cmd ../config/security.env.dev serverless deploy -s ${environment}`, (deployCode, deployStdout: string) => {
         log.info(deployStdout);
       });
     }

@@ -9,7 +9,7 @@
 jest.mock('../../user-data-map/models/UserDataMap');
 
 import {userDataMapResolver, UserDataMapAttributes} from '../../user-data-map/api/resolver';
-import {UserDataMapInstance} from '../../user-data-map/models/UserDataMap';
+
 describe('UserDataMap resolver tests.', () => {
 
   describe('tests for get', () => {
@@ -17,7 +17,6 @@ describe('UserDataMap resolver tests.', () => {
     it('should pass when valid params are passed', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.get({
         userId: 'test',
-        vendorDataType: 'test'
       });
 
       expect(response.userId).toEqual('test');
@@ -26,9 +25,8 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should throw error invalid params are passed', async () => {
       try {
-        let response: UserDataMapAttributes = await userDataMapResolver.get({
+        await userDataMapResolver.get({
           userId: 'invalid',
-          vendorDataType: 'test'
         });
       } catch (error) {
         expect(error.message).toEqual('No such user record found');
