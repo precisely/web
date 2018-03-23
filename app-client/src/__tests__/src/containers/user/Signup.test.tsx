@@ -7,7 +7,7 @@
  */
 
 import 'src/__mocks__/utilsMocks';
-import 'src/__mocks__/cognitoMocks'
+import 'src/__mocks__/cognitoMocks';
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';

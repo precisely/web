@@ -30,7 +30,7 @@ export const mockedHistory: History = {
   createHref: jest.fn<void>(),
 };
 
-export function mockedMatch<P=void>(params?: P): match<P> {
+export function mockedMatch<P = void>(params?: P): match<P> {
   return {
     params,
     isExact: true,
