@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
-        options: {configFile: 'tsconfig.build.json'}
+        options: {configFile: 'tsconfig.json'}
       },
       {
         test: /\.graphql|gql?$/,

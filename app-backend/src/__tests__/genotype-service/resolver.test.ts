@@ -8,9 +8,10 @@
 
 jest.mock('../../genotype-service/models/Genotype');
 
+import '../../__mocks__/utilsMocks';
 import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
 import {genotypeResolver, CreateOrUpdateAttributes} from '../../genotype-service/api/resolver';
-import {hasAuthorizedRoles} from '../../utils';
+import {AuthorizerAttributes} from '../../interfaces';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -18,14 +19,13 @@ unroll.use(it);
 type ExecSuccess = {Items: GenotypeAttributes[]};
 
 describe('Genotype resolver tests.', () => {
-  hasAuthorizedRoles = jest.fn().mockReturnValue(true);
-
   const commonData: {gene: string, source: string, quality: string} = {
     gene: 'QWERTY2',
     source: 'helix',
     quality: undefined,
   };
 
+  const authorizer: AuthorizerAttributes = {claims: {'custom:roles': 'USER'}};
   const dummyRequestData: CreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
   const dummyResponseData: GenotypeAttributes = {...commonData, opaque_id: 'PQR03'};
 
@@ -37,7 +37,7 @@ describe('Genotype resolver tests.', () => {
       .mockImplementationOnce((): {attrs: GenotypeAttributes} => ({attrs: dummyResponseData}))
       .mockImplementationOnce(() => null);
 
-  const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
+  const mockedExecAsync = jest.fn(() => {
     return {
       execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
     };
@@ -85,19 +85,19 @@ describe('Genotype resolver tests.', () => {
 
   describe('Get tests', () => {
     it('should fetch the record when there is no error.', async () => {
-      let response = await genotypeResolver.get({opaqueId: 'PQR03', gene: 'QWERTY2'});
+      let response = await genotypeResolver.get({opaqueId: 'PQR03', gene: 'QWERTY2'}, authorizer);
       expect(response).toEqual(dummyResponseData);
     });
 
     it('should throw an error when the opaque_id is invalid.', async () => {
-      let response = await genotypeResolver.get({opaqueId: 'abcd', gene: 'XXXX'});
+      let response = await genotypeResolver.get({opaqueId: 'abcd', gene: 'XXXX'}, authorizer);
       expect(response[`message`]).toEqual('No such record found');
     });
   });
 
   describe('List test', () => {
     it('should return an error message if required parameters are not present.', async () => {
-      let response = await genotypeResolver.list();
+      let response = await genotypeResolver.list({}, authorizer);
       expect(response[`message`]).toEqual('Required parameters not present.');
     });
 
@@ -105,7 +105,7 @@ describe('Genotype resolver tests.', () => {
         done: () => void,
         args: {params: {[key: string]: string | number}}
     ) => {
-      let response = await genotypeResolver.list(args.params);
+      let response = await genotypeResolver.list(args.params, authorizer);
       expect(response).toEqual({Items: [dummyResponseData]});
       done();
     }, [ // tslint:disable-next-line

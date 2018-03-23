@@ -6,12 +6,20 @@
 * without modification, are not permitted.
 */
 
+import {Context} from 'aws-lambda';
 import {dynogels} from '../../dynogels-db/connection';
 import {setupDatabase} from '../../dynogels-db/setup';
 
+const MockContext = require('mock-lambda-context');
+
 describe('setupDatabase tests.', () => {
 
-  const mockContext = jest.fn();
+  let ctx: Context;
+
+  beforeEach(() => {
+    ctx = new MockContext();
+  });
+
   dynogels.createTables = jest.fn()
     .mockImplementation(callback => {
       callback(null);
@@ -25,14 +33,14 @@ describe('setupDatabase tests.', () => {
   });
 
   it('should fail if dynogels.createTables throws error', () => {
-    setupDatabase({}, mockContext, (error: Error, response: string) => {
+    setupDatabase({}, ctx, (error: Error, response: string) => {
       expect(error.message).toEqual('Error while creating the tables.');
       expect(response).toBeNull();
     });
   });
 
   it('should pass if dynogels.createTables is successful', () => {
-    setupDatabase({}, mockContext, (error: Error, response: string) => {
+    setupDatabase({}, ctx, (error: Error, response: string) => {
       expect(response).toEqual('Tables Created Successfully');
       expect(error).toBeNull();
     });

@@ -6,27 +6,10 @@
 * without modification, are not permitted.
 */
 
-jest.mock('fs');
-
-import * as fs from 'fs';
+import './__mocks__/seedCognitoMocks';
 import {cognito, seedCognito} from '../../seed-data/scripts/seedCognito';
 
-const jsonfile = require('jsonfile');
-
 describe('seedCognito tests', () => {
-  const dummyUser = {
-    firstName: 'demo-firstName',
-    lastName: 'demo-lastName',
-    email: 'demo-email@demo-precisely.com',
-    password: 'demo-password',
-    roles: 'demo-roles'
-  };
-
-  fs.readFileSync = jest.fn()
-    .mockImplementation(() => {
-      return JSON.stringify([dummyUser, {...dummyUser, email: 'demo-email2@demo-precisely.com'}]);
-    });
-
   cognito.adminCreateUser = jest.fn()
     .mockImplementation(() => {
       return {

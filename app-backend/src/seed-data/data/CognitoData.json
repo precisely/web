@@ -1,0 +1,72 @@
+[
+  {
+    "firstName": "Marquise",
+    "lastName": "Sipes",
+    "email": "Marquise.Sipes14@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "USER"
+  },
+  {
+    "firstName": "Bulah",
+    "lastName": "Durgan",
+    "email": "Bulah.Durgan@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Pierre",
+    "lastName": "Willms",
+    "email": "Pierre28@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Gerda",
+    "lastName": "Bode",
+    "email": "Gerda12@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "USER"
+  },
+  {
+    "firstName": "Elmer",
+    "lastName": "Vandervort",
+    "email": "Elmer92@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Carmen",
+    "lastName": "Little",
+    "email": "Carmen.Little@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Peter",
+    "lastName": "Marquardt",
+    "email": "Peter1@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Destiney",
+    "lastName": "Heidenreich",
+    "email": "Destiney6@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Isabella",
+    "lastName": "Volkman",
+    "email": "Isabella59@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "ADMIN"
+  },
+  {
+    "firstName": "Reagan",
+    "lastName": "Bayer",
+    "email": "Reagan_Bayer@demo-precisely.com",
+    "password": "test@12345",
+    "roles": "USER"
+  }
+]
