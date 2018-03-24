@@ -11,7 +11,7 @@ export const cognito = new AWS.CognitoIdentityServiceProvider({
   credentials: new AWS.SharedIniFileCredentials({ profile: process.env.NODE_ENV + '-profile-precisely' })
 });
 
-const createUser = (email: string, password: string, roles: string): Promise<AdminCreateUserResponse> => {
+function createUser(email: string, password: string, roles: string): Promise<AdminCreateUserResponse> {
   return cognito.adminCreateUser({
     UserPoolId: process.env.REACT_APP_USER_POOL_ID,
     Username: email,
@@ -24,7 +24,7 @@ const createUser = (email: string, password: string, roles: string): Promise<Adm
       }
     ]
   }).promise();
-};
+}
 
 const initiateAuth = (username: string, password: string): Promise<AdminInitiateAuthResponse> => {
   return cognito.adminInitiateAuth({
@@ -38,7 +38,7 @@ const initiateAuth = (username: string, password: string): Promise<AdminInitiate
   }).promise();
 };
 
-const confirmUser = (session: string, username: string, password: string): 
+const confirmUser = (session: string, username: string, password: string):
     Promise<AdminRespondToAuthChallengeResponse> => {
 
   return cognito.adminRespondToAuthChallenge({
@@ -53,30 +53,23 @@ const confirmUser = (session: string, username: string, password: string):
   }).promise();
 };
 
-export const seedCognito = (): Promise<string[]> => {
+export async function seedCognito(): Promise<string[]> {
   const jsonPath = path.join(__dirname, '..', 'data/');
-  const allCognitoData = JSON.parse(fs.readFileSync(jsonPath + 'CognitoData.json', 'utf8'));
-  let length: number = allCognitoData.length;
-  const userId: string[] = [];
+  const cognitoUsers = JSON.parse(fs.readFileSync(jsonPath + 'CognitoData.json', 'utf8'));
+  const userIds: string[] = [];
 
-  return new Promise((resolve, reject) => {
-      allCognitoData.forEach(async (user: {[key: string]: string}) => {
-        
-        const createdUser: AdminCreateUserResponse = await createUser(user.email, user.password, user.roles);
+  for (let user of cognitoUsers) {
+    const createdUser: AdminCreateUserResponse = await createUser(user.email, user.password, user.roles);
 
-        userId.push(createdUser.User.Username);
+    userIds.push(createdUser.User.Username);
 
-        const authData: AdminInitiateAuthResponse = await initiateAuth(
-          createdUser.User.Username,
-          user.password
-        );
+    const authData: AdminInitiateAuthResponse = await initiateAuth(
+      createdUser.User.Username,
+      user.password
+    );
 
-        await confirmUser(authData.Session, createdUser.User.Username, user.password);
+    await confirmUser(authData.Session, createdUser.User.Username, user.password);
+  }
 
-        length = length - 1;
-        if (!length) {
-          resolve(userId);
-        }
-      });
-  });
-};
+  return userIds;
+}
