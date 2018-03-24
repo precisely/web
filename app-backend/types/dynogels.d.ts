@@ -182,46 +182,46 @@ declare module "dynogels" {
       ne(value: any): T;
   }
 
-  export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
-  export type QueryFilterChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
-
-  // Dynogels Query
-  export interface Query<Attributes={any:any}> {
-      limit(number: number): Query<Attributes>;
-      filterExpression(expression: any): Query<Attributes>;
-      expressionAttributeNames(data: any): Query<Attributes>;
-      expressionAttributeValues(data: any): Query<Attributes>;
-      projectionExpression(data: any): Query<Attributes>;
-      usingIndex(name: string): Query<Attributes>;
-      consistentRead(read: boolean): Query<Attributes>;
-      addKeyCondition(condition: any): Query<Attributes>;
-      addFilterCondition(condition: any): Query<Attributes>;
-      startKey(hashKey: any, rangeKey: any): Query<Attributes>;
-      attributes(attrs: any): Query<Attributes>;
-      ascending(): Query<Attributes>;
-      descending(): Query<Attributes>;
-      select(value: any): Query<Attributes>;
-      returnConsumedCapacity(value: any): Query<Attributes>;
-      loadAll(): Query<Attributes>;
-      where(keyName: string): QueryWhereChain<Attributes>;
-      filter(keyName: string): QueryFilterChain<Attributes>;
-      exec(): stream.Readable;
-      exec(callback: (err: Error, data: ExecResult<Attributes>) => void): void;
-  }
-
-  export interface ScanWhereChain<Attributes={[key:string]:any}> extends ExtendedChain<Scan<Attributes>> {
-      notNull(): Scan<Attributes>;
-  }
-
   export interface ExecResult<Attributes> {
     Items: Item<Attributes>[],
     Count: number,
     LastEvaluatedKey?: any,
   }
 
+  export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
+  export type QueryFilterChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
+
+  // Dynogels Query
+  export interface Query<Attributes={any:any}> {
+    limit(number: number): Query<Attributes>;
+    filterExpression(expression: any): Query<Attributes>;
+    expressionAttributeNames(data: any): Query<Attributes>;
+    expressionAttributeValues(data: any): Query<Attributes>;
+    projectionExpression(data: any): Query<Attributes>;
+    usingIndex(name: string): Query<Attributes>;
+    consistentRead(read: boolean): Query<Attributes>;
+    addKeyCondition(condition: any): Query<Attributes>;
+    addFilterCondition(condition: any): Query<Attributes>;
+    startKey(hashKey: any, rangeKey: any): Query<Attributes>;
+    attributes(attrs: any): Query<Attributes>;
+    ascending(): Query<Attributes>;
+    descending(): Query<Attributes>;
+    select(value: any): Query<Attributes>;
+    returnConsumedCapacity(value: any): Query<Attributes>;
+    loadAll(): Query<Attributes>;
+    where(keyName: string): QueryWhereChain<Attributes>;
+    filter(keyName: string): QueryFilterChain<Attributes>;
+    exec(): stream.Readable;
+    exec(callback: (err: Error, data: ExecResult<Attributes>) => void): void;
+  }
+
+  export interface ScanWhereChain<Attributes={[key:string]:any}> extends ExtendedChain<Scan<Attributes>> {
+      notNull(): Scan<Attributes>;
+  }
+
   // Dynogels Scan
   export interface Scan<Attributes={[key:string]:any}> {
-      limit(number: number): Scan;
+      limit(number: number): Scan<Attributes>;
       addFilterCondition(condition: any): Scan<Attributes>;
       startKey(hashKey: any, rangeKey?: any): Scan<Attributes>;
       attributes(attrs: any): Scan<Attributes>;
@@ -265,68 +265,5 @@ declare module "dynogels" {
       Items: Document[];
       Count: number;
       ScannedCount: number;
-  }
-}
-
-declare module "dynogels-promisified" {
-  import {
-    Model as DynogelModel, Scan as DynogelScan, Query as DynogelQuery, Item as DynogelItem,
-    GetItemOptions, CreateItemOptions, UpdateItemOptions, DestroyItemOptions,
-    CreateTablesOptions, DynogelsGlobalOptions, Throughput,
-    ScanWhereChain, ExecResult, BaseChain, ExtendedChain
-  } from "dynogels";
-
-  import stream = require("stream");
-
-  export * from 'dynogels';
-
-  export interface Model<Attributes={any:any}> extends DynogelModel<Attributes> {
-    getAsync(hashKey: any, rangeKey: any, options: GetItemOptions): Promise<Item<Attributes>>;
-    getAsync(haskKey: any, options: GetItemOptions): Promise<Item<Attributes>>;
-    getASync(hashKey: any): Promise<Item<Attributes>>;
-    getAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes>>;
-    createAsync(item: Attributes, options: CreateItemOptions): Promise<Item<Attributes>>;
-    createAsync(item: Attributes): Promise<Item<Attributes>>;
-    updateAsync(item: Attributes, options: UpdateItemOptions): Promise<Item<Attributes>>;
-    updateAsync(item: Attributes): Promise<Item<Attributes>>;
-    destroyAsync(hashKey: any, rangeKey: any, options: DestroyItemOptions): Promise<Item<Attributes>>;
-    destroyAsync(haskKey: any, options: DestroyItemOptions): Promise<Item<Attributes>>;
-    destroyAsync(hashKey: any): Promise<Item<Attributes>>;
-    destroyAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes>>;
-    destroyAsync(item: Attributes, options: DestroyItemOptions): Promise<Item<Attributes>>;
-    destroyAsync(item: Attributes): Promise<Item<Attributes>>;
-    parallelScan(totalSegments: number): Scan<Attributes>;
-    getItemsAsync(items: string[] | Array<{ [key: string]: string }>): Promise<Item<Attributes>[]>;
-    getItemsAsync(items: string[] | Array<{ [key: string]: string }>, options: GetItemOptions): Promise<Item<Attributes>[]>;
-    batchGetItemsAsync(items: string[] | Array<{ [key: string]: string }>): Promise<Item<Attributes>[]>;
-    batchGetItemsAsync(items: string[] | Array<{ [key: string]: string }>, options: GetItemOptions): Promise<Item<Attributes>[]>;
-    createTableAsync(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions): Promise<AWS.DynamoDB.CreateTableOutput>;
-    createTableAsync(): Promise<AWS.DynamoDB.CreateTableOutput>;
-    updateTableAsync(throughput: Throughput): Promise<AWS.DynamoDB.UpdateTableOutput>;
-    updateTableAsync(): Promise<AWS.DynamoDB.UpdateTableOutput>;
-    describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
-    deleteTableAsync(): void;
-    query(hashKey: any): Query<Attributes>;
-  }
-
-  export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
-  export type QueryFilterChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
-
-  export interface Item<Attributes={any:any}> extends DynogelItem<Attributes> {
-    saveAsync(): Promise<Item<Attributes>>;
-    updateAsync(options: UpdateItemOptions): Promise<Item<Attributes>>;
-    updateAsync(): Promise<Item<Attributes>>;
-    destroyAsync(options: DestroyItemOptions): Promise<Item<Attributes>>;
-    destroyAsync(): Promise<Item<Attributes>>;
-  }
-
-  export interface Query<Attributes={any:any}> extends DynogelQuery<Attributes> {
-    execAsync(): Promise<ExecResult<Attributes>>;
-    where(keyName: string): QueryWhereChain<Attributes>;
-    filter(keyName: string): QueryFilterChain<Attributes>;
-  }
-
-  export interface Scan<Attributes={any:any}> extends DynogelScan<Attributes> {
-    execAsync(): Promise<ExecResult<Attributes>>;
   }
 }
