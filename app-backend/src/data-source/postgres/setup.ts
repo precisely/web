@@ -10,8 +10,8 @@ export const migrate = (environment: string) => {
     shell.exec(`./node_modules/.bin/sequelize db:migrate --url 'postgres://${process.env.POSTGRES_DB_USERNAME}:${process.env.POSTGRES_DB_PASSWORD}@${process.env.POSTGRES_DB_CONN_STR}/${process.env.POSTGRES_DB_NAME}'`, (decryptCode, decryptStdout) => {
       log.info(decryptStdout);
     });
-  } 
-  
+  }
+
   if (environment === 'dev' || environment === 'stage' || environment === 'prod') {
     shell.exec(`./node_modules/.bin/serverless decrypt -s ${environment}`, (code, stdout) => {
       const position: number = stdout.indexOf('SECRETS');

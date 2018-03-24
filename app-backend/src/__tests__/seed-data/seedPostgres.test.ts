@@ -7,7 +7,7 @@
 */
 
 jest.mock('fs');
-jest.mock('../../user-data-map/models/UserDataMap');
+jest.mock('../../features/user-data/models/UserDataMap');
 
 import * as fs from 'fs';
 import {seedUser} from '../../seed-data/scripts/seedPostgres';

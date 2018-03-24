@@ -27,7 +27,7 @@ jest.mock('aws-sdk', () => {
 });
 
 import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../utils';
-import {AuthorizerAttributes} from '../interfaces';
+import {Authorizer} from '../interfaces';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -70,7 +70,7 @@ describe('Test for addEnvironmentToTableName', () => {
 describe('Tests for hasAuthorizedRoles', () => {
   unroll('it should throw an error when the authorizer is #authorizerValue', async (
       done: () => void,
-      args: {authorizerValue: AuthorizerAttributes}
+      args: {authorizerValue: Authorizer}
   ) => {
     expect(() => hasAuthorizedRoles(args.authorizerValue, ['ADMIN'])).toThrowError('The user is unauthorized.');
     done();

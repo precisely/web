@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {Genotype} from 'src/features/genotype/models/Genotype';
-import {UserDataMap} from '../models/UserDataMap';
+import * as UserDataMapService from '../../../features/user-data/services/UserDataMap';
+import * as GenotypeService from '../../../features/genotype/services/Genotype';
 
 export class UserData {
 
@@ -20,10 +20,7 @@ export class UserData {
   private genes: string[];
 
   public async getGenotypes() {
-    var opaqueId = await UserDataMap.getOpaqueId(this.userId, 'genotype');
-    return await Genotype.getGenes({
-      genes: this.genes,
-      opaqueId: opaqueId
-    });
+    var opaqueId = await UserDataMapService.getOpaqueId(this.userId, 'genotype');
+    return await GenotypeService.getGenotypes(opaqueId, this.genes);
   }
 }

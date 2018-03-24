@@ -7,7 +7,7 @@
 */
 
 import * as Sequelize from 'sequelize';
-import {connection} from 'src/data-source/postgres/connections';
+import {database} from '../../../data-source/postgres/connections';
 
 export interface UserDataMapAttributes {
   user_id: string;
@@ -20,15 +20,16 @@ export interface UserDataMapInstance extends Sequelize.Instance<UserDataMapAttri
 }
 
 export const vendorDataTypeList: string[] = [
-  // Add vendorDataType here
-  'precisely:demo',
-  'precisely:test',
   'precisely:genotype',
 ];
 
-export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> = 
+export const UserDataMap =
 
-    connection.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
+    database.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
+
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+
       user_id: {
         type: Sequelize.STRING,
         allowNull: false,
