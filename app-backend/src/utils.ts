@@ -33,13 +33,6 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
 }
 
 /**
- * Utility function to add the environment to the database table name.
- */
-export function addEnvironmentToTableName(tableName: string, version: string): string {
-  return `${process.env.NODE_ENV}-${version}-${tableName}`;
-}
-
-/**
  * Utility function to check if a user is authorized or not.
  */
 export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {

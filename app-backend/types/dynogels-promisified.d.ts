@@ -171,7 +171,7 @@ declare module "dynogels-promisified" {
       dynamodb?: AWS.DynamoDB;
   }
 
-  export interface Item<Attributes={any:any}> extends DynogelItem<Attributes> {
+  export interface Item<Attributes={any:any}> {
     get(key?: string): Attributes;
     set(params: {}): Item<Attributes>;
     save(callback?: DynogelsItemCallback<Attributes>): void;

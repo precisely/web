@@ -21,6 +21,9 @@
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
+      "app/*": [
+        "./src/*"
+      ],
       "*": [
         "*"
       ]

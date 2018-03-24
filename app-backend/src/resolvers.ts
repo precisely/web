@@ -7,8 +7,8 @@
 */
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
-import * as UserDataMapResolvers from './user-data-map/api/resolver';
-import * as ReportResolvers from './report-service/api/resolver';
+import {resolvers as genotypeResolvers} from './api/genotype/resolvers';
+import {resolvers as reportResolvers} from './api/report/resolvers';
 
 export const resolvers: IResolvers = {
   Query: {

@@ -28,7 +28,7 @@ declare module "dynogels" {
   // Dynogels global functions
   export function dynamoDriver(dynamoDB: AWS.DynamoDB): AWS.DynamoDB;
   export function reset(): void;
-  export function define(modelName: string, config: ModelConfiguration): Model;
+  export function define<Attributes>(modelName: string, config: ModelConfiguration): Model<Attributes>;
   export function createTables(callback: (err: string) => void): void;
   export function createTables(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions, callback: (err: string) => void): void;
   export function Set(...args: any[]): any;
