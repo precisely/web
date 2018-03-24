@@ -8,18 +8,14 @@
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
 import * as UserDataMapResolvers from './user-data-map/api/resolver';
-import * as GenotypeResolvers from './genotype-service/api/resolver';
 import * as ReportResolvers from './report-service/api/resolver';
 
 export const resolvers: IResolvers = {
   Query: {
-    ...UserDataMapResolvers.queries,
-    ...GenotypeResolvers.queries,
     ...ReportResolvers.queries,
   },
   Mutation: {
     ...UserDataMapResolvers.mutations,
-    ...GenotypeResolvers.mutations,
     ...ReportResolvers.mutations,
   }
 };

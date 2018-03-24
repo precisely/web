@@ -54,4 +54,5 @@
 
 ### Added
 - Winston logger
+- Commands for seeding user and data.
 - A function to send a sample email via SES.

@@ -8,50 +8,25 @@
 
 jest.mock('../../user-data-map/models/UserDataMap');
 
-import {userDataMapResolver} from '../../user-data-map/api/resolver';
-import {UserDataMapAttributes, UserDataMapInstance} from '../../user-data-map/models/UserDataMap';
+import {userDataMapResolver, UserDataMapAttributes} from '../../user-data-map/api/resolver';
 
 describe('UserDataMap resolver tests.', () => {
-
-  describe('tests for list', () => {
-
-    it('should pass when no params are passed', async () => {
-      let responseList: UserDataMapInstance[] = await userDataMapResolver.list();
-      let response: UserDataMapAttributes = responseList[0].get({plain: true});
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
-    });
-
-    it('should pass when valid params are passed', async () => {
-      let responseList: UserDataMapInstance[] = await userDataMapResolver.list({limit: 10, offset: 10});
-      let response: UserDataMapAttributes = responseList[0].get({plain: true});
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
-    });
-
-    it('should throw error invalid params are passed', async () => {
-      let responseList: UserDataMapInstance[] = await userDataMapResolver.list({limit: -10});
-      expect(responseList.message).toEqual('mock-findAll error');
-    });
-  });
 
   describe('tests for get', () => {
 
     it('should pass when valid params are passed', async () => {
-      let response: IUserDataMapAttributes = await userDataMapResolver.get({
-        user_id: 'test', 
-        vendor_data_type: 'test'
+      let response: UserDataMapAttributes = await userDataMapResolver.get({
+        userId: 'test',
       });
-      
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should throw error invalid params are passed', async () => {
       try {
-        let response: IUserDataMapAttributes = await userDataMapResolver.get({
-          user_id: 'invalid', 
-          vendor_data_type: 'test'
+        await userDataMapResolver.get({
+          userId: 'invalid',
         });
       } catch (error) {
         expect(error.message).toEqual('No such user record found');
@@ -63,16 +38,16 @@ describe('UserDataMap resolver tests.', () => {
 
     it('should pass when all data is passed', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.findOrCreate({
-          userId: 'dummyId', 
+          userId: 'dummyId',
           vendorDataType: 'test'
         });
-      expect(response.user_id).toEqual('test');
-      expect(response.vendor_data_type).toEqual('test');
+      expect(response.userId).toEqual('test');
+      expect(response.vendorDataType).toEqual('test');
     });
 
     it('should throw error when data is missing', async () => {
       let response: UserDataMapAttributes = await userDataMapResolver.findOrCreate({
-          userId: 'invalid', 
+          userId: 'invalid',
           vendorDataType: 'test'
         });
       expect(response.message).toEqual('mock-findCreateFind error');

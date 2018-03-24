@@ -9,47 +9,47 @@
 import * as Joi from 'joi';
 import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
+import {Model} from 'dynogels-promisified';
 
 export interface GenotypeAttributes {
-  opaque_id?: string;
-  sample_id?: string;
+  opaqueId?: string;
+  sampleId?: string;
   source?: string;
   gene?: string;
-  variant_call?: string;
+  variantCall?: string;
   zygosity?: string;
-  start_base?: string;
-  chromosome_name?: string;
-  variant_type?: string;
+  startBase?: string;
+  chromosomeName?: string;
+  variantType?: string;
   quality?: string;
-  created_at?: string;
-  updated_at?: string;
 }
 
 /* istanbul ignore next */
-export const Genotype = dynogels.define(addEnvironmentToTableName('precisely-genotype', '01'), {
-  hashKey : 'opaque_id',
+export const Genotype: Model<GenotypeAttributes> =
+    dynogels.define(addEnvironmentToTableName('precisely-genotype', '01'), {
+
+  hashKey : 'opaqueId',
   rangeKey: 'gene',
 
   timestamps : true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
 
   schema : {
-    opaque_id: Joi.string(),
-    sample_id: Joi.string(),
+    opaqueId: Joi.string(),
+    sampleId: Joi.string(),
     source: Joi.string(),
     gene: Joi.string(),
-    variant_call: Joi.string(),
+    geneFilter: Joi.string(),
+    variantCall: Joi.string(),
     zygosity: Joi.string(),
-    start_base: Joi.string(),
-    chromosome_name: Joi.string(),
-    variant_type: Joi.string(),
+    startBase: Joi.string(),
+    chromosomeName: Joi.string(),
+    variantType: Joi.string(),
     quality: Joi.string(),
   },
 
   indexes: [{
     hashKey: 'gene',
-    rangeKey: 'opaque_id',
+    rangeKey: 'opaqueId',
     name: 'GenotypeGlobalIndex',
     type: 'global',
   }],
