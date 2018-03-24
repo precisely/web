@@ -6,9 +6,9 @@
  * without modification, are not permitted.
  */
 
-import * as actionTypes from 'src/containers/report/actionTypes';
+import * as actionTypes from 'src/features/report/actionTypes';
 import {GenericAction} from 'src/interfaces';
-import {ReportData} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/features/report/interfaces';
 
 export const setLoadingState = (): GenericAction => {
   return {type: actionTypes.SET_LOADING_STATE};

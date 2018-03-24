@@ -10,7 +10,7 @@
 import {combineReducers, Reducer} from 'redux';
 /* istanbul ignore next */
 import {routerReducer} from 'react-router-redux';
-import {reportReducer} from 'src/containers/report/reducers';
+import {reportReducer} from 'src/features/report/reducers';
 
 // All the reducers should be combined here
 /* istanbul ignore next */

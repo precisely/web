@@ -7,9 +7,9 @@
  */
 
 import {fromJS, Map} from 'immutable';
-import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/containers/report/actionTypes';
+import {SET_LOADING_STATE, SET_REPORT_DATA} from 'src/features/report/actionTypes';
 import {GenericAction} from 'src/interfaces';
-import {ReportData} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/features/report/interfaces';
 
 export const initialState = fromJS({
   isLoading: false,

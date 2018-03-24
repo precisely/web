@@ -9,12 +9,12 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link} from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {PageContent} from 'src/components/PageContent';
-import {signup} from 'src/utils/cognito';
+import {PageContent} from 'src/features/common/PageContent';
+// import {signup} from 'src/utils/cognito';
 import {checkEmailAndPassword, showAlert} from 'src/utils';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {
   formButton,
   removeBorderRadius,
@@ -81,7 +81,7 @@ export class Signup extends React.Component<RouteComponentProps<void>, SignupSta
       }
 
       this.updateLoadingState(true);
-      signup(email, password, this.onSuccess, this.onFailure);
+      // signup(email, password, this.onSuccess, this.onFailure);
     }
   }
 

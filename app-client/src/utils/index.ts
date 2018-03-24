@@ -101,3 +101,7 @@ export const validatePassword = (password: string, toastId: number): {isValid: b
 
   return {isValid: true, toastId};
 };
+
+export const utils = {
+  showAlert,
+};

@@ -18,8 +18,8 @@ import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
-import {Basepage} from 'src/containers/basepage/Basepage';
-import {getTokenFromLocalStorage} from 'src/utils/index';
+import {Basepage} from 'src/features/common/Basepage';
+import {getTokenFromLocalStorage} from 'src/utils';
 
 initReactFastclick();
 

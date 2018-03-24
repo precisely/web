@@ -11,16 +11,16 @@ import {RouteComponentProps} from 'react-router';
 import {connect} from 'react-redux';
 import {createStructuredSelector, Selector} from 'reselect';
 import {graphql, OptionProps} from 'react-apollo';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {Container} from 'src/components/ReusableComponents';
-import {PageContent} from 'src/components/PageContent';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {Container} from 'src/features/common/ReusableComponents';
+import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
-import {GetReport} from 'src/containers/report/queries';
-import {isLoading, getReportData} from 'src/containers/report/selectors';
+import {GetReport} from 'src/features/report/queries';
+import {isLoading, getReportData} from 'src/features/report/selectors';
 import {store} from 'src/store';
-import {setLoadingState, setReportData} from 'src/containers/report/actions';
-import {ReportData} from 'src/containers/report/interfaces';
-import {MarkdownComponentRenderer} from 'src/components/report/MarkdownComponentRenderer';
+import {setLoadingState, setReportData} from 'src/features/report/actions';
+import {ReportData} from 'src/features/report/interfaces';
+import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 
 export interface ReportProps extends RouteComponentProps<void> {
   isLoading?: boolean;

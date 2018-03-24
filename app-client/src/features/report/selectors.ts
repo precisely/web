@@ -7,7 +7,7 @@
  */
 
 import {createSelector, OutputSelector} from 'reselect';
-import {ReportData} from 'src/containers/report/interfaces';
+import {ReportData} from 'src/features/report/interfaces';
 
 type Selector<T> = OutputSelector<Map<string, Object>, T, (res: boolean) => void>;
 

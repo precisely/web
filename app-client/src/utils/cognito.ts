@@ -14,8 +14,6 @@ import {
   AuthenticationDetails,
   CognitoUser,
   CognitoUserSession,
-  ISignUpResult,
-  CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
 
 /* istanbul ignore next */
@@ -36,29 +34,30 @@ export const isLoggedIn = (): boolean => {
 
 export class AWSUser {
   jwtToken: string;
+  user: CognitoUser;
 
   constructor() {
-    AWS.config.setPromisesDependency(require('bluebird'));
+    AWS.config.setPromisesDependency(Bluebird);
     AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
   }
 
-  async login(email: string , password: string) {
+   login = async (email: string , password: string) => {
     const userData: {Username: string, Pool: CognitoUserPool} = {
       Username : email,
       Pool : userPool
     };
 
-    const user: CognitoUser = new CognitoUser(userData);
+    this.user = new CognitoUser(userData);
 
     const authenticationData: {Username: string, Password: string} = {
       Username : email,
       Password : password,
     };
     const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-    
-    const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> = 
-            Bluebird.promisify(user.authenticateUser.bind(this));
-    authenticateUser(authenticationDetails).then(this.setToken);
+
+    const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> =
+            Bluebird.promisify(this.user.authenticateUser.bind(this.user));
+    authenticateUser(authenticationDetails).then(this.setToken.bind(this));
   }
 
   async setToken(userSession: CognitoUserSession) {
@@ -85,7 +84,12 @@ export function getResetPasswordCode(
     successCallback?: () => void,
     failureCallback?: (message: string) => void
 ): void {
-  const cognitoUser: CognitoUser = getCognitoUser(email);
+  const userData: {Username: string, Pool: CognitoUserPool} = {
+    Username : email,
+    Pool : userPool
+  };
+
+  const cognitoUser: CognitoUser = new CognitoUser(userData);
 
   cognitoUser.forgotPassword({
     onSuccess: (): void => {
@@ -108,7 +112,12 @@ export function resetPassword(
     successCallback?: () => void,
     failureCallback?: (message: string) => void
 ): void {
-  const cognitoUser: CognitoUser = getCognitoUser(email);
+  const userData: {Username: string, Pool: CognitoUserPool} = {
+    Username : email,
+    Pool : userPool
+  };
+
+  const cognitoUser: CognitoUser = new CognitoUser(userData);
 
   cognitoUser.confirmPassword(verificationCode, newPassword, {
     onSuccess(): void {

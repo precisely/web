@@ -9,13 +9,13 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/components/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {PageContent} from 'src/components/PageContent';
+import {PageContent} from 'src/features/common/PageContent';
 import {AWSUser} from 'src/utils/cognito';
 import {checkEmailAndPassword, showAlert} from 'src/utils';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {Email} from 'src/components/Email';
+import {Email} from 'src/features/common/Email';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {
   formButton,
   noBorderTop,
@@ -53,7 +53,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     this.toastId = showAlert(this.toastId, message);
   }
 
-  submitForm = async (e: React.FormEvent<HTMLFormElement>): void => {
+  submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email, password} = this.state;
 
@@ -92,7 +92,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
               <FormGroup className="mb-0" style={alignCenter}>
                 <Email
                     placeholder="Email"
-                    value={email} 
+                    value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}

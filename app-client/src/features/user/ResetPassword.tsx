@@ -9,11 +9,11 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input} from 'src/components/ReusableComponents';
-import {PageContent} from 'src/components/PageContent';
+import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
+import {PageContent} from 'src/features/common/PageContent';
 import {resetPassword} from 'src/utils/cognito';
 import {showAlert} from 'src/utils';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {CSS} from 'src/interfaces';
 import {
   formButton,
