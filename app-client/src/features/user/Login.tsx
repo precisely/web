@@ -53,7 +53,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     this.toastId = showAlert(this.toastId, message);
   }
 
-  submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  submitForm = async (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const {email, password} = this.state;
 
@@ -64,7 +64,19 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
     if (validationInfo.isValid) {
       this.updateLoadingState(true);
-      login(email, password, this.onSuccess, this.onFailure);
+      let loginStatus = await new Login(email, password).then(() => {
+        setTokenInLocalStorage(result.getIdToken().getJwtToken());
+
+        AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
+
+        const jwtToken: string = result.getIdToken().getJwtToken();
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
+            Logins : {
+                [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
+            }
+        });
+      });
     }
   }
 

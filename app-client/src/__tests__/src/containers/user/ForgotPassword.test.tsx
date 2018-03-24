@@ -16,7 +16,7 @@ import {Button, Form, FormGroup} from 'src/components/ReusableComponents';
 import {getResetPasswordCode} from 'src/utils/cognito';
 import {PageContent} from 'src/components/PageContent';
 import {Email} from 'src/components/Email';
-import {showAlert} from 'src/utils';
+import * as module from 'src/utils'
 import {mockedHistory} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
@@ -29,7 +29,7 @@ describe('Tests for ForgotPassword', () => {
   Radium.TestMode.enable();
 
   beforeEach(() => {
-    showAlert = jest.fn<number>().mockReturnValue(1);
+    module.testUtils.showAlert = jest.fn<number>().mockReturnValue(1);
     mockedHistory.push = jest.fn<void>();
   });
 

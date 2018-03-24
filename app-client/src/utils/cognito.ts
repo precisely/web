@@ -8,6 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
+import * as Bluebird from 'bluebird';
 import {
   CognitoUserPool,
   AuthenticationDetails,
@@ -29,87 +30,56 @@ const poolData: {UserPoolId: string, ClientId: string} = {
 
 export const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
+export function configAWS() {
+  AWS.config.setPromisesDependency(require('bluebird'));
+  AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
+
+}
+
 export const isLoggedIn = (): boolean => {
   return !!userPool.getCurrentUser();
 };
 
-export const getCognitoUser = (email: string): CognitoUser => {
-  const userData: {Username: string, Pool: CognitoUserPool} = {
-    Username : email,
-    Pool : userPool
-  };
+export class AWSUser {
+  email: string;
+  password: string;
+  user: CognitoUser;
 
-  return new CognitoUser(userData);
-};
+  constructor(email: string, password: string) {
+    const userData: {Username: string, Pool: CognitoUserPool} = {
+      Username : email,
+      Pool : userPool
+    };
+    this.user = new CognitoUser(userData);
+  }
+  
+  async login(email: string, password: string) {
+    const authenticationData: {Username: string, Password: string} = {
+      Username : email,
+      Password : password,
+    };
+    const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
+    
+    const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> = 
+            Bluebird.promisify(this.user.authenticateUser.bind(this));
+    authenticateUser(authenticationDetails).then(this.setToken);
+  }
 
-export function login(
-  email: string,
-  password: string,
-  successCallback?: () => void,
-  failureCallback?: (message: string) => void
-): void {
-  const authenticationData: {Username: string, Password: string} = {
-    Username : email,
-    Password : password,
-  };
-
-  const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-  const cognitoUser: CognitoUser = getCognitoUser(email);
-
-  cognitoUser.authenticateUser(authenticationDetails, {
-    onSuccess: (result: CognitoUserSession): void => {
-      setTokenInLocalStorage(result.getIdToken().getJwtToken());
-
-      AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
-
-      const jwtToken: string = result.getIdToken().getJwtToken();
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+  async setToken(userSession: CognitoUserSession) {
+    let jwtToken: string = userSession.getIdToken().getJwtToken();
+    setTokenInLocalStorage(jwtToken);
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
         Logins : {
-          [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
+            [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
         }
-      });
+    });
+  }
 
-      if (successCallback) {
-        successCallback();
-      }
-    },
-
-    onFailure: (error: Error): void => {
-      if (failureCallback) {
-        failureCallback(error.message);
-      }
-    },
-  });
 }
 
-export function signup(
-    email: string,
-    password: string,
-    successCallback?: (result: ISignUpResult) => void,
-    failureCallback?: (message: string) => void
-): void {
-  const userRole: CognitoUserAttribute = new CognitoUserAttribute({Name: 'custom:roles', Value: 'USER'});
 
-  userPool.signUp(
-      email,
-      password,
-      [userRole],
-      null,
-      (error: Error, result: ISignUpResult): void => {
-    if (error) {
-      if (failureCallback) {
-        failureCallback(error.message);
-      }
 
-      return;
-    }
-
-    if (successCallback) {
-      successCallback(result);
-    }
-  });
-}
 
 export function logOut(): void {
   const cognitoUser = userPool.getCurrentUser();
