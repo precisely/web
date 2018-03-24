@@ -6,16 +6,13 @@
 * without modification, are not permitted.
 */
 
-jest.mock('../../report-service/models/Report');
+jest.mock('src/features/report/models/Report');
 
-import {ReportAttributes, Report} from '../../report-service/models/Report';
-import {reportResolver, CreateOrUpdateAttributes} from '../../report-service/api/resolver';
-import {genotypeResolver} from '../../genotype-service/api/resolver';
+import {ReportAttributes, Report} from 'src/features/report/models/Report';
+import {reportResolver, CreateArgs} from 'src/features/report/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
-
-type ExecSuccess = {Items: ReportAttributes[]};
 
 describe('Report resolver tests.', () => {
 
@@ -27,7 +24,7 @@ describe('Report resolver tests.', () => {
     genes: ['demo', 'genes']
   };
 
-  const dummyRequestData: CreateOrUpdateAttributes = {...commonData, rawContent: 'demo-content'};
+  const dummyRequestData: CreateArgs = {...commonData, rawContent: 'demo-content'};
   const dummyResponseData: ReportAttributes = {...commonData, rawContent: 'demo-content'};
 
   Report.createAsync = jest.fn()

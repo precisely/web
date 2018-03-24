@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {dynogels} from '../../data-source/dynogels-db/connection';
-import {setupDatabase} from '../../data-source/dynogels-db/setup';
+import {dynogels} from 'src/data-source/dynogels-db/connection';
+import {setupDatabase} from 'src/data-source/dynogels-db/setup';
 
 describe('setupDatabase tests.', () => {
 

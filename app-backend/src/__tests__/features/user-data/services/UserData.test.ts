@@ -6,9 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {UserData} from '../../../report-service/api/util/UserData';
-import {genotypeResolver} from '../../../genotype-service/api/resolver';
-import {userDataMapResolver} from '../../../user-data-map/api/resolver';
+import {UserData} from 'src/features/user-data/services/UserData';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -33,7 +31,7 @@ describe('UserData tests.', () => {
       args: {action: string; condition: string}
   ) => {
     try {
-      await userData.genotypes();
+      await userData.getGenotypes();
       expect(genotypeResolver.list).toBeCalledWith({genes: ['demo', 'gene'], opaqueId: 'demo-id'});
     } catch (error) {
       expect(error.message).toBe('No such user record found');

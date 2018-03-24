@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
-import {genotypeIngester} from '../../ingest-service/genotypeIngester';
-import {genotypeResolver} from '../../genotype-service/api/resolver';
+import {genotypeIngester} from 'src/features/ingest/genotypeIngester';
+import {genotypeResolver} from 'src/features/genotype/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
