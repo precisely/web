@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Bluebird from 'bluebird';
-import {UserDataMap} from '../../user-data-map/models/UserDataMap';
+import {UserDataMap} from '../../features/user-data/models/UserDataMap';
 
 const jsonPath = path.join(__dirname, '../data/');
 

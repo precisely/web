@@ -9,9 +9,9 @@
 import * as path from 'path';
 import * as faker from 'faker';
 import {seedCognito} from './seedCognito';
-import {vendorDataTypeList} from '../../user-data-map/models/UserDataMap';
-import {ReportAttributes} from '../../report-service/models/Report';
-import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
+import {vendorDataTypeList} from '../../features/user-data/models/UserDataMap';
+import {ReportAttributes} from '../../features/report/models/Report';
+import {GenotypeAttributes} from '../../features/genotype/models/Genotype';
 import {log} from '../../logger';
 const jsonfile = require('jsonfile');
 

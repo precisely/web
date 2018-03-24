@@ -11,8 +11,8 @@ jest.mock('fs');
 import * as fs from 'fs';
 import {seedReport, seedGenotype} from '../../seed-data/scripts/seedDynamo';
 import {log} from '../../logger';
-import {Report} from '../../report-service/models/Report';
-import {Genotype} from '../../genotype-service/models/Genotype';
+import {Report} from '../../features/report/models/Report';
+import {Genotype} from '../../features/genotype/models/Genotype';
 
 const unroll = require('unroll');
 unroll.use(it);

@@ -1,4 +1,4 @@
-import {UserDataMap} from 'src/features/user-data/models/UserDataMap';
+import {UserDataMap} from '../../../features/user-data/models/UserDataMap';
 
 export async function getOpaqueId(userId: string, vendorDataType: string): Promise<string> {
   let userDataMapInstance = await UserDataMap.findOne({

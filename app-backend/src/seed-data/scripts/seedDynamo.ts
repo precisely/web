@@ -8,8 +8,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {ReportAttributes, Report} from '../../report-service/models/Report';
-import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
+import {ReportAttributes, Report} from '../../features/report/models/Report';
+import {GenotypeAttributes, Genotype} from '../../features/genotype/models/Genotype';
 import {log} from '../../logger';
 
 const jsonPath = path.join(__dirname, '../data/');

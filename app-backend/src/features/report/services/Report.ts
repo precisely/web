@@ -1,5 +1,5 @@
-import {Report, ReportAttributes} from 'src/features/report/models/Report';
-import {log} from 'src/logger';
+import {Report, ReportAttributes} from '../../../features/report/models/Report';
+import {log} from '../../../logger';
 import {CreateArgs} from '../api/resolver';
 
 export async function create(args: CreateArgs): Promise<ReportAttributes> {

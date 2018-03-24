@@ -1,5 +1,5 @@
-import {Genotype, GenotypeAttributes} from 'src/features/genotype/models/Genotype';
-import {log} from 'src/logger';
+import {Genotype, GenotypeAttributes} from '../../../features/genotype/models/Genotype';
+import {log} from '../../../logger';
 
 export async function getGenotypes(opaqueId: string, genes: string[]): Promise<GenotypeAttributes[]> {
   try {
