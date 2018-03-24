@@ -7,15 +7,13 @@
 */
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
-import * as UserDataMapResolvers from './user-data-map/api/resolver';
-import * as ReportResolvers from './report-service/api/resolver';
+import * as ReportResolvers from 'src/features/report/api/resolver';
 
 export const resolvers: IResolvers = {
   Query: {
     ...ReportResolvers.queries,
   },
   Mutation: {
-    ...UserDataMapResolvers.mutations,
     ...ReportResolvers.mutations,
   }
 };

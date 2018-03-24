@@ -15,6 +15,21 @@ type UserData {
   genotypes: [Genotype]
 }
 
+type Genotype {
+  opaqueId: String
+  sampleId: String
+  source: String
+  gene: String
+  variantCall: String
+  zygosity: String
+  startBase: String
+  chromosomeName: String
+  variantType: String
+  quality: String
+  createdAt: String
+  updatedAt: String
+}
+
 extend type Query {
   reports: [Report],
   report(slug: String!): Report,
