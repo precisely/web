@@ -12,3 +12,10 @@ export interface AuthorizerAttributes {
     'custom:roles'?: string;
   };
 }
+
+export interface Secrets {
+  POSTGRES_DB_NAME: string;
+  POSTGRES_DB_USERNAME: string;
+  POSTGRES_DB_PASSWORD: string;
+  POSTGRES_DB_CONN_STR: string;
+}

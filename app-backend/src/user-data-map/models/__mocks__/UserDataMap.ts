@@ -30,13 +30,14 @@ UserDataMapMock.findAll = jest.fn((params: { limit: number, offset: number }): U
   }
 });
 
-UserDataMapMock.findOne = jest.fn((params: { where: { user_id: string, vendor_data_type: string } }):
-  PromiseLike<UserDataMapInstance> => {
-    if (params.where.user_id === 'test') {
-      return UserDataMapMock.build();
-    } else {
-      return null;
-    }
+UserDataMapMock.findOne = jest.fn((params: {where: {user_id: string, vendor_data_type: string}}):
+    PromiseLike<UserDataMapInstance> => {
+
+  if (params.where.user_id === 'test') {
+    return UserDataMapMock.build();
+  } else {
+    return null;
+  }
 });
 
 UserDataMapMock.findCreateFind = jest.fn((params: { where: { user_id: string } }) => {
@@ -51,9 +52,9 @@ UserDataMapMock.findCreateFind = jest.fn((params: { where: { user_id: string } }
 });
 
 UserDataMapMock.upsert = jest.fn((params: { user_id: string }): boolean => {
-    if (params.user_id === 'dummyId') {
-      return true;
-    } else {
-      throw new Error();
-    }
+  if (params.user_id === 'dummyId') {
+    return true;
+  } else {
+    throw new Error();
+  }
 });

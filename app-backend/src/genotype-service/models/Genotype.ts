@@ -8,8 +8,8 @@
 
 import * as Joi from 'joi';
 import {addEnvironmentToTableName} from '../../utils';
-import {dynogels} from '../../dynogels-db/connection';
 import {Model} from 'dynogels-promisified';
+import {dynogels} from '../../data-source/dynogels-db/connection';
 
 export interface GenotypeAttributes {
   opaqueId?: string;

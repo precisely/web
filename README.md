@@ -114,6 +114,18 @@ To use the GraphQL Playground, open `/playground` of your Serverless service. Wi
 
 Configure your AWS keys. Here you can find a [2min walkthrough](https://www.youtube.com/watch?v=mRkUnA3mEt4) how to do retrieve the keys.
 
+- For `Local`
+
+   Make sure you have [PostgreSQL](https://www.postgresql.org/download/) installed on your system.
+   
+   - Add the value for the following keys in the config/security.env.local:
+       * `POSTGRES_DB_NAME`
+       * `POSTGRES_DB_USERNAME`
+       * `POSTGRES_DB_PASSWORD`
+       * `POSTGRES_DB_CONN_STR`
+       
+   - Now go ahead and run these commands from the app-backend directory `yarn setup:database:dynamo:local` and `yarn setup:database:postgres:local` for setting up the DynamoDB and the Postgres respectively.
+
 - For `Development`
 
     Make sure you have your development access key and secret token saved under `dev-profile-precisely` profile.
@@ -121,6 +133,8 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
     sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
     ```
+
+    To setup the Postgres run `yarn setup:database:postgres -d dev` from the app-backend directory.
 
     You need to make sure you have access to your deployed lambda functions.
 
@@ -149,6 +163,7 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
     sls config credentials --provider aws -n stage-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
     ```
+    To setup the Postgres run `yarn setup:database:postgres -d stage` from the app-backend directory.
 
     You need to make sure you have access to your deployed lambda functions.
 
@@ -177,6 +192,7 @@ Configure your AWS keys. Here you can find a [2min walkthrough](https://www.yout
     ```
     sls config credentials --provider aws -n prod-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
     ```
+    To setup the Postgres run `yarn setup:database:postgres -d prod` from the app-backend directory.
 
     You need to make sure you have access to your deployed lambda functions.
 
