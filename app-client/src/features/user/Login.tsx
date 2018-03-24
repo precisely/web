@@ -12,7 +12,7 @@ import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/components/PageContent';
-import {login} from 'src/utils/cognito';
+import {AWSUser} from 'src/utils/cognito';
 import {checkEmailAndPassword, showAlert} from 'src/utils';
 import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
 import {Email} from 'src/components/Email';
@@ -64,19 +64,12 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
     if (validationInfo.isValid) {
       this.updateLoadingState(true);
-      let loginStatus = await new Login(email, password).then(() => {
-        setTokenInLocalStorage(result.getIdToken().getJwtToken());
-
-        AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
-
-        const jwtToken: string = result.getIdToken().getJwtToken();
-        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
-            Logins : {
-                [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
-            }
-        });
-      });
+      let awsUser: AWSUser = new AWSUser();
+      try {
+        awsUser.login(email, password).then(this.onSuccess);
+      } catch {
+        this.onFailure();
+      }
     }
   }
 

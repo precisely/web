@@ -30,30 +30,26 @@ const poolData: {UserPoolId: string, ClientId: string} = {
 
 export const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
-export function configAWS() {
-  AWS.config.setPromisesDependency(require('bluebird'));
-  AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
-
-}
-
 export const isLoggedIn = (): boolean => {
   return !!userPool.getCurrentUser();
 };
 
 export class AWSUser {
-  email: string;
-  password: string;
-  user: CognitoUser;
+  jwtToken: string;
 
-  constructor(email: string, password: string) {
+  constructor() {
+    AWS.config.setPromisesDependency(require('bluebird'));
+    AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
+  }
+
+  async login(email: string , password: string) {
     const userData: {Username: string, Pool: CognitoUserPool} = {
       Username : email,
       Pool : userPool
     };
-    this.user = new CognitoUser(userData);
-  }
-  
-  async login(email: string, password: string) {
+
+    const user: CognitoUser = new CognitoUser(userData);
+
     const authenticationData: {Username: string, Password: string} = {
       Username : email,
       Password : password,
@@ -61,25 +57,22 @@ export class AWSUser {
     const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
     
     const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> = 
-            Bluebird.promisify(this.user.authenticateUser.bind(this));
+            Bluebird.promisify(user.authenticateUser.bind(this));
     authenticateUser(authenticationDetails).then(this.setToken);
   }
 
   async setToken(userSession: CognitoUserSession) {
-    let jwtToken: string = userSession.getIdToken().getJwtToken();
-    setTokenInLocalStorage(jwtToken);
+    this.jwtToken = userSession.getIdToken().getJwtToken();
+    setTokenInLocalStorage(this.jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
         Logins : {
-            [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
+            [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: this.jwtToken,
         }
     });
   }
 
 }
-
-
-
 
 export function logOut(): void {
   const cognitoUser = userPool.getCurrentUser();
