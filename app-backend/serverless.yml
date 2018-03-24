@@ -12,7 +12,11 @@ provider:
     SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
     REGION: ${self:provider.region}
     NODE_ENV: ${opt:stage, self:provider.stage}
-    AWS_PROFILE: ${opt:stage, self:provider.stage}-profile-precisely 
+    AWS_PROFILE: ${opt:stage, self:provider.stage}-profile-precisely
+    POSTGRES_DB_NAME: ${env:POSTGRES_DB_NAME, ''}
+    POSTGRES_DB_USERNAME: ${env:POSTGRES_DB_USERNAME, ''}
+    POSTGRES_DB_PASSWORD: ${env:POSTGRES_DB_PASSWORD, ''}
+    POSTGRES_DB_CONN_STR: ${env:POSTGRES_DB_CONN_STR, ''}
     # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
   iamRoleStatements:
     -  Effect: "Allow"
@@ -66,9 +70,13 @@ functions:
         method: post
         cors: true
         authorizer:
-          arn: ${env:COGNITO_ARN}
-  setupDatabase:
-    handler: src/dynogels-db/setup.setupDatabase
+          arn: ${env:COGNITO_ARN, ''}
+  setupDynamo:
+    handler: src/data-source/dynogels-db/setup.setupDatabase
+  setupPostgres:
+    handler: src/data-source/postgres/setup.migrate
+  deploy:
+    handler: src/data-source/scripts.deploy
   ingester:
     handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:

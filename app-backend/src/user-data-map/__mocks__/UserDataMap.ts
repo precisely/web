@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {UserDataMapInstance} from '../UserDataMap';
+import {UserDataMapInstance} from '/UserDataMap';
 
 const SequelizeMock = require('sequelize-mock');
 const DBConnectionMock = new SequelizeMock();
@@ -30,14 +30,15 @@ UserDataMapMock.findAll = jest.fn((params: { limit: number, offset: number }): U
   }
 });
 
+<<<<<<< HEAD
 UserDataMapMock.findOne = jest.fn((params: { where: { user_id: string, vendor_data_type: string } }):
-  PromiseLike<UserDataMapInstance> => {
+  return (async (resolve, reject): void => {
     if (params.where.user_id === 'test') {
       return UserDataMapMock.build();
     } else {
       return null;
     }
-});
+  });
 
 UserDataMapMock.findCreateFind = jest.fn((params: { where: { user_id: string } }) => {
   return {
