@@ -24,4 +24,3 @@ export const connection: Sequelize.Sequelize = new Sequelize(
     },
   }
 );
-

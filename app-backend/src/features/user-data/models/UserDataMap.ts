@@ -29,7 +29,6 @@ export const vendorDataTypeList: string[] = [
 export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> = 
 
     connection.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
-
       user_id: {
         type: Sequelize.STRING,
         allowNull: false,

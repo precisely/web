@@ -8,8 +8,8 @@
 
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
-import {genotypeResolver} from '../genotype-service/api/resolver';
-import {log} from '../logger';
+import {genotypeResolver} from 'src/features/genotype/api/resolver';
+import {log} from 'src/logger';
 
 interface GA4GH {
   referenceName: string;

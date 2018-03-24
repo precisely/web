@@ -7,10 +7,10 @@
 */
 
 import * as Joi from 'joi';
-import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
-import {addEnvironmentToTableName} from '../../utils';
+import {GenotypeAttributes} from 'src/features/genotype/models/Genotype';
+import {addEnvironmentToTableName} from 'src/utils';
 import {Model} from 'dynogels-promisified';
-import {dynogels} from '../../data-source/dynogels-db/connection';
+import {dynogels} from 'src/data-source/dynogels-db/connection';
 
 export interface ReportAttributes {
   hashKey?: 'report';

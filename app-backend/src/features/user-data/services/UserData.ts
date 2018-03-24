@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {genotypeResolver} from 'src/genotype-service/api/resolver';
-import {userDataMapResolver, UserDataMapAttributes} from 'src/user-data-map/api/resolver';
+import {Genotype} from 'src/features/genotype/models/Genotype';
+import {UserDataMap} from '../models/UserDataMap';
 
 export class UserData {
 
@@ -16,19 +16,14 @@ export class UserData {
     this.genes = genes;
   }
 
-  private userDataMap: UserDataMapAttributes;
   private userId: string;
   private genes: string[];
 
-  public genotypes = async() => {
-    await this.getUserInstance();
-    return genotypeResolver.list({opaqueId: this.userDataMap.opaqueId, genes: this.genes});
-  }
-
-  private getUserInstance = async () => {
-    this.userDataMap = await userDataMapResolver.get({
-      userId: this.userId,
+  public async getGenotypes() {
+    var opaqueId = await UserDataMap.getOpaqueId(this.userId, 'genotype');
+    return await Genotype.getGenes({
+      genes: this.genes,
+      opaqueId: opaqueId
     });
   }
-
 }

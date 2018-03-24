@@ -6,11 +6,11 @@
 * without modification, are not permitted.
 */
 
-jest.mock('../../genotype-service/models/Genotype');
+jest.mock('src/genotype-service/models/Genotype');
 
-import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
-import {genotypeResolver, CreateOrUpdateAttributes} from '../../genotype-service/api/resolver';
-import {hasAuthorizedRoles} from '../../utils';
+import {GenotypeAttributes, Genotype} from 'src/genotype-service/models/Genotype';
+import {genotypeResolver, CreateOrUpdateAttributes} from 'src/genotype-service/api/resolver';
+import {hasAuthorizedRoles} from 'src/utils';
 
 const unroll = require('unroll');
 unroll.use(it);
