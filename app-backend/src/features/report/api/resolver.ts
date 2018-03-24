@@ -7,39 +7,35 @@
 */
 
 import {Query, ExecResult, Item} from 'dynogels-promisified';
-import {Report, ReportAttributes} from 'src/report-service/models/Report';
-import {GenotypeAttributes} from 'src/genotype-service/models/Genotype';
-import {AuthorizerAttributes} from 'src/interfaces';
+import {Report, ReportAttributes} from 'src/features/report/models/Report';
+import {GenotypeAttributes} from 'src/features/genotype/models/Genotype';
+import {AuthParams} from 'src/interfaces';
 import {log} from 'src/logger';
-import {UserData} from './util/UserData';
+import {UserData} from 'src/features/user-data/services/UserData';
 
-export interface CreateOrUpdateAttributes {
+export interface ReportParams {
   title: string;
   slug: string;
   rawContent: string;
   genes: string[];
 }
 
-interface ReportInterface {
-  slug?: string;
-}
-
 export const reportResolver = {
-  async create(args: CreateOrUpdateAttributes, authorizer: AuthorizerAttributes): Promise<ReportAttributes> {
+  async create(args: ReportParams, authorizer: AuthParams): Promise<ReportAttributes> {
     let reportInstance: Item<ReportAttributes>;
     const {slug, title, genes, rawContent} = args;
 
     try {
       reportInstance = await Report.createAsync({slug, title, genes, rawContent: rawContent});
     } catch (error) {
-      log.error(`reportResolver-create: ${error.message}`);
+      log.error(`: ${error.message}`);
       return error;
     }
 
     return reportInstance.get();
   },
 
-  async list(authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
+  async list(authorizer: AuthParams): Promise<ReportAttributes[]> {
     const result: ReportAttributes[] = [];
     let reportList: ExecResult<ReportAttributes>;
 
@@ -59,7 +55,7 @@ export const reportResolver = {
     return result;
   },
 
-  async get(args: ReportInterface, authorizer: AuthorizerAttributes): Promise<ReportAttributes &
+  async get(args: ReportInterface, authorizer: AuthParams): Promise<ReportAttributes &
       {userData: () => {genotypes: Promise<GenotypeAttributes[]>}}> {
 
     const {slug} = args;
@@ -103,5 +99,5 @@ export const queries = {
 /* istanbul ignore next */
 export const mutations = {
   // TODO: will be fixed with https://github.com/precisely/web/issues/90
-  saveReport: (root: any, args: CreateOrUpdateAttributes) => reportResolver.create(args, root.authorizer),
+  saveReport: (root: any, args: ReportParams) => reportResolver.create(args, root.authorizer),
 };
