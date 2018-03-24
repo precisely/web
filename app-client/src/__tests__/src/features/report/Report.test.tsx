@@ -14,13 +14,13 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {createHttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {ReportImpl, ReportProps, ReportWithApollo} from 'src/features/common/report/Report';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {ReportImpl, ReportProps, ReportWithApollo} from 'src/features/report/Report';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container} from 'src/features/common/ReusableComponents';
 import {store} from 'src/store';
-import {setLoadingState} from 'src/features/common/report/actions';
-import {ReportData} from 'src/features/common/report/interfaces';
+import {setLoadingState} from 'src/features/report/actions';
+import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 import {dummyData} from 'src/__tests__/src/features/report/testData';
 

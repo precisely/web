@@ -72,19 +72,18 @@ describe('Tests for utils/index.ts', () => {
     expect(getTokenFromLocalStorage()).toEqual('');
   });
 
-  unroll('it should return #result when the params are #params', (
+  unroll('it should return #result when the params are (#email, #password, #toastId)', (
       done: () => void,
-      // tslint:disable-next-line
-      args: {condition: string, params: Array<any>, result: boolean}
+      args: {condition: string, email: string, password: string, toastId: number, result: boolean}
   ) => {
-    expect(checkEmailAndPassword(...args.params)).toEqual(args.result);
+    expect(checkEmailAndPassword(args.email, args.password, args.toastId)).toEqual(args.result);
     done();
   }, [ // tslint:disable-next-line
-    ['params', 'result'],
-    [['', '', 100], {isValid: false, toastId: 100}],
-    [['', 'dummyPassword', null], {isValid: false, toastId: 1}],
-    [['test@example.com', '', null], {isValid: false, toastId: 2}],
-    [['test@example.com', 'dummy', null], {isValid: false, toastId: 3}],
-    [['test@example.com', 'dummyPassword', null], {isValid: true, toastId: null}],
+    ['email', 'password', 'toastId', 'result'],
+    ['', '', 100, {isValid: false, toastId: 100}],
+    ['', 'dummyPassword', '', {isValid: false, toastId: 1}],
+    ['test@example.com', '', '', {isValid: false, toastId: 2}],
+    ['test@example.com', 'dummy', '', {isValid: false, toastId: 3}],
+    ['test@example.com', 'dummyPassword', 100, {isValid: true, toastId: 100}],
   ]);
 });

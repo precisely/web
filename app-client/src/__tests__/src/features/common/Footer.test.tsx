@@ -12,10 +12,6 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Footer} from 'src/features/common/Footer';
 import {Col} from 'src/features/common/ReusableComponents';
 
-const scrollParallax = require('react-scroll-parallax');
-const Parallax = scrollParallax.Parallax;
-const ParallaxProvider = scrollParallax.ParallaxProvider;
-
 const unroll = require('unroll');
 unroll.use(it);
 
@@ -23,9 +19,7 @@ configure({adapter: new Adapter()});
 
 describe('Footer tests.', () => {
 
-  const componentTree: ShallowWrapper = shallow(
-    <Footer />
-  );
+  const componentTree: ShallowWrapper = shallow(<Footer />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

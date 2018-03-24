@@ -10,7 +10,7 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
-import {NavigationBar, NavigationBarState} from 'src/components/navigationBar/NavigationBar';
+import {NavigationBar, NavigationBarState} from 'src/features/common/NavigationBar';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
 import {mockedHistory} from 'src/__tests__/testSetup.ts';
 import {
@@ -62,7 +62,7 @@ describe('NavigationBar tests.', () => {
       componentTree.find(NavLink).at(1).simulate('click');
       expect(mockedHistory.replace).toBeCalledWith('/');
     });
-  
+
     unroll('it should display #count #elementName elements', (
         done: () => void,
         args: {elementName: string, element: EnzymePropSelector, count: number}
@@ -79,7 +79,7 @@ describe('NavigationBar tests.', () => {
       ['NavItem', NavItem, 2],
       ['NavLink', NavLink, 2],
     ]);
-  
+
     it('should set the state of isOpen to true', () => {
       componentTree.find(NavbarToggler).simulate('click');
       expect(componentTree.state().isOpen).toBeTruthy();

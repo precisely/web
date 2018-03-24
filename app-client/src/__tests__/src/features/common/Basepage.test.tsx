@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Basepage} from 'src/features/common/basepage/Basepage';
+import {Basepage} from 'src/features/common/Basepage';
 import {Footer} from 'src/features/common/Footer';
 import {Routes} from 'src/routes/Routes';
 
