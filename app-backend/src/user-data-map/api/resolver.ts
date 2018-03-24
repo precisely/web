@@ -7,41 +7,30 @@
 */
 
 import {UserDataMap} from '../models/UserDataMap';
-import {UserDataMapInstance, UserDataMapAttributes} from '../models/UserDataMap';
+import {UserDataMapInstance} from '../models/UserDataMap';
 import {log} from '../../logger';
 
-export interface ListUserDataMapFilters {
-  limit?: number;
-  offset?: number;
+const camelcaseKeys = require('camelcase-keys');
+
+export interface UserDataMapAttributes {
+  userId: string;
+  vendorDataType: string;
+  opaqueId: string;
 }
 
 export const userDataMapResolver = {
 
-  async list(args: ListUserDataMapFilters = {}): Promise<UserDataMapInstance[]> {
-    let userDataMapInstances: UserDataMapInstance[];
-    const {limit = 15, offset = 0} = args;
-
-    try {
-      userDataMapInstances = await UserDataMap.findAll({limit, offset});
-    } catch (error) {
-      log.error(`UserDataMap-list: ${error.message}`);
-      return error;
-    }
-    
-    return userDataMapInstances;
-  },
-
-  async get(args: {user_id: string, vendor_data_type: string}): Promise<UserDataMapAttributes> {
+  async get(args: {userId: string}): Promise<UserDataMapAttributes> {
     let userDataMapInstance: UserDataMapInstance;
-    const {user_id, vendor_data_type} = args;
+    const {userId} = args;
 
-    userDataMapInstance = await UserDataMap.findOne({where: {user_id, vendor_data_type}});
+    userDataMapInstance = await UserDataMap.findOne({where: {user_id: userId, vendor_data_type: 'precisely:genetics'}});
 
     if (!userDataMapInstance) {
       throw new Error('No such user record found');
     }
-    
-    return userDataMapInstance.get({plain: true});
+
+    return camelcaseKeys(userDataMapInstance.get({plain: true}));
   },
 
   async findOrCreate(args: {userId: string, vendorDataType: string}): Promise<UserDataMapAttributes> {
@@ -56,10 +45,10 @@ export const userDataMapResolver = {
           }
         })
         .spread((user: UserDataMapInstance): UserDataMapInstance => {
-          /* 
+          /*
            *  findCreateFind returns [Instance, created]. Since we don't need created attribute,
            *  returning the user instance directly
-           */ 
+           */
 
           return user;
         });
@@ -68,7 +57,7 @@ export const userDataMapResolver = {
       return error;
     }
 
-    return userDataMapInstance.get({plain: true});
+    return camelcaseKeys(userDataMapInstance.get({plain: true}));
   }
 };
 
@@ -76,11 +65,10 @@ export const userDataMapResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  listUserDataMap: (root: any, args: ListUserDataMapFilters) => userDataMapResolver.list(args),
 };
 
 /* istanbul ignore next */
 export const mutations = {
-  findOrCreateUserDataMap: (root: any, args: {userId: string, vendorDataType: string}) => 
+  userDataMap: (root: any, args: {userId: string, vendorDataType: string}) =>
     userDataMapResolver.findOrCreate(args),
 };

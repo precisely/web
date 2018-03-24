@@ -10,39 +10,35 @@ import * as Joi from 'joi';
 import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {addEnvironmentToTableName} from '../../utils';
 import {dynogels} from '../../dynogels-db/connection';
+import {Model} from 'dynogels-promisified';
 
 export interface ReportAttributes {
+  hashKey?: 'report';
   id?: string;
   title: string;
   slug: string;
-  raw_content: string;
-  parsed_content: string;
-  top_level: boolean;
-  genes: string[];
+  rawContent?: string;
+  parsedContent?: string;
+  topLevel?: boolean;
+  genes?: string[];
   genotype?: GenotypeAttributes[];
 }
 
 /* istanbul ignore next */
-export const Report = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
-  hashKey: 'id',
+export const Report: Model<ReportAttributes> = dynogels.define(addEnvironmentToTableName('precisely-report', '01'), {
+  hashKey: 'hashKey',
   rangeKey: 'slug',
 
   timestamps : true,
 
   schema: {
+    hashKey: Joi.string().default('report'), // Added to make list work without args
     id: dynogels.types.uuid(),
     title: Joi.string().required(),
     slug: Joi.string().required(),
-    raw_content: Joi.string(),
-    parsed_content: Joi.string(),
-    top_level: Joi.boolean(),
+    rawContent: Joi.string(),
+    parsedContent: Joi.string(),
+    topLevel: Joi.boolean(),
     genes: Joi.array().items(Joi.string()),
-  },
-
-  indexes: [{
-    hashKey: 'slug',
-    rangeKey: 'id',
-    name: 'ReportGlobalIndex',
-    type: 'global',
-  }],
+  }
 });

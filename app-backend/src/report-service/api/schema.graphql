@@ -2,23 +2,24 @@ type Report {
   id: String,
   title: String,
   slug: String,
-  raw_content: String,
-  parsed_content: String,
-  top_level: Boolean,
+  rawContent: String,
+  parsedContent: String,
+  topLevel: Boolean,
   genes: [String],
+  createdAt: String
+  updatedAt: String
+  userData: UserData,
 }
 
-type LastEvaluatedReportData {
-  id: String,
-  slug: String
+type UserData {
+  genotypes: [Genotype]
 }
 
-type ReportListItem {
-  attrs: Report
+extend type Query {
+  reports: [Report],
+  report(slug: String!): Report,
 }
 
-type ReportList {
-  Items: [ReportListItem],
-  userData(limit: Int!, lastEvaluatedKeys: LastEvaluatedGenotypeRecord): GenotypeList,
-  LastEvaluatedKey: LastEvaluatedReportData
+extend type Mutation {
+  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
 }

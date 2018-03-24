@@ -27,36 +27,32 @@ describe('Genotype resolver tests.', () => {
   };
 
   const dummyRequestData: CreateOrUpdateAttributes = {...commonData, opaqueId: 'PQR03'};
-  const dummyResponseData: GenotypeAttributes = {...commonData, opaque_id: 'PQR03'};
+  const dummyResponseData: GenotypeAttributes = {...commonData, opaqueId: 'PQR03'};
 
   Genotype.getAsync = jest.fn()
-      .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
+      .mockImplementationOnce(() => ({get: () => ({opaqueId: 'PQR03'})}))
       .mockImplementationOnce(() => null)
-      .mockImplementationOnce(() => ({opaque_id: 'PQR03'}))
+      .mockImplementationOnce(() => ({get: () => ({opaqueId: 'PQR03'})}))
       .mockImplementationOnce(() => null)
-      .mockImplementationOnce((): {attrs: GenotypeAttributes} => ({attrs: dummyResponseData}))
+      .mockImplementationOnce(() => ({get: () => dummyResponseData}))
       .mockImplementationOnce(() => null);
 
-  const mockedExecAsync: jest.Mock<ExecSuccess> = jest.fn((): {execAsync: jest.Mock<ExecSuccess>} => {
-    return {
-      execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]}))
-    };
-  });
-
   Genotype.createAsync = Genotype.updateAsync = jest.fn()
-      .mockImplementation((data: GenotypeAttributes): {attrs: GenotypeAttributes} => ({attrs: data}));
+      .mockImplementation((data: GenotypeAttributes) => ({
+        get: (): GenotypeAttributes => data
+      }));
 
-  const mockedLimit = jest.fn((limit: number) => ({
-    execAsync: jest.fn((): ExecSuccess => ({Items: [dummyResponseData]})),
-    startKey: mockedExecAsync,
+  const execAsync = jest.fn()
+    .mockImplementation(() => ({Items: [{get: () => ({...commonData, opaqueId: 'PQR03'})}]}))
+    .mockImplementationOnce(() => {throw new Error('genotypeResolver-list: mock error'); });
+
+  Genotype.query = jest.fn(() => ({
+      filter: jest.fn(() => ({
+        in: jest.fn(() => ({
+          execAsync
+        }))
+      })),
   }));
-
-  Genotype.query = jest.fn(() => {
-    return {
-      limit: mockedLimit,
-      usingIndex: jest.fn(() => ({limit: mockedLimit}))
-    };
-  });
 
   describe('Create tests', () => {
     it('should throw an error when the record already exists.', async () => {
@@ -76,7 +72,7 @@ describe('Genotype resolver tests.', () => {
       expect(response).toEqual(dummyResponseData);
     });
 
-    it('should throw an error when the opaque_id is invalid.', async () => {
+    it('should throw an error when the opaqueId is invalid.', async () => {
       let response = await genotypeResolver
           .update({opaqueId: 'abcd', gene: 'XXXXX', source: 'helix'});
       expect(response[`message`]).toEqual('No such record found');
@@ -89,31 +85,21 @@ describe('Genotype resolver tests.', () => {
       expect(response).toEqual(dummyResponseData);
     });
 
-    it('should throw an error when the opaque_id is invalid.', async () => {
+    it('should throw an error when the opaqueId is invalid.', async () => {
       let response = await genotypeResolver.get({opaqueId: 'abcd', gene: 'XXXX'});
       expect(response[`message`]).toEqual('No such record found');
     });
   });
 
   describe('List test', () => {
-    it('should return an error message if required parameters are not present.', async () => {
-      let response = await genotypeResolver.list();
-      expect(response[`message`]).toEqual('Required parameters not present.');
+    it('should return an error message on error.', async () => {
+      let response = await genotypeResolver.list({opaqueId: 'demo', genes: []});
+      expect(response[`message`]).toEqual('genotypeResolver-list: mock error');
     });
 
-    unroll('It should respond with the genotype data list when #params are present.', async (
-        done: () => void,
-        args: {params: {[key: string]: string | number}}
-    ) => {
-      let response = await genotypeResolver.list(args.params);
-      expect(response).toEqual({Items: [dummyResponseData]});
-      done();
-    }, [ // tslint:disable-next-line
-      ['params'],
-      [{opaqueId: 'PQR03'}],
-      [{gene: 'QWERTY2'}],
-      [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}}],
-      [{gene: 'QWERTY2', lastEvaluatedKeys: {opaqueId: 'PQR03', gene: 'QWERTY2'}, limit: 10}],
-    ]);
+    it('should return result when successful', async () => {
+      let response = await genotypeResolver.list({opaqueId: 'PQR03', genes: []});
+      expect(response).toEqual([dummyResponseData]);
+    });
   });
 });

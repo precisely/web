@@ -6,13 +6,12 @@
 * without modification, are not permitted.
 */
 
-import {Query} from 'dynogels';
+import {Query, ExecResult, Item} from 'dynogels-promisified';
 import {Report, ReportAttributes} from '../models/Report';
-import {userDataMapResolver} from '../../user-data-map/api/resolver';
-import {UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
-import {genotypeResolver, ListGenotypeFilters, ListGenotypeObject} from '../../genotype-service/api/resolver';
+import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
 import {AuthorizerAttributes} from '../../interfaces';
 import {log} from '../../logger';
+import {UserData} from './util/UserData';
 
 export interface CreateOrUpdateAttributes {
   title: string;
@@ -21,101 +20,74 @@ export interface CreateOrUpdateAttributes {
   genes: string[];
 }
 
-export interface ListReportFilters {
-  limit?: number;
-  lastEvaluatedKeys?: {
-    id: string;
-    slug: string;
-  };
-  id?: string;
+interface ReportInterface {
   slug?: string;
-  userId?: string;
-  vendorDataType?: string;
-}
-
-export interface ListReportObject {
-  Items: ReportAttributes[];
-  LastEvaluatedKey: {
-    slug: string;
-    id: string;
-  };
 }
 
 export const reportResolver = {
   async create(args: CreateOrUpdateAttributes, authorizer: AuthorizerAttributes): Promise<ReportAttributes> {
-    let reportInstance: {attrs: ReportAttributes};
+    let reportInstance: Item<ReportAttributes>;
     const {slug, title, genes, rawContent} = args;
 
     try {
-      reportInstance = await Report.createAsync({slug, title, genes, raw_content: rawContent});
+      reportInstance = await Report.createAsync({slug, title, genes, rawContent: rawContent});
     } catch (error) {
       log.error(`reportResolver-create: ${error.message}`);
       return error;
     }
-    
-    return reportInstance.attrs;
+
+    return reportInstance.get();
   },
 
-  async list(args: ListReportFilters, authorizer: AuthorizerAttributes): Promise<ListReportObject> {
-    const {lastEvaluatedKeys, slug, limit = 15} = args;
-    let result: ListReportObject;
-    
+  async list(authorizer: AuthorizerAttributes): Promise<ReportAttributes[]> {
+    const result: ReportAttributes[] = [];
+    let reportList: ExecResult<ReportAttributes>;
+
     try {
-      let query: Query & {execAsync?: () => ListReportObject};
-
-      query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
-
-      if (lastEvaluatedKeys) {
-        query = query.startKey(lastEvaluatedKeys.id, lastEvaluatedKeys.slug);
-      }
-
-      result = await query.execAsync();
+      let query: Query<ReportAttributes>;
+      query = Report.query('report');
+      reportList = await query.execAsync();
     } catch (error) {
       log.error(`reportResolver-list: ${error.message}`);
       return error;
     }
 
+    reportList.Items.forEach((report: Item<ReportAttributes>) => {
+      result.push(report.get());
+    });
+
     return result;
   },
 
-  async get(args: ListReportFilters, authorizer: AuthorizerAttributes): 
-    Promise<ListReportObject & { userData: (genotypeArgs: ListGenotypeFilters) => Promise<ListGenotypeObject>; }> {
-      
-    const {slug, id, userId, vendorDataType, limit, lastEvaluatedKeys} = args;
-    let reportInstance: ListReportObject;
-    let userInstance: UserDataMapAttributes;
+  async get(args: ReportInterface, authorizer: AuthorizerAttributes): Promise<ReportAttributes &
+      {userData: () => {genotypes: Promise<GenotypeAttributes[]>}}> {
+
+    const {slug} = args;
+    let reportInstance: Item<ReportAttributes>;
 
     try {
-      userInstance = await userDataMapResolver.get({user_id: userId, vendor_data_type: vendorDataType});
-      let query: Query & {execAsync?: () => ListReportObject};
+      reportInstance = await Report.getAsync('report', slug);
 
-      if (id) {
-        query = Report.query(id).limit(limit);
-      } else if (slug) {
-        query = Report.query(slug).usingIndex('ReportGlobalIndex').limit(limit);
-      } else {
-        throw new Error('Required parameters not present.');
+      if (!reportInstance) {
+        throw new Error('No such record found');
       }
-
-      if (lastEvaluatedKeys) {
-        query = query.startKey(lastEvaluatedKeys.slug, lastEvaluatedKeys.id);
-      }
-
-      reportInstance = await query.execAsync();
     } catch (error) {
       log.error(`reportResolver-get: ${error.message}`);
       return error;
     }
-    
+
     return {
-      ...reportInstance,
-      userData: (genotypeArgs: ListGenotypeFilters) => genotypeResolver.list(
-        {
-          opaqueId: userInstance.opaque_id,
-          ...genotypeArgs
-        }, 
-        authorizer
-      ),
+      ...reportInstance.get(),
+      userData: () => {
+        const userData = new UserData(
+            authorizer.claims.sub,
+            reportInstance.get().genes
+          );
+
+        return {
+          genotypes: userData.genotypes(),
+        };
+      }
     };
   },
 };
@@ -124,8 +96,8 @@ export const reportResolver = {
 
 /* istanbul ignore next */
 export const queries = {
-  reports: (root: any, args: ListReportFilters) => reportResolver.list(args, root.authorizer),
-  report: (root: any, args: ListReportFilters) => reportResolver.get(args, root.authorizer),
+  reports: (root: any) => reportResolver.list(root.authorizer),
+  report: (root: any, args: ReportInterface) => reportResolver.get(args, root.authorizer),
 };
 
 /* istanbul ignore next */

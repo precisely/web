@@ -22,9 +22,9 @@ const decryptAsync: (params: DecryptRequest) => Bluebird<Object> = Bluebird.prom
  */
 export async function getEnvironmentVariables(): Promise<Object | void> {
   try {
-    const result: DecryptResponse = 
+    const result: DecryptResponse =
         await decryptAsync({CiphertextBlob: new Buffer(process.env.SECRETS as string, 'base64')});
-        
+
     return result && result.Plaintext &&  JSON.parse(result.Plaintext.toString());
   } catch (error) {
     log.error(`Error while decrypting secrets: ${error.message}`);

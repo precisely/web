@@ -22,9 +22,9 @@ export const seedReport = () => {
         id: report.id,
         title: report.title,
         slug: report.slug,
-        raw_content: report.raw_content,
-        parsed_content: report.parsed_content,
-        top_level: report.top_level,
+        rawContent: report.rawContent,
+        parsedContent: report.parsedContent,
+        topLevel: report.topLevel,
         genes: report.genes
     }, (error: Error) => {
       if (error) {
@@ -39,19 +39,20 @@ export const seedGenotype = () => {
 
   allGenotypes.forEach((genotype: GenotypeAttributes) => {
     Genotype.create({
-      opaque_id: genotype.opaque_id,
-      sample_id: genotype.sample_id,
+      opaqueId: genotype.opaqueId,
+      sampleId: genotype.sampleId,
       source: genotype.source,
       gene: genotype.gene,
-      variant_call: genotype.variant_call,
+      geneFilter: genotype.gene,
+      variantCall: genotype.variantCall,
       zygosity: genotype.zygosity,
-      start_base: genotype.start_base,
-      chromosome_name: genotype.chromosome_name,
-      variant_type: genotype.variant_type,
+      startBase: genotype.startBase,
+      chromosomeName: genotype.chromosomeName,
+      variantType: genotype.variantType,
       quality: genotype.quality,
     }, (error: Error) => {
       if (error) {
-        log.error(`Unable to add Genotype ${genotype.opaque_id}. Error JSON: ${JSON.stringify(error, null, 2)}`);
+        log.error(`Unable to add Genotype ${genotype.opaqueId}. Error JSON: ${JSON.stringify(error, null, 2)}`);
       }
     });
   });

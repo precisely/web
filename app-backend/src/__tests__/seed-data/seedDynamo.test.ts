@@ -23,22 +23,22 @@ describe('seedDynamo tests', () => {
     id: 'dummy-id',
     title: 'dummy-title',
     slug: 'dummy-slug',
-    raw_content: 'dummy-raw_content',
-    parsed_content: 'dummy-parsed_content',
-    top_level: false,
+    rawContent: 'dummy-rawContent',
+    parsedContent: 'dummy-parsedContent',
+    topLevel: false,
     genes: ['dummy-genes']
   };
 
   const dummyGenotype = {
-    opaque_id: 'dummy-opaque_id',
-    sample_id: 'dummy-sample_id',
+    opaqueId: 'dummy-opaqueId',
+    sampleId: 'dummy-sampleId',
     source: 'dummy-source',
     gene: 'dummy-gene',
-    variant_call: 'dummy-variant_call',
+    variantCall: 'dummy-variantCall',
     zygosity: 'dummy-zygosity',
-    start_base: 'dummy-start_base',
-    chromosome_name: 'dummy-chromosome_name',
-    variant_type: 'dummy-variant_type',
+    startBase: 'dummy-startBase',
+    chromosomeName: 'dummy-chromosomeName',
+    variantType: 'dummy-variantType',
     quality: 'dummy-quality'
   };
 
@@ -53,7 +53,7 @@ describe('seedDynamo tests', () => {
 
   Report.create = Genotype.create = jest.fn()
     .mockImplementation((data, callback) => {
-      if (data.id === 'dummy-id' || data.opaque_id === 'dummy-opaque_id') {
+      if (data.id === 'dummy-id' || data.opaqueId === 'dummy-opaqueId') {
         callback(null);
       } else {
         callback(new Error('failed'));
@@ -81,7 +81,7 @@ describe('seedDynamo tests', () => {
     ['Report', seedReport, dummyReport, 'not call log.error when pass'],
     ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'log.error error when fail'],
     ['Genotype', seedGenotype, dummyGenotype, 'not call log.error when pass'],
-    ['Genotype', seedGenotype, { ...dummyGenotype, opaque_id: 'invalid' }, 'log.error error when fail']
+    ['Genotype', seedGenotype, { ...dummyGenotype, opaqueId: 'invalid' }, 'log.error error when fail']
   ]);
 
 });

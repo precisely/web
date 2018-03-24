@@ -9,9 +9,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Bluebird from 'bluebird';
-import {UserDataMap, UserDataMapAttributes} from '../../user-data-map/models/UserDataMap';
+import {UserDataMap} from '../../user-data-map/models/UserDataMap';
 
 const jsonPath = path.join(__dirname, '../data/');
+
+interface UserDataMapAttributes {
+  user_id: string;
+  vendor_data_type: string;
+  opaque_id: string;
+}
 
 export const seedUser = async () => {
   const promises: Bluebird<boolean>[] = [];

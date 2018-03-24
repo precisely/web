@@ -84,7 +84,7 @@ describe('Tests for hasAuthorizedRoles', () => {
   ]);
 
   it('should return true when the current user is an admin.', () => {
-    const result: boolean = hasAuthorizedRoles({claims: {'custom:roles': 'USER, ADMIN'}}, ['ADMIN']);
+    const result: boolean = hasAuthorizedRoles({claims: {'custom:roles': 'USER, ADMIN', sub: ''}}, ['ADMIN']);
     expect(result).toEqual(true);
   });
 });

@@ -14,6 +14,10 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "@types/",
+      "./types"
+    ],
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
