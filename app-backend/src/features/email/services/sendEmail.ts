@@ -7,7 +7,7 @@
 */
 
 import * as AWS from 'aws-sdk';
-import {log} from '../logger';
+import {log} from 'src/logger';
 
 AWS.config.update({region: process.env.REGION});
 

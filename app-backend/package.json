@@ -20,7 +20,7 @@
     "deploy:stage": "serverless invoke local -f deploy -d stage",
     "deploy:prod": "serverless invoke local -f deploy -d prod",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src"
+    "eslint": "eslint src/**"
   },
   "jest": {
     "collectCoverage": true,

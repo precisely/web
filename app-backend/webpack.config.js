@@ -8,10 +8,10 @@ module.exports = {
   externals: ['pg-native', 'tedious', 'sqlite3', 'mysql2'],
   plugins: [
     new webpack.ContextReplacementPlugin(
-            /sequelize(\\|\/)/,
-            path.resolve(__dirname, '../src'
-          )
-  )],
+      /sequelize(\\|\/)/,
+      path.resolve('./src')
+    )
+  ],
   resolve: {
     extensions: [
       '.js',
@@ -37,10 +37,10 @@ module.exports = {
         test: /\.md$/,
         use: [
           {
-            loader: "html-loader"
+            loader: 'html-loader'
           },
           {
-            loader: "markdown-loader"
+            loader: 'markdown-loader'
           }
         ]
       }
@@ -48,7 +48,7 @@ module.exports = {
   },
   output: {
     libraryTarget: 'commonjs',
-    path: path.join(__dirname, '.webpack'),
+    path: path.join('../.webpack'),
     filename: '[name].js',
   },
 };

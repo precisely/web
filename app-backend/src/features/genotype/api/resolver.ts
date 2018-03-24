@@ -7,10 +7,10 @@
 */
 
 import {Query, ExecResult, Item} from 'dynogels-promisified';
-import {Genotype, GenotypeAttributes} from '../models/Genotype';
-import {hasAuthorizedRoles} from '../../utils';
-import {AuthorizerAttributes} from '../../interfaces';
-import {log} from '../../logger';
+import {Genotype, GenotypeAttributes} from 'src/genotype-service/models/Genotype';
+import {hasAuthorizedRoles} from 'src/utils';
+import {AuthorizerAttributes} from 'src/interfaces';
+import {log} from 'src/logger';
 
 export interface ListGenotypeFilters {
   opaqueId: string;

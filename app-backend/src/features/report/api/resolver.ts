@@ -7,10 +7,10 @@
 */
 
 import {Query, ExecResult, Item} from 'dynogels-promisified';
-import {Report, ReportAttributes} from '../models/Report';
-import {GenotypeAttributes} from '../../genotype-service/models/Genotype';
-import {AuthorizerAttributes} from '../../interfaces';
-import {log} from '../../logger';
+import {Report, ReportAttributes} from 'src/report-service/models/Report';
+import {GenotypeAttributes} from 'src/genotype-service/models/Genotype';
+import {AuthorizerAttributes} from 'src/interfaces';
+import {log} from 'src/logger';
 import {UserData} from './util/UserData';
 
 export interface CreateOrUpdateAttributes {

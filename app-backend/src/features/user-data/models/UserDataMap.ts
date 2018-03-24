@@ -7,32 +7,16 @@
 */
 
 import * as Sequelize from 'sequelize';
+import {connection} from 'src/data-source/postgres/connections';
 
-export const sequelize: Sequelize.Sequelize = new Sequelize(
-  process.env.POSTGRES_DB_NAME,
-  process.env.POSTGRES_DB_USERNAME,
-  process.env.POSTGRES_DB_PASSWORD,
-  {
-    dialect: 'postgres',
-    port: 5432,
-    host: process.env.POSTGRES_DB_CONN_STR,
-    logging: false,
-    pool: {
-      max: 1,
-      min: 0,
-      idle: 10000
-    },
-  }
-);
-
-interface UserDataMapAttributes {
+export interface UserDataMapAttributes {
   user_id: string;
   vendor_data_type: string;
   opaque_id: string;
 }
 
 export interface UserDataMapInstance extends Sequelize.Instance<UserDataMapAttributes>, UserDataMapAttributes {
-
+    /// What is happening here?
 }
 
 export const vendorDataTypeList: string[] = [
@@ -42,9 +26,9 @@ export const vendorDataTypeList: string[] = [
   'precisely:genotype',
 ];
 
-export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> =
+export const UserDataMap: Sequelize.Model<UserDataMapInstance, UserDataMapAttributes> = 
 
-    sequelize.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
+    connection.define<UserDataMapInstance, UserDataMapAttributes>('userDataMap', {
 
       user_id: {
         type: Sequelize.STRING,

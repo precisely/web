@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import {genotypeResolver} from '../../../genotype-service/api/resolver';
-import {userDataMapResolver, UserDataMapAttributes} from '../../../user-data-map/api/resolver';
+import {genotypeResolver} from 'src/genotype-service/api/resolver';
+import {userDataMapResolver, UserDataMapAttributes} from 'src/user-data-map/api/resolver';
 
 export class UserData {
 

@@ -1,9 +1,0 @@
-type UserDataMap {
-  userId: String,
-  vendorDataType: String,
-  opaqueId: String
-}
-
-extend type Mutation {
-  userDataMap(userId: String!, vendorDataType: String!): UserDataMap,
-}
