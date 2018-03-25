@@ -20,6 +20,8 @@ import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
 import {Basepage} from 'src/features/common/Basepage';
 import {getTokenFromLocalStorage} from 'src/utils';
+import * as Bluebird from 'bluebird';
+import * as AWS from 'aws-sdk';
 
 initReactFastclick();
 
@@ -32,6 +34,14 @@ const client = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 });
+
+Bluebird.config({
+  longStackTraces: true,
+  warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
+});
+
+AWS.config.setPromisesDependency(Bluebird);
+AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
 
 ReactDOM.render(
   <Provider store={store}>

@@ -11,7 +11,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
-import {resetPassword} from 'src/utils/cognito';
+import {currentUser} from 'src/constants/currentUser';
 import {showAlert} from 'src/utils';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {CSS} from 'src/interfaces';
@@ -48,7 +48,7 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
     }
   }
 
-  updateLoadingState = (isLoading: boolean): void => {
+  updateLoadingState = (isLoading: boolean) => {
     this.setState({isLoading});
   }
 
@@ -58,9 +58,9 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
     this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
   }
 
-  onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
+  onFailure = (error: Error) => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, message);
+    this.toastId = showAlert(this.toastId, error.message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -75,7 +75,13 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
     this.updateLoadingState(true);
 
     // Not adding a null check for the email here, since it's already added in the componentWillMount method
-    resetPassword(this.props.match.params.email, verificationCode, newPassword, this.onSuccess, this.onFailure);
+    currentUser.resetPassword(
+      this.props.match.params.email, 
+      verificationCode, 
+      newPassword, 
+      this.onSuccess, 
+      this.onFailure
+    );
   }
 
   handleInputChange(inputType: string, value: string): void {

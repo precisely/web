@@ -6,138 +6,133 @@
  * without modification, are not permitted.
  */
 
-import * as AWS from 'aws-sdk';
 import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
-import * as Bluebird from 'bluebird';
 import {
   CognitoUserPool,
   AuthenticationDetails,
   CognitoUser,
   CognitoUserSession,
+  ISignUpResult,
 } from 'amazon-cognito-identity-js';
-
-Bluebird.config({
-  longStackTraces: true,
-  warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
-});
+import * as AWS from 'aws-sdk';
 
 /* istanbul ignore next */
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
   console.warn('Cognito configuration missing.');
 }
 
-const poolData: {UserPoolId: string, ClientId: string} = {
-  UserPoolId : process.env.REACT_APP_USER_POOL_ID,
-  ClientId : process.env.REACT_APP_CLIENT_APP_ID,
-};
-
-export const userPool: CognitoUserPool = new CognitoUserPool(poolData);
-
-export const isLoggedIn = (): boolean => {
-  return !!userPool.getCurrentUser();
-};
-
 export class AWSUser {
-  jwtToken: string;
   user: CognitoUser;
+  authenticationDetails: AuthenticationDetails;
+  userPool: CognitoUserPool;
+  poolData: {UserPoolId: string, ClientId: string};
 
   constructor() {
-    AWS.config.setPromisesDependency(Bluebird);
-    AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
+    this.poolData = {
+      UserPoolId: process.env.REACT_APP_USER_POOL_ID,
+      ClientId: process.env.REACT_APP_CLIENT_APP_ID
+    };
+    this.userPool = new CognitoUserPool(this.poolData);
   }
 
-  login = async (email: string , password: string) => {
-    const userData: {Username: string, Pool: CognitoUserPool} = {
-      Username : email,
-      Pool : userPool
-    };
+  signup(
+    email: string,
+    password: string,
+    successCallback: (result: ISignUpResult) => void,
+    failureCallback: (error: Error) => void
+  ): void {
 
-    this.user = new CognitoUser(userData);
+    this.userPool.signUp(
+        email,
+        password,
+        null,
+        null,
+        (error: Error, result: ISignUpResult): void => {
+          if (error) {
+            failureCallback(error);
+            return;
+          }
+          successCallback(result);
+        }
+    );
+  }
 
+  login (
+      email: string , 
+      password: string,
+      onSuccess: (cognitoUserSession: CognitoUserSession) => void,
+      onFailure: () => void
+  ) {
+    this.buildCognitoUser(email);
     const authenticationData: {Username: string, Password: string} = {
       Username : email,
       Password : password,
     };
-    const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-
-    const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> =
-            Bluebird.promisify(authWrapper);
-    return authenticateUser(authenticationDetails).then(this.setToken.bind(this));
+    this.authenticationDetails = new AuthenticationDetails(authenticationData);
+    return this.user.authenticateUser(
+        this.authenticationDetails, 
+        { 
+          onSuccess: onSuccess, 
+          onFailure: onFailure
+        });  
   }
 
-  authWrapper(authenticationDetails: AuthenticationDetails, callback: (session: CognitoUserSession) => void) {
-    this.user.authenticateUser(authenticationDetails,{callbacks: {onSuccess:callback, onFailure: () => {}}});
-  }
-
-  setToken(userSession: CognitoUserSession): void {
-    this.jwtToken = userSession.getIdToken().getJwtToken();
-    setTokenInLocalStorage(this.jwtToken);
+  static setToken(userSession: CognitoUserSession) {
+    let jwtToken: string = userSession.getIdToken().getJwtToken();
+    setTokenInLocalStorage(jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
         Logins : {
-            [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: this.jwtToken,
+            [`cognito-idp.us-east-1.amazonaws.com/${process.env.REACT_APP_USER_POOL_ID}`]: jwtToken,
         }
     });
   }
 
-}
+  isLoggedIn(): boolean {
+    return !!this.userPool.getCurrentUser();
+  }
 
-export function logOut(): void {
-  const cognitoUser = userPool.getCurrentUser();
-  cognitoUser.signOut();
-  removeTokenFromLocalStorage();
-}
+  logOut(): void {
+    const cognitoUser = this.userPool.getCurrentUser();
+    cognitoUser.signOut();
+    removeTokenFromLocalStorage();
+  }
 
-export function getResetPasswordCode(
+  forgotPassword (
     email: string,
-    successCallback?: () => void,
-    failureCallback?: (message: string) => void
-): void {
-  const userData: {Username: string, Pool: CognitoUserPool} = {
-    Username : email,
-    Pool : userPool
-  };
+    // tslint:disable-next-line
+    successCallback: (data: any) => void,
+    failureCallback: (error: Error) => void
+  ): void {
+    this.buildCognitoUser(email);
+    this.user.forgotPassword({
+      onSuccess: successCallback,
+      onFailure: failureCallback
+    });
+  }
 
-  const cognitoUser: CognitoUser = new CognitoUser(userData);
-
-  cognitoUser.forgotPassword({
-    onSuccess: (): void => {
-      if (successCallback) {
-        successCallback();
-      }
-    },
-    onFailure: (error: Error): void => {
-      if (failureCallback) {
-        failureCallback(error.message);
-      }
-    },
-  });
-}
-
-export function resetPassword(
+  resetPassword(
     email: string,
     verificationCode: string,
     newPassword: string,
-    successCallback?: () => void,
-    failureCallback?: (message: string) => void
-): void {
-  const userData: {Username: string, Pool: CognitoUserPool} = {
-    Username : email,
-    Pool : userPool
-  };
-
-  const cognitoUser: CognitoUser = new CognitoUser(userData);
-
-  cognitoUser.confirmPassword(verificationCode, newPassword, {
-    onSuccess(): void {
-      if (successCallback) {
-        successCallback();
+    successCallback: () => void,
+    failureCallback: (error: Error) => void
+  ): void {
+    this.buildCognitoUser(email);
+    this.user.confirmPassword(
+      verificationCode, newPassword, 
+      {
+        onSuccess: successCallback,
+        onFailure: failureCallback
       }
-    },
-    onFailure(error: Error): void {
-      if (failureCallback) {
-        failureCallback(error.message);
-      }
-    },
-  });
+    );
+  }
+
+  private buildCognitoUser(email: string) {
+    this.user = new CognitoUser({
+      Username : email,
+      Pool : this.userPool
+    });
+  }
+
 }

@@ -9,13 +9,15 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/features/common/ReusableComponents';
+import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} 
+    from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/features/common/PageContent';
 import {AWSUser} from 'src/utils/cognito';
 import {checkEmailAndPassword, showAlert} from 'src/utils';
 import {Email} from 'src/features/common/Email';
 import {NavigationBar} from 'src/features/common/NavigationBar';
+import {currentUser} from 'src/constants/currentUser';
 import {
   formButton,
   noBorderTop,
@@ -25,6 +27,7 @@ import {
   alignCenter,
   formMargin,
 } from 'src/constants/styleGuide';
+import { CognitoUserSession } from 'amazon-cognito-identity-js';
 
 export interface LoginState {
   email?: string;
@@ -43,7 +46,8 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     this.setState({isLoading});
   }
 
-  onSuccess = (): void => {
+  onSuccess = (cognitoUserSession: CognitoUserSession): void => {
+    AWSUser.setToken(cognitoUserSession);
     this.setLoadingState(false);
     this.props.history.push('/dashboard');
   }
@@ -64,15 +68,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
     if (validationInfo.isValid) {
       this.setLoadingState(true);
-      let awsUser: AWSUser = new AWSUser();
-      (async() => {
-        try {
-          await awsUser.login(email, password);
-          this.onSuccess();
-        } catch {
-          this.onFailure();
-        }
-      })();
+      currentUser.login(email, password, this.onSuccess, this.onFailure);
     }
   }
 
