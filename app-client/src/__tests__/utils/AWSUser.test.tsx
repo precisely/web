@@ -8,15 +8,13 @@
 
 jest.mock('src/utils/index');
 
-import * as AWSUser from 'src/utils/AWSUser';
-import {CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
 import {utils} from 'src/utils/index';
 import {currentUser} from 'src/constants/currentUser';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Cognito tests', () => {
+describe('AWSUser tests', () => {
   const successCallback = jest.fn();
   const failureCallback = jest.fn();
 
@@ -36,11 +34,6 @@ describe('Cognito tests', () => {
     [false, 'not logged in'],
     [true, 'logged in'],
   ]);
-
-  // it('should return the current user details', () => {
-  //   const cognitoUser = currentUser.buildCognitoUser('test@example.com');
-  //   expect(cognitoUser[`data`].name).toEqual('Test User');
-  // });
 
   it('should remove the token from the local storage when signout is called.', () => {
     currentUser.logOut();
@@ -67,7 +60,7 @@ describe('Cognito tests', () => {
         done: () => void,
         args: {callbackType: string, condition: string, function: jest.Mock}
     ) => {
-      currentUser.resetPassword('test@example.com', successCallback, failureCallback);
+      currentUser.forgotPassword('test@example.com', successCallback, failureCallback);
       expect(args.function).toBeCalled();
       done();
     }, [ // tslint:disable-next-line
@@ -76,31 +69,30 @@ describe('Cognito tests', () => {
     ]);
   });
 
-  // describe('Signup tests.', () => {
-  //   unroll('It should call the #callbackType callback when there is #condition ', (
-  //       done: () => void,
-  //       args: {callbackType: string, condition: string, function: jest.Mock, email: string}
-  //   ) => {
-  //     Cognito.signup(args.email, 'qwerty', successCallback, failureCallback);
-  //     expect(args.function).toBeCalled();
-  //     done();
-  //   }, [ // tslint:disable-next-line
-  //     ['callbackType', 'condition', 'function', 'email'],
-  //     ['success', 'no error', successCallback, 'test@example.com'],
-  //     ['failure', 'an error', failureCallback, 'xxx'],
-  //   ]);
-  // });
-  //
-  // describe('Login tests', () => {
-  //   it('should save the token to the local storage on successful login', () => {
-  //     Cognito.login('test@example.com', 'qwerty', successCallback, failureCallback);
-  //     expect(setTokenInLocalStorage).toBeCalledWith('DUMMY_TOKEN');
-  //     expect(successCallback).toBeCalled();
-  //   });
-  //
-  //   it('should call the failure callback on failure.', () => {
-  //     Cognito.login('xxx', 'qwerty', successCallback, failureCallback);
-  //     expect(failureCallback).toBeCalled();
-  //   });
-  // });
+  describe('Signup tests.', () => {
+    unroll('It should call the #callbackType callback when there is #condition ', (
+        done: () => void,
+        args: {callbackType: string, condition: string, function: jest.Mock, email: string}
+    ) => {
+      currentUser.signup(args.email, 'qwerty', successCallback, failureCallback);
+      expect(args.function).toBeCalled();
+      done();
+    }, [ // tslint:disable-next-line
+      ['callbackType', 'condition', 'function', 'email'],
+      ['success', 'no error', successCallback, 'test@example.com'],
+      ['failure', 'an error', failureCallback, 'xxx'],
+    ]);
+  });
+
+  describe('Login tests', () => {
+    it('should save the token to the local storage on successful login', () => {
+      currentUser.login('test@example.com', 'qwerty', successCallback, failureCallback);
+      expect(successCallback).toBeCalled();
+    });
+
+    it('should call the failure callback on failure.', () => {
+      currentUser.login('xxx', 'qwerty', successCallback, failureCallback);
+      expect(failureCallback).toBeCalled();
+    });
+  });
 });

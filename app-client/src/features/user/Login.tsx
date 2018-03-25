@@ -8,15 +8,15 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
+import {CognitoUserSession} from 'amazon-cognito-identity-js';
 import {RouteComponentProps} from 'react-router';
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/features/common/PageContent';
-import {AWSUser} from 'AWSUser.ts';
+import {AWSUser} from 'src/utils/AWSUser.ts';
 import {utils} from 'src/utils';
 import {Email} from 'src/features/common/Email';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {currentUser} from 'src/constants/currentUser';
-import { CognitoUserSession } from 'amazon-cognito-identity-js';
 import {
   formButton,
   noBorderTop,

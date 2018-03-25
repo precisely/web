@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar, NavigationBarState} from 'src/features/common/NavigationBar';
-import {logOut, isLoggedIn} from 'AWSUser.ts';
+import {currentUser} from 'src/constants/currentUser';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 import {
   Collapse,
@@ -32,14 +32,8 @@ type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>,
 
 describe('NavigationBar tests.', () => {
 
-  logOut = jest.fn<void>();
-  isLoggedIn = jest.fn<boolean>()
-    .mockImplementationOnce((): boolean => {
-      return true;
-    })
-    .mockImplementation((): boolean => {
-      return false;
-    });
+  currentUser.logOut = jest.fn<void>();
+  currentUser.isLoggedIn = jest.fn<boolean>().mockReturnValueOnce(true).mockReturnValue(false);
 
   const getComponentTree = (): ComponentTree => {
     return shallow(
@@ -56,7 +50,7 @@ describe('NavigationBar tests.', () => {
 
     it('should log out when button is clicked', () => {
       componentTree.find(NavLink).at(1).simulate('click');
-      expect(logOut).toBeCalled();
+      expect(currentUser.logOut).toBeCalled();
       expect(mockedHistory.replace).toBeCalledWith('/');
     });
   });

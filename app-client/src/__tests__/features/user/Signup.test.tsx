@@ -13,7 +13,7 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, SignupState} from 'src/features/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/features/common/ReusableComponents';
-import {signup} from 'AWSUser.ts';
+import {currentUser} from 'src/constants/currentUser';
 import {PageContent} from 'src/features/common/PageContent';
 import {utils} from 'src/utils/index';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
@@ -31,26 +31,21 @@ describe('Tests for Signup', () => {
     utils.showAlert = jest.fn<number>().mockReturnValue(1);
   });
 
-  signup = jest.fn<void>()
+  currentUser.signup = jest.fn<void>()
       .mockImplementationOnce((
         email: string,
         password: string,
         successCallback?: () => void,
-        failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          resolve(successCallback());
-        });
+      ) => {
+        successCallback();
       })
       .mockImplementationOnce((
         email: string,
         password: string,
         successCallback?: () => void,
         failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          reject(failureCallback());
-        });
+      ) => {
+          failureCallback();
       });
 
   utils.checkEmailAndPassword = jest.fn()
@@ -85,7 +80,7 @@ describe('Tests for Signup', () => {
 
   it('should not submit the form when the username and password are not valid.', () => {
     componentTree.find('#signupForm').simulate('submit', {preventDefault});
-    expect(signup).not.toBeCalled();
+    expect(currentUser.signup).not.toBeCalled();
   });
 
   unroll('It should change state value onChange of #id', (
@@ -104,7 +99,7 @@ describe('Tests for Signup', () => {
   it('should not submit the form when the confirm password is null.', () => {
     componentTree.find('#signupForm').simulate('submit', {preventDefault});
     expect(utils.showAlert).toBeCalledWith(1, 'Please confirm your password.');
-    expect(signup).not.toBeCalled();
+    expect(currentUser.signup).not.toBeCalled();
   });
 
   it('should change the confirm password state value on change.', () => {

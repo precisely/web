@@ -21,7 +21,7 @@ import {Container} from 'src/features/common/ReusableComponents';
 import {store} from 'src/store';
 import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
-import {dummyData} from 'src/__tests__/src/features/report/testData';
+import {dummyData} from 'src/__tests__/features/report/testData';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const createMockedNetworkFetch = require('apollo-mocknetworkinterface');

@@ -13,7 +13,7 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ResetPassword, ResetPasswordState} from 'src/features/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
-import {resetPassword} from 'AWSUser.ts';
+import {currentUser} from 'src/constants/currentUser';
 import {PageContent} from 'src/features/common/PageContent';
 import {utils} from 'src/utils/index';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
@@ -36,17 +36,14 @@ describe('Tests for ResetPassword', () => {
     mockedHistory.push = jest.fn<void>();
   });
 
-  resetPassword = jest.fn<void>()
+  currentUser.resetPassword = jest.fn<void>()
       .mockImplementationOnce((
           email: string,
           verificationCode: string,
           newPassword: string,
           successCallback?: () => void,
-          failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          resolve(successCallback());
-        });
+      ) => {
+        successCallback();
       })
       .mockImplementationOnce((
           email: string,
@@ -54,14 +51,14 @@ describe('Tests for ResetPassword', () => {
           newPassword: string,
           successCallback?: () => void,
           failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          reject(failureCallback());
-        });
+      ) => {
+        failureCallback();
       });
 
   const getComponentTree = (params?: {email: string}): ShallowWrapperType => {
-    return shallow(<ResetPassword history={mockedHistory} match={{params}}/>);
+    return shallow(
+        <ResetPassword history={mockedHistory} match={mockedMatch<{email: string}>(params)} location={mockedLocation}/>
+    );
   };
 
   describe('When the email is not present in the params.', () => {
@@ -94,7 +91,7 @@ describe('Tests for ResetPassword', () => {
       componentTree.find(`#newPassword`).simulate('change', {target: {id: 'confirmPassword', value: 'dummy'}});
       componentTree.find(Form).simulate('submit', {preventDefault});
       expect(utils.showAlert).toBeCalledWith(null, 'Password does not match.');
-      expect(resetPassword).not.toBeCalled();
+      expect(currentUser.resetPassword).not.toBeCalled();
     });
   });
 

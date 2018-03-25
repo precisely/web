@@ -13,10 +13,10 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ForgotPassword, ForgotPasswordState} from 'src/features/user/ForgotPassword';
 import {Button, Form, FormGroup} from 'src/features/common/ReusableComponents';
-import {getResetPasswordCode} from 'AWSUser.ts';
 import {PageContent} from 'src/features/common/PageContent';
 import {Email} from 'src/features/common/Email';
 import {utils} from 'src/utils/index';
+import {currentUser} from 'src/constants/currentUser';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
@@ -33,24 +33,10 @@ describe('Tests for ForgotPassword', () => {
     mockedHistory.push = jest.fn<void>();
   });
 
-  getResetPasswordCode = jest.fn<void>()
-      .mockImplementationOnce((
-          email: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          resolve(successCallback());
-        });
-      })
-      .mockImplementationOnce((
-          email: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-          reject(failureCallback());
-        });
+  currentUser.forgotPassword = jest.fn<void>().mockImplementationOnce((email: string, successCallback?: () => void) => {
+        successCallback();
+      }).mockImplementationOnce((email: string, successCallback?: () => void, failureCallback?: () => void) => {
+          failureCallback();
       });
 
   const preventDefault: jest.Mock<void> = jest.fn<void>();
@@ -77,7 +63,6 @@ describe('Tests for ForgotPassword', () => {
   it('should not submit the form when the email is not present.', () => {
     componentTree.find(Form).simulate('submit', {preventDefault});
     expect(utils.showAlert).toBeCalledWith(null, 'Please enter your email.');
-    expect(getResetPasswordCode).not.toBeCalled();
   });
 
   unroll('It should change state value onChange of #id', (

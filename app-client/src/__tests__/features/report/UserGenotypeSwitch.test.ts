@@ -7,7 +7,7 @@
  */
 
 import {UserGenotypeSwitch} from 'src/features/report/UserGenotypeSwitch';
-import {dummyData, parsedContentJson} from 'src/__tests__/src/features/report/testData';
+import {dummyData, parsedContentJson} from 'src/__tests__/features/report/testData';
 
 const unroll = require('unroll');
 unroll.use(it);

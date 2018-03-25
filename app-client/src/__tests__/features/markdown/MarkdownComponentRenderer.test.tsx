@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure} from 'enzyme';
-import {dummyData} from 'src/__tests__/src/features/report/testData';
+import {dummyData} from 'src/__tests__/features/report/testData';
 import {
   MarkdownComponentRenderer,
   MarkdownComponentRendererProps,

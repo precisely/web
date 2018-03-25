@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {logOut, isLoggedIn} from 'AWSUser.ts';
+import {currentUser} from 'src/constants/currentUser';
 import {CSS} from 'src/interfaces';
 import {
   Collapse,
@@ -41,7 +41,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
 
   handleClick = (loggedIn: boolean): void => {
     if (loggedIn) {
-      logOut();
+      currentUser.logOut();
       this.props.history.replace('/');
     } else {
       this.props.history.push('/login');
@@ -57,7 +57,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
   }
 
   render() {
-    const loggedIn: boolean = isLoggedIn();
+    const loggedIn: boolean = currentUser.isLoggedIn();
     const {isOpen, backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;

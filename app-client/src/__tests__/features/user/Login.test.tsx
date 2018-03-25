@@ -13,10 +13,11 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Login, LoginState} from 'src/features/user/Login';
 import {Button, Form, FormGroup, Input, Link} from 'src/features/common/ReusableComponents';
-// import {login} from 'src/utils/cognito';
+import {currentUser} from 'src/constants/currentUser';
 import {PageContent} from 'src/features/common/PageContent';
 import {utils} from 'src/utils/index';
 import {Email} from 'src/features/common/Email';
+import {AWSUser} from 'src/utils/AWSUser';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
@@ -29,38 +30,27 @@ describe('Tests for Login', () => {
   Radium.TestMode.enable();
 
   beforeEach(() => {
-    // showAlert = jest.fn<number>().mockReturnValue(1);
     mockedHistory.push = jest.fn<void>();
   });
 
-  // login = jest.fn<void>()
-  //     .mockImplementationOnce((
-  //       email: string,
-  //       password: string,
-  //       successCallback?: () => void,
-  //       failureCallback?: () => void
-  //     ): Promise<void> => {
-  //       return new Promise((resolve, reject): void => {
-  //         return resolve(successCallback());
-  //       });
-  //     })
-  //     .mockImplementationOnce((
-  //       email: string,
-  //       password: string,
-  //       successCallback?: () => void,
-  //       failureCallback?: () => void
-  //     ): Promise<void> => {
-  //       return new Promise((resolve, reject): void => {
-  //         return reject(failureCallback());
-  //       });
-  //     });
+  AWSUser.setToken = jest.fn();
 
-
-  utils.checkEmailAndPassword = jest.fn()
-      .mockImplementationOnce(() => {
-        return {isValid: false, toastId: 1};
+  currentUser.login = jest.fn<void>()
+      .mockImplementationOnce((email: string, password: string, successCallback?: () => void) => {
+          successCallback();
       })
-      .mockImplementation(() => {
+      .mockImplementationOnce((
+          email: string,
+          password: string,
+          successCallback?: () => void,
+          failureCallback?: () => void
+      ) => {
+          failureCallback();
+      });
+
+  utils.checkEmailAndPassword = jest.fn().mockImplementationOnce(() => {
+        return {isValid: false, toastId: 1};
+      }).mockImplementation(() => {
         return {isValid: true, toastId: 1};
       });
 
@@ -90,7 +80,7 @@ describe('Tests for Login', () => {
   it('should not submit when checkEmailAndPassword fails.', () => {
     componentTree.find('#loginForm').simulate('submit', {preventDefault});
     expect(utils.checkEmailAndPassword).toBeCalled();
-    // expect(login).not.toBeCalled();
+    expect(currentUser.login).not.toBeCalled();
   });
 
   unroll('It should change state value onChange of #id', (
@@ -106,8 +96,8 @@ describe('Tests for Login', () => {
     ['password', 'dummyPassword', Input]
   ]);
 
-  // it('should change the route to the dashboard when the form is submitted successfully.', async () => {
-  //   await componentTree.find('#loginForm').simulate('submit', {preventDefault});
-  //   expect(mockedHistory.push).toBeCalledWith('/dashboard');
-  // });
+  it('should change the route to the dashboard when the form is submitted successfully.', async () => {
+    await componentTree.find('#loginForm').simulate('submit', {preventDefault});
+    expect(mockedHistory.push).toBeCalledWith('/dashboard');
+  });
 });

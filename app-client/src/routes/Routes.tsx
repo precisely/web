@@ -11,7 +11,7 @@ import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
 import {AuthRoute} from 'src/routes/AuthRoute';
 import {LoadingPage} from 'src/features/common/LoadingPage';
-import {isLoggedIn} from 'AWSUser.ts';
+import {currentUser} from 'src/constants/currentUser';
 
 // tslint:disable
 /* istanbul ignore next */
@@ -37,49 +37,49 @@ export class Routes extends React.Component {
     return (
       <Switch>
         <AuthRoute
-            onEnter={() => !isLoggedIn()}
+            onEnter={() => !currentUser.isLoggedIn()}
             redirectTo="/dashboard"
             path="/"
             exact
             component={LoadComponent('Homepage', 'homepage/Homepage')}
         />
         <AuthRoute
-            onEnter={() => !isLoggedIn()}
+            onEnter={() => !currentUser.isLoggedIn()}
             redirectTo="/dashboard"
             path="/login"
             exact
             component={LoadComponent('Login', 'user/Login')}
         />
         <AuthRoute
-            onEnter={() => !isLoggedIn()}
+            onEnter={() => !currentUser.isLoggedIn()}
             redirectTo="/dashboard"
             path="/signup"
             exact
             component={LoadComponent('Signup', 'user/Signup')}
         />
         <AuthRoute
-            onEnter={isLoggedIn}
+            onEnter={currentUser.isLoggedIn}
             redirectTo="/login"
             path="/dashboard"
             exact
             component={LoadComponent('Dashboard', 'user/Dashboard')}
         />
         <AuthRoute
-            onEnter={() => !isLoggedIn()}
+            onEnter={() => !currentUser.isLoggedIn()}
             redirectTo="/dashboard"
             path="/reset-password/:email"
             exact
             component={LoadComponent('ResetPassword', 'user/ResetPassword')}
         />
         <AuthRoute
-            onEnter={() => !isLoggedIn()}
+            onEnter={() => !currentUser.isLoggedIn()}
             redirectTo="/dashboard"
             path="/forgot-password"
             exact
             component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
         />
         <AuthRoute
-            onEnter={isLoggedIn}
+            onEnter={currentUser.isLoggedIn}
             redirectTo="/login"
             path="/view-report"
             exact
