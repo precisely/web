@@ -52,20 +52,20 @@ for (let i = 0; i < limit; i++) {
   opaqueIdList.push(faker.random.uuid());
 }
 
-export const removeDuplicate = (array: string[]) => {
+export function removeDuplicate(array: string[]) {
   return Array.from(new Set(array));
-};
+}
 
-export const saveJSONFile = (fileName: string, data: object[]) => {
+export function saveJSONFile(fileName: string, data: object[]) {
   jsonfile.writeFileSync(jsonPath + fileName + '.json', data, { spaces: 2 });
   log.info(`${fileName} created successfully.`);
-};
+}
 
-export const createParsedContent = () => { // tslint:disable-next-line:max-line-length
+export function createParsedContent() { // tslint:disable-next-line:max-line-length
   return `[{"type":"tag","name":"usergenotypeswitch","children":[{"type":"tag","name":"genotypecase","children":[{"type":"text","blocks":["<p>${faker.lorem.sentence()}</p>"]}],"rawName":"GenotypeCase","attrs":{"svn":"${faker.random.arrayElement(variantCallList)}"},"selfClosing":false},{"type":"tag","name":"genotypecase","children":[{"type":"text","blocks":["<p>This is a fallback text.</p>"]}],"rawName":"GenotypeCase","attrs":{},"selfClosing":false}],"rawName":"UserGenotypeSwitch","attrs":{"gene":"${faker.random.arrayElement(genesList)}"},"selfClosing":false}]`;
-};
+}
 
-export const createCognitoDataWithUser = async (max: number): Promise<string[]> => {
+export async function createCognitoDataWithUser(max: number): Promise<string[]> {
   for (let i = 0; i < max; i++) {
     cognitoData.push({
       firstName: faker.name.firstName(),
@@ -80,9 +80,9 @@ export const createCognitoDataWithUser = async (max: number): Promise<string[]> 
   saveJSONFile('CognitoData', cognitoData);
 
   return await seedCognito();
-};
+}
 
-export const createDBData = (max: number, userIdList: string[]) => {
+export function createDBData(max: number, userIdList: string[]) {
   for (let i = 0; i < max; i++) {
 
     userData.push({
@@ -123,10 +123,10 @@ export const createDBData = (max: number, userIdList: string[]) => {
   saveJSONFile('UserData', userData);
   saveJSONFile('ReportData', reportData);
   saveJSONFile('GenotypeData', genotypeData);
-};
+}
 
 /* istanbul ignore next */
-(async () => {
+(async function() {
   if (process.env.NODE_ENV !== 'test') {
     const userIdList = await createCognitoDataWithUser(limit);
     createDBData(limit, userIdList);

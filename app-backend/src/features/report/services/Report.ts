@@ -1,3 +1,4 @@
+import {Item} from 'dynogels-promisified';
 import {Report, ReportAttributes} from '../../../features/report/models/Report';
 import {log} from '../../../logger';
 import {CreateArgs} from '../api/resolver';
@@ -18,7 +19,7 @@ export async function list(): Promise<ReportAttributes[]> {
     let query = Report.query('report');
     let reportList = await query.execAsync();
 
-    reportList.Items.forEach(report => {
+    reportList.Items.forEach(function(report: Item<ReportAttributes>) {
       result.push(report.get());
     });
 

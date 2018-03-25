@@ -1,25 +1,25 @@
 import * as AWS from 'aws-sdk';
-import {genotypeIngester} from 'src/features/ingest/genotypeIngester';
-import {genotypeResolver} from 'src/features/genotype/api/resolver';
+import {genotypeIngester} from '../../../features/ingest/genotypeIngester';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('genotypeIngester tests', (): void => {
+describe('genotypeIngester tests', function (): void {
 
-  beforeEach(() => {
+  beforeEach(function() {
     genotypeResolver.create.mockClear();
   });
 
   const mockContext = jest.fn();
   genotypeResolver.create = jest.fn();
 
-  AWS.S3 = () => ({
-    getObject: jest.fn()
-      .mockImplementation((
+  AWS.S3 = function() {
+    return {
+      getObject: jest.fn()
+      .mockImplementation(function(
         params: AWS.S3.Types.GetObjectRequest,
         callback: (error: Error, data: AWS.S3.Types.GetObjectOutput) => void
-      ) => {
+      ) {
         if (params.Key === 'valid') {
           callback(null, {
             Body: JSON.stringify([{
@@ -37,12 +37,13 @@ describe('genotypeIngester tests', (): void => {
           callback(new Error('mock error'), null);
         }
       })
-  });
+    };
+  };
 
-  unroll('it should #expectedStatus with #description', (
+  unroll('it should #expectedStatus with #description', function (
       done: () => void,
       args: {fileName: string; expectedStatus: string; description: string; }
-  ): void => {
+  ): void {
     genotypeIngester({
       Records: [
         {

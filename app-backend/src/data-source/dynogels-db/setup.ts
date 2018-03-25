@@ -1,4 +1,4 @@
-import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
+import {Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {dynogels} from './connection';
 import {log} from '../../logger';
 
@@ -7,10 +7,10 @@ const {Report} = require('../../features/report/models/Report');
 // @ts-ignore:no-unused-local
 const {Genotype} = require('../../features/genotype/models/Genotype');
 
-export const setupDatabase: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+export function setupDatabase(event: APIGatewayEvent, context: Context, callback: Callback) {
   context.callbackWaitsForEmptyEventLoop = false;
 
-  dynogels.createTables((error: Error): void => {
+  dynogels.createTables(function(error: Error): void {
     if (error) {
       log.error(`Error while creating the tables: ${error.message}`);
       return callback(new Error('Error while creating the tables.'), null);
@@ -18,4 +18,4 @@ export const setupDatabase: Handler = (event: APIGatewayEvent, context: Context,
 
     return callback(null, 'Tables Created Successfully');
   });
-};
+}

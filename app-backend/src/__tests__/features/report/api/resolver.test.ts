@@ -8,13 +8,13 @@
 
 jest.mock('src/features/report/models/Report');
 
-import {ReportAttributes, Report} from 'src/features/report/models/Report';
-import {reportResolver, CreateArgs} from 'src/features/report/api/resolver';
+import {ReportAttributes, Report} from '../../../../features/report/models/Report';
+import {reportResolver, CreateArgs} from '../../../../features/report/api/resolver';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('Report resolver tests.', () => {
+describe('Report resolver tests.', function() {
 
   const authorizer = jest.fn();
 
@@ -28,46 +28,50 @@ describe('Report resolver tests.', () => {
   const dummyResponseData: ReportAttributes = {...commonData, rawContent: 'demo-content'};
 
   Report.createAsync = jest.fn()
-      .mockImplementation((data: ReportAttributes) => ({
-        get: (): ReportAttributes => data
-      }))
-      .mockImplementationOnce(() => {throw new Error('createAsync mock error'); });
+      .mockImplementation(function(data: ReportAttributes) {
+        return {get: (): ReportAttributes => data};
+      })
+      .mockImplementationOnce(function() {throw new Error('createAsync mock error'); });
 
   Report.getAsync = jest.fn()
       .mockImplementation((report, slug) => (slug && {get: (): ReportAttributes => dummyResponseData}))
-      .mockImplementationOnce(() => {throw new Error('getAsync mock error'); });
+      .mockImplementationOnce(function() {throw new Error('getAsync mock error'); });
 
   genotypeResolver.list = jest.fn();
 
   Report.query = jest.fn()
-    .mockImplementationOnce(() => {throw new Error('query mock error'); })
-    .mockImplementation(() => ({
-      execAsync: jest.fn(() => ({Items: [{get: () => ({...commonData, rawContent: 'demo-content'})}]}))
-    })
+    .mockImplementationOnce(function() {throw new Error('query mock error'); })
+    .mockImplementation(function() {
+      return {
+        execAsync: jest.fn(function() {
+          return {Items: [{get: function() {return {...commonData, rawContent: 'demo-content'}; }}]};
+        })
+      };
+    });
 
-  describe('Create tests', () => {
-    it('should throw an error when the record already exists.', async () => {
+  describe('Create tests', function() {
+    it('should throw an error when the record already exists.', async function() {
       let response = await reportResolver.create(dummyRequestData, authorizer);
       expect(response[`message`]).toEqual('createAsync mock error');
     });
 
-    it('should create a new record when there is no error', async () => {
+    it('should create a new record when there is no error', async function() {
       let response = await reportResolver.create(dummyRequestData, authorizer);
       expect(response).toEqual(dummyResponseData);
     });
   });
 
-  describe('List test', () => {
+  describe('List test', function() {
 
-    it('should fail if an error occurs', async () => {
+    it('should fail if an error occurs', async function() {
       let response = await reportResolver.list({});
       expect(response[`message`]).toEqual('query mock error');
     });
 
-    unroll('it should respond with the report data list when #params are present.', async (
+    unroll('it should respond with the report data list when #params are present.', async function(
         done: () => void,
         args: {params: {[key: string]: string | number}}
-    ) => {
+    ) {
       let response = await reportResolver.list(args.params);
       expect(response).toEqual([dummyResponseData]);
       done();
@@ -78,18 +82,18 @@ describe('Report resolver tests.', () => {
     ]);
   });
 
-  describe('Get tests', () => {
-    it('should throw an error when the if user is not found.', async () => {
+  describe('Get tests', function() {
+    it('should throw an error when the if user is not found.', async function() {
       let response = await reportResolver.get({}, authorizer);
       expect(response[`message`]).toEqual('getAsync mock error');
     });
 
-    it('should return an error message if required parameters are not present.', async () => {
+    it('should return an error message if required parameters are not present.', async function() {
       let response = await reportResolver.get({}, authorizer);
       expect(response[`message`]).toEqual('No such record found');
     });
 
-    it('should return data successfully when no error occurs', async () => {
+    it('should return data successfully when no error occurs', async function() {
       let response = await reportResolver.get({slug: 'test'}, {claims: {sub: 'demo-id'}});
       let userData = response.userData();
 

@@ -13,7 +13,7 @@ import {cognito, seedCognito} from '../../seed-data/scripts/seedCognito';
 
 const jsonfile = require('jsonfile');
 
-describe('seedCognito tests', () => {
+describe('seedCognito tests', function() {
   const dummyUser = {
     firstName: 'demo-firstName',
     lastName: 'demo-lastName',
@@ -23,43 +23,47 @@ describe('seedCognito tests', () => {
   };
 
   fs.readFileSync = jest.fn()
-    .mockImplementation(() => {
+    .mockImplementation(function() {
       return JSON.stringify([dummyUser, {...dummyUser, email: 'demo-email2@demo-precisely.com'}]);
     });
 
   cognito.adminCreateUser = jest.fn()
-    .mockImplementation(() => {
+    .mockImplementation(function() {
       return {
-        promise: jest.fn(() => ({ User: { Username: 'demo-username' } }))
+        promise: jest.fn(function() {
+          return {User: {Username: 'demo-username'}};
+        })
       };
     })
-    .mockImplementationOnce(() => {
+    .mockImplementationOnce(function() {
       return {
-        promise: jest.fn(() => { throw new Error('mock Error'); })
+        promise: jest.fn(function() { throw new Error('mock Error'); })
       };
     });
 
   cognito.adminInitiateAuth = jest.fn()
-    .mockImplementation(() => {
+    .mockImplementation(function() {
       return {
-        promise: jest.fn(() => ({ Session: 'demo-session' }))
+        promise: jest.fn(function() {
+          return {Session: 'demo-session'};
+        })
       };
     });
 
   cognito.adminRespondToAuthChallenge = jest.fn()
-    .mockImplementation(() => {
+    .mockImplementation(function() {
       return {
         promise: jest.fn()
       };
     });
 
-  it('should fail when an error occurs', () => {
-    seedCognito().catch((error) => {
+  it('should fail when an error occurs', function() {
+    seedCognito().catch(function(error: Error) {
       expect(error.message).toBe('mock Error');
     });
   });
 
-  it('should pass and return userId array', () => {
+  it('should pass and return userId array', function() {
     expect(seedCognito()).resolves.toEqual(['demo-username', 'demo-username']);
   });
 });

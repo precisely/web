@@ -12,7 +12,7 @@ jest.mock('../../features/user-data/models/UserDataMap');
 import * as fs from 'fs';
 import {seedUser} from '../../seed-data/scripts/seedPostgres';
 
-describe('seedPostgres tests', () => {
+describe('seedPostgres tests', function() {
 
   const dummyUser = {
     user_id: 'dummyId',
@@ -22,14 +22,14 @@ describe('seedPostgres tests', () => {
   process.exit = jest.fn();
 
   fs.readFileSync = jest.fn()
-    .mockImplementation(() => {
+    .mockImplementation(function() {
       return JSON.stringify([dummyUser]);
     })
-    .mockImplementationOnce(() => {
+    .mockImplementationOnce(function() {
       return JSON.stringify([{ ...dummyUser, user_id: 'invalid' }]);
     });
 
-  it('should fail when error occurs while updation/insertion', async () => {
+  it('should fail when error occurs while updation/insertion', async function() {
     try {
       await seedUser();
     } catch (error) {
@@ -37,7 +37,7 @@ describe('seedPostgres tests', () => {
     }
   });
 
-  it('should exit successfully when updated/inserted successfully', async () => {
+  it('should exit successfully when updated/inserted successfully', async function() {
     await seedUser();
     expect(process.exit).toBeCalled();
   });

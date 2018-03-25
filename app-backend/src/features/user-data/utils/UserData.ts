@@ -8,6 +8,7 @@
 
 import * as UserDataMapService from '../../../features/user-data/services/UserDataMap';
 import * as GenotypeService from '../../../features/genotype/services/Genotype';
+import {log} from '../../../logger';
 
 export class UserData {
 
@@ -20,7 +21,12 @@ export class UserData {
   private genes: string[];
 
   public async getGenotypes() {
-    var opaqueId = await UserDataMapService.getOpaqueId(this.userId, 'genotype');
-    return await GenotypeService.getGenotypes(opaqueId, this.genes);
+    try {
+      var opaqueId = await UserDataMapService.getOpaqueId(this.userId, 'precisely:genotype');
+      return await GenotypeService.getGenotypes(opaqueId, this.genes);
+    } catch (error) {
+      log.error(`UserData-getGenotypes: ${error.message}`);
+      throw error;
+    }
   }
 }

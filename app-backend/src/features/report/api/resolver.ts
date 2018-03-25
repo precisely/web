@@ -37,7 +37,7 @@ export const reportResolver = {
 
     return {
       ...reportInstance,
-      userData: () => {
+      userData: function() {
         const userData = new UserData(
             authorizer.claims.sub,
             reportInstance.genes

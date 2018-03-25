@@ -51,7 +51,7 @@ export function hasAuthorizedRoles(authorizer: Authorizer, allowedRoles: string[
 
   const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
 
-  isAuthorized = currentUserRoles.some((role: string): boolean => {
+  isAuthorized = currentUserRoles.some(function(role: string): boolean {
     return (allowedRoles.indexOf(role.trim()) > -1);
   });
 

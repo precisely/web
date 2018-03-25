@@ -1,9 +1,9 @@
 jest.mock('src/features/user-data/models/UserDataMap');
 
-import {getOpaqueId} from 'src/features/user-data/services/UserDataMap';
+import {getOpaqueId} from '../../../../features/user-data/services/UserDataMap';
 
-describe('getOpaqueId', () => {
-  it('should throw error', async () => {
+describe('getOpaqueId', function() {
+  it('should throw error', async function() {
       try {
         getOpaqueId('invalid', 'test');
       } catch (err) {
@@ -11,7 +11,7 @@ describe('getOpaqueId', () => {
       }
   });
 
-  it('should return valid opaqueId', async () => {
+  it('should return valid opaqueId', async function() {
     expect(await getOpaqueId('testUserId', 'testVendorDataType')).toBe('testOpaqueId');
   });
 });

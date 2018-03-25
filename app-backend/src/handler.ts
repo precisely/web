@@ -7,7 +7,7 @@
 */
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
-import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
+import {Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda, graphiqlLambda, LambdaHandler} from 'apollo-server-lambda';
 import {ITypeDefinitions} from 'graphql-tools/dist/Interfaces';
 import {makeExecutableSchema} from 'graphql-tools';
@@ -22,14 +22,14 @@ const myGraphQLSchema = makeExecutableSchema({
 });
 
 /* istanbul ignore next */
-export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+export function graphqlHandler(event: APIGatewayEvent, context: Context, callback: Callback) {
   const handler: LambdaHandler = graphqlLambda({
     schema: myGraphQLSchema,
     tracing: true,
     rootValue: {authorizer: event.requestContext.authorizer}
   });
   return handler(event, context, callback);
-};
+}
 
 // for local endpointURL is /graphql and for prod it is /stage/graphql
 export const playgroundHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)

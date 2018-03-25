@@ -6,33 +6,33 @@
 * without modification, are not permitted.
 */
 
-import {dynogels} from 'src/data-source/dynogels-db/connection';
-import {setupDatabase} from 'src/data-source/dynogels-db/setup';
+import {dynogels} from '../../../data-source/dynogels-db/connection';
+import {setupDatabase} from '../../../data-source/dynogels-db/setup';
 
-describe('setupDatabase tests.', () => {
+describe('setupDatabase tests.', function () {
 
   const mockContext = jest.fn();
   dynogels.createTables = jest.fn()
-    .mockImplementation(callback => {
+    .mockImplementation(function (callback: (error: Error) => void) {
       callback(null);
     })
-    .mockImplementationOnce(callback => {
+    .mockImplementationOnce(function (callback: (error: Error) => void) {
       callback(Error('dynogels.createTables mock error'));
     });
 
-  it('setupDatabase should be a function', () => {
+  it('setupDatabase should be a function', function() {
     expect(typeof setupDatabase).toBe('function');
   });
 
-  it('should fail if dynogels.createTables throws error', () => {
-    setupDatabase({}, mockContext, (error: Error, response: string) => {
+  it('should fail if dynogels.createTables throws error', function() {
+    setupDatabase({}, mockContext, function (error: Error, response: string) {
       expect(error.message).toEqual('Error while creating the tables.');
       expect(response).toBeNull();
     });
   });
 
-  it('should pass if dynogels.createTables is successful', () => {
-    setupDatabase({}, mockContext, (error: Error, response: string) => {
+  it('should pass if dynogels.createTables is successful', function() {
+    setupDatabase({}, mockContext, function(error: Error, response: string) {
       expect(response).toEqual('Tables Created Successfully');
       expect(error).toBeNull();
     });

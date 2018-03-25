@@ -19,12 +19,12 @@ interface UserDataMapAttributes {
   opaque_id: string;
 }
 
-export const seedUser = async () => {
+export async function seedUser() {
   const promises: Bluebird<boolean>[] = [];
   const allUsers = JSON.parse(fs.readFileSync(jsonPath + 'UserData.json', 'utf8'));
-  allUsers.forEach((user: UserDataMapAttributes) => {
+  allUsers.forEach(function(user: UserDataMapAttributes) {
     promises.push(UserDataMap.upsert(user));
   });
   await Promise.all(promises);
   process.exit();
-};
+}

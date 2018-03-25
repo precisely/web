@@ -6,30 +6,30 @@
 * without modification, are not permitted.
 */
 
-import {UserData} from 'src/features/user-data/services/UserData';
+import {UserData} from '../../../../features/user-data/utils/UserData';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('UserData tests.', () => {
+describe('UserData tests.', function() {
 
   genotypeResolver.list = jest.fn();
 
   userDataMapResolver.get = jest.fn()
-    .mockImplementation(() => ({opaqueId: 'demo-id', vendorDataType: 'demo-vendor'}))
-    .mockImplementationOnce(() => { throw new Error('No such user record found'); });
+    .mockImplementation(function() { return {opaqueId: 'demo-id', vendorDataType: 'demo-vendor'}; })
+    .mockImplementationOnce(function() { throw new Error('No such user record found'); });
 
   let userData = new UserData('demo-id', ['demo', 'gene']);
 
-  it('should be an instance', () => {
+  it('should be an instance', function() {
     expect(userData).toBeInstanceOf(UserData);
     expect(userData.genotypes).toBeInstanceOf(Function);
   });
 
-  unroll('it should return #action if #condition', async (
+  unroll('it should return #action if #condition', async function(
       done: () => void,
       args: {action: string; condition: string}
-  ) => {
+  ) {
     try {
       await userData.getGenotypes();
       expect(genotypeResolver.list).toBeCalledWith({genes: ['demo', 'gene'], opaqueId: 'demo-id'});

@@ -11,7 +11,7 @@ export const cognito = new AWS.CognitoIdentityServiceProvider({
   credentials: new AWS.SharedIniFileCredentials({ profile: process.env.NODE_ENV + '-profile-precisely' })
 });
 
-const createUser = (email: string, password: string, roles: string): Promise<AdminCreateUserResponse> => {
+function createUser(email: string, password: string, roles: string): Promise<AdminCreateUserResponse> {
   return cognito.adminCreateUser({
     UserPoolId: process.env.REACT_APP_USER_POOL_ID,
     Username: email,
@@ -24,9 +24,9 @@ const createUser = (email: string, password: string, roles: string): Promise<Adm
       }
     ]
   }).promise();
-};
+}
 
-const initiateAuth = (username: string, password: string): Promise<AdminInitiateAuthResponse> => {
+function initiateAuth(username: string, password: string): Promise<AdminInitiateAuthResponse> {
   return cognito.adminInitiateAuth({
     AuthFlow: 'ADMIN_NO_SRP_AUTH',
     ClientId: process.env.REACT_APP_CLIENT_APP_ID,
@@ -36,10 +36,10 @@ const initiateAuth = (username: string, password: string): Promise<AdminInitiate
       PASSWORD: password
     }
   }).promise();
-};
+}
 
-const confirmUser = (session: string, username: string, password: string): 
-    Promise<AdminRespondToAuthChallengeResponse> => {
+function confirmUser(session: string, username: string, password: string):
+    Promise<AdminRespondToAuthChallengeResponse> {
 
   return cognito.adminRespondToAuthChallenge({
     ChallengeName: 'NEW_PASSWORD_REQUIRED',
@@ -51,9 +51,9 @@ const confirmUser = (session: string, username: string, password: string):
       USERNAME: username
     }
   }).promise();
-};
+}
 
-export const seedCognito = (): Promise<string[]> => {
+export function seedCognito(): Promise<string[]> {
   const jsonPath = path.join(__dirname, '..', 'data/');
   const allCognitoData = JSON.parse(fs.readFileSync(jsonPath + 'CognitoData.json', 'utf8'));
   let length: number = allCognitoData.length;
@@ -61,7 +61,7 @@ export const seedCognito = (): Promise<string[]> => {
 
   return new Promise((resolve, reject) => {
       allCognitoData.forEach(async (user: {[key: string]: string}) => {
-        
+
         const createdUser: AdminCreateUserResponse = await createUser(user.email, user.password, user.roles);
 
         userId.push(createdUser.User.Username);
@@ -79,4 +79,4 @@ export const seedCognito = (): Promise<string[]> => {
         }
       });
   });
-};
+}

@@ -20,7 +20,7 @@ export const UserDataMapMock = DBConnectionMock.define(
 
 export const UserDataMap = UserDataMapMock;
 
-UserDataMapMock.findOne = jest.fn((params: { where: { user_id: string } }) => {
+UserDataMapMock.findOne = jest.fn(function (params: { where: { user_id: string } }) {
   if (params.where.user_id === 'testUserId') {
     return UserDataMapMock.build();
   } else {

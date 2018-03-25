@@ -18,36 +18,36 @@ const jsonfile = require('jsonfile');
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('createFakeData test', () => {
+describe('createFakeData test', function() {
 
   jsonfile.writeFileSync = jest.fn();
 
-  beforeEach(() => {
+  beforeEach(function() {
     jsonfile.writeFileSync.mockClear();
   });
 
-  describe('removeDuplicate tests', () => {
+  describe('removeDuplicate tests', function() {
     const duplicateElements = ['a', 'a', 'b', 'c', 'a'];
 
-    it('should remove duplicates from the array passed', () => {
+    it('should remove duplicates from the array passed', function() {
       expect(removeDuplicate(duplicateElements)).toEqual(['a', 'b', 'c']);
     });
   });
 
-  describe('saveJSONFile tests', () => {
+  describe('saveJSONFile tests', function() {
     log.info = jest.fn();
 
-    it('should create file with data passed', () => {
+    it('should create file with data passed', function() {
       saveJSONFile('test', [{demo: 'data'}]);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
       expect(log.info).toBeCalledWith('test created successfully.');
     });
   });
 
-  describe('createCognitoDataWithUser tests', () => {
-    seedCognito = jest.fn(() => ['demo', 'test']);
+  describe('createCognitoDataWithUser tests', function() {
+    seedCognito = jest.fn(function() { return ['demo', 'test']; });
 
-    it('should save JSON file and call seedCognito', async () => {
+    it('should save JSON file and call seedCognito', async function() {
       const userIdList = await createCognitoDataWithUser(2);
       expect(userIdList.length).toBe(2);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(1);
@@ -55,8 +55,8 @@ describe('createFakeData test', () => {
     });
   });
 
-  describe('createDBData tests', () => {
-    it('should populate array with fake data and save it to JSON', () => {
+  describe('createDBData tests', function() {
+    it('should populate array with fake data and save it to JSON', function() {
       createDBData(1, ['demo-username']);
       expect(jsonfile.writeFileSync).toHaveBeenCalledTimes(3);
     });

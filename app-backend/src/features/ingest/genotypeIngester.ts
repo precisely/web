@@ -6,10 +6,10 @@
 * without modification, are not permitted.
 */
 
-import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
+import {Context, Callback, S3CreateEvent} from 'aws-lambda';
 
-export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
+export function genotypeIngester(event: S3CreateEvent, context: Context, callback: Callback) {
 
   // TODO: in datapipeline card for VCF Parser
 
-};
+}

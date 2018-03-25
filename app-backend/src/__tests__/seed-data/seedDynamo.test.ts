@@ -17,7 +17,7 @@ import {Genotype} from '../../features/genotype/models/Genotype';
 const unroll = require('unroll');
 unroll.use(it);
 
-describe('seedDynamo tests', () => {
+describe('seedDynamo tests', function() {
 
   const dummyReport = {
     id: 'dummy-id',
@@ -42,12 +42,12 @@ describe('seedDynamo tests', () => {
     quality: 'dummy-quality'
   };
 
-  const mockReadFileSync = (data) => {
+  function mockReadFileSync(data: object) {
     fs.readFileSync = jest.fn()
-      .mockImplementation(() => {
+      .mockImplementation(function() {
         return JSON.stringify([data]);
       });
-  };
+  }
 
   log.error = jest.fn();
 
@@ -60,14 +60,14 @@ describe('seedDynamo tests', () => {
       }
     });
 
-  beforeEach(() => {
+  beforeEach(function() {
     log.error.mockClear();
   });
 
-  unroll('it should #expectedResult for #case file', async (
+  unroll('it should #expectedResult for #case file', async function(
       done: () => void,
       args: {case: string, mockReadData: object, functionName: () => void, expectedResult: string}
-  ) => {
+  ) {
     mockReadFileSync(args.mockReadData);
     args.functionName();
     if (args.expectedResult === 'not call log.error when pass') {
