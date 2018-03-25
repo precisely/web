@@ -39,21 +39,21 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
   state: LoginState = {email: '', password: '', isLoading: false};
 
-  updateLoadingState = (isLoading: boolean): void => {
+  setLoadingState = (isLoading: boolean): void => {
     this.setState({isLoading});
   }
 
   onSuccess = (): void => {
-    this.updateLoadingState(false);
+    this.setLoadingState(false);
     this.props.history.push('/dashboard');
   }
 
   onFailure = (message: string = 'Unable to login.'): void => {
-    this.updateLoadingState(false);
+    this.setLoadingState(false);
     this.toastId = showAlert(this.toastId, message);
   }
 
-  submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+  submitForm =  (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email, password} = this.state;
 
@@ -63,13 +63,16 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     this.toastId = validationInfo.toastId;
 
     if (validationInfo.isValid) {
-      this.updateLoadingState(true);
+      this.setLoadingState(true);
       let awsUser: AWSUser = new AWSUser();
-      try {
-        awsUser.login(email, password).then(this.onSuccess);
-      } catch {
-        this.onFailure();
-      }
+      (async() => {
+        try {
+          await awsUser.login(email, password);
+          this.onSuccess();
+        } catch {
+          this.onFailure();
+        }
+      })();
     }
   }
 

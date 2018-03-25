@@ -16,6 +16,11 @@ import {
   CognitoUserSession,
 } from 'amazon-cognito-identity-js';
 
+Bluebird.config({
+  longStackTraces: true,
+  warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
+});
+
 /* istanbul ignore next */
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
   console.warn('Cognito configuration missing.');
@@ -41,7 +46,7 @@ export class AWSUser {
     AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
   }
 
-   login = async (email: string , password: string) => {
+  login = async (email: string , password: string) => {
     const userData: {Username: string, Pool: CognitoUserPool} = {
       Username : email,
       Pool : userPool
@@ -56,11 +61,15 @@ export class AWSUser {
     const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
 
     const authenticateUser: (params: AuthenticationDetails) => Bluebird<Object> =
-            Bluebird.promisify(this.user.authenticateUser.bind(this.user));
-    authenticateUser(authenticationDetails).then(this.setToken.bind(this));
+            Bluebird.promisify(authWrapper);
+    return authenticateUser(authenticationDetails).then(this.setToken.bind(this));
   }
 
-  async setToken(userSession: CognitoUserSession) {
+  authWrapper(authenticationDetails: AuthenticationDetails, callback: (session: CognitoUserSession) => void) {
+    this.user.authenticateUser(authenticationDetails,{callbacks: {onSuccess:callback, onFailure: () => {}}});
+  }
+
+  setToken(userSession: CognitoUserSession): void {
     this.jwtToken = userSession.getIdToken().getJwtToken();
     setTokenInLocalStorage(this.jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
