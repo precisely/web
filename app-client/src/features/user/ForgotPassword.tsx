@@ -11,7 +11,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, FormText} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
-import {showAlert} from 'src/utils';
+import {utils} from 'src/utils';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Email} from 'src/features/common/Email';
 import {currentUser} from 'src/constants/currentUser';
@@ -46,7 +46,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
 
   onFailure = (error: Error): void => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, error.message);
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -54,7 +54,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
     const {email} = this.state;
 
     if (!email) {
-      this.toastId = showAlert(this.toastId, 'Please enter your email.');
+      this.toastId = utils.showAlert(this.toastId, 'Please enter your email.');
       return;
     }
 

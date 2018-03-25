@@ -7,14 +7,7 @@
  */
 
 import {toast} from 'react-toastify';
-import {
-  isEmpty,
-  getEnvironment,
-  setTokenInLocalStorage,
-  removeTokenFromLocalStorage,
-  checkEmailAndPassword,
-  getTokenFromLocalStorage,
-} from 'src/utils';
+import {utils} from 'src/utils';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -27,7 +20,7 @@ describe('Tests for utils/index.ts', () => {
       done: () => void,
       args: {condition: string, params: Object, result: boolean}
   ) => {
-    expect(isEmpty(args.params)).toEqual(args.result);
+    expect(utils.isEmpty(args.params)).toEqual(args.result);
     done();
   }, [ // tslint:disable-next-line
     ['condition', 'params', 'result'],
@@ -36,10 +29,10 @@ describe('Tests for utils/index.ts', () => {
   ]);
 
   it('should test getEnvironment and return the correct environment', () => {
-    expect(getEnvironment()).toEqual('test');
+    expect(utils.getEnvironment()).toEqual('test');
 
     process.env.NODE_ENV = '';
-    expect(getEnvironment()).toEqual('');
+    expect(utils.getEnvironment()).toEqual('');
   });
 
   unroll('it should #operation the authentication token in the local storage', (
@@ -47,7 +40,7 @@ describe('Tests for utils/index.ts', () => {
       args: {operation: string, tokenValue: string}
   ) => {
     localStorage.setItem = jest.fn<void>();
-    setTokenInLocalStorage(args.tokenValue);
+    utils.setTokenInLocalStorage(args.tokenValue);
     if (args.tokenValue) {
       expect(localStorage.setItem).toBeCalled();
     } else {
@@ -62,21 +55,21 @@ describe('Tests for utils/index.ts', () => {
 
   it('should delete the token from the local storage.', () => {
     localStorage.removeItem = jest.fn<void>();
-    removeTokenFromLocalStorage();
+    utils.removeTokenFromLocalStorage();
     expect(localStorage.removeItem).toBeCalledWith('AUTH_TOKEN');
   });
 
   it('should get the token from the local storage.', () => {
     localStorage.getItem = jest.fn().mockReturnValueOnce('DummyToken').mockReturnValueOnce(undefined);
-    expect(getTokenFromLocalStorage()).toEqual('DummyToken');
-    expect(getTokenFromLocalStorage()).toEqual('');
+    expect(utils.getTokenFromLocalStorage()).toEqual('DummyToken');
+    expect(utils.getTokenFromLocalStorage()).toEqual('');
   });
 
   unroll('it should return #result when the params are (#email, #password, #toastId)', (
       done: () => void,
       args: {condition: string, email: string, password: string, toastId: number, result: boolean}
   ) => {
-    expect(checkEmailAndPassword(args.email, args.password, args.toastId)).toEqual(args.result);
+    expect(utils.checkEmailAndPassword(args.email, args.password, args.toastId)).toEqual(args.result);
     done();
   }, [ // tslint:disable-next-line
     ['email', 'password', 'toastId', 'result'],

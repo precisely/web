@@ -13,7 +13,7 @@ import {Button, Form, FormGroup, Input, Link} from 'src/features/common/Reusable
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/features/common/PageContent';
 import {currentUser} from 'src/constants/currentUser';
-import {checkEmailAndPassword, showAlert} from 'src/utils';
+import {utils} from 'src/utils';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {
   formButton,
@@ -52,32 +52,32 @@ export class Signup extends React.Component<RouteComponentProps<void>, SignupSta
   onSuccess = () => {
     this.updateLoadingState(false);
     this.props.history.push('/login');
-    this.toastId = showAlert(this.toastId, 'Please check your email to confirm your account.', 'success');
+    this.toastId = utils.showAlert(this.toastId, 'Please check your email to confirm your account.', 'success');
   }
 
   onFailure = (error: Error) => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, error.message);
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email, password, confirmPassword} = this.state;
 
-    const validationInfo: {isValid: boolean, toastId: number} = 
-        checkEmailAndPassword(email, password, this.toastId);
+    const validationInfo: {isValid: boolean, toastId: number} =
+        utils.checkEmailAndPassword(email, password, this.toastId);
 
     // This is needed to prevent multiple toast from getting rendered.
     this.toastId = validationInfo.toastId;
 
     if (validationInfo.isValid) {
       if (!confirmPassword) {
-        this.toastId = showAlert(this.toastId, 'Please confirm your password.');
+        this.toastId = utils.showAlert(this.toastId, 'Please confirm your password.');
         return;
       }
 
       if (password !== confirmPassword) {
-        this.toastId = showAlert(this.toastId, 'Password does not match the confirm password.');
+        this.toastId = utils.showAlert(this.toastId, 'Password does not match the confirm password.');
         return;
       }
 

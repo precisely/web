@@ -21,13 +21,13 @@ describe('UserGenotypeSwitch tests', () => {
   });
 
   it('should not call the render method when the children are not present', () => {
-    UserGenotypeSwitch({gene: 'demo', userData: dummyData.userData}, mockedRender);
+    UserGenotypeSwitch({gene: 'demo', userData: dummyData.report.userData}, mockedRender);
     expect(mockedRender).not.toBeCalled();
   });
 
   it('should render the correct child when the matching gene is found', () => {
     UserGenotypeSwitch(
-      {__children: parsedContentJson[`children`], gene: 'MTHFR', userData: dummyData.userData},
+      {__children: parsedContentJson[`children`], gene: 'MTHFR', userData: dummyData.report.userData},
       mockedRender
     );
 
@@ -45,7 +45,7 @@ describe('UserGenotypeSwitch tests', () => {
 
   it('should render the fallback child when the matching gene is not found', () => {
     UserGenotypeSwitch(
-      {__children: parsedContentJson[`children`], gene: 'TEST', userData: dummyData.userData},
+      {__children: parsedContentJson[`children`], gene: 'TEST', userData: dummyData.report.userData},
       mockedRender
     );
 

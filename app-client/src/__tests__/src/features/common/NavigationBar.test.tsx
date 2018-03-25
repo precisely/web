@@ -12,7 +12,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar, NavigationBarState} from 'src/features/common/NavigationBar';
 import {logOut, isLoggedIn} from 'src/utils/cognito';
-import {mockedHistory} from 'src/__tests__/testSetup.ts';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 import {
   Collapse,
   Navbar,
@@ -42,7 +42,13 @@ describe('NavigationBar tests.', () => {
     });
 
   const getComponentTree = (): ComponentTree => {
-    return shallow(<NavigationBar history={mockedHistory} />);
+    return shallow(
+        <NavigationBar
+            history={mockedHistory}
+            match={mockedMatch<{email: string}>({email: 'test@example.com'})}
+            location={mockedLocation}
+        />
+    );
   };
 
   describe('When user is logged in', () => {

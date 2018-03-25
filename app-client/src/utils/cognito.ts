@@ -6,7 +6,7 @@
  * without modification, are not permitted.
  */
 
-import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
+import {utils} from 'src/utils';
 import {
   CognitoUserPool,
   AuthenticationDetails,
@@ -79,7 +79,7 @@ export class AWSUser {
 
   static setToken(userSession: CognitoUserSession) {
     let jwtToken: string = userSession.getIdToken().getJwtToken();
-    setTokenInLocalStorage(jwtToken);
+    utils.setTokenInLocalStorage(jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
         Logins : {
@@ -95,7 +95,7 @@ export class AWSUser {
   logOut(): void {
     const cognitoUser = this.userPool.getCurrentUser();
     cognitoUser.signOut();
-    removeTokenFromLocalStorage();
+    utils.removeTokenFromLocalStorage();
   }
 
   forgotPassword (

@@ -9,9 +9,10 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Homepage} from 'src/features/common/homepage/Homepage';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {Homepage} from 'src/features/homepage/Homepage';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container} from 'src/features/common/ReusableComponents';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
@@ -24,7 +25,8 @@ configure({adapter: new Adapter()});
 
 describe('Homepage tests.', () => {
 
-  const componentTree: ShallowWrapper = shallow(<Homepage />);
+  const componentTree: ShallowWrapper =
+      shallow(<Homepage history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

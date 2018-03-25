@@ -12,7 +12,7 @@ import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
 import {currentUser} from 'src/constants/currentUser';
-import {showAlert} from 'src/utils';
+import {utils} from 'src/utils';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {CSS} from 'src/interfaces';
 import {
@@ -55,12 +55,12 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
   onSuccess = (): void => {
     this.updateLoadingState(false);
     this.props.history.push('/login');
-    this.toastId = showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
+    this.toastId = utils.showAlert(this.toastId, 'Please login with your new password to continue.', 'success');
   }
 
   onFailure = (error: Error) => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, error.message);
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -68,7 +68,7 @@ export class ResetPassword extends React.Component<RouteComponentProps<{email: s
     const {verificationCode, newPassword, confirmPassword} = this.state;
 
     if (newPassword !== confirmPassword) {
-      this.toastId = showAlert(this.toastId, 'Password does not match.');
+      this.toastId = utils.showAlert(this.toastId, 'Password does not match.');
       return;
     }
 

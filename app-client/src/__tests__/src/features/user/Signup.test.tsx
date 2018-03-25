@@ -11,11 +11,12 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {Signup, SignupState} from 'src/features/common/user/Signup';
+import {Signup, SignupState} from 'src/features/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/features/common/ReusableComponents';
 import {signup} from 'src/utils/cognito';
 import {PageContent} from 'src/features/common/PageContent';
-import {checkEmailAndPassword, showAlert} from 'src/utils/index';
+import {utils} from 'src/utils/index';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -27,7 +28,7 @@ describe('Tests for Signup', () => {
   Radium.TestMode.enable();
 
   beforeEach(() => {
-    showAlert = jest.fn<number>().mockReturnValue(1);
+    utils.showAlert = jest.fn<number>().mockReturnValue(1);
   });
 
   signup = jest.fn<void>()
@@ -52,7 +53,7 @@ describe('Tests for Signup', () => {
         });
       });
 
-  checkEmailAndPassword = jest.fn()
+  utils.checkEmailAndPassword = jest.fn()
       .mockImplementationOnce(() => {
         return {isValid: false, toastId: 1};
       })
@@ -61,12 +62,9 @@ describe('Tests for Signup', () => {
       });
 
   const preventDefault: jest.Mock<void> = jest.fn<void>();
-  const mockedHistory: {push: jest.Mock<void>} = {
-    push: jest.fn<void>(),
-  };
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>, SignupState> = shallow(
-      <Signup history={mockedHistory} />
+      <Signup history={mockedHistory} match={mockedMatch()} location={mockedLocation} />
   );
 
   unroll('it should display #count #elementName elements', (
@@ -105,7 +103,7 @@ describe('Tests for Signup', () => {
 
   it('should not submit the form when the confirm password is null.', () => {
     componentTree.find('#signupForm').simulate('submit', {preventDefault});
-    expect(showAlert).toBeCalledWith(1, 'Please confirm your password.');
+    expect(utils.showAlert).toBeCalledWith(1, 'Please confirm your password.');
     expect(signup).not.toBeCalled();
   });
 
