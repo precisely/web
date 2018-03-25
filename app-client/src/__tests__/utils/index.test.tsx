@@ -7,7 +7,7 @@
  */
 
 import {toast} from 'react-toastify';
-import {utils} from 'src/utils';
+import {utils} from 'src/utils/index';
 
 const unroll = require('unroll');
 unroll.use(it);

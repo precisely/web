@@ -11,7 +11,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/features/common/PageContent';
-import {AWSUser} from 'src/utils/cognito';
+import {AWSUser} from 'AWSUser.ts';
 import {utils} from 'src/utils';
 import {Email} from 'src/features/common/Email';
 import {NavigationBar} from 'src/features/common/NavigationBar';

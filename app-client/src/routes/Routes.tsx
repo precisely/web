@@ -11,7 +11,7 @@ import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
 import {AuthRoute} from 'src/routes/AuthRoute';
 import {LoadingPage} from 'src/features/common/LoadingPage';
-import {isLoggedIn} from 'src/utils/cognito';
+import {isLoggedIn} from 'AWSUser.ts';
 
 // tslint:disable
 /* istanbul ignore next */

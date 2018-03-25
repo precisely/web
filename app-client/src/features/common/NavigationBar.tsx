@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {logOut, isLoggedIn} from 'src/utils/cognito';
+import {logOut, isLoggedIn} from 'AWSUser.ts';
 import {CSS} from 'src/interfaces';
 import {
   Collapse,

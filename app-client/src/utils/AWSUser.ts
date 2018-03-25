@@ -6,6 +6,7 @@
  * without modification, are not permitted.
  */
 
+import * as AWS from 'aws-sdk';
 import {utils} from 'src/utils';
 import {
   CognitoUserPool,
@@ -14,7 +15,6 @@ import {
   CognitoUserSession,
   ISignUpResult,
 } from 'amazon-cognito-identity-js';
-import * as AWS from 'aws-sdk';
 
 /* istanbul ignore next */
 if (!process.env.REACT_APP_USER_POOL_ID || !process.env.REACT_APP_CLIENT_APP_ID) {
@@ -58,7 +58,7 @@ export class AWSUser {
   }
 
   login (
-      email: string , 
+      email: string ,
       password: string,
       onSuccess: (cognitoUserSession: CognitoUserSession) => void,
       onFailure: () => void
@@ -70,11 +70,11 @@ export class AWSUser {
     };
     this.authenticationDetails = new AuthenticationDetails(authenticationData);
     return this.user.authenticateUser(
-        this.authenticationDetails, 
-        { 
-          onSuccess: onSuccess, 
+        this.authenticationDetails,
+        {
+          onSuccess: onSuccess,
           onFailure: onFailure
-        });  
+        });
   }
 
   static setToken(userSession: CognitoUserSession) {
@@ -120,7 +120,7 @@ export class AWSUser {
   ): void {
     this.buildCognitoUser(email);
     this.user.confirmPassword(
-      verificationCode, newPassword, 
+      verificationCode, newPassword,
       {
         onSuccess: successCallback,
         onFailure: failureCallback

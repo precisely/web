@@ -13,7 +13,7 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {Signup, SignupState} from 'src/features/user/Signup';
 import {Button, Form, FormGroup, Input, Link} from 'src/features/common/ReusableComponents';
-import {signup} from 'src/utils/cognito';
+import {signup} from 'AWSUser.ts';
 import {PageContent} from 'src/features/common/PageContent';
 import {utils} from 'src/utils/index';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';

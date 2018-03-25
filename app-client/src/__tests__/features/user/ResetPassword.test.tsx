@@ -13,7 +13,7 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {ResetPassword, ResetPasswordState} from 'src/features/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
-import {resetPassword} from 'src/utils/cognito';
+import {resetPassword} from 'AWSUser.ts';
 import {PageContent} from 'src/features/common/PageContent';
 import {utils} from 'src/utils/index';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';

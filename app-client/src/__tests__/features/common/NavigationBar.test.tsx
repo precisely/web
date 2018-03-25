@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar, NavigationBarState} from 'src/features/common/NavigationBar';
-import {logOut, isLoggedIn} from 'src/utils/cognito';
+import {logOut, isLoggedIn} from 'AWSUser.ts';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 import {
   Collapse,
