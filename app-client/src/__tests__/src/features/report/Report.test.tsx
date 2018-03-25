@@ -14,7 +14,7 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {createHttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {ReportImpl, ReportProps, Report, ReportState} from 'src/features/report/Report';
+import {ReportImpl, ReportProps, Report} from 'src/features/report/Report';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container} from 'src/features/common/ReusableComponents';
@@ -38,8 +38,9 @@ describe('Report tests.', () => {
   store.dispatch = jest.fn();
 
   describe('When the report data is loading.', () => {
-    const componentTree: ShallowWrapper<ReportProps, ReportState> =
-        shallow(<ReportImpl history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
+    const componentTree: ShallowWrapper<ReportProps> = shallow(
+        <ReportImpl history={mockedHistory} match={mockedMatch()} location={mockedLocation} data={{loading: true}} />
+    );
 
     unroll('it should display #count #elementName elements', (
         done: () => void,
@@ -60,6 +61,21 @@ describe('Report tests.', () => {
     });
   });
 
+  describe('When the server responds with an error.', () => {
+    const componentTree: ShallowWrapper<ReportProps> = shallow(
+        <ReportImpl
+            history={mockedHistory}
+            match={mockedMatch()}
+            location={mockedLocation}
+            data={{error: 'A dummy error.', loading: false}}
+        />
+    );
+
+    it('should display an error message.', () => {
+      expect(componentTree.contains('Unable to fetch the reports.')).toBe(true);
+    });
+  });
+
   describe('When the report data is not loading and the report data is not present.', () => {
     unroll('It should not render the TemplateRendered when the props are: #props', (
         done: () => void,
@@ -77,10 +93,14 @@ describe('Report tests.', () => {
 
   describe('When the report data is present.', () => {
     it('It should not render the MarkdownComponentRenderer', () => {
-      const componentTree: ShallowWrapper<ReportProps, ReportState> =
-          shallow(
-            <ReportImpl data={dummyData} history={mockedHistory} match={mockedMatch()} location={mockedLocation} />
-          );
+      const componentTree: ShallowWrapper<ReportProps> = shallow(
+          <ReportImpl
+              data={{loading: false, ...dummyData}}
+              history={mockedHistory}
+              match={mockedMatch()}
+              location={mockedLocation}
+          />
+      );
       expect(componentTree.find(MarkdownComponentRenderer).length).toBe(1);
     });
   });

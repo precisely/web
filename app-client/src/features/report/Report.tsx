@@ -17,17 +17,9 @@ import {GetReport} from 'src/features/report/queries';
 import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 
-export interface ReportProps extends RouteComponentProps<void> {
-  data?: {
-    report: ReportData
-  };
-}
+export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
-export interface ReportState {
-  isLoading?: boolean;
-}
-
-export class ReportImpl extends React.Component<ReportProps, ReportState> {
+export class ReportImpl extends React.Component<ReportProps> {
 
   state = {isLoading: false};
 
@@ -36,20 +28,24 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   }
 
   renderReports = (): JSX.Element | string => {
-    const {data} = this.props;
+    const {error, loading, report} = this.props.data;
 
-    if (!data) {
+    if (loading) {
       return 'Fetching data. Please wait...';
     }
 
-    if (!data.report || !data.report.parsedContent) {
+    if (error) {
+      return 'Unable to fetch the reports.';
+    }
+
+    if (!report || !report.parsedContent) {
       return <p>No reports found</p>;
     }
 
     return (
       <div>
-        <h6>{data.report.title}</h6>
-        <MarkdownComponentRenderer parsedContent={data.report.parsedContent} userData={data.report.userData} />
+        <h6>{report.title}</h6>
+        <MarkdownComponentRenderer parsedContent={report.parsedContent} userData={report.userData} />
       </div>
     );
   }
@@ -75,11 +71,5 @@ export const Report = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.
     variables: {slug: 'dolorem-error-minima'}
-  }),
-  props: (props: OptionProps<void, {report: ReportData}>): void => {
-    if (props.data.report) {
-      // storing the data in the redux for now.
-      // store.dispatch(setReportData(props.data.report));
-    }
-  }
+  })
 })(ReportImpl);
