@@ -6,9 +6,9 @@
 * without modification, are not permitted.
 */
 
-jest.mock('../../seed-data/scripts/seedDynamo');
-jest.mock('../../seed-data/scripts/seedPostgres');
-import {setEnvironment} from '../../seed-data/scripts/seedData';
+jest.mock('../../../seed-data/scripts/seedDynamo');
+jest.mock('../../../seed-data/scripts/seedPostgres');
+import {setEnvironment} from '../../../seed-data/scripts/seedData';
 
 describe('seedData tests', function() {
   describe('setEnvironment test', function() {

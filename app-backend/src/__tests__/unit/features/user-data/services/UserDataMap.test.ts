@@ -1,7 +1,7 @@
-jest.mock('../../../../features/user-data/models/UserDataMap');
+jest.mock('../../../../../features/user-data/models/UserDataMap');
 
-import {getOpaqueId} from '../../../../features/user-data/services/UserDataMap';
-import {log} from '../../../../logger';
+import {getOpaqueId} from '../../../../../features/user-data/services/UserDataMap';
+import {log} from '../../../../../logger';
 
 describe('getOpaqueId', function() {
   log.error = jest.fn();

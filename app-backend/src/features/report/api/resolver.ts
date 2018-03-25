@@ -10,14 +10,8 @@ import {ReportAttributes} from '../../../features/report/models/Report';
 import {GenotypeAttributes} from '../../../features/genotype/models/Genotype';
 import {Authorizer} from '../../../interfaces';
 import {UserData} from '../../../features/user-data/utils/UserData';
+import {CreateArgs} from '../interfaces';
 import * as ReportService from '../../../features/report/services/Report';
-
-export interface CreateArgs {
-  title: string;
-  slug: string;
-  rawContent: string;
-  genes: string[];
-}
 
 export const reportResolver = {
   async create(args: CreateArgs, authorizer: Authorizer): Promise<ReportAttributes> {

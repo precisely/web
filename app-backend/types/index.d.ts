@@ -307,6 +307,7 @@ declare module "dynogels-promisified" {
     describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
     deleteTableAsync(): void;
     query(hashKey: any): Query<Attributes>;
+    scan(): Scan<Attributes>;
   }
 
   export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;

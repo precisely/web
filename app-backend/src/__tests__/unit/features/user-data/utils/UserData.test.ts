@@ -6,9 +6,9 @@
 * without modification, are not permitted.
 */
 
-import * as GenotypeService from '../../../../features/genotype/services/Genotype';
-import * as UserDataMapService from '../../../../features/user-data/services/UserDataMap';
-import {UserData} from '../../../../features/user-data/utils/UserData';
+import * as GenotypeService from '../../../../../features/genotype/services/Genotype';
+import * as UserDataMapService from '../../../../../features/user-data/services/UserDataMap';
+import {UserData} from '../../../../../features/user-data/utils/UserData';
 
 const unroll = require('unroll');
 unroll.use(it);

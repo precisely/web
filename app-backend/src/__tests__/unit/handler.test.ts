@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {graphqlHandler, playgroundHandler} from '../handler';
+import {graphqlHandler, playgroundHandler} from '../../handler';
 
 it('graphqlHandler should be a function', function() {
   expect(typeof graphqlHandler).toBe('function');

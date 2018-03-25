@@ -53,30 +53,23 @@ function confirmUser(session: string, username: string, password: string):
   }).promise();
 }
 
-export function seedCognito(): Promise<string[]> {
+export async function seedCognito(): Promise<string[]> {
   const jsonPath = path.join(__dirname, '..', 'data/');
-  const allCognitoData = JSON.parse(fs.readFileSync(jsonPath + 'CognitoData.json', 'utf8'));
-  let length: number = allCognitoData.length;
-  const userId: string[] = [];
+  const cognitoUsers = JSON.parse(fs.readFileSync(jsonPath + 'CognitoData.json', 'utf8'));
+  const userIds: string[] = [];
 
-  return new Promise((resolve, reject) => {
-      allCognitoData.forEach(async (user: {[key: string]: string}) => {
+  for (let user of cognitoUsers) {
+    const createdUser: AdminCreateUserResponse = await createUser(user.email, user.password, user.roles);
 
-        const createdUser: AdminCreateUserResponse = await createUser(user.email, user.password, user.roles);
+    userIds.push(createdUser.User.Username);
 
-        userId.push(createdUser.User.Username);
+    const authData: AdminInitiateAuthResponse = await initiateAuth(
+      createdUser.User.Username,
+      user.password
+    );
 
-        const authData: AdminInitiateAuthResponse = await initiateAuth(
-          createdUser.User.Username,
-          user.password
-        );
+    await confirmUser(authData.Session, createdUser.User.Username, user.password);
+  }
 
-        await confirmUser(authData.Session, createdUser.User.Username, user.password);
-
-        length = length - 1;
-        if (!length) {
-          resolve(userId);
-        }
-      });
-  });
+  return userIds;
 }

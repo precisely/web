@@ -32,8 +32,8 @@ jest.mock('aws-sdk', function() {
 });
 
 import * as AWS from 'aws-sdk';
-import {log} from '../../../../logger';
-import {sendEmail} from '../../../../features/email/services/sendEmail';
+import {log} from '../../../../../logger';
+import {sendEmail} from '../../../../../features/email/services/sendEmail';
 
 describe('sendEmail tests', function() {
 

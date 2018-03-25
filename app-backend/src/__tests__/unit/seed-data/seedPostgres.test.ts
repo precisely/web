@@ -5,28 +5,24 @@
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
-
 jest.mock('fs');
-jest.mock('../../features/user-data/models/UserDataMap');
+jest.mock('../../../features/user-data/models/UserDataMap');
 
-import * as fs from 'fs';
-import {seedUser} from '../../seed-data/scripts/seedPostgres';
+import {seedUser} from '../../../seed-data/scripts/seedPostgres';
+import {mockUserDataMap} from './mockTestData';
+
+const fs = require('fs');
 
 describe('seedPostgres tests', function() {
 
-  const dummyUser = {
-    user_id: 'dummyId',
-    opaque_id: 'a72078c2-83c3-465d-9526-d80622dd01b3',
-    vendor_data_type: 'precisely:genotype'
-  };
-  process.exit = jest.fn();
+  process.exit = jest.fn<never>();
 
   fs.readFileSync = jest.fn()
     .mockImplementation(function() {
-      return JSON.stringify([dummyUser]);
+      return JSON.stringify([mockUserDataMap]);
     })
     .mockImplementationOnce(function() {
-      return JSON.stringify([{ ...dummyUser, user_id: 'invalid' }]);
+      return JSON.stringify([{ ...mockUserDataMap, user_id: 'invalid' }]);
     });
 
   it('should fail when error occurs while updation/insertion', async function() {

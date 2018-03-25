@@ -1,26 +1,10 @@
-jest.mock('../../../../features/genotype/models/Genotype');
+jest.mock('../../../../../features/genotype/models/Genotype');
 
-import {getGenotypes} from '../../../../features/genotype/services/Genotype';
-import {Genotype} from '../../../../features/genotype/models/Genotype';
-import {log} from '../../../../logger';
+import '../__mocks__/Genotype.mock';
+import {getGenotypes} from '../../../../../features/genotype/services/Genotype';
+import {log} from '../../../../../logger';
 
 log.error = jest.fn();
-Genotype.query = jest.fn()
-  .mockImplementation(() => ({
-    filter: jest.fn(() => ({
-      in: jest.fn(() => ({
-        execAsync: jest.fn(() => ({
-          Items: [{
-            get: () => ({
-              opaqueId: 'demo',
-              sampleId: 'demo',
-            })
-          }]
-        }))
-      }))
-    }))
-  }))
-  .mockImplementationOnce(function() { throw new Error('Genotype mock error'); });
 
 describe('Genotype Service tests', function() {
 

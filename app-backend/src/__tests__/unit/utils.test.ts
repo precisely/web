@@ -28,8 +28,8 @@ jest.mock('aws-sdk', function() {
   };
 });
 
-import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../utils';
-import {Authorizer} from '../interfaces';
+import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../../utils';
+import {Authorizer} from '../../interfaces';
 
 const unroll = require('unroll');
 unroll.use(it);

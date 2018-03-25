@@ -8,39 +8,17 @@
 
 jest.mock('fs');
 
-import * as fs from 'fs';
-import {seedReport, seedGenotype} from '../../seed-data/scripts/seedDynamo';
-import {log} from '../../logger';
-import {Report} from '../../features/report/models/Report';
-import {Genotype} from '../../features/genotype/models/Genotype';
+import {seedReport, seedGenotype} from '../../../seed-data/scripts/seedDynamo';
+import {log} from '../../../logger';
+import {Report} from '../../../features/report/models/Report';
+import {Genotype} from '../../../features/genotype/models/Genotype';
+import {mockReportData, mockGenotypeData} from './mockTestData';
 
+const fs = require('fs');
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('seedDynamo tests', function() {
-
-  const dummyReport = {
-    id: 'dummy-id',
-    title: 'dummy-title',
-    slug: 'dummy-slug',
-    rawContent: 'dummy-rawContent',
-    parsedContent: 'dummy-parsedContent',
-    topLevel: false,
-    genes: ['dummy-genes']
-  };
-
-  const dummyGenotype = {
-    opaqueId: 'dummy-opaqueId',
-    sampleId: 'dummy-sampleId',
-    source: 'dummy-source',
-    gene: 'dummy-gene',
-    variantCall: 'dummy-variantCall',
-    zygosity: 'dummy-zygosity',
-    startBase: 'dummy-startBase',
-    chromosomeName: 'dummy-chromosomeName',
-    variantType: 'dummy-variantType',
-    quality: 'dummy-quality'
-  };
 
   function mockReadFileSync(data: object) {
     fs.readFileSync = jest.fn()
@@ -78,10 +56,10 @@ describe('seedDynamo tests', function() {
     done();
   }, [ // tslint:disable-next-line
     ['case', 'functionName', 'mockReadData', 'expectedResult'],
-    ['Report', seedReport, dummyReport, 'not call log.error when pass'],
-    ['Report', seedReport, { ...dummyReport, id: 'invalid' }, 'log.error error when fail'],
-    ['Genotype', seedGenotype, dummyGenotype, 'not call log.error when pass'],
-    ['Genotype', seedGenotype, { ...dummyGenotype, opaqueId: 'invalid' }, 'log.error error when fail']
+    ['Report', seedReport, mockReportData, 'not call log.error when pass'],
+    ['Report', seedReport, { ...mockReportData, id: 'invalid' }, 'log.error error when fail'],
+    ['Genotype', seedGenotype, mockGenotypeData, 'not call log.error when pass'],
+    ['Genotype', seedGenotype, { ...mockGenotypeData, opaqueId: 'invalid' }, 'log.error error when fail']
   ]);
 
 });

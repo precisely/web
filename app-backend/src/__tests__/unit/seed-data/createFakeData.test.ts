@@ -6,14 +6,19 @@
 * without modification, are not permitted.
 */
 
-import {seedCognito} from '../../seed-data/scripts/seedCognito';
+jest.mock('../../../seed-data/scripts/seedCognito', () => ({
+  seedCognito: jest.fn(function() { return ['demo', 'test']; })
+}));
+
+import {seedCognito} from '../../../seed-data/scripts/seedCognito';
 import {
   saveJSONFile,
   removeDuplicate,
   createCognitoDataWithUser,
   createDBData
-} from '../../seed-data/scripts/createFakeData';
-import {log} from '../../logger';
+} from '../../../seed-data/scripts/createFakeData';
+import {log} from '../../../logger';
+
 const jsonfile = require('jsonfile');
 const unroll = require('unroll');
 unroll.use(it);
@@ -45,7 +50,6 @@ describe('createFakeData test', function() {
   });
 
   describe('createCognitoDataWithUser tests', function() {
-    seedCognito = jest.fn(function() { return ['demo', 'test']; });
 
     it('should save JSON file and call seedCognito', async function() {
       const userIdList = await createCognitoDataWithUser(2);

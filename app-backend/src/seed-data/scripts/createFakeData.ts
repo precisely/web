@@ -92,7 +92,7 @@ export function createDBData(max: number, userIdList: string[]) {
     });
 
     reportData.push({
-      hashKey: 'report',
+      type: 'generic-report',
       id: faker.random.uuid(),
       title: faker.lorem.sentence(),
       slug: faker.lorem.slug(),

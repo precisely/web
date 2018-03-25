@@ -1,7 +1,7 @@
 import {Item} from 'dynogels-promisified';
 import {Report, ReportAttributes} from '../../../features/report/models/Report';
 import {log} from '../../../logger';
-import {CreateArgs} from '../api/resolver';
+import { CreateArgs } from '../interfaces';
 
 export async function create(args: CreateArgs): Promise<ReportAttributes> {
   try {
@@ -16,8 +16,7 @@ export async function create(args: CreateArgs): Promise<ReportAttributes> {
 export async function list(): Promise<ReportAttributes[]> {
   try {
     const result: ReportAttributes[] = [];
-    let query = Report.query('report');
-    let reportList = await query.execAsync();
+    let reportList = await Report.query('generic-report').execAsync();
 
     reportList.Items.forEach(function(report: Item<ReportAttributes>) {
       result.push(report.get());
@@ -32,7 +31,7 @@ export async function list(): Promise<ReportAttributes[]> {
 
 export async function get(slug: string): Promise<ReportAttributes> {
   try {
-    const reportInstance = await Report.getAsync('report', slug);
+    const reportInstance = await Report.getAsync('generic-report', slug);
 
     if (!reportInstance) {
       throw new Error('No such record found');

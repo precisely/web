@@ -3,7 +3,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts --collectCoverageFrom=!src/data-source/postgres/** --collectCoverageFrom=!src/data-source/scripts.ts",
+    "test": "jest --no-cache --coverage",
     "start": "AWS_PROFILE=dev-profile-precisely env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "env-cmd ../config/security.env.local serverless dynamodb install",
     "setup:database": "yarn setup:database:postgres && yarn setup:database:dynamo",
@@ -32,16 +32,21 @@
       "json"
     ],
     "collectCoverageFrom": [
+      "src/**/*.js",
       "src/**/*.ts",
       "!**/node_modules/**",
       "!src/interfaces/**",
-      "!src/__tests__/**"
+      "!src/__tests__/**",
+      "!src/**/*.graphql",
+      "!src/interfaces.ts",
+      "!src/data-source/postgres/**",
+      "!src/data-source/scripts.ts"
     ],
     "transform": {
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": "\/__tests__\/.*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"

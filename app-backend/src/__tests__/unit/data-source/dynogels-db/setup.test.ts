@@ -7,8 +7,8 @@
 */
 
 import {Context} from 'aws-lambda';
-import {dynogels} from '../../../data-source/dynogels-db/connection';
-import {setupDatabase} from '../../../data-source/dynogels-db/setup';
+import {dynogels} from '../../../../data-source/dynogels-db/connection';
+import {setupDatabase} from '../../../../data-source/dynogels-db/setup';
 
 describe('setupDatabase tests.', function () {
 
