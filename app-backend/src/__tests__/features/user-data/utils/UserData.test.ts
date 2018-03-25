@@ -6,6 +6,8 @@
 * without modification, are not permitted.
 */
 
+import * as GenotypeService from '../../../../features/genotype/services/Genotype';
+import * as UserDataMapService from '../../../../features/user-data/services/UserDataMap';
 import {UserData} from '../../../../features/user-data/utils/UserData';
 
 const unroll = require('unroll');
@@ -13,17 +15,17 @@ unroll.use(it);
 
 describe('UserData tests.', function() {
 
-  genotypeResolver.list = jest.fn();
+  GenotypeService.getGenotypes = jest.fn();
 
-  userDataMapResolver.get = jest.fn()
-    .mockImplementation(function() { return {opaqueId: 'demo-id', vendorDataType: 'demo-vendor'}; })
+  UserDataMapService.getOpaqueId = jest.fn()
+    .mockImplementation(function() { return 'demo-id'; })
     .mockImplementationOnce(function() { throw new Error('No such user record found'); });
 
   let userData = new UserData('demo-id', ['demo', 'gene']);
 
   it('should be an instance', function() {
     expect(userData).toBeInstanceOf(UserData);
-    expect(userData.genotypes).toBeInstanceOf(Function);
+    expect(userData.getGenotypes).toBeInstanceOf(Function);
   });
 
   unroll('it should return #action if #condition', async function(
@@ -32,7 +34,8 @@ describe('UserData tests.', function() {
   ) {
     try {
       await userData.getGenotypes();
-      expect(genotypeResolver.list).toBeCalledWith({genes: ['demo', 'gene'], opaqueId: 'demo-id'});
+      expect(UserDataMapService.getOpaqueId).toBeCalledWith('demo-id', 'precisely:genetics');
+      expect(GenotypeService.getGenotypes).toBeCalledWith('demo-id', ['demo', 'gene']);
     } catch (error) {
       expect(error.message).toBe('No such user record found');
     }

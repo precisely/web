@@ -40,14 +40,14 @@ describe('Report resolver tests.', function() {
   genotypeResolver.list = jest.fn();
 
   Report.query = jest.fn()
-    .mockImplementationOnce(function() {throw new Error('query mock error'); })
     .mockImplementation(function() {
       return {
         execAsync: jest.fn(function() {
           return {Items: [{get: function() {return {...commonData, rawContent: 'demo-content'}; }}]};
         })
       };
-    });
+    })
+    .mockImplementationOnce(function() {throw new Error('query mock error'); });
 
   describe('Create tests', function() {
     it('should throw an error when the record already exists.', async function() {

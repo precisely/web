@@ -8,7 +8,7 @@ export async function create(args: CreateArgs): Promise<ReportAttributes> {
     let reportInstance = await Report.createAsync(args);
     return reportInstance.get();
   } catch (error) {
-    log.error(`: ${error.message}`);
+    log.error(`reportResolver-create: ${error.message}`);
     return error;
   }
 }

@@ -101,6 +101,7 @@
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
     "markdown-loader": "2.0.2",
+    "mock-lambda-context": "0.0.1",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
     "serverless-dynamodb-local": "0.2.26",

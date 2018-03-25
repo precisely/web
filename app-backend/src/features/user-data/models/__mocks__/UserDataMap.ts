@@ -23,6 +23,8 @@ export const UserDataMap = UserDataMapMock;
 UserDataMapMock.findOne = jest.fn(function (params: { where: { user_id: string } }) {
   if (params.where.user_id === 'testUserId') {
     return UserDataMapMock.build();
+  } else if (params.where.user_id === 'empty') {
+    return null;
   } else {
     throw new Error('mock-findFindAll error');
   }

@@ -22,7 +22,7 @@ export class UserData {
 
   public async getGenotypes() {
     try {
-      var opaqueId = await UserDataMapService.getOpaqueId(this.userId, 'precisely:genotype');
+      var opaqueId = await UserDataMapService.getOpaqueId(this.userId, 'precisely:genetics');
       return await GenotypeService.getGenotypes(opaqueId, this.genes);
     } catch (error) {
       log.error(`UserData-getGenotypes: ${error.message}`);

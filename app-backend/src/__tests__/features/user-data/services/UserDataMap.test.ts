@@ -1,13 +1,17 @@
-jest.mock('src/features/user-data/models/UserDataMap');
+jest.mock('../../../../features/user-data/models/UserDataMap');
 
 import {getOpaqueId} from '../../../../features/user-data/services/UserDataMap';
+import {log} from '../../../../logger';
 
 describe('getOpaqueId', function() {
-  it('should throw error', async function() {
+  log.error = jest.fn();
+
+  it('should log and throw error when no user found', async function() {
       try {
-        getOpaqueId('invalid', 'test');
+        await getOpaqueId('empty', 'test');
       } catch (err) {
-        expect(err.message).toBe('mock-findFindAll error');
+        expect(err.message).toBe('No such user found');
+        expect(log.error).toBeCalledWith('userDataMap-getOpaqueId: No such user found');
       }
   });
 
