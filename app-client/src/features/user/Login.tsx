@@ -9,11 +9,11 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
 import {PageContent} from 'src/features/common/PageContent';
 import {AWSUser} from 'src/utils/cognito';
-import {checkEmailAndPassword, showAlert} from 'src/utils';
+import {utils} from 'src/utils';
+// import * as login from 'src/utils/index';
 import {Email} from 'src/features/common/Email';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {
@@ -25,6 +25,15 @@ import {
   alignCenter,
   formMargin,
 } from 'src/constants/styleGuide';
+import {
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Link,
+  InputGroupAddon,
+  InputGroup,
+} from 'src/features/common/ReusableComponents';
 
 export interface LoginState {
   email?: string;
@@ -50,14 +59,15 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
   onFailure = (message: string = 'Unable to login.'): void => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, message);
+    this.toastId = utils.showAlert(this.toastId, message);
   }
 
   submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email, password} = this.state;
 
-    const validationInfo: {isValid: boolean, toastId: number} = checkEmailAndPassword(email, password, this.toastId);
+    const validationInfo: {isValid: boolean, toastId: number} =
+          utils.checkEmailAndPassword(email, password, this.toastId);
 
     // This is needed to prevent multiple toast from getting rendered.
     this.toastId = validationInfo.toastId;

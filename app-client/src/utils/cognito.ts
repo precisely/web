@@ -7,7 +7,7 @@
  */
 
 import * as AWS from 'aws-sdk';
-import {setTokenInLocalStorage, removeTokenFromLocalStorage} from 'src/utils';
+import {utils} from 'src/utils';
 import * as Bluebird from 'bluebird';
 import {
   CognitoUserPool,
@@ -62,7 +62,7 @@ export class AWSUser {
 
   async setToken(userSession: CognitoUserSession) {
     this.jwtToken = userSession.getIdToken().getJwtToken();
-    setTokenInLocalStorage(this.jwtToken);
+    utils.setTokenInLocalStorage(this.jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId : process.env.REACT_APP_USER_POOL_ID,
         Logins : {
@@ -76,7 +76,7 @@ export class AWSUser {
 export function logOut(): void {
   const cognitoUser = userPool.getCurrentUser();
   cognitoUser.signOut();
-  removeTokenFromLocalStorage();
+  utils.removeTokenFromLocalStorage();
 }
 
 export function getResetPasswordCode(

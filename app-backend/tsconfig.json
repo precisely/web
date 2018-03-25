@@ -18,6 +18,9 @@
       "@types/",
       "./types"
     ],
+    "types": [
+      "jest"
+    ],
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {

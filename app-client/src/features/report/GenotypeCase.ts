@@ -7,8 +7,8 @@
  */
 
 // tslint:disable-next-line
-export const GenotypeCase = ({__children}: any, render: any) => {
+export function GenotypeCase({__children}: any, render: any) {
   render('<div>');
   render(__children);
   render('</div>');
-};
+}

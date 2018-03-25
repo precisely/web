@@ -12,7 +12,7 @@ import {RouteComponentProps} from 'react-router';
 import {Button, Form, FormGroup, FormText} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
 import {getResetPasswordCode} from 'src/utils/cognito';
-import {showAlert} from 'src/utils';
+import {utils} from 'src/utils';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Email} from 'src/features/common/Email';
 import {
@@ -46,7 +46,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
 
   onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, message);
+    this.toastId = utils.showAlert(this.toastId, message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -54,7 +54,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
     const {email} = this.state;
 
     if (!email) {
-      this.toastId = showAlert(this.toastId, 'Please enter your email.');
+      this.toastId = utils.showAlert(this.toastId, 'Please enter your email.');
       return;
     }
 

@@ -10,10 +10,11 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Dashboard} from 'src/features/common/user/Dashboard';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {Dashboard} from 'src/features/user/Dashboard';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container, Link} from 'src/features/common/ReusableComponents';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -22,7 +23,8 @@ configure({adapter: new Adapter()});
 
 describe('Dashboard tests.', () => {
 
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(<Dashboard />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> =
+      shallow(<Dashboard history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

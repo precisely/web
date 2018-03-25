@@ -15,7 +15,7 @@ import {isLoggedIn} from 'src/utils/cognito';
 
 // tslint:disable
 /* istanbul ignore next */
-const LoadComponent = (componentName: string, path?: string) =>  {
+function LoadComponent(componentName: string, path?: string) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),
     render(loaded: any, props: any) {

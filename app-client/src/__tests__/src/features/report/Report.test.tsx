@@ -14,15 +14,15 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {createHttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {ReportImpl, ReportProps, ReportWithApollo} from 'src/features/report/Report';
+import {ReportImpl, ReportProps, Report, ReportState} from 'src/features/report/Report';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container} from 'src/features/common/ReusableComponents';
 import {store} from 'src/store';
-import {setLoadingState} from 'src/features/report/actions';
 import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 import {dummyData} from 'src/__tests__/src/features/report/testData';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const createMockedNetworkFetch = require('apollo-mocknetworkinterface');
 
@@ -38,15 +38,12 @@ describe('Report tests.', () => {
   store.dispatch = jest.fn();
 
   describe('When the report data is loading.', () => {
-    const componentTree: ShallowWrapper<ReportProps> = shallow(<ReportImpl isLoading={true} />);
-
-    it('should dispatch an action to set the loading state before the component is mounted', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(setLoadingState());
-    });
+    const componentTree: ShallowWrapper<ReportProps, ReportState> =
+        shallow(<ReportImpl history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
 
     unroll('it should display #count #elementName elements', (
-      done: () => void,
-      args: {elementName: string, element: EnzymePropSelector, count: number}
+        done: () => void,
+        args: {elementName: string, element: EnzymePropSelector, count: number}
     ) => {
       expect(componentTree.find(args.element).length).toBe(args.count);
       done();
@@ -73,21 +70,23 @@ describe('Report tests.', () => {
       done();
     }, [ // tslint:disable-next-line
       ['props'],
-      [{isLoading: false}],
-      [{isLoading: false, reportData: []}]
+      [{data: {}}],
+      [{data: {report: []}}]
     ]);
   });
 
   describe('When the report data is present.', () => {
     it('It should not render the MarkdownComponentRenderer', () => {
-      const componentTree: ShallowWrapper<ReportProps> =
-          shallow(<ReportImpl isLoading={false} reportData={dummyData} />);
+      const componentTree: ShallowWrapper<ReportProps, ReportState> =
+          shallow(
+            <ReportImpl data={dummyData} history={mockedHistory} match={mockedMatch()} location={mockedLocation} />
+          );
       expect(componentTree.find(MarkdownComponentRenderer).length).toBe(1);
     });
   });
 
   describe('When the component is wrapped with the graphql', () => {
-    const createResponse = (): {data: {report: ReportData}} => ({data: {report: dummyData}});
+    const createResponse = (): {data: {report: ReportData}} => ({data: dummyData});
 
     const mockedNetworkFetch = createMockedNetworkFetch(createResponse, {timeout: 1});
 
@@ -98,7 +97,7 @@ describe('Report tests.', () => {
 
     const componentTree: ReactWrapper = mount(
       <ApolloProvider client={client}>
-        <ReportWithApollo/>
+        <Report/>
       </ApolloProvider>
     );
 

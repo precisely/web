@@ -22,7 +22,12 @@ configure({adapter: new Adapter()});
 
 describe('MarkdownComponentRenderer tests.', () => {
   const componentTree: ShallowWrapper<MarkdownComponentRendererProps> =
-      shallow(<MarkdownComponentRenderer parsedContent={dummyData.parsedContent} userData={dummyData.userData} />);
+      shallow(
+        <MarkdownComponentRenderer
+              parsedContent={dummyData.report.parsedContent}
+              userData={dummyData.report.userData}
+        />
+      );
 
   it('should render the div element.', () => {
     expect(componentTree.find('div').length).toBe(1);

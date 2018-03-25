@@ -9,19 +9,19 @@
 import * as React from 'react';
 import {Genotype, UserData} from 'src/features/report/interfaces';
 
-const findGenotype = (svn: string, genotypes: Genotype[]): boolean => {
+function findGenotype(svn: string, genotypes: Genotype[]): boolean {
   return genotypes.some(genotype => {
     return genotype.variantCall === svn;
   });
-};
+}
 
-const getUserDataByGene = (gene: string, userData: UserData): Genotype[] => {
+function getUserDataByGene(gene: string, userData: UserData): Genotype[] {
   // Using an array was necessary because gene is not a unique attribute in the model.
   return userData.genotypes.filter((genotype) => gene === genotype.gene);
-};
+}
 
 // tslint:disable-next-line
-export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: any): any => {
+export function UserGenotypeSwitch({__children, gene, userData}: any, render: any): any {
 
   let userDataByGene: Genotype[] = getUserDataByGene(gene, userData);
 
@@ -45,4 +45,4 @@ export const UserGenotypeSwitch = ({__children, gene, userData}: any, render: an
   render('<div>');
   render(genotypeCase);
   render('</div>');
-};
+}

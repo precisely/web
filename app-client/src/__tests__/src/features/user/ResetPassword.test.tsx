@@ -11,12 +11,12 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
-import {ResetPassword, ResetPasswordState} from 'src/features/common/user/ResetPassword';
+import {ResetPassword, ResetPasswordState} from 'src/features/user/ResetPassword';
 import {Button, Form, FormGroup, Input} from 'src/features/common/ReusableComponents';
 import {resetPassword} from 'src/utils/cognito';
 import {PageContent} from 'src/features/common/PageContent';
-import {showAlert} from 'src/utils/index';
-import {mockedHistory} from 'src/__tests__/testSetup';
+import {utils} from 'src/utils/index';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -32,7 +32,7 @@ describe('Tests for ResetPassword', () => {
   const preventDefault: jest.Mock<void> = jest.fn<void>();
 
   beforeEach((): void => {
-    showAlert = jest.fn<number>().mockReturnValue(1);
+    utils.showAlert = jest.fn<number>().mockReturnValue(1);
     mockedHistory.push = jest.fn<void>();
   });
 
@@ -93,7 +93,7 @@ describe('Tests for ResetPassword', () => {
     it('should not submit the form when the passwords are not equal.', () => {
       componentTree.find(`#newPassword`).simulate('change', {target: {id: 'confirmPassword', value: 'dummy'}});
       componentTree.find(Form).simulate('submit', {preventDefault});
-      expect(showAlert).toBeCalledWith(null, 'Password does not match.');
+      expect(utils.showAlert).toBeCalledWith(null, 'Password does not match.');
       expect(resetPassword).not.toBeCalled();
     });
   });
