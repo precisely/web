@@ -112,6 +112,7 @@ describe('Report tests.', () => {
 
     const componentTree: ReactWrapper = mount(
       <ApolloProvider client={client}>
+        // @ts-ignore
         <Report/>
       </ApolloProvider>
     );
