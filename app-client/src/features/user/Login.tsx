@@ -61,7 +61,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
   onFailure = (error: Error): void => {
     this.setLoadingState(false);
-    this.toastId = utils.showAlert(this.toastId, error.message || 'Unable to login.');
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
   submitForm =  (e: React.FormEvent<HTMLFormElement>) => {

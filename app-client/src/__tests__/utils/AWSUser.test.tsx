@@ -8,8 +8,10 @@
 
 jest.mock('src/utils/index');
 
+import {CognitoUserSession} from 'amazon-cognito-identity-js';
 import {utils} from 'src/utils/index';
 import {currentUser} from 'src/constants/currentUser';
+import {AWSUser} from 'src/utils/AWSUser';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -40,12 +42,24 @@ describe('AWSUser tests', () => {
     expect(utils.removeTokenFromLocalStorage).toBeCalled();
   });
 
+  it('should set the token in the local storage.', () => {
+    // @ts-ignore
+    AWSUser.setToken(new CognitoUserSession({jwtToken: 'DUMMY TOKEN'}));
+    expect(utils.setTokenInLocalStorage).toBeCalledWith('DUMMY TOKEN');
+  });
+
   describe('Reset password tests', () => {
     unroll('It should call the #callbackType callback when there is #condition ', (
         done: () => void,
         args: {callbackType: string, condition: string, verificationCode: string, function: jest.Mock}
     ) => {
-      currentUser.resetPassword('test@example.com', args.verificationCode, 'qwerty123', successCallback, failureCallback);
+      currentUser.resetPassword(
+          'test@example.com',
+          args.verificationCode,
+          'qwerty123',
+          successCallback,
+          failureCallback
+      );
       expect(args.function).toBeCalled();
       done();
     }, [ // tslint:disable-next-line

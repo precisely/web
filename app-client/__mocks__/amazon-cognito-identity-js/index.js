@@ -11,4 +11,5 @@ module.exports = {
   CognitoUser: jest.fn().mockImplementation(require('./CognitoUser')),
   CognitoUserAttribute: jest.fn().mockImplementation(require('./CognitoUserAttribute')),
   AuthenticationDetails: jest.fn().mockImplementation(require('./AuthenticationDetails')),
+  CognitoUserSession: jest.fn().mockImplementation(require('./CognitoUserSession')),
 }

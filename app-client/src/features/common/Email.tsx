@@ -21,7 +21,7 @@ export interface EmailProps {
 
 export let Email: React.StatelessComponent<EmailProps> = props => (
   <Input
-      style={[removeBorderRadius, inputStyle] || props.style}
+      style={props.style || [removeBorderRadius, inputStyle]}
       type="email"
       id="email"
       placeholder={props.placeholder}
