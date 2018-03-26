@@ -56,3 +56,8 @@
 - Winston logger
 - Commands for seeding user and data.
 - A function to send a sample email via SES.
+- A component to fetch the report data.
+- The react types path in the tsconfig.
+- Setup for the postgres.
+- A function to decrypt the secrets while performing migrations.
+- A script to set the environment before deployment.

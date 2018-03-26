@@ -18,8 +18,10 @@ import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
-import {Basepage} from 'src/containers/basepage/Basepage';
-import {getTokenFromLocalStorage} from 'src/utils/index';
+import {Basepage} from 'src/features/common/Basepage';
+import {utils} from 'src/utils';
+import * as Bluebird from 'bluebird';
+import * as AWS from 'aws-sdk';
 
 initReactFastclick();
 
@@ -27,11 +29,19 @@ const client = new ApolloClient({
   link: new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
     headers: {
-      Authorization: getTokenFromLocalStorage()
+      Authorization: utils.getTokenFromLocalStorage()
     }
   }),
   cache: new InMemoryCache(),
 });
+
+Bluebird.config({
+  longStackTraces: true,
+  warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
+});
+
+AWS.config.setPromisesDependency(Bluebird);
+AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
 
 ReactDOM.render(
   <Provider store={store}>

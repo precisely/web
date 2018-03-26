@@ -18,6 +18,9 @@
       "@types/",
       "./types"
     ],
+    "types": [
+      "jest"
+    ],
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
@@ -31,7 +34,7 @@
     "build",
     "scripts",
     "acceptance-tests",
-    "webpack",
+    "webpack.config.js",
     "jest",
     "src/setupTests.ts"
   ]

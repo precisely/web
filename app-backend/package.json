@@ -3,22 +3,27 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
+    "test": "jest --no-cache --coverage",
     "start": "AWS_PROFILE=dev-profile-precisely env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "env-cmd ../config/security.env.local serverless dynamodb install",
-    "setup:database": "serverless invoke local -f setupDatabase",
+    "setup:database": "yarn setup:database:postgres && yarn setup:database:dynamo",
+    "setup:database:dynamo": "serverless invoke local -f setupDynamo",
+    "setup:database:dynamo:local": "env-cmd ../config/security.env.local serverless invoke local -f setupDynamo",
+    "setup:database:postgres:local": "env-cmd ../config/security.env.local serverless invoke local -f setupPostgres -d local",
+    "setup:database:postgres": "serverless invoke local -f setupPostgres",
     "seed:create:dev": "env-cmd ../config/security.env.local ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/createFakeData.ts",
     "seed:create:stage": "env-cmd ../config/security.env.stage ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/createFakeData.ts",
     "seed:local": "DB=local env-cmd ../config/security.env.local ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "seed:dev": "sls decrypt | env-cmd ../config/security.env.local xargs ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
     "seed:stage": "sls decrypt -s stage | env-cmd ../config/security.env.stage xargs ts-node -O '{\"module\": \"commonjs\"}' src/seed-data/scripts/seedData.ts",
-    "deploy:dev": "env-cmd ../config/security.env.local serverless deploy -s dev",
-    "deploy:stage": "env-cmd ../config/security.env.stage serverless deploy -s stage",
-    "deploy:prod": "env-cmd ../config/security.env.prod serverless deploy -s prod",
+    "deploy:dev": "serverless invoke local -f deploy -d dev",
+    "deploy:stage": "serverless invoke local -f deploy -d stage",
+    "deploy:prod": "serverless invoke local -f deploy -d prod",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src"
+    "eslint": "eslint 'src/*.js' 'src/**/*.js'"
   },
   "jest": {
+    "automock": false,
     "collectCoverage": true,
     "coverageDirectory": "coverage",
     "coverageReporters": [
@@ -28,21 +33,30 @@
       "json"
     ],
     "collectCoverageFrom": [
+      "src/**/*.js",
       "src/**/*.ts",
       "!**/node_modules/**",
       "!src/interfaces/**",
-      "!src/__tests__/**"
+      "!src/__tests__/**",
+      "!src/**/*.graphql",
+      "!src/interfaces.ts",
+      "!src/data-source/postgres/**",
+      "!src/data-source/deployWrapper.ts"
     ],
     "transform": {
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": "\/__tests__\/.*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
-    "mapCoverage": true,
+    "moduleNameMapper": {
+      "dynogels-promisified": "<rootDir>/__mocks__/dynogels-promisified.ts",
+      "aws-sdk": "<rootDir>/__mocks__/aws-sdk.ts",
+      "fs": "<rootDir>/__mocks__/fs.ts"
+    },
     "setupFiles": [
       "jest-plugin-context/setup"
     ]
@@ -68,8 +82,10 @@
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
     "sequelize": "4.35.2",
+    "sequelize-cli": "4.0.0",
     "serverless-dynamodb-client": "0.0.2",
     "serverless-plugin-scripts": "1.0.2",
+    "shelljs": "0.8.1",
     "winston": "3.0.0-rc2"
   },
   "devDependencies": {
@@ -80,6 +96,7 @@
     "@types/jest": "21.1.4",
     "@types/node": "9.3.0",
     "@types/sequelize": "4.27.4",
+    "@types/shelljs": "0.7.8",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",
@@ -88,17 +105,20 @@
     "env-cmd": "5.0.0",
     "eslint": "4.17.0",
     "faker": "4.1.0",
+    "html-loader": "0.5.5",
     "imports-loader": "0.7.1",
-    "jest": "21.2.1",
+    "jest": "22.4.3",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
+    "markdown-loader": "2.0.2",
+    "mock-lambda-context": "0.0.1",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
     "serverless-dynamodb-local": "0.2.26",
     "serverless-kms-secrets": "1.0.2",
     "serverless-offline": "3.17.0",
     "serverless-webpack": "4.1.0",
-    "ts-jest": "22.0.1",
+    "ts-jest": "22.4.2",
     "ts-loader": "3.3.0",
     "tslint": "5.7.0",
     "typescript": "2.6.2",

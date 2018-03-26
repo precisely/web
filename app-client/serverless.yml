@@ -14,5 +14,6 @@ plugins:
 
 custom:
   client:
+    errorDocument: index.html
     bucketName: ${opt:stage, self:provider.stage}-precisely-01
     distributionFolder: build

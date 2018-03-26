@@ -6,9 +6,16 @@
 * without modification, are not permitted.
 */
 
-export interface AuthorizerAttributes {
+export interface Authorizer {
   claims?: {
     sub: string;
     'custom:roles'?: string;
   };
+}
+
+export interface Secrets {
+  POSTGRES_DB_NAME: string;
+  POSTGRES_DB_USERNAME: string;
+  POSTGRES_DB_PASSWORD: string;
+  POSTGRES_DB_CONN_STR: string;
 }

@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2011-Present, Precise.ly, Inc.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or
+* without modification, are not permitted.
+*/
+
+const SequelizeMock = require('sequelize-mock');
+const DBConnectionMock = new SequelizeMock();
+
+export const UserDataMapMock = DBConnectionMock.define(
+  'userDataMap',
+  {
+    user_id: 'testUserId',
+    opaque_id: 'testOpaqueId',
+    vendor_data_type: 'testVendorDataType'
+  },
+  {});
+
+export const UserDataMap = UserDataMapMock;
+
+// TODO: Remove logic from mocks
+UserDataMapMock.findOne = jest.fn(function (params: { where: { user_id: string } }) {
+  if (params.where.user_id === 'testUserId') {
+    return UserDataMapMock.build();
+  } else if (params.where.user_id === 'empty') {
+    return null;
+  } else {
+    throw new Error('mock-findFindAll error');
+  }
+});
+
+// TODO: Remove logic from mocks
+UserDataMapMock.upsert = jest.fn((params: { user_id: string }): boolean => {
+  if (params.user_id === 'dummyId') {
+    return true;
+  } else {
+    throw new Error('mock-upsert error');
+  }
+});

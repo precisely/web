@@ -8,10 +8,10 @@ module.exports = {
   externals: ['pg-native', 'tedious', 'sqlite3', 'mysql2'],
   plugins: [
     new webpack.ContextReplacementPlugin(
-            /sequelize(\\|\/)/,
-            path.resolve(__dirname, '../src'
-          )
-  )],
+      /sequelize(\\|\/)/,
+      path.resolve('./src')
+    )
+  ],
   resolve: {
     extensions: [
       '.js',
@@ -27,11 +27,22 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
-        options: {configFile: 'tsconfig.build.json'}
+        options: {configFile: 'tsconfig.json'}
       },
       {
         test: /\.graphql|gql?$/,
         loader: 'webpack-graphql-loader'
+      },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: 'html-loader'
+          },
+          {
+            loader: 'markdown-loader'
+          }
+        ]
       }
     ],
   },

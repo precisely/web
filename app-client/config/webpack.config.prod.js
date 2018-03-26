@@ -56,7 +56,7 @@ module.exports = {
   bail: true,
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
-  devtool: shouldUseSourceMap ? 'source-map' : false,
+  devtool: false,
   // In production, we only want to load the polyfills and the app code.
   entry: [require.resolve('./polyfills'), paths.appIndexJs],
   output: {
@@ -102,7 +102,7 @@ module.exports = {
       '.jsx',
     ],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -157,7 +157,7 @@ module.exports = {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
             loader: require.resolve('ts-loader'),
-            options: {configFile: 'tsconfig.build.json'}
+            options: {configFile: 'tsconfig.json'}
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

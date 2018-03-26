@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Bluebird from 'bluebird';
-import {UserDataMap} from '../../user-data-map/models/UserDataMap';
+import {UserDataMap} from '../../features/user-data/models/UserDataMap';
 
 const jsonPath = path.join(__dirname, '../data/');
 
@@ -19,12 +19,12 @@ interface UserDataMapAttributes {
   opaque_id: string;
 }
 
-export const seedUser = async () => {
+export async function seedUser() {
   const promises: Bluebird<boolean>[] = [];
   const allUsers = JSON.parse(fs.readFileSync(jsonPath + 'UserData.json', 'utf8'));
-  allUsers.forEach((user: UserDataMapAttributes) => {
+  allUsers.forEach(function(user: UserDataMapAttributes) {
     promises.push(UserDataMap.upsert(user));
   });
   await Promise.all(promises);
   process.exit();
-};
+}

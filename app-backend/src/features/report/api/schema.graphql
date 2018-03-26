@@ -1,0 +1,40 @@
+type Report {
+  id: String,
+  title: String,
+  slug: String,
+  rawContent: String,
+  parsedContent: String,
+  topLevel: Boolean,
+  genes: [String],
+  createdAt: String
+  updatedAt: String
+  userData: UserData,
+}
+
+type UserData {
+  genotypes: [Genotype]
+}
+
+type Genotype {
+  opaqueId: String
+  sampleId: String
+  source: String
+  gene: String
+  variantCall: String
+  zygosity: String
+  startBase: String
+  chromosomeName: String
+  variantType: String
+  quality: String
+  createdAt: String
+  updatedAt: String
+}
+
+extend type Query {
+  reports: [Report],
+  report(slug: String!): Report,
+}
+
+extend type Mutation {
+  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
+}
