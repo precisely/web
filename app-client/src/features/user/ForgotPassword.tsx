@@ -9,12 +9,12 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, FormText} from 'src/components/ReusableComponents';
-import {PageContent} from 'src/components/PageContent';
-import {getResetPasswordCode} from 'src/utils/cognito';
-import {showAlert} from 'src/utils';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {Email} from 'src/components/Email';
+import {Button, Form, FormGroup, FormText} from 'src/features/common/ReusableComponents';
+import {PageContent} from 'src/features/common/PageContent';
+import {utils} from 'src/utils';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {Email} from 'src/features/common/Email';
+import {currentUser} from 'src/constants/currentUser';
 import {
   formButton,
   header,
@@ -44,9 +44,9 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
     this.props.history.push(`/reset-password/${this.state.email}`);
   }
 
-  onFailure = (message: string = 'Unable to process your request at this moment. Please try again later.'): void => {
+  onFailure = (error: Error): void => {
     this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, message);
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
   submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -54,14 +54,14 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
     const {email} = this.state;
 
     if (!email) {
-      this.toastId = showAlert(this.toastId, 'Please enter your email.');
+      this.toastId = utils.showAlert(this.toastId, 'Please enter your email.');
       return;
     }
 
     this.updateLoadingState(true);
-    getResetPasswordCode(email, this.onSuccess, this.onFailure);
+    currentUser.forgotPassword(email, this.onSuccess, this.onFailure);
   }
-
+  
   handleInputChange(inputType: string, value: string): void {
     this.setState((): ForgotPasswordState => ({
       [inputType]: value,
@@ -85,7 +85,7 @@ export class ForgotPassword extends React.Component<RouteComponentProps<void>, F
                 </FormText><br/>
                 <Email
                     placeholder="Enter your email"
-                    value={email} 
+                    value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}

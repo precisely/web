@@ -9,10 +9,10 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {PageContent} from 'src/components/PageContent';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
+import {PageContent} from 'src/features/common/PageContent';
+import {NavigationBar} from 'src/features/common/NavigationBar';
 import {CSS} from 'src/interfaces';
-import {Container} from 'src/components/ReusableComponents';
+import {Container} from 'src/features/common/ReusableComponents';
 
 @Radium
 export class AboutUs extends React.Component<RouteComponentProps<void>> {

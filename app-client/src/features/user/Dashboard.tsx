@@ -9,9 +9,9 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Container, Link} from 'src/components/ReusableComponents';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {PageContent} from 'src/components/PageContent';
+import {Container, Link} from 'src/features/common/ReusableComponents';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 
 @Radium

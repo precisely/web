@@ -38,7 +38,7 @@
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
-      "<rootDir>/src/__mocks__/localStorage.js"
+      "<rootDir>/__mocks__/localStorage.js"
     ],
     "testRegex": "(/tests/.*-test|\\.(test|spec))\\.(ts|tsx)$",
     "testEnvironment": "node",
@@ -53,7 +53,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "amazon-cognito-identity-js": "<rootDir>/src/__mocks__/amazon-cognito-identity-js/index.js"
+      "amazon-cognito-identity-js": "<rootDir>/__mocks__/amazon-cognito-identity-js/index.js"
     },
     "moduleFileExtensions": [
       "web.ts",
@@ -67,11 +67,6 @@
       "json",
       "node"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "./tsconfig.test.json"
-      }
-    },
     "moduleDirectories": [
       "node_modules",
       "."

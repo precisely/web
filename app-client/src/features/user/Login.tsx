@@ -8,14 +8,15 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
+import {CognitoUserSession} from 'amazon-cognito-identity-js';
 import {RouteComponentProps} from 'react-router';
-import {Button, Form, FormGroup, Input, Link, InputGroupAddon, InputGroup} from 'src/components/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {PageContent} from 'src/components/PageContent';
-import {AWSUser} from 'src/utils/cognito';
-import {checkEmailAndPassword, showAlert} from 'src/utils';
-import {NavigationBar} from 'src/components/navigationBar/NavigationBar';
-import {Email} from 'src/components/Email';
+import {PageContent} from 'src/features/common/PageContent';
+import {AWSUser} from 'src/utils/AWSUser.ts';
+import {utils} from 'src/utils';
+import {Email} from 'src/features/common/Email';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {currentUser} from 'src/constants/currentUser';
 import {
   formButton,
   noBorderTop,
@@ -25,6 +26,15 @@ import {
   alignCenter,
   formMargin,
 } from 'src/constants/styleGuide';
+import {
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Link,
+  InputGroupAddon,
+  InputGroup,
+} from 'src/features/common/ReusableComponents';
 
 export interface LoginState {
   email?: string;
@@ -39,37 +49,34 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
 
   state: LoginState = {email: '', password: '', isLoading: false};
 
-  updateLoadingState = (isLoading: boolean): void => {
+  setLoadingState = (isLoading: boolean): void => {
     this.setState({isLoading});
   }
 
-  onSuccess = (): void => {
-    this.updateLoadingState(false);
+  onSuccess = (cognitoUserSession: CognitoUserSession): void => {
+    AWSUser.setToken(cognitoUserSession);
+    this.setLoadingState(false);
     this.props.history.push('/dashboard');
   }
 
-  onFailure = (message: string = 'Unable to login.'): void => {
-    this.updateLoadingState(false);
-    this.toastId = showAlert(this.toastId, message);
+  onFailure = (error: Error): void => {
+    this.setLoadingState(false);
+    this.toastId = utils.showAlert(this.toastId, error.message);
   }
 
-  submitForm = async (e: React.FormEvent<HTMLFormElement>): void => {
+  submitForm =  (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email, password} = this.state;
 
-    const validationInfo: {isValid: boolean, toastId: number} = checkEmailAndPassword(email, password, this.toastId);
+    const validationInfo: {isValid: boolean, toastId: number} =
+          utils.checkEmailAndPassword(email, password, this.toastId);
 
     // This is needed to prevent multiple toast from getting rendered.
     this.toastId = validationInfo.toastId;
 
     if (validationInfo.isValid) {
-      this.updateLoadingState(true);
-      let awsUser: AWSUser = new AWSUser();
-      try {
-        awsUser.login(email, password).then(this.onSuccess);
-      } catch {
-        this.onFailure();
-      }
+      this.setLoadingState(true);
+      currentUser.login(email, password, this.onSuccess, this.onFailure);
     }
   }
 
@@ -92,7 +99,7 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
               <FormGroup className="mb-0" style={alignCenter}>
                 <Email
                     placeholder="Email"
-                    value={email} 
+                    value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                       this.handleInputChange(e.target.id, e.target.value);
                     }}

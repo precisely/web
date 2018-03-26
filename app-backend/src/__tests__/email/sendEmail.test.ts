@@ -29,7 +29,7 @@ jest.mock('aws-sdk', () => {
 
 import * as AWS from 'aws-sdk';
 import {log} from '../../logger';
-import {sendEmail} from '../../email/sendEmail';
+import {sendEmail} from '../../features/email/services/sendEmail';
 
 describe('sendEmail tests', () => {
 
