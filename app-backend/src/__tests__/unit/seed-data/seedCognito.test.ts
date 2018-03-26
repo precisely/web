@@ -7,9 +7,10 @@
 */
 
 jest.mock('fs');
-jest.unmock('aws-sdk');
+jest.mock('aws-sdk');
 
-import {cognito, seedCognito} from '../../../seed-data/scripts/seedCognito';
+import * as AWS from 'aws-sdk';
+import {seedCognito} from '../../../seed-data/scripts/seedCognito';
 import {mockCognitoUser} from '../../constants/seedData';
 
 const fs = require('fs');
@@ -21,28 +22,10 @@ fs.readFileSync = jest.fn()
 
 describe('seedCognito tests', function() {
 
-  cognito.adminCreateUser = jest.fn()
-    .mockImplementation(() => ({
-        promise: jest.fn(() => ({ User: {Username: 'demo-username'} }))
-      })
-    )
-    .mockImplementationOnce(() => ({
-        promise: jest.fn(() => { throw new Error('mock Error'); })
-      })
-    );
-
-  cognito.adminInitiateAuth = jest.fn(() => ({
-      promise: jest.fn(() => ({Session: 'demo-session'}))
-    }));
-
-  cognito.adminRespondToAuthChallenge = jest.fn(() => ({
-      promise: jest.fn()
-    }));
-
   it('should fail when an error occurs', function() {
-    seedCognito().catch(function(error: Error) {
-      expect(error.message).toBe('mock Error');
-    });
+    // @ts-ignore
+    AWS.mockedAdminCreateUser.mockImplementationOnce(() => { throw new Error('mock Error'); });
+    expect(seedCognito()).rejects.toEqual(new Error('mock Error'));
   });
 
   it('should pass and return userId array', function() {

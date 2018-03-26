@@ -8,6 +8,7 @@
 
 jest.mock('fs');
 jest.unmock('aws-sdk');
+jest.unmock('dynogels-promisified');
 
 import {seedReport, seedGenotype} from '../../../seed-data/scripts/seedDynamo';
 import {log} from '../../../logger';
