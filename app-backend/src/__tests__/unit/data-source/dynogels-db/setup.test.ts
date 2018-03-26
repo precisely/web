@@ -6,6 +6,7 @@
 * without modification, are not permitted.
 */
 
+jest.unmock('aws-sdk');
 import {Context} from 'aws-lambda';
 import {dynogels} from '../../../../data-source/dynogels-db/connection';
 import {setupDatabase} from '../../../../data-source/dynogels-db/setup';

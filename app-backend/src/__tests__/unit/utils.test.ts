@@ -6,33 +6,14 @@
 * without modification, are not permitted.
 */
 
-jest.mock('aws-sdk', function() {
-  return {
-    KMS: function() {
-      return {
-        decrypt: jest.fn()
-          .mockImplementationOnce(function(
-              params: AWS.KMS.Types.DecryptRequest,
-              callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-          ) {
-            callback(new Error('mock error'), null);
-          })
-          .mockImplementationOnce(function(
-              params: AWS.KMS.Types.DecryptRequest,
-              callback: (error: Error, data: AWS.KMS.Types.DecryptResponse) => void
-          ) {
-            callback(null, {Plaintext: new Buffer(JSON.stringify({demo: 'test'}))});
-          })
-      };
-    }
-  };
-});
-
-import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../../utils';
-import {Authorizer} from '../../interfaces';
+jest.mock('aws-sdk');
 
 const unroll = require('unroll');
 unroll.use(it);
+
+import * as AWS from 'aws-sdk';
+import {getEnvironmentVariables, addEnvironmentToTableName, hasAuthorizedRoles} from '../../utils';
+import {Authorizer} from '../../interfaces';
 
 describe('Test for getEnvironmentVariables', function() {
 
@@ -42,22 +23,18 @@ describe('Test for getEnvironmentVariables', function() {
     expect(typeof getEnvironmentVariables).toBe('function');
   });
 
-  unroll('it should #description when #expectedResult', async (
-      done: () => void,
-      args: {expectedResult: string, description: string}
-  ) => {
+  it('should return null when error', async () => {
+    // @ts-ignore
+    AWS.mockedDecrypt.mockImplementationOnce(() => { throw new Error('mock error'); });
     const result = await getEnvironmentVariables();
-    if (args.expectedResult === 'pass') {
-      expect(result).toEqual({'demo': 'test'});
-    } else {
-      expect(result).toBeFalsy();
-    }
-    done();
-  }, [
-    ['expectedResult', 'description'],
-    ['fail', 'return null'],
-    ['pass', 'return data'],
-  ]);
+    expect(result).toBeFalsy();
+  });
+
+  it('should return data when successful', async () => {
+    const result = await getEnvironmentVariables();
+    expect(result).toEqual({'demo': 'test'});
+  });
+
 });
 
 describe('Test for addEnvironmentToTableName', function() {

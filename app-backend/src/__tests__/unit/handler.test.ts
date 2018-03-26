@@ -6,6 +6,7 @@
 * without modification, are not permitted.
 */
 
+jest.unmock('aws-sdk');
 import {graphqlHandler, playgroundHandler} from '../../handler';
 
 it('graphqlHandler should be a function', function() {

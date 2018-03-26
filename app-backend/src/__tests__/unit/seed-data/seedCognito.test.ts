@@ -6,15 +6,18 @@
 * without modification, are not permitted.
 */
 
+jest.mock('fs');
+jest.unmock('aws-sdk');
+
 import {cognito, seedCognito} from '../../../seed-data/scripts/seedCognito';
 import {mockCognitoUser} from '../../constants/seedData';
 
-jest.doMock('fs', () => ({
-  readFileSync: jest.fn()
+const fs = require('fs');
+
+fs.readFileSync = jest.fn()
   .mockImplementation(function() {
     return JSON.stringify([mockCognitoUser, {...mockCognitoUser, email: 'demo-email2@demo-precisely.com'}]);
-  })
-}));
+  });
 
 describe('seedCognito tests', function() {
 

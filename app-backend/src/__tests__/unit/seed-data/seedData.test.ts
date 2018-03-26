@@ -6,8 +6,10 @@
 * without modification, are not permitted.
 */
 
+jest.unmock('aws-sdk');
 jest.mock('../../../seed-data/scripts/seedDynamo');
 jest.mock('../../../seed-data/scripts/seedPostgres');
+
 import {setEnvironment} from '../../../seed-data/scripts/seedData';
 
 describe('seedData tests', function() {

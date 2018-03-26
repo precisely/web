@@ -7,6 +7,7 @@
 */
 
 jest.mock('fs');
+jest.unmock('aws-sdk');
 
 import {seedReport, seedGenotype} from '../../../seed-data/scripts/seedDynamo';
 import {log} from '../../../logger';

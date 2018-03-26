@@ -6,30 +6,7 @@
 * without modification, are not permitted.
 */
 
-jest.mock('aws-sdk', function() {
-  return {
-    SES: function (params: {apiVersion: string}) {
-      return {
-        sendEmail: jest.fn().mockImplementationOnce(function(emailData: AWS.SES.Types.SendEmailRequest) {
-          return {
-            promise: jest.fn().mockImplementation(function() {
-              if (emailData.Source !== 'test@precise.ly') {
-                return {MessageId: 'dummyMessage'};
-              } else {
-                let error = new Error();
-                error.stack = 'A dummy stacktrace.';
-                throw error;
-              }
-            })
-          };
-        })
-      };
-    },
-    config: (() => ({
-      update: jest.fn().mockImplementation(jest.fn()),
-    }))(),
-  };
-});
+jest.mock('aws-sdk');
 
 import * as AWS from 'aws-sdk';
 import {log} from '../../../../../logger';
@@ -46,6 +23,12 @@ describe('sendEmail tests', function() {
   });
 
   it('should log an error message when the email is not sent.', async function() {
+    // @ts-ignore
+    AWS.mockedSendEmail.mockImplementationOnce(() => {
+      let error = new Error();
+      error.stack = 'A dummy stacktrace.';
+      throw error;
+    });
     await sendEmail(['test@example.com', ], 'test', 'Dummy subject', 'I am a test message');
     expect(log.error).toBeCalledWith('Error occured while sending email: A dummy stacktrace.');
   });
