@@ -1,4 +1,4 @@
-import { CreateArgs } from '../../features/report/interfaces';
+import {CreateArgs} from '../../features/report/interfaces';
 
 export const reportData: CreateArgs = {
   title: 'demo-title',

@@ -7,7 +7,7 @@
 */
 
 import {cognito, seedCognito} from '../../../seed-data/scripts/seedCognito';
-import {mockCognitoUser} from './mockTestData';
+import {mockCognitoUser} from '../../constants/seedData';
 
 jest.doMock('fs', () => ({
   readFileSync: jest.fn()

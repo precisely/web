@@ -9,7 +9,7 @@ jest.mock('fs');
 jest.mock('../../../features/user-data/models/UserDataMap');
 
 import {seedUser} from '../../../seed-data/scripts/seedPostgres';
-import {mockUserDataMap} from './mockTestData';
+import {mockUserDataMap} from '../../constants/seedData';
 
 const fs = require('fs');
 

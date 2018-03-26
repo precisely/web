@@ -12,7 +12,7 @@ import {seedReport, seedGenotype} from '../../../seed-data/scripts/seedDynamo';
 import {log} from '../../../logger';
 import {Report} from '../../../features/report/models/Report';
 import {Genotype} from '../../../features/genotype/models/Genotype';
-import {mockReportData, mockGenotypeData} from './mockTestData';
+import {mockReportData, mockGenotypeData} from '../../constants/seedData';
 
 const fs = require('fs');
 const unroll = require('unroll');
