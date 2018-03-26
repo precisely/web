@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+jest.mock('src/constants/currentUser');
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -36,25 +38,6 @@ describe('Tests for ResetPassword', () => {
     mockedHistory.push = jest.fn<void>();
   });
 
-  currentUser.resetPassword = jest.fn<void>()
-      .mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-      ) => {
-        successCallback();
-      })
-      .mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ) => {
-        failureCallback();
-      });
-
   const getComponentTree = (params?: {email: string}): ShallowWrapperType => {
     return shallow(
         <ResetPassword history={mockedHistory} match={mockedMatch<{email: string}>(params)} location={mockedLocation}/>
@@ -66,7 +49,6 @@ describe('Tests for ResetPassword', () => {
       getComponentTree();
       expect(mockedHistory.push).toBeCalledWith('/forgot-password');
     });
-
   });
 
   describe('When the email not present in the params.', () => {
@@ -113,8 +95,15 @@ describe('Tests for ResetPassword', () => {
     ]);
 
     it('should change the route to the login when the form is submitted successfully.', async () => {
+      currentUser[`__mockResetPasswordSuccessCase`]();
       await componentTree.find(Form).simulate('submit', {preventDefault});
       expect(mockedHistory.push).toBeCalledWith('/login');
+    });
+
+    it('should change the route to the login when the form is submitted successfully.', async () => {
+      currentUser[`__mockResetPasswordFailureCase`]();
+      await componentTree.find(Form).simulate('submit', {preventDefault});
+      expect(utils.showAlert).toBeCalledWith(1, 'Unable to reset the password.');
     });
   });
 });

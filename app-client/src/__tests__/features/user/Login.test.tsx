@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+jest.mock('src/constants/currentUser');
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -35,24 +37,13 @@ describe('Tests for Login', () => {
 
   AWSUser.setToken = jest.fn();
 
-  currentUser.login = jest.fn<void>()
-      .mockImplementationOnce((email: string, password: string, successCallback?: () => void) => {
-          successCallback();
-      })
-      .mockImplementationOnce((
-          email: string,
-          password: string,
-          successCallback?: () => void,
-          failureCallback?: () => void
-      ) => {
-          failureCallback();
-      });
-
   utils.checkEmailAndPassword = jest.fn().mockImplementationOnce(() => {
         return {isValid: false, toastId: 1};
       }).mockImplementation(() => {
         return {isValid: true, toastId: 1};
       });
+
+  utils.showAlert = jest.fn();
 
   const preventDefault: jest.Mock<void> = jest.fn<void>();
 
@@ -96,8 +87,15 @@ describe('Tests for Login', () => {
     ['password', 'dummyPassword', Input]
   ]);
 
-  it('should change the route to the dashboard when the form is submitted successfully.', async () => {
+  it('should change the route to the dashboard when the user is logged in successfully.', async () => {
+    currentUser[`__mockLoginSuccessCase`]();
     await componentTree.find('#loginForm').simulate('submit', {preventDefault});
     expect(mockedHistory.push).toBeCalledWith('/dashboard');
+  });
+
+  it('should show an alert when the user is unable to log in.', async () => {
+    currentUser[`__mockLoginFailureCase`]();
+    await componentTree.find('#loginForm').simulate('submit', {preventDefault});
+    expect(utils.showAlert).toBeCalledWith(1, 'Unable to login');
   });
 });

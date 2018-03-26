@@ -51,7 +51,6 @@ describe('Tests for AuthRoute', () => {
           onEnter={() => onEnter(false)}
           path="/dummyPath"
           redirectTo="dummyRedirectPath"
-          exact
           component={DummyComponent}
       />
     );

@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+jest.mock('src/constants/currentUser');
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -32,12 +34,6 @@ describe('Tests for ForgotPassword', () => {
     utils.showAlert = jest.fn<number>().mockReturnValue(1);
     mockedHistory.push = jest.fn<void>();
   });
-
-  currentUser.forgotPassword = jest.fn<void>().mockImplementationOnce((email: string, successCallback?: () => void) => {
-        successCallback();
-      }).mockImplementationOnce((email: string, successCallback?: () => void, failureCallback?: () => void) => {
-          failureCallback();
-      });
 
   const preventDefault: jest.Mock<void> = jest.fn<void>();
 
@@ -77,8 +73,15 @@ describe('Tests for ForgotPassword', () => {
     ['email', 'dummy@user.com'],
   ]);
 
-  it('should change the route to the dashboard when the form is submitted successfully.', async () => {
+  it('should change the route to the reset password page when the form is submitted successfully.', async () => {
+    currentUser[`__mockForgotPasswordSuccessCase`]();
     await componentTree.find(Form).simulate('submit', {preventDefault});
     expect(mockedHistory.push).toBeCalledWith('/reset-password/dummy@user.com');
+  });
+
+  it('should show an alert if the reset password is not processed successfully..', async () => {
+    currentUser[`__mockForgotPasswordFailureCase`]();
+    await componentTree.find(Form).simulate('submit', {preventDefault});
+    expect(utils.showAlert).toBeCalledWith(1, 'Unable to process forgot password.');
   });
 });

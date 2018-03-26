@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+jest.mock('src/constants/currentUser');
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
@@ -30,23 +32,6 @@ describe('Tests for Signup', () => {
   beforeEach(() => {
     utils.showAlert = jest.fn<number>().mockReturnValue(1);
   });
-
-  currentUser.signup = jest.fn<void>()
-      .mockImplementationOnce((
-        email: string,
-        password: string,
-        successCallback?: () => void,
-      ) => {
-        successCallback();
-      })
-      .mockImplementationOnce((
-        email: string,
-        password: string,
-        successCallback?: () => void,
-        failureCallback?: () => void
-      ) => {
-          failureCallback();
-      });
 
   utils.checkEmailAndPassword = jest.fn()
       .mockImplementationOnce(() => {
@@ -102,14 +87,29 @@ describe('Tests for Signup', () => {
     expect(currentUser.signup).not.toBeCalled();
   });
 
+  it('should not submit the form when the passwords are not same.', () => {
+    componentTree.find(`#confirmPassword`)
+        .simulate('change', {target: {id: 'confirmPassword', value: 'qwerty12345'}});
+    componentTree.find('#signupForm').simulate('submit', {preventDefault});
+    expect(utils.showAlert).toBeCalledWith(1, 'Password does not match the confirm password.');
+    expect(currentUser.signup).not.toBeCalled();
+  });
+
   it('should change the confirm password state value on change.', () => {
     componentTree.find(`#confirmPassword`)
         .simulate('change', {target: {id: 'confirmPassword', value: 'dummyPassword'}});
     expect(componentTree.state('confirmPassword')).toEqual('dummyPassword');
   });
 
-  it('should change the route to the dashboard when the form is submitted successfully.', async () => {
+  it('should change the route to the login when the form is submitted successfully.', async () => {
+    currentUser[`__mockSignupSuccessCase`]();
     await componentTree.find('#signupForm').simulate('submit', {preventDefault});
     expect(mockedHistory.push).toBeCalledWith('/login');
+  });
+
+  it('should show an alert when the user is unable to signup.', async () => {
+    currentUser[`__mockSignupFailureCase`]();
+    await componentTree.find('#signupForm').simulate('submit', {preventDefault});
+    expect(utils.showAlert).toBeCalledWith(1, 'Unable to signup');
   });
 });
