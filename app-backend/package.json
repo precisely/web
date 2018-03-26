@@ -41,7 +41,7 @@
       "!src/**/*.graphql",
       "!src/interfaces.ts",
       "!src/data-source/postgres/**",
-      "!src/data-source/scripts.ts"
+      "!src/data-source/deployWrapper.ts"
     ],
     "transform": {
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",

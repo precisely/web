@@ -110,12 +110,8 @@ describe('Report tests.', () => {
       cache: new InMemoryCache({addTypename: false}),
     });
 
-    const componentTree: ReactWrapper = mount(
-      <ApolloProvider client={client}>
-        // @ts-ignore
-        <Report/>
-      </ApolloProvider>
-    );
+    // @ts-ignore
+    const componentTree: ReactWrapper = mount(<ApolloProvider client={client}><Report/></ApolloProvider>);
 
     it('should render the Report data successfully.', () => {
       expect(componentTree.find(ReportImpl).length).toEqual(1);
