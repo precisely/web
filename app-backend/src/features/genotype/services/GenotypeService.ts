@@ -2,7 +2,7 @@ import {Item} from 'dynogels-promisified';
 import {Genotype, GenotypeAttributes} from '../../../features/genotype/models/Genotype';
 import {log} from '../../../logger';
 
-export async function getGenotypes(opaqueId: string, genes: string[]): Promise<GenotypeAttributes[]> {
+async function getGenotypes(opaqueId: string, genes: string[]): Promise<GenotypeAttributes[]> {
   try {
     const result: GenotypeAttributes[] = [];
     let query = Genotype.query(opaqueId).filter('geneFilter').in(genes);
@@ -18,3 +18,7 @@ export async function getGenotypes(opaqueId: string, genes: string[]): Promise<G
     throw error;
   }
 }
+
+export const GenotypeService = {
+  getGenotypes: getGenotypes
+};

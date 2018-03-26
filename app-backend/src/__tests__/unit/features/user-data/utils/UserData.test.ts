@@ -5,21 +5,20 @@
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
+jest.mock('../../../../../features/genotype/services/GenotypeService');
+jest.mock('../../../../../features/user-data/services/UserDataMapService');
 
-import * as GenotypeService from '../../../../../features/genotype/services/Genotype';
-import * as UserDataMapService from '../../../../../features/user-data/services/UserDataMap';
+import {GenotypeService} from '../../../../../features/genotype/services/GenotypeService';
+import {UserDataMapService} from '../../../../../features/user-data/services/UserDataMapService';
 import {UserData} from '../../../../../features/user-data/utils/UserData';
+import {log} from '../../../../../logger';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 describe('UserData tests.', function() {
 
-  GenotypeService.getGenotypes = jest.fn();
-
-  UserDataMapService.getOpaqueId = jest.fn()
-    .mockImplementation(function() { return 'demo-id'; })
-    .mockImplementationOnce(function() { throw new Error('No such user record found'); });
+  log.error = jest.fn();
 
   let userData = new UserData('demo-id', ['demo', 'gene']);
 
@@ -28,22 +27,22 @@ describe('UserData tests.', function() {
     expect(userData.getGenotypes).toBeInstanceOf(Function);
   });
 
-  unroll('it should return #action if #condition', async function(
-      done: () => void,
-      args: {action: string; condition: string}
-  ) {
+  it('should log and return error if no user found', async function() {
     try {
+      UserDataMapService.getOpaqueId = jest.fn(() => { throw new Error('No such user record found'); });
       await userData.getGenotypes();
-      expect(UserDataMapService.getOpaqueId).toBeCalledWith('demo-id', 'precisely:genetics');
-      expect(GenotypeService.getGenotypes).toBeCalledWith('demo-id', ['demo', 'gene']);
     } catch (error) {
       expect(error.message).toBe('No such user record found');
+      expect(log.error).toBeCalledWith('UserData-getGenotypes: No such user record found');
     }
-    done();
-  }, [
-    ['action', 'condition'],
-    ['error', 'no user Found'],
-    ['genotype list', 'successful']
-  ]);
+  });
+
+  it('should return genotype list if successful', async function() {
+    // @ts-ignore
+    UserDataMapService.__resetUserDataMapServiceMock();
+    await userData.getGenotypes();
+    expect(UserDataMapService.getOpaqueId).toBeCalledWith('demo-id', 'precisely:genetics');
+    expect(GenotypeService.getGenotypes).toBeCalledWith('demo-id', ['demo', 'gene']);
+  });
 
 });

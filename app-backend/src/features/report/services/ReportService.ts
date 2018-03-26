@@ -3,7 +3,7 @@ import {Report, ReportAttributes} from '../../../features/report/models/Report';
 import {log} from '../../../logger';
 import { CreateArgs } from '../interfaces';
 
-export async function create(args: CreateArgs): Promise<ReportAttributes> {
+async function create(args: CreateArgs): Promise<ReportAttributes> {
   try {
     let reportInstance = await Report.createAsync(args);
     return reportInstance.get();
@@ -13,7 +13,7 @@ export async function create(args: CreateArgs): Promise<ReportAttributes> {
   }
 }
 
-export async function list(): Promise<ReportAttributes[]> {
+async function list(): Promise<ReportAttributes[]> {
   try {
     const result: ReportAttributes[] = [];
     let reportList = await Report.query('generic-report').execAsync();
@@ -29,7 +29,7 @@ export async function list(): Promise<ReportAttributes[]> {
   }
 }
 
-export async function get(slug: string): Promise<ReportAttributes> {
+async function get(slug: string): Promise<ReportAttributes> {
   try {
     const reportInstance = await Report.getAsync('generic-report', slug);
 
@@ -43,3 +43,9 @@ export async function get(slug: string): Promise<ReportAttributes> {
     return error;
   }
 }
+
+export const ReportService = {
+  create,
+  list,
+  get
+};

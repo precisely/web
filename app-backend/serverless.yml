@@ -76,7 +76,7 @@ functions:
   setupPostgres:
     handler: src/data-source/postgres/setup.migrate
   deploy:
-    handler: src/data-source/scripts.deploy
+    handler: src/data-source/deployWrapper.deploy
   ingester:
     handler: src/features/ingest/genotypeIngester.genotypeIngester
     events:

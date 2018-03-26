@@ -6,8 +6,8 @@
 * without modification, are not permitted.
 */
 
-import * as UserDataMapService from '../../../features/user-data/services/UserDataMap';
-import * as GenotypeService from '../../../features/genotype/services/Genotype';
+import {UserDataMapService} from '../../../features/user-data/services/UserDataMapService';
+import {GenotypeService} from '../../../features/genotype/services/GenotypeService';
 import {log} from '../../../logger';
 
 export class UserData {

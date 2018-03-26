@@ -1,7 +1,7 @@
 import {UserDataMap} from '../../../features/user-data/models/UserDataMap';
 import {log} from '../../../logger';
 
-export async function getOpaqueId(userId: string, vendorDataType: string): Promise<string> {
+async function getOpaqueId(userId: string, vendorDataType: string): Promise<string> {
   try {
     let userDataMapInstance = await UserDataMap.findOne({
       where: {
@@ -20,3 +20,7 @@ export async function getOpaqueId(userId: string, vendorDataType: string): Promi
     throw error;
   }
 }
+
+export const UserDataMapService = {
+  getOpaqueId: getOpaqueId
+};

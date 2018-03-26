@@ -11,7 +11,7 @@ import {GenotypeAttributes} from '../../../features/genotype/models/Genotype';
 import {Authorizer} from '../../../interfaces';
 import {UserData} from '../../../features/user-data/utils/UserData';
 import {CreateArgs} from '../interfaces';
-import * as ReportService from '../../../features/report/services/Report';
+import {ReportService} from '../../../features/report/services/ReportService';
 
 export const reportResolver = {
   async create(args: CreateArgs, authorizer: Authorizer): Promise<ReportAttributes> {
