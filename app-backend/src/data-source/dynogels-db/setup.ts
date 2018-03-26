@@ -10,12 +10,11 @@ const {Genotype} = require('../../features/genotype/models/Genotype');
 export function setupDatabase(event: APIGatewayEvent, context: Context, callback: Callback) {
   context.callbackWaitsForEmptyEventLoop = false;
 
-  dynogels.createTables(function(error: Error): void {
+  dynogels.createTables((error: Error): void => {
     if (error) {
       log.error(`Error while creating the tables: ${error.message}`);
       return callback(new Error('Error while creating the tables.'), null);
     }
-
     return callback(null, 'Tables Created Successfully');
   });
 }
