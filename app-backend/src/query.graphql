@@ -1,5 +1,4 @@
-#import "./genotype-service/api/schema.graphql"
-#import "./report-service/api/schema.graphql"
+#import "./features/report/api/schema.graphql"
 
 type GenericResponse {
   success: Boolean,

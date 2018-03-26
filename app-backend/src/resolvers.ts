@@ -7,7 +7,7 @@
 */
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
-import * as ReportResolvers from 'src/features/report/api/resolver';
+import * as ReportResolvers from './features/report/api/resolver';
 
 export const resolvers: IResolvers = {
   Query: {

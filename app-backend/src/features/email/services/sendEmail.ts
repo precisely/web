@@ -11,7 +11,7 @@ import {log} from '../../../logger';
 
 AWS.config.update({region: process.env.REGION});
 
-export const sendEmail = async (recipients: string[], senderUsername: string, subject: string, message: string) => {
+export async function sendEmail(recipients: string[], senderUsername: string, subject: string, message: string) {
 
   const params: AWS.SES.Types.SendEmailRequest = {
     Destination: {ToAddresses: recipients},
@@ -34,4 +34,4 @@ export const sendEmail = async (recipients: string[], senderUsername: string, su
   } catch (error) {
     log.error(`Error occured while sending email: ${error.stack}`);
   }
-};
+}

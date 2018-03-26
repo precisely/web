@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-export interface AuthorizerAttributes {
+export interface Authorizer {
   claims?: {
     sub: string;
     'custom:roles'?: string;

@@ -26,7 +26,7 @@ provider:
     - Effect: Allow
       Action:
         - KMS:Decrypt
-      Resource: ${self:custom.kmsSecrets.keyArn} 
+      Resource: ${self:custom.kmsSecrets.keyArn}
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -76,9 +76,9 @@ functions:
   setupPostgres:
     handler: src/data-source/postgres/setup.migrate
   deploy:
-    handler: src/data-source/scripts.deploy
+    handler: src/data-source/deployWrapper.deploy
   ingester:
-    handler: src/ingest-service/genotypeIngester.genotypeIngester
+    handler: src/features/ingest/genotypeIngester.genotypeIngester
     events:
     - s3:
         bucket: ${opt:stage, 'dev'}-precisely-genetics-ga4gh

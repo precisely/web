@@ -3,7 +3,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts --collectCoverageFrom=!src/data-source/postgres/** --collectCoverageFrom=!src/data-source/scripts.ts",
+    "test": "jest --no-cache --coverage",
     "start": "AWS_PROFILE=dev-profile-precisely env-cmd ../config/security.env.local serverless offline start",
     "postinstall": "env-cmd ../config/security.env.local serverless dynamodb install",
     "setup:database": "yarn setup:database:postgres && yarn setup:database:dynamo",
@@ -23,6 +23,7 @@
     "eslint": "eslint 'src/*.ts' 'src/**/*.ts'"
   },
   "jest": {
+    "automock": false,
     "collectCoverage": true,
     "coverageDirectory": "coverage",
     "coverageReporters": [
@@ -32,21 +33,28 @@
       "json"
     ],
     "collectCoverageFrom": [
+      "src/**/*.js",
       "src/**/*.ts",
       "!**/node_modules/**",
       "!src/interfaces/**",
-      "!src/__tests__/**"
+      "!src/__tests__/**",
+      "!src/**/*.graphql",
+      "!src/interfaces.ts",
+      "!src/data-source/postgres/**",
+      "!src/data-source/scripts.ts"
     ],
     "transform": {
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": "\/__tests__\/.*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
-    "mapCoverage": true,
+    "moduleNameMapper": {
+      "aws-sdk": "<rootDir>/__mocks__/aws-sdk.ts"
+    },
     "setupFiles": [
       "jest-plugin-context/setup"
     ]
@@ -97,17 +105,18 @@
     "faker": "4.1.0",
     "html-loader": "0.5.5",
     "imports-loader": "0.7.1",
-    "jest": "21.2.1",
+    "jest": "22.4.3",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
     "markdown-loader": "2.0.2",
+    "mock-lambda-context": "0.0.1",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
     "serverless-dynamodb-local": "0.2.26",
     "serverless-kms-secrets": "1.0.2",
     "serverless-offline": "3.17.0",
     "serverless-webpack": "4.1.0",
-    "ts-jest": "22.0.1",
+    "ts-jest": "22.4.2",
     "ts-loader": "3.3.0",
     "tslint": "5.7.0",
     "typescript": "2.6.2",

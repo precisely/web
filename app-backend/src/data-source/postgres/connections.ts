@@ -8,7 +8,7 @@
 
 import * as Sequelize from 'sequelize';
 
-export const connection: Sequelize.Sequelize = new Sequelize(
+export const database: Sequelize.Sequelize = new Sequelize(
   process.env[`POSTGRES_DB_NAME`] || '',
   process.env[`POSTGRES_DB_USERNAME`] || '',
   process.env[`POSTGRES_DB_PASSWORD`] || '',

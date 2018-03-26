@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
-        options: {configFile: 'tsconfig.build.json'}
+        options: {configFile: 'tsconfig.json'}
       },
       {
         test: /\.graphql|gql?$/,
@@ -48,7 +48,7 @@ module.exports = {
   },
   output: {
     libraryTarget: 'commonjs',
-    path: path.join('../.webpack'),
+    path: path.join(__dirname, '.webpack'),
     filename: '[name].js',
   },
 };

@@ -9,7 +9,7 @@
 import {seedReport, seedGenotype} from './seedDynamo';
 import {log} from '../../logger';
 
-export const setEnvironment = (secrets: string) => {
+export function setEnvironment(secrets: string) {
   const lines: string[] = secrets.slice(1, secrets.length - 1).split(',');
 
   lines.forEach((line: string): void => {
@@ -17,10 +17,10 @@ export const setEnvironment = (secrets: string) => {
     const value: string = line.split(':')[1];
     process.env[key] = value;
   });
-};
+}
 
 /* istanbul ignore next */
-(async () => {
+(async function() {
   log.info(`Seeding started for ${process.env.DB || process.env.NODE_ENV} environment.`);
   setEnvironment(process.argv.pop());
   const {seedUser} = await import('./seedPostgres');
