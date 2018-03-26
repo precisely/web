@@ -1,7 +1,7 @@
-import '../__mocks__/Report.mock';
+jest.mock('../../../../../features/report/models/Report');
 import {create, list, get} from '../../../../../features/report/services/Report';
 import {log} from '../../../../../logger';
-import {reportData} from '../__mocks__/Report.mock';
+import { reportData } from '../../../../constants/reportData';
 
 const unroll = require('unroll');
 unroll.use(it);
