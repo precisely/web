@@ -35,12 +35,12 @@ export class AWSUser {
     this.userPool = new CognitoUserPool(this.poolData);
   }
 
-  signup(
+  signup = (
     email: string,
     password: string,
     successCallback: (result: ISignUpResult) => void,
     failureCallback: (error: Error) => void
-  ): void {
+  ): void => {
 
     this.userPool.signUp(
         email,
@@ -57,12 +57,12 @@ export class AWSUser {
     );
   }
 
-  login (
+  login = (
       email: string ,
       password: string,
       onSuccess: (cognitoUserSession: CognitoUserSession) => void,
-      onFailure: () => void
-  ) {
+      onFailure: (error: Error) => void
+  ) => {
     this.buildCognitoUser(email);
     const authenticationData: {Username: string, Password: string} = {
       Username : email,
@@ -77,7 +77,7 @@ export class AWSUser {
         });
   }
 
-  static setToken(userSession: CognitoUserSession) {
+  static setToken = (userSession: CognitoUserSession) => {
     let jwtToken: string = userSession.getIdToken().getJwtToken();
     utils.setTokenInLocalStorage(jwtToken);
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -88,22 +88,22 @@ export class AWSUser {
     });
   }
 
-  isLoggedIn(): boolean {
+  isLoggedIn = (): boolean => {
     return !!this.userPool.getCurrentUser();
   }
 
-  logOut(): void {
+  logOut = (): void => {
     const cognitoUser = this.userPool.getCurrentUser();
     cognitoUser.signOut();
     utils.removeTokenFromLocalStorage();
   }
 
-  forgotPassword (
+  forgotPassword = (
     email: string,
     // tslint:disable-next-line
     successCallback: (data: any) => void,
     failureCallback: (error: Error) => void
-  ): void {
+  ): void => {
     this.buildCognitoUser(email);
     this.user.forgotPassword({
       onSuccess: successCallback,
@@ -111,13 +111,13 @@ export class AWSUser {
     });
   }
 
-  resetPassword(
+  resetPassword = (
     email: string,
     verificationCode: string,
     newPassword: string,
     successCallback: () => void,
     failureCallback: (error: Error) => void
-  ): void {
+  ): void => {
     this.buildCognitoUser(email);
     this.user.confirmPassword(
       verificationCode, newPassword,
@@ -128,7 +128,7 @@ export class AWSUser {
     );
   }
 
-  private buildCognitoUser(email: string) {
+  private buildCognitoUser = (email: string) => {
     this.user = new CognitoUser({
       Username : email,
       Pool : this.userPool

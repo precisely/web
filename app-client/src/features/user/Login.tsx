@@ -59,9 +59,9 @@ export class Login extends React.Component<RouteComponentProps<void>, LoginState
     this.props.history.push('/dashboard');
   }
 
-  onFailure = (message: string = 'Unable to login.'): void => {
+  onFailure = (error: Error): void => {
     this.setLoadingState(false);
-    this.toastId = utils.showAlert(this.toastId, message);
+    this.toastId = utils.showAlert(this.toastId, error.message || 'Unable to login.');
   }
 
   submitForm =  (e: React.FormEvent<HTMLFormElement>) => {
