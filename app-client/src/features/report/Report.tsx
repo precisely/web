@@ -65,7 +65,7 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 }
 
-export const Report = graphql<any, any>(GetReport, {
+export const Report = graphql<{report: ReportData}, ReportProps>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.
     variables: {slug: 'dolorem-error-minima'}
