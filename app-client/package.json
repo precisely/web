@@ -67,11 +67,6 @@
       "json",
       "node"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "./tsconfig.test.json"
-      }
-    },
     "moduleDirectories": [
       "node_modules",
       "."

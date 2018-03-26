@@ -39,6 +39,7 @@ describe('Report tests.', () => {
 
   describe('When the report data is loading.', () => {
     const componentTree: ShallowWrapper<ReportProps> = shallow(
+        // @ts-ignore
         <ReportImpl history={mockedHistory} match={mockedMatch()} location={mockedLocation} data={{loading: true}} />
     );
 
@@ -62,13 +63,10 @@ describe('Report tests.', () => {
   });
 
   describe('When the server responds with an error.', () => {
+    const data = {error: 'A dummy error.', loading: false};
     const componentTree: ShallowWrapper<ReportProps> = shallow(
-        <ReportImpl
-            history={mockedHistory}
-            match={mockedMatch()}
-            location={mockedLocation}
-            data={{error: 'A dummy error.', loading: false}}
-        />
+      // @ts-ignore
+        <ReportImpl history={mockedHistory} match={mockedMatch()} location={mockedLocation} data={data} />
     );
 
     it('should display an error message.', () => {
@@ -92,14 +90,11 @@ describe('Report tests.', () => {
   });
 
   describe('When the report data is present.', () => {
+    const data = {loading: false, ...dummyData};
     it('It should not render the MarkdownComponentRenderer', () => {
       const componentTree: ShallowWrapper<ReportProps> = shallow(
-          <ReportImpl
-              data={{loading: false, ...dummyData}}
-              history={mockedHistory}
-              match={mockedMatch()}
-              location={mockedLocation}
-          />
+          // @ts-ignore
+          <ReportImpl data={data} history={mockedHistory} match={mockedMatch()} location={mockedLocation}/>
       );
       expect(componentTree.find(MarkdownComponentRenderer).length).toBe(1);
     });
