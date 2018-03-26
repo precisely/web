@@ -36,10 +36,10 @@ export class AWSUser {
   }
 
   signup = (
-    email: string,
-    password: string,
-    successCallback: (result: ISignUpResult) => void,
-    failureCallback: (error: Error) => void
+      email: string,
+      password: string,
+      successCallback: (result: ISignUpResult) => void,
+      failureCallback: (error: Error) => void
   ): void => {
 
     this.userPool.signUp(
@@ -69,12 +69,7 @@ export class AWSUser {
       Password : password,
     };
     this.authenticationDetails = new AuthenticationDetails(authenticationData);
-    return this.user.authenticateUser(
-        this.authenticationDetails,
-        {
-          onSuccess: onSuccess,
-          onFailure: onFailure
-        });
+    return this.user.authenticateUser(this.authenticationDetails, {onSuccess, onFailure});
   }
 
   static setToken = (userSession: CognitoUserSession) => {
@@ -99,33 +94,24 @@ export class AWSUser {
   }
 
   forgotPassword = (
-    email: string,
-    // tslint:disable-next-line
-    successCallback: (data: any) => void,
-    failureCallback: (error: Error) => void
+      email: string,
+      // tslint:disable-next-line
+      onSuccess: (data: any) => void,
+      onFailure: (error: Error) => void
   ): void => {
     this.buildCognitoUser(email);
-    this.user.forgotPassword({
-      onSuccess: successCallback,
-      onFailure: failureCallback
-    });
+    this.user.forgotPassword({onSuccess, onFailure});
   }
 
   resetPassword = (
-    email: string,
-    verificationCode: string,
-    newPassword: string,
-    successCallback: () => void,
-    failureCallback: (error: Error) => void
+      email: string,
+      verificationCode: string,
+      newPassword: string,
+      onSuccess: () => void,
+      onFailure: (error: Error) => void
   ): void => {
     this.buildCognitoUser(email);
-    this.user.confirmPassword(
-      verificationCode, newPassword,
-      {
-        onSuccess: successCallback,
-        onFailure: failureCallback
-      }
-    );
+    this.user.confirmPassword(verificationCode, newPassword, {onSuccess, onFailure});
   }
 
   private buildCognitoUser = (email: string) => {
