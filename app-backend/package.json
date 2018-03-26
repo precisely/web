@@ -54,7 +54,8 @@
     ],
     "moduleNameMapper": {
       "dynogels-promisified": "<rootDir>/__mocks__/dynogels-promisified.ts",
-      "aws-sdk": "<rootDir>/__mocks__/aws-sdk.ts"
+      "aws-sdk": "<rootDir>/__mocks__/aws-sdk.ts",
+      "fs": "<rootDir>/__mocks__/fs.ts"
     },
     "setupFiles": [
       "jest-plugin-context/setup"

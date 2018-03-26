@@ -22,15 +22,9 @@ unroll.use(it);
 
 describe('seedDynamo tests', function() {
 
-  function mockReadFileSync(data: object) {
-    fs.readFileSync = jest.fn()
-      .mockImplementation(function() {
-        return JSON.stringify([data]);
-      });
-  }
-
   log.error = jest.fn();
 
+  // TODO: Remove logic from mocks
   Report.create = Genotype.create = jest.fn()
     .mockImplementation((data, callback) => {
       if (data.id === 'dummy-id' || data.opaqueId === 'dummy-opaqueId') {
@@ -48,7 +42,7 @@ describe('seedDynamo tests', function() {
       done: () => void,
       args: {case: string, mockReadData: object, functionName: () => void, expectedResult: string}
   ) {
-    mockReadFileSync(args.mockReadData);
+    fs.setMockReadFileSync.mockImplementationOnce(() => JSON.stringify([args.mockReadData]));
     args.functionName();
     if (args.expectedResult === 'not call log.error when pass') {
       expect(log.error).not.toBeCalled();

@@ -20,6 +20,7 @@ export const UserDataMapMock = DBConnectionMock.define(
 
 export const UserDataMap = UserDataMapMock;
 
+// TODO: Remove logic from mocks
 UserDataMapMock.findOne = jest.fn(function (params: { where: { user_id: string } }) {
   if (params.where.user_id === 'testUserId') {
     return UserDataMapMock.build();
@@ -27,5 +28,14 @@ UserDataMapMock.findOne = jest.fn(function (params: { where: { user_id: string }
     return null;
   } else {
     throw new Error('mock-findFindAll error');
+  }
+});
+
+// TODO: Remove logic from mocks
+UserDataMapMock.upsert = jest.fn((params: { user_id: string }): boolean => {
+  if (params.user_id === 'dummyId') {
+    return true;
+  } else {
+    throw new Error('mock-upsert error');
   }
 });

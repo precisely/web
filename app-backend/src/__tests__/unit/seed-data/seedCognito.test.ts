@@ -15,20 +15,25 @@ import {mockCognitoUser} from '../../constants/seedData';
 
 const fs = require('fs');
 
-fs.readFileSync = jest.fn()
-  .mockImplementation(function() {
-    return JSON.stringify([mockCognitoUser, {...mockCognitoUser, email: 'demo-email2@demo-precisely.com'}]);
-  });
-
 describe('seedCognito tests', function() {
 
-  it('should fail when an error occurs', function() {
+  const dummyReadData = [mockCognitoUser, {...mockCognitoUser, email: 'demo-email2@demo-precisely.com'}];
+
+  it('should fail when cognito error occurs', function() {
     // @ts-ignore
     AWS.mockedAdminCreateUser.mockImplementationOnce(() => { throw new Error('mock Error'); });
+    fs.setMockReadFileSync.mockImplementationOnce(() => JSON.stringify(dummyReadData));
+    expect(seedCognito()).rejects.toEqual(new Error('mock Error'));
+  });
+
+  it('should fail when fs error occurs', function() {
+    // @ts-ignore
+    fs.setMockReadFileSync.mockImplementationOnce(() => { throw new Error('mock Error'); });
     expect(seedCognito()).rejects.toEqual(new Error('mock Error'));
   });
 
   it('should pass and return userId array', function() {
+    fs.setMockReadFileSync.mockImplementationOnce(() => JSON.stringify(dummyReadData));
     expect(seedCognito()).resolves.toEqual(['demo-username', 'demo-username']);
   });
 });
