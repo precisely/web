@@ -5,15 +5,21 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: dev
-  region: us-east-1
-  profile: ${opt:stage, self:provider.stage}-profile-precisely
+  stage: $<opt:stage, "dev">
+  region: $<opt:region, "us-east-1">
+  profile: $<self:provider.stage>-serverless
+  variableSyntax: "\\$<([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)>"
   environment:
-    SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
-    REGION: ${self:provider.region}
-    NODE_ENV: ${opt:stage, self:provider.stage}
-    AWS_PROFILE: ${opt:stage, self:provider.stage}-profile-precisely 
+    SECRETS: $<self:custom.kmsSecrets.secrets.SECRETS>
+    REGION: $<self:provider.region>
+    NODE_ENV: $<self:provider.stage>
+    AWS_PROFILE: $<self:provider.stage>-serverless
     # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
+  resources:
+    - $<file(serverless-resources/cognito.yml)>
+    - $<file(serverless-resources/kms.yml)>
+    - $<file(serverless-resources/s3.yml)>
+    - $<file(serverless-resources/ecs.yml)>
   iamRoleStatements:
     -  Effect: "Allow"
        Action:
@@ -22,7 +28,7 @@ provider:
     - Effect: Allow
       Action:
         - KMS:Decrypt
-      Resource: ${self:custom.kmsSecrets.keyArn} 
+      Resource: $<self:custom.kmsSecrets.keyArn>
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -32,7 +38,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:table/*"
+      Resource: "arn:aws:dynamodb:us-east-1:*:table/$<self:provider.stage>-*"
 
 plugins:
   - serverless-webpack
@@ -44,13 +50,13 @@ plugins:
 custom:
   scripts:
     hooks:
-      'deploy:finalize': yarn setup:database -- -s ${opt:stage, self:provider.stage}
+      'deploy:finalize': yarn setup:database -- -s $<self:provider.stage>
   serverless-offline:
     port: 4000
   webpackIncludeModules: true
   serverless-kms-secrets:
-    secretsFile: kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml
-  kmsSecrets: ${file(./kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
+    secretsFile: kms-secrets/kms-secrets.$<self:provider.stage>.$<self:provider.region>.yml
+  kmsSecrets: $<file(./kms-secrets/kms-secrets.$<self:provider.stage>.$<self:provider.region>.yml)>
   dynamodb:
     start:
       port: 8000
@@ -66,14 +72,15 @@ functions:
         method: post
         cors: true
         authorizer:
-          arn: ${env:COGNITO_ARN}
+          arn:
+            'FN::GetAtt': [CognitoUserPool, Arn]
   setupDatabase:
     handler: src/dynogels-db/setup.setupDatabase
   ingester:
     handler: src/ingest-service/genotypeIngester.genotypeIngester
     events:
     - s3:
-        bucket: ${opt:stage, 'dev'}-precisely-genetics-ga4gh
+        bucket: $<self:stage>-precisely-genetics-ga4gh
         event: s3:ObjectCreated:*
   playground:
     handler: src/handler.playgroundHandler
