@@ -8,27 +8,30 @@
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
-import {graphqlLambda, graphiqlLambda, LambdaHandler} from 'apollo-server-lambda';
-import {ITypeDefinitions} from 'graphql-tools/dist/Interfaces';
+import {graphqlLambda, graphiqlLambda} from 'apollo-server-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
-import {resolvers} from './resolvers';
 
-const typeDefs: ITypeDefinitions = require('./query.graphql');
+import preciselyTypes from 'src/api/schema.graphql';
+import {resolvers} from 'src/api/resolvers';
+import {log} from 'src/logger';
 
-const myGraphQLSchema = makeExecutableSchema({
-  typeDefs,
+import { ResolverContext } from './resolver-context';
+
+const PreciselySchema = makeExecutableSchema({
+  typeDefs: preciselyTypes,
   resolvers,
-  logger: console,
+  logger: log
 });
 
-/* istanbul ignore next */
 export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
-  const handler: LambdaHandler = graphqlLambda({
-    schema: myGraphQLSchema,
+  const handler = graphqlLambda({
+    schema: PreciselySchema,
     tracing: true,
-    rootValue: {authorizer: event.requestContext.authorizer}
+    rootValue: null,
+    context: new ResolverContext(event, context)
   });
-  return handler(event, context, callback);
+
+  handler(event, context, callback);
 };
 
 // for local endpointURL is /graphql and for prod it is /stage/graphql

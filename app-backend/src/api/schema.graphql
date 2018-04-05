@@ -1,0 +1,9 @@
+#import "./genotype/schema.graphql"
+#import "./report/schema.graphql"
+#import "./user-data/schema.graphql"
+
+type Query {
+}
+
+type Mutation {
+}

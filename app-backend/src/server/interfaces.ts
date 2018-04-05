@@ -5,10 +5,3 @@
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
-
-export interface AuthorizerAttributes {
-  claims?: {
-    sub: string;
-    'custom:roles'?: string;
-  };
-}

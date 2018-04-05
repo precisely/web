@@ -8,7 +8,6 @@
 
 import * as AWS from 'aws-sdk';
 import * as Bluebird from 'bluebird';
-import {AuthorizerAttributes} from './interfaces';
 import {log} from './logger';
 
 type DecryptRequest = AWS.KMS.Types.DecryptRequest;
@@ -32,25 +31,25 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
   }
 }
 
-/**
- * Utility function to check if a user is authorized or not.
- */
-export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {
-  let isAuthorized: boolean = true;
+// /**
+//  * Utility function to check if a user is authorized or not.
+//  */
+// export function hasAuthorizedRoles(authorizer: AuthorizerAttributes, allowedRoles: string[]): boolean {
+//   let isAuthorized: boolean = true;
 
-  if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
-    throw new Error('The user is unauthorized.');
-  }
+//   if (!authorizer || !authorizer.claims || !authorizer.claims[`custom:roles`]) {
+//     throw new Error('The user is unauthorized.');
+//   }
 
-  const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
+//   const currentUserRoles: string[] = authorizer.claims[`custom:roles`].split(',');
 
-  isAuthorized = currentUserRoles.some((role: string): boolean => {
-    return (allowedRoles.indexOf(role.trim()) > -1);
-  });
+//   isAuthorized = currentUserRoles.some((role: string): boolean => {
+//     return (allowedRoles.indexOf(role.trim()) > -1);
+//   });
 
-  if (!isAuthorized) {
-    throw new Error('The user is unauthorized.');
-  }
+//   if (!isAuthorized) {
+//     throw new Error('The user is unauthorized.');
+//   }
 
-  return isAuthorized;
-}
+//   return isAuthorized;
+// }
