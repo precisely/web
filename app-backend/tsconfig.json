@@ -15,18 +15,15 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
+      "../node_modules/@types",
       "@types/",
       "./types"
     ],
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
-      "app/*": [
-        "./src/*"
-      ],
-      "*": [
-        "*"
-      ]
+      "src": [ "src" ],
+      "*": [ "*" ]
     }
   },
   "exclude": [
