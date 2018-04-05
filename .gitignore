@@ -15,3 +15,5 @@ coverage
 
 # Production Config
 config/security.env.prod
+yarn-error.log
+
