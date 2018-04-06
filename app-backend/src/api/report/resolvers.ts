@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {Report} from './dynamo-models';
+import {Report} from './models';
 
 export interface ReportCreateUpdateArgs {
   title: string;
@@ -25,20 +25,11 @@ export const resolvers = {
     }
   },
   Mutation: {
-    createReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs, ) {
+    async createReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
       return Report.safeCreate({title, rawContent: content, genes});
     },
-    updateReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs) {
-
+    async updateReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
+      return await Report.createAsync({title, rawContent: content, genes});
     }
   }
-
-}
-export const queries = {
-};
-
-/* istanbul ignore next */
-export const mutations = {
-  // TODO: will be fixed with https://github.com/precisely/web/issues/90
-  saveReport: (root: any, args: CreateOrUpdateAttributes) => reportResolver.create(args, root.authorizer),
 };

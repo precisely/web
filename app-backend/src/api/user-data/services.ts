@@ -6,21 +6,40 @@
 * without modification, are not permitted.
 */
 
-import {Genotype} from 'src/features/genotype';
-import {UserDataMap} from '../models/UserDataMap';
+import {Genotype} from 'src/api/genotype';
+import {DataBridge} from './models';
+
+type DataBridgeKey = 'precisely:genotype' | 'precisely:survey';
+
+export type UserDataArguments = {
+  userId: string,
+  genes: string[],
+  opaqueIdMap: {[key: string]: string}
+};
 
 export class UserData {
-
-  constructor(userId: string, genes: string[]) {
+  constructor({userId, genes, opaqueIdMap}: UserDataArguments) {
     this.userId = userId;
     this.genes = genes;
+    this.opaqueIdMap = opaqueIdMap;
   }
 
   private userId: string;
   private genes: string[];
+  private opaqueIdMap: {[key: string]: string};
 
-  public genotypes = async() => {
-    const opaqueId = await UserData.getOpaqueId(this.userId, 'precisely:genotype');
-    return await Genotype.getGenes({opaqueId, genes: this.genes});
+  async genotypes() {
+    const opaqueId = await DataBridge.getOpaqueId(this.userId, 'precisely:genotype');
+    return await Genotype.forUser(opaqueId, this.genes);
+  }
+
+  async getOpaqueId(key: DataBridgeKey): Promise<string> {
+    if (this.opaqueIdMap && this.opaqueIdMap.hasOwnProperty(key)) {
+      return this.opaqueIdMap[key];
+    } else {
+      const opaqueId = await DataBridge.getOpaqueId(this.userId, key);
+      this.opaqueIdMap[key] = opaqueId;
+      return opaqueId;
+    }
   }
 }

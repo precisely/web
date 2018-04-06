@@ -2,8 +2,6 @@
 #import "./report/schema.graphql"
 #import "./user-data/schema.graphql"
 
-type Query {
-}
+type Query
 
-type Mutation {
-}
+type Mutation

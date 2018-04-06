@@ -1,6 +1,5 @@
 
 type User {
-  id: string,
-  name: string,
-  role:
+  id: String,
+  name: String
 }

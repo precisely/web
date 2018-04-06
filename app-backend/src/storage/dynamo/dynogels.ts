@@ -6,12 +6,12 @@ const pad = require('pad');
 
 dynogels.AWS.config.update({
   region: process.env.REACT_APP_AWS_AUTH_REGION,
-  credentials: new SharedIniFileCredentials({ profile: process.env.NODE_ENV + '-profile-precisely' }),
+  credentials: new SharedIniFileCredentials({ profile: process.env.STAGE + '-profile-precisely' }),
   endpoint: process.env.DB === 'local' ? 'http://localhost:8000' : 'https://dynamodb.us-east-1.amazonaws.com'
 }, true);
 
 export function envTableName(tableName: string, version: number): string {
-  return `${process.env.NODE_ENV}-${pad(3, version, '0')}-precisely-${tableName}`;
+  return `${process.env.STAGE}-${pad(3, version, '0')}-${tableName}`;
 }
 
 function extend<T, U>(first: T, second: U): T & U {

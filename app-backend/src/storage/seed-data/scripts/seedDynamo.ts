@@ -8,11 +8,13 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {ReportAttributes, Report} from '../../report-service/models/Report';
-import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
-import {log} from '../../logger';
-
+import {ReportAttributes, Report, GenotypeAttributes, Genotype} from 'src/api/models';
+import {log} from 'src/logger';
 const jsonPath = path.join(__dirname, '../data/');
+
+export function seedDataBridge() {
+  // must create userDataMap entries here
+}
 
 export const seedReport = () => {
   const allReports: ReportAttributes[] = JSON.parse(fs.readFileSync(jsonPath + 'ReportData.json', 'utf8'));
@@ -47,7 +49,7 @@ export const seedGenotype = () => {
       variantCall: genotype.variantCall,
       zygosity: genotype.zygosity,
       startBase: genotype.startBase,
-      chromosomeName: genotype.chromosomeName,
+      chromosomeName: genotype.chromosome,
       variantType: genotype.variantType,
       quality: genotype.quality,
     }, (error: Error) => {

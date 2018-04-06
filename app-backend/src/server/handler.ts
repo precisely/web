@@ -11,14 +11,14 @@ import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda, graphiqlLambda} from 'apollo-server-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
-import preciselyTypes from 'src/api/schema.graphql';
+import preciselyTypeDefs from 'src/api/schema.graphql';
 import {resolvers} from 'src/api/resolvers';
 import {log} from 'src/logger';
 
 import { ResolverContext } from './resolver-context';
 
 const PreciselySchema = makeExecutableSchema({
-  typeDefs: preciselyTypes,
+  typeDefs: preciselyTypeDefs,
   resolvers,
   logger: log
 });
@@ -36,10 +36,7 @@ export const graphqlHandler: Handler = (event: APIGatewayEvent, context: Context
 
 // for local endpointURL is /graphql and for prod it is /stage/graphql
 export const playgroundHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
-    = lambdaPlayground({
-
-  endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
-});
+    = lambdaPlayground({ endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT });
 
 export const graphiqlHandler: ((event: APIGatewayEvent, context: Context, callback: Callback) => void)
     = graphiqlLambda({

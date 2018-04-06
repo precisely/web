@@ -9,8 +9,7 @@
 jest.mock('../../genotype-service/models/Genotype');
 
 import {GenotypeAttributes, Genotype} from '../../genotype-service/models/Genotype';
-import {genotypeResolver, CreateOrUpdateAttributes} from '../../genotype-service/api/resolver';
-import {hasAuthorizedRoles} from '../../utils';
+import {resolver as genotypeResolver, CreateOrUpdateAttributes} from 'src/api/genotype';
 
 const unroll = require('unroll');
 unroll.use(it);

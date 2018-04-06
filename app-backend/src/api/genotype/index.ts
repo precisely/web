@@ -1,2 +1,2 @@
-export {Genotype} from './dynamo-models';
+export {Genotype} from './models';
 export {resolvers} from './resolvers';

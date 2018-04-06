@@ -172,7 +172,8 @@ declare module "dynogels-promisified" {
   }
 
   export interface Item<Attributes={any:any}> {
-    get(key?: string): Attributes;
+    get<K extends keyof Attributes>(key: K): Attributes[K];
+    get(): Attributes;
     set(params: {}): Item<Attributes>;
     save(callback?: DynogelsItemCallback<Attributes>): void;
     update(options: UpdateItemOptions, callback?: DynogelsItemCallback<Attributes>): void;
@@ -215,8 +216,8 @@ declare module "dynogels-promisified" {
     LastEvaluatedKey?: any,
   }
 
-  export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
-  export type QueryFilterChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
+  //export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
+  export type QueryChain<Attributes={[key:string]:any}> = ExtendedChain<Query<Attributes>>;
 
   export interface Query<Attributes={any:any}> {
     limit(number: number): Query<Attributes>;
@@ -235,8 +236,8 @@ declare module "dynogels-promisified" {
     select(value: any): Query<Attributes>;
     returnConsumedCapacity(value: any): Query<Attributes>;
     loadAll(): Query<Attributes>;
-    where(keyName: string): QueryWhereChain<Attributes>;
-    filter(keyName: string): QueryFilterChain<Attributes>;
+    where(keyName: string): QueryChain<Attributes>;
+    filter(keyName: string): QueryChain<Attributes>;
     exec(): stream.Readable;
     exec(callback: (err: Error, data: ExecResult<Attributes>) => void): void;
 

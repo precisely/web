@@ -1,2 +1,2 @@
-export {Report} from './dynamo-models';
+export {Report} from './models';
 export {resolvers} from './resolvers';

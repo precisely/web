@@ -1,4 +1,5 @@
-type UserData {
-  genotypes: Genotype[]
-}
+#import "../genotype/schema.graphql"
 
+type UserData {
+  genotypes: [Genotype]
+}

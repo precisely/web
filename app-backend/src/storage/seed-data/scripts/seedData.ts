@@ -7,7 +7,7 @@
 */
 
 import {seedReport, seedGenotype} from './seedDynamo';
-import {log} from '../../logger';
+import {log} from 'src/logger';
 
 export const setEnvironment = (secrets: string) => {
   const lines: string[] = secrets.slice(1, secrets.length - 1).split(',');
@@ -23,9 +23,9 @@ export const setEnvironment = (secrets: string) => {
 (async () => {
   log.info(`Seeding started for ${process.env.DB || process.env.NODE_ENV} environment.`);
   setEnvironment(process.argv.pop());
-  const {seedUser} = await import('./seedPostgres');
 
+  // also need to seed the DataBridge
   seedReport();
   seedGenotype();
-  seedUser();
+
 })();

@@ -6,8 +6,9 @@
 * without modification, are not permitted.
 */
 import {Genotype} from './models';
+import { IResolvers } from 'graphql-tools';
 
-export const resolvers = {
+export const resolvers: IResolvers = {
   Query: {
     // no top level queries
   },

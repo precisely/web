@@ -2,10 +2,8 @@ import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import dynogels from './dynogels';
 import {log} from 'src/logger';
 
-// @ts-ignore:no-unused-local -ignored as importing schema is necessary before creating but is not used explicitly
-const {Report} = require('src/api/report/dynamo-models');
-// @ts-ignore:no-unused-local
-const {Genotype} = require('src/api/genotype/dynamo-models');
+// ensure all dynogels models are loaded
+require('src/api/models');
 
 export const setupDatabase: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
   context.callbackWaitsForEmptyEventLoop = false;

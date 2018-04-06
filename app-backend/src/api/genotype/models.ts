@@ -22,9 +22,21 @@ export interface GenotypeAttributes {
   quality?: string;
 }
 
-interface GenotypeModel extends Model<GenotypeAttributes> {
-  // no static methods yet
+export interface GenotypeModel extends Model<GenotypeAttributes> {
+  forUser?(opaqueId: string, genes: string[]): Promise<Genotype[]>;
 }
+
+const StaticMethods = {
+  async forUser(opaqueId: string, genes?: string[]): Promise<Genotype[]> {
+    let query = await Genotype.query(opaqueId);
+    if (genes && genes.length > 0) {
+      query = query.where('gene').in(genes);
+    }
+    const result = await query.execAsync();
+
+    return result && result.Items;
+  }
+};
 
 // model instance interface
 export interface Genotype extends Item<GenotypeAttributes>, GenotypeAttributes {
@@ -57,4 +69,4 @@ export const Genotype: GenotypeModel = defineModel<GenotypeAttributes>('genotype
     name: 'geneIndex',
     type: 'global',
   }],
-});
+}, StaticMethods);
