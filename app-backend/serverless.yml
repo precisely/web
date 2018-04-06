@@ -4,22 +4,17 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: $<opt:stage, "dev">
   region: $<opt:region, "us-east-1">
-  profile: $<self:provider.stage>-serverless
+  profile: $<self:provider.stage>-profile-precisely
   variableSyntax: "\\$<([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)>"
   environment:
+    STAGE: $<self:provider.stage>
     SECRETS: $<self:custom.kmsSecrets.secrets.SECRETS>
     REGION: $<self:provider.region>
-    NODE_ENV: $<self:provider.stage>
-    AWS_PROFILE: $<self:provider.stage>-serverless
+    # remove for now: AWS_PROFILE: $<self:provider.stage>-serverless
     # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
-  resources:
-    - $<file(serverless-resources/cognito.yml)>
-    - $<file(serverless-resources/kms.yml)>
-    - $<file(serverless-resources/s3.yml)>
-    - $<file(serverless-resources/ecs.yml)>
   iamRoleStatements:
     -  Effect: "Allow"
        Action:
@@ -31,6 +26,7 @@ provider:
       Resource: $<self:custom.kmsSecrets.keyArn>
     - Effect: Allow
       Action:
+        - dynamodb:*
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
@@ -46,11 +42,12 @@ plugins:
   - serverless-kms-secrets
   - serverless-plugin-scripts
   - serverless-offline
+  - serverless-plugin-additional-stacks
 
 custom:
   scripts:
     hooks:
-      'deploy:finalize': yarn setup:database -- -s $<self:provider.stage>
+      'deploy:finalize': yarn setup:database -s $<self:provider.stage>
   serverless-offline:
     port: 4000
   webpackIncludeModules: true
@@ -62,35 +59,46 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
+  # additionalStackResources:
+  #   cognitoResources: &cognitoResources
+  #     $<file(serverless/cognito.yml)>
+  #   kmsResources: &kmsResources
+  #     $<file(serverless/kms.yml)>
+
+  # additionalStacks:
+  #   AuthStack:
+  #     Deploy: Before
+  #     <<: *cognitoResources
 
 functions:
   graphql:
-    handler: src/handler.graphqlHandler
+    handler: src/server/handler.graphqlHandler
     events:
     - http:
         path: api
         method: post
         cors: true
         authorizer:
-          arn:
-            'FN::GetAtt': [CognitoUserPool, Arn]
+          arn: $<env:COGNITO_ARN>
+            # 'FN::GetAtt': [CognitoUserPool, Arn]
   setupDatabase:
-    handler: src/dynogels-db/setup.setupDatabase
+    handler: src/storage/dynamo/setup.setupDatabase
+
   ingester:
-    handler: src/ingest-service/genotypeIngester.genotypeIngester
+    handler: src/systems/genetics-pipeline/genotypeIngester.genotypeIngester
     events:
     - s3:
-        bucket: $<self:stage>-precisely-genetics-ga4gh
+        bucket: $<self:provider.stage>-precisely-genetics-vcf
         event: s3:ObjectCreated:*
   playground:
-    handler: src/handler.playgroundHandler
+    handler: src/server/handler.playgroundHandler
     events:
     - http:
         path: playground
         method: get
         cors: true
   graphiql:
-    handler: src/handler.graphiqlHandler
+    handler: src/server/handler.graphiqlHandler
     events:
     - http:
         path: graphiql

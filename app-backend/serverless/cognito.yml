@@ -6,18 +6,18 @@ Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: ${self:provider.stage}-user-pool
+      UserPoolName: $<self:provider.stage>-user-pool
   CognitoUserPoolClient:
-    Type: AWS::Cognito::UserPoolClient
+    Type: AWS::Cognito::UserPoolWebClient
     Properties:
-      ClientName: ${self:provider.stage}-user-pool-client
+      ClientName: $<self:provider.stage>-user-pool-client
       GenerateSecret: false # set to false for web clients!
       UserPoolId:
         Ref: CognitoUserPool
   CognitoIdentityPool:
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: ${self:provider.stage}-identity-pool
+      IdentityPoolName: $<self:provider.stage>-identity-pool
       AllowUnauthenticatedIdentities: false
       CognitoIdentityProviders:
         - ClientId:
@@ -40,7 +40,7 @@ Resources:
   CognitoUserRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:provider.stage}UserRole
+      RoleName: $<self:provider.stage>UserRole
       Path: /
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -80,26 +80,19 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
                   - dynamodb:DeleteItem
-                Resource: "arn:aws:dynamodb:us-east-1:*:table/${self:provider.stage}UserDataMap"
+                Resource: "arn:aws:dynamodb:us-east-1:*:table/$<self:provider.stage>UserDataMap"
                 Condition:
                   "ForAllValues:StringEquals":
-                    "dynamodb:LeadingKeys": [
-                        "${cognito-identity.amazonaws.com:sub}"
-                    ],
-                    "dynamodb:Attributes": [
-                        "cognitoUserId",
-                        "GameTitle",
-                        "Wins",
-                        "Losses",
-                        "TopScore",
-                        "TopScoreDateTime"
-                    ]
+                    "dynamodb:LeadingKeys":
+                        - "${cognito-identity.amazonaws.com:sub}"
+                    "dynamodb:Attributes":
+                        - cognitoUserId
   ##########################
   # Cognito Unauthorized User
   CognitoUnauthorizedRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:provider.stage}UnauthRole
+      RoleName: $<self:provider.stage>UnauthRole
       Path: /
       AssumeRolePolicyDocument:
         Version: "2012-10-17"

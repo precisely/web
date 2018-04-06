@@ -19,5 +19,5 @@ Resources:
               - "kms:DescribeKey"
             Resource: "*"
       Tags:
-        - *
+        - "*"
 ...
