@@ -12,6 +12,10 @@ module.exports = {
     new webpack.ContextReplacementPlugin(
             /sequelize(\\|\/)/,
             path.resolve(__dirname, '../src')
+    ),
+    new webpack.ContextReplacementPlugin(
+      /logform/,
+      /(.*)\.js/
     )
   ],
   resolve: {
