@@ -43,7 +43,7 @@ export interface Genotype extends Item<GenotypeAttributes>, GenotypeAttributes {
   // no additional instance methods yet
 }
 
-export const Genotype: GenotypeModel = defineModel<GenotypeAttributes>('genotype', 1, {
+export const Genotype: GenotypeModel = defineModel<GenotypeAttributes>('genotype', {
   hashKey : 'opaqueId',
   rangeKey: 'gene',
 

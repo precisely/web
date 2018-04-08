@@ -43,7 +43,7 @@ export interface DataBridgeModel extends Model<DataBridgeAttributes> {
   forUser?(userId: string): Promise<DataBridge[]>;
 }
 
-export const DataBridge: DataBridgeModel = defineModel<DataBridgeAttributes>('report', 1, {
+export const DataBridge: DataBridgeModel = defineModel<DataBridgeAttributes>('report', {
   hashKey: 'userId',
   rangeKey: 'key',
 
