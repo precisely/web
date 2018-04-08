@@ -11,7 +11,6 @@ provider:
   variableSyntax: "\\$<([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)>"
   environment:
     STAGE: $<self:provider.stage>
-    SECRETS: $<self:custom.kmsSecrets.secrets.SECRETS>
     REGION: $<self:provider.region>
     # remove for now: AWS_PROFILE: $<self:provider.stage>-serverless
     # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
@@ -39,7 +38,6 @@ provider:
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
-  - serverless-kms-secrets
   - serverless-plugin-scripts
   - serverless-offline
   - serverless-plugin-additional-stacks
@@ -62,8 +60,6 @@ custom:
   # additionalStackResources:
   #   cognitoResources: &cognitoResources
   #     $<file(serverless/cognito.yml)>
-  #   kmsResources: &kmsResources
-  #     $<file(serverless/kms.yml)>
 
   # additionalStacks:
   #   AuthStack:
