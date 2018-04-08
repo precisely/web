@@ -53,3 +53,14 @@ export async function getEnvironmentVariables(): Promise<Object | void> {
 
 //   return isAuthorized;
 // }
+
+export function extend<T, U>(first: T, second: U): T & U {
+  let result = <T & U> first;
+  if (second) {
+    Object.keys(second).forEach(key => {
+      first[key] = second[key];
+    });
+  }
+
+  return result;
+}

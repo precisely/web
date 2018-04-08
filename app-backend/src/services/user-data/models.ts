@@ -15,7 +15,7 @@
 */
 
 import * as Joi from 'joi';
-import {defineModel, Model, Item, types} from 'src/storage/dynamo/dynogels';
+import {defineModel, Model, Item, types} from 'src/db/dynamo/dynogels';
 
 export interface DataBridgeAttributes {
   userId?: string;

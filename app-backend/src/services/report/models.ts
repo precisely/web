@@ -7,7 +7,7 @@
 */
 
 import * as Joi from 'joi';
-import {defineModel, Model, Item, types} from 'src/storage/dynamo/dynogels';
+import {defineModel, Model, Item, types} from 'src/db/dynamo/dynogels';
 import {UserData} from '../user-data';
 import slugify from 'slugify';
 const {uuid} = types;
@@ -56,7 +56,7 @@ export interface ReportModel extends Model<ReportAttributes> {
   safeCreate?({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report>;
 }
 
-export const Report: ReportModel = defineModel<ReportAttributes>('report', 1, {
+export const Report: ReportModel = defineModel<ReportAttributes>('report', {
   hashKey: 'id',
 
   timestamps : true,
