@@ -8,7 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
-import {Genotype} from 'src/api/genotype/models';
+import {Genotype} from 'src/modules/genotype/models';
 import {log} from 'src/logger';
 
 interface GA4GH {
