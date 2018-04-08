@@ -5,30 +5,71 @@
 
 ## Quick Setup
 
-You need to have Node 6 or higher and `nvm` [installed](https://github.com/creationix/nvm#installation) on your system.
+### Dependencies
 
-- Install Dependencies.
+* Ensure nvm is installed:
+https://github.com/creationix/nvm#installation
 
-   `npm i -g serverless`
+### Clone this repo
+```shell
+git clone git@github.com:precisely/web
+cd web
+```
 
-   `yarn install`
+### Use correct node version
+```shell
+nvm use
+```
 
-- Install required packages and Node v6.10.3 (If you haven't fixed [npm permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions), you may have to use `sudo`)
-
-   `yarn setup`
-
-## Managing Node Version
-
-- As AWS Lambda only supports v6.10.3 and v4.3.2 of Node.js, we are using `nvm` to manage versions.
-- Make sure to run `nvm use` in this directory if you have changed your nodeJS version for any reason.
+You may need to `nvm install {recommended-version}`
 - If you are a [zsh](http://ohmyz.sh) user then you can configure your shell to call `nvm use` automatically in a directory with a .nvmrc file. [Read here.](https://github.com/creationix/nvm#zsh)
 
 
-## Quick Start
+### Install packages
+```shell
+yarn install
+```
 
-Make sure you have your developer access key and secret token saved under `dev-profile-precisely` profile.
+### Configure AWS profiles
+Setup AWS credentials for environments, and name them as follows:
+* `dev-precisely`
+* `stage-precisely`
+* `prod-precisely` - if you are a prod admin
 
-    sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+You'll need your developer access key and secret. Ask Aneil.
+
+```shell
+sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+```
+
+### Stack
+
+* AWS: Lambda, Cognito, DynamoDB, KMS, ECS, APIGateway
+* Typescript, Apollo, GraphQL
+* Serverless
+
+### AWS Accounts
+
+We maintain 3 AWS accounts: dev, staging and prod.
+
+### Serverless Stages
+
+#### offline
+Entirely offline.  (Not yet implemented).
+
+#### {developerName}
+Developer-specific stages residing on the AWS dev account: https://dev-precisely.signin.aws.amazon.com/console.
+
+AWS resources will be provisioned using the developer's name as a prefix. This provides a way for each developer to work with AWS services independently.
+
+#### test
+Like a developer specific account, but local DynamoDB is used, if possible.
+
+
+#### staging
+Automatically deployed to our AWS staging account.
+
+#### prod
 
 ### Backend Server
 
@@ -64,9 +105,9 @@ This will run both concurrently but is not recommended when you want to view bac
 
 * To create seed data and cognito users,
     * For `dev` environment:
-        * `yarn seed:create:dev [LIMIT]`: will create users in cognito pool of dev account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
+        * `yarn seed:create:dev [LIMIT]`: will create users in cognito pool of dev account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format.
     * For `stage` environment:
-        * `yarn seed:create:stage [LIMIT]`: will create users in cognito pool of stage account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
+        * `yarn seed:create:stage [LIMIT]`: will create users in cognito pool of stage account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format.
     * LIMIT is optional here with default value of 10. E.g: `yarn seed:create:stage 100`
 
 * To seed data in Database:
