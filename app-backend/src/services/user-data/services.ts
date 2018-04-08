@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {Genotype} from 'src/api/genotype';
+import {Genotype} from 'src/modules/genotype';
 import {DataBridge} from './models';
 
 type DataBridgeKey = 'precisely:genotype' | 'precisely:survey';
