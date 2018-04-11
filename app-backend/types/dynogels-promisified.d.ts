@@ -31,6 +31,10 @@ declare module "dynogels-promisified" {
     options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions,
     callback: (err: string) => void
   ): void;
+  export function createTablesAsync(): Promise<void>;
+  export function createTablesAsync(
+    options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions
+  ): Promise<void>;
   export function Set(...args: any[]): any;
 
   export interface DynogelsGlobalOptions {
