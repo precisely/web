@@ -26,6 +26,7 @@ declare module "dynogels-promisified" {
     modelName: string,
     config: ModelConfiguration
   ): Model<Attributes>;
+
   export function createTables(callback: (err: Error | string) => void): void;
   export function createTables(
     options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions,
@@ -130,6 +131,8 @@ declare module "dynogels-promisified" {
       options: GetItemOptions,
       callback: (err: Error, items: Item<Attributes>[]) => void
     ): void;
+    dynamoParameters(): Object;
+    dynamoParameters(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions): Object;
     createTable(
       options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions,
       callback: (err: Error, data: AWS.DynamoDB.CreateTableOutput) => void

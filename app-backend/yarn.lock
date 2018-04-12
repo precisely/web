@@ -76,9 +76,9 @@
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
 
-"@types/node@^9.6.2":
-  version "9.6.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.2.tgz#e49ac1adb458835e95ca6487bc20f916b37aff23"
+"@types/node@^9.6.4":
+  version "9.6.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.4.tgz#0ef7b4cfc3499881c81e0ea1ce61a23f6f4f5b42"
 
 "@types/sequelize@4.27.4":
   version "4.27.4"
@@ -2315,7 +2315,7 @@ dynogels-promisified@1.0.4:
 
 "dynogels@https://github.com/aneilbaboo/dynogels#aneil/tableCreateParams":
   version "9.0.0"
-  resolved "https://github.com/aneilbaboo/dynogels#c6c4fb90805dc11d81694f94436aa7bc048e7eaf"
+  resolved "https://github.com/aneilbaboo/dynogels#76c7eea632be408be89df50efb8073af8add6346"
   dependencies:
     async "2.5.0"
     aws-sdk "2.131.0"
@@ -3836,8 +3836,8 @@ isemail@2.x.x:
   resolved "https://registry.yarnpkg.com/isemail/-/isemail-2.2.1.tgz#0353d3d9a62951080c262c2aa0a42b8ea8e9e2a6"
 
 isemail@3.x.x:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/isemail/-/isemail-3.1.1.tgz#e8450fe78ff1b48347db599122adcd0668bd92b5"
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/isemail/-/isemail-3.1.2.tgz#937cf919002077999a73ea8b1951d590e84e01dd"
   dependencies:
     punycode "2.x.x"
 
