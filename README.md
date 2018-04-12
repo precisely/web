@@ -50,7 +50,19 @@ sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_a
 
 ### AWS Accounts
 
-We maintain 3 AWS accounts: dev, staging and prod.
+We maintain 3 AWS accounts: dev, stage and prod.
+
+#### dev
+https://dev-precisely.signin.aws.amazon.com/console
+Used for development. Serverless creates separate resources for each developer.
+
+#### stage
+https://stage-precisely.signin.aws.amazon.com/console
+This is the staging account, it is intended to be as close as possible to the prod account. After code from the dev branch passes tests, CircleCI automatically deploys it to stage.
+
+#### prod
+https://prod-precisely.signin.aws.amazon.com/console
+The production branch. Admin access to this account is restricted to a few people.
 
 ### Serverless Stages
 
@@ -58,15 +70,14 @@ We maintain 3 AWS accounts: dev, staging and prod.
 Entirely offline.  (Not yet implemented).
 
 #### {developerName}
-Developer-specific stages residing on the AWS dev account: https://dev-precisely.signin.aws.amazon.com/console.
+Developer-specific stages residing on the AWS dev account.
 
 AWS resources will be provisioned using the developer's name as a prefix. This provides a way for each developer to work with AWS services independently.
 
 #### test
-Like a developer specific account, but local DynamoDB is used, if possible.
+Needs thought.
 
-
-#### staging
+#### stage
 Automatically deployed to our AWS staging account.
 
 #### prod
