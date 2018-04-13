@@ -5,98 +5,97 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: $<opt:stage, "dev">
-  region: $<opt:region, "us-east-1">
-  profile: $<self:provider.stage>-profile-precisely
-  variableSyntax: "\\$<([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)>"
+  stage: ${opt:stage, env:DEVELOPER}
+  region: ${opt:region, env:REGION, "us-east-1"}
+  profile: ${self:provider.stage}-profile-precisely
   environment:
-    STAGE: $<self:provider.stage>
-    REGION: $<self:provider.region>
-    # remove for now: AWS_PROFILE: $<self:provider.stage>-serverless
-    # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
-  iamRoleStatements:
-    -  Effect: "Allow"
-       Action:
-         - "s3:GetObject"
-       Resource: "*"
-    - Effect: Allow
-      Action:
-        - KMS:Decrypt
-      Resource: $<self:custom.kmsSecrets.keyArn>
-    - Effect: Allow
-      Action:
-        - dynamodb:*
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:table/$<self:provider.stage>-*"
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+
+    # Reflect these resources so they are available in code
+    S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
+    S3_BUCKET_GENETICS_VCF: ${self:provider.stage}-precisely-genetics-vcf
+    S3_BUCKET_GENETICS_23ANDME: ${self:provider.stage}-precisely-genetics-23andme
+
+  # global role used by all lambda functions
+  # iamRoleStatements: # Additions to AWSLambdaVPCAccessExecutionRole
+  #   -  Effect: "Allow"
+  #      Action:
+  #        - "s3:GetObject"
+  #      Resource: "*"
+  #   - Effect: Allow
+  #     Action:
+  #       - KMS:Decrypt
+  #     Resource: ${self:custom.kmsSecrets.keyArn}
+  #   - Effect: Allow
+  #     Action:
+  #       - dynamodb:*
+  #       - dynamodb:Query
+  #       - dynamodb:Scan
+  #       - dynamodb:GetItem
+  #       - dynamodb:BatchGetItem
+  #       - dynamodb:PutItem
+  #       - dynamodb:UpdateItem
+  #       - dynamodb:DeleteItem
+  #     Resource: "arn:aws:dynamodb:us-east-1:*:table/${self:provider.stage}-*"
 
 plugins:
   - serverless-webpack
-  - serverless-dynamodb-local
   - serverless-plugin-scripts
   - serverless-offline
   - serverless-plugin-additional-stacks
+  - serverless-cloudformation-sub-variables
 
 custom:
-  scripts:
-    hooks:
-      'deploy:finalize': yarn setup:database -s $<self:provider.stage>
+  dotenv:
+    path: ../config/dev.env
   serverless-offline:
     port: 4000
   webpackIncludeModules: true
-  serverless-kms-secrets:
-    secretsFile: kms-secrets/kms-secrets.$<self:provider.stage>.$<self:provider.region>.yml
-  kmsSecrets: $<file(./kms-secrets/kms-secrets.$<self:provider.stage>.$<self:provider.region>.yml)>
-  dynamodb:
+  dynamodb: # local dynamodb settings
     start:
       port: 8000
       inMemory: true
       migrate: true
-  # additionalStackResources:
-  #   cognitoResources: &cognitoResources
-  #     $<file(serverless/cognito.yml)>
+  dynogelsTables: &dynogelsTables
+    ${file(./serverless/dynogels-tables.js)}
 
-  # additionalStacks:
-  #   AuthStack:
-  #     Deploy: Before
-  #     <<: *cognitoResources
+  additionalStackResources:
+    cognitoResources: &cognitoResources
+      ${file(serverless/cognito.yml)}
+  additionalStacks:
+    AuthStack:
+      Deploy: Before
+      <<: *cognitoResources
 
 functions:
-  graphql:
-    handler: src/server/handler.graphqlHandler
-    events:
-    - http:
-        path: api
-        method: post
-        cors: true
-        authorizer:
-          arn: $<env:COGNITO_ARN>
-            # 'FN::GetAtt': [CognitoUserPool, Arn]
-  setupDatabase:
-    handler: src/storage/dynamo/setup.setupDatabase
-
   ingester:
-    handler: src/systems/genetics-pipeline/genotypeIngester.genotypeIngester
+    handler: src/services/genetics-pipeline/lambdas.vcfIngester
     events:
-    - s3:
-        bucket: $<self:provider.stage>-precisely-genetics-vcf
-        event: s3:ObjectCreated:*
+      - s3:
+          bucket: ${self:provider.stage}-precisely-genetics-vcf
+          event: s3:ObjectCreated:*
   playground:
-    handler: src/server/handler.playgroundHandler
+    handler: src/services/graphql/lambdas.playgroundHandler
     events:
-    - http:
-        path: playground
-        method: get
-        cors: true
+      - http:
+          path: playground
+          method: get
+          cors: true
+  graphql:
+    handler: src/services/graphql/lambdas.apiHandler
+    events:
+      - http:
+          path: api
+          method: post
+          cors: true
+          authorizer:
+            arn:
+              FN::GetAtt: [CognitoUserPool, Arn]
   graphiql:
-    handler: src/server/handler.graphiqlHandler
+    handler: src/services/graphql/lambdas.graphiqlHandler
     events:
-    - http:
-        path: graphiql
-        method: get
-        cors: true
+      - http:
+          path: graphiql
+          method: get
+          cors: true

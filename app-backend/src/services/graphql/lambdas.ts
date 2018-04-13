@@ -11,11 +11,11 @@ import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda, graphiqlLambda} from 'apollo-server-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
-import preciselyTypeDefs from 'src/modules/schema.graphql';
-import {resolvers} from 'src/modules/resolvers';
+import preciselyTypeDefs from 'src/services/schema.graphql';
+import {resolvers} from 'src/services/resolvers';
 import {log} from 'src/logger';
 
-import { ResolverContext } from './resolver-context';
+import { ResolverContext } from 'src/graphql-utils';
 
 const PreciselySchema = makeExecutableSchema({
   typeDefs: preciselyTypeDefs,

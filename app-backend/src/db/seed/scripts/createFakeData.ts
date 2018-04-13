@@ -11,7 +11,7 @@
 // import {seedCognito} from './seedCognito';
 // import {vendorDataTypeList} from '../../user-data-map/models/UserDataMap';
 // import {ReportAttributes} from '../../report-service/models/Report';
-// import {GenotypeAttributes} from 'src/modules/Genotype';
+// import {GenotypeAttributes} from 'src/services/Genotype';
 // import {log} from 'src/logger';
 // const jsonfile = require('jsonfile');
 

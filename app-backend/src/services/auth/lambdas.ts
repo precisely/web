@@ -3,8 +3,7 @@ import {
   PolicyDocument, Statement, Context
 } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
-import { Genotype } from 'src/modules/models';
-import { isObject } from 'util';
+import { Genotype } from 'src/services/models';
 
 const PolicyVersion = '2012-10-17';
 export const DynamoReadActions = [

@@ -1,4 +1,4 @@
-declare module "dynogels-promisified" {
+declare module "@aneilbaboo/dynogels-promisified" {
   export import AWS = require("aws-sdk");
   import * as joi from "joi";
   import stream = require("stream");
@@ -131,8 +131,8 @@ declare module "dynogels-promisified" {
       options: GetItemOptions,
       callback: (err: Error, items: Item<Attributes>[]) => void
     ): void;
-    dynamoParameters(): Object;
-    dynamoParameters(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions): Object;
+    dynamoCreateTableParams(): Object;
+    dynamoCreateTableParams(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions): Object;
     createTable(
       options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions,
       callback: (err: Error, data: AWS.DynamoDB.CreateTableOutput) => void

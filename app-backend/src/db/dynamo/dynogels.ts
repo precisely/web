@@ -1,7 +1,7 @@
 import {SharedIniFileCredentials} from 'aws-sdk';
-export * from 'dynogels-promisified';
-import {Model, ModelConfiguration } from 'dynogels-promisified';
-import * as dynogels from 'dynogels-promisified';
+export * from '@aneilbaboo/dynogels-promisified';
+import {Model, ModelConfiguration } from '@aneilbaboo/dynogels-promisified';
+import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/utils';
 
 const options = {
@@ -10,7 +10,7 @@ const options = {
   endpoint: process.env.DB === 'local' ? 'http://localhost:8000' : 'https://dynamodb.us-east-1.amazonaws.com'
 };
 
-console.log('Starting dynogels with options:', options);
+// console.log('Starting dynogels with options:', options);
 
 dynogels.AWS.config.update(options, true);
 

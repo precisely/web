@@ -1,4 +1,5 @@
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
+import { IResolverObject } from 'graphql-tools';
 
 export type ExtendedAuthorizer = {
   claims?: {
@@ -26,4 +27,12 @@ export class ResolverContext {
     const authorizer: ExtendedAuthorizer = this.event.requestContext.authorizer;
     return authorizer.claims.dataBridge && authorizer.claims.dataBridge[key];
   }
+}
+
+export function modelFieldsResolver<T>(fields: string[]): IResolverObject {
+  let resolver = {};
+  for (const field of fields) {
+    resolver[field] = (obj: T) => obj[field];
+  }
+  return resolver;
 }

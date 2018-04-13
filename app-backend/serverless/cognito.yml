@@ -84,7 +84,7 @@ Resources:
                 Condition:
                   "ForAllValues:StringEquals":
                     "dynamodb:LeadingKeys":
-                        - "${cognito-identity.amazonaws.com:sub}"
+                        - "#{cognito-identity.amazonaws.com:sub}"
                     "dynamodb:Attributes":
                         - cognitoUserId
   ##########################

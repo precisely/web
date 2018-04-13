@@ -8,7 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
-import {Genotype} from 'src/modules/genotype/models';
+import {Genotype} from 'src/services/genotype/models';
 import {log} from 'src/logger';
 
 interface GA4GH {
@@ -21,7 +21,7 @@ interface GA4GH {
   };
 }
 
-export const genotypeIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
+export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   const sourceBucket: string = event.Records[0].s3.bucket.name;
   const sourceKey: string = event.Records[0].s3.object.key;
