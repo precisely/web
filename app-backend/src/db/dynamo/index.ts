@@ -1,1 +1,1 @@
-export {default as dynogels} from './dynogels';
+export {default as dynogels, tableNameWithoutStage} from './dynogels';

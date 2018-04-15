@@ -1,0 +1,15 @@
+S3BucketGeneticsVCF:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.names.geneticsVCFBucket}
+ResizeLambdaPermissionPhotosS3:
+  Type: "AWS::Lambda::Permission"
+  Properties:
+    FunctionName:
+       # serverless generates this name from `functions: ingester: ...`
+      "Fn::GetAtt": [ 'VCFIngesterLambdaFunction', 'Arn' ]
+    Principal: "s3.amazonaws.com"
+    Action: "lambda:InvokeFunction"
+    SourceAccount:
+      Ref: AWS::AccountId
+    SourceArn: arn:aws:s3:::${self:provider.names.geneticsVCFBucket}

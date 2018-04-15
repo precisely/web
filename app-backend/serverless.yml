@@ -13,15 +13,15 @@ provider:
     # default AWS config profile name (used locally)
     defaultProfile: ${self:provider.names.account}-profile-precisely
     # name of the AWS account (prod, stage or dev)
-    account: ${self:provider.names.accountMap.${self:provider.stage}, "dev"}
-    accountMap:
+    account: ${self:provider.names.nonDevAccounts.${self:provider.stage}, "dev"}
+    nonDevAccounts:
       beta: beta
       prod: prod
     # resource names
-    s3_bucket_genetics_vcf: ${self:provider.stage}-precisely-genetics-vcf
-    s3_bucket_genetics_23andme: ${self:provider.stage}-precisely-genetics-23andme
+    geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
+    genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
 
-  # environment for handlers and scripts:
+  # environment for handlers (but not scripts in ./serverless!):
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
@@ -30,8 +30,8 @@ provider:
 
     # Reflect these resources so they are available in code
     S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
-    S3_BUCKET_GENETICS_VCF: ${self:provider.names.s3_bucket_genetics_vcf}
-    S3_BUCKET_GENETICS_23ANDME: ${self:provider.names.s3_bucket_genetics_23andme}
+    S3_BUCKET_GENETICS_VCF: ${self:provider.names.geneticsVCFBucket}
+    S3_BUCKET_GENETICS_23ANDME: ${self:provider.names.genetics23andMeBucket}
 
 
 iamRoleStatements:
@@ -40,9 +40,10 @@ iamRoleStatements:
       Resource: ${self:custom.kmsSecrets.keyArn}
 
 resources:
-  - ${file(./serverless/kms.yml)}
-  - ${file(./serverless/cors.yml)}
-  - ${file(./serverless/dynogels-tables.js)}
+  - Resources: ${file(./serverless/kms.yml)}
+  - Resources: ${file(./serverless/cors.yml)}
+  - Resources: ${file(./serverless/dynogels-tables.js)}
+  - Resources: ${file(./serverless/genetics-buckets.yml)}
 
 plugins:
   - serverless-webpack
@@ -71,11 +72,11 @@ functions:
   userAuthorizer:
     handler: src/services/auth/handlers.userAuthorizer
     cors: true
-  ingester: # is triggered by new file in S3_BUCKET_GENETICS_VCF
+  VCFIngester: # is triggered by new file in S3_BUCKET_GENETICS_VCF
     handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
       - s3:
-          bucket: ${self:provider.names.s3_bucket_genetics_vcf}
+          bucket: GeneticsVCF
           event: s3:ObjectCreated:*
   playground:
     handler: src/services/graphql/handlers.playgroundHandler

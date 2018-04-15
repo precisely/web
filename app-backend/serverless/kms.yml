@@ -1,18 +1,17 @@
 ---
-Resources:
-  KMSKey:
-    Type: AWS::KMS::Key
-    Properties:
-      Description: For encrypting secrets for ${self:provider.stage}-precisely resources
-      Enabled: true
-      KeyPolicy:
-        Version: "2012-10-17"
-        Statement:
-          - Sid: Root Key Access Permissions
-            Effect: "Allow"
-            Principal:
-              AWS:
-                Fn::Join: [ '', [ 'arn:aws:iam::', { Ref: AWS::AccountId }, ':root' ] ]
-            Action: "kms:*"
-            Resource: "*"
+KMSKey:
+  Type: AWS::KMS::Key
+  Properties:
+    Description: For encrypting secrets for ${self:provider.stage}-precisely resources
+    Enabled: true
+    KeyPolicy:
+      Version: "2012-10-17"
+      Statement:
+        - Sid: Root Key Access Permissions
+          Effect: "Allow"
+          Principal:
+            AWS:
+              Fn::Join: [ '', [ 'arn:aws:iam::', { Ref: AWS::AccountId }, ':root' ] ]
+          Action: "kms:*"
+          Resource: "*"
 ...
