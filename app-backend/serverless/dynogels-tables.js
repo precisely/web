@@ -13,9 +13,11 @@ module.exports = () => {
   for (const tableName in models) {
     if (models.hasOwnProperty(tableName)) {
       const model = models[tableName];
-      params[tableName] = model.dynamoCreateTableParams({});
-      params[tableName].Type = 'AWS::DynamoDB::Table';
+      params[tableName] = {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: model.dynamoCreateTableParams({})
+      };
     }
   }
-  return params;
+  return { Resources: params };
 };

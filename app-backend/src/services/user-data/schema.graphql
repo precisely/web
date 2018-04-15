@@ -1,5 +1,0 @@
-#import "../genotype/schema.graphql"
-
-type UserData {
-  genotypes: [Genotype]
-}

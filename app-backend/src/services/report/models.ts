@@ -8,7 +8,6 @@
 
 import * as Joi from 'joi';
 import {defineModel, Model, Item, types} from 'src/db/dynamo/dynogels';
-import {UserData} from '../user-data';
 import slugify from 'slugify';
 const {uuid} = types;
 
@@ -48,7 +47,6 @@ const StaticMethods = {
 };
 
 export interface Report extends Item<ReportAttributes>, ReportAttributes {
-  userData?(): Promise<UserData>;
 }
 
 export interface ReportModel extends Model<ReportAttributes> {

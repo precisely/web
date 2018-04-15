@@ -9,11 +9,9 @@
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
 import {resolvers as genotypeResolvers} from './genotype';
 import {resolvers as reportResolvers} from './report';
-import {resolvers as userDataResolvers} from './user-data';
 import {merge} from 'lodash';
 
 export const resolvers: IResolvers = [
   genotypeResolvers,
-  reportResolvers,
-  userDataResolvers
+  reportResolvers
 ].reduce(merge);

@@ -5,95 +5,97 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${opt:stage, env:DEVELOPER}
+  stage: ${opt:stage, env:STAGE, "dev"}
   region: ${opt:region, env:REGION, "us-east-1"}
-  profile: ${self:provider.stage}-profile-precisely
+  profile: ${opt:profile, env:PROFILE, self:provider.names.defaultProfile}
+
+  names: # generated names and other work variables that can referred to throughout:
+    # default AWS config profile name (used locally)
+    defaultProfile: ${self:provider.names.account}-profile-precisely
+    # name of the AWS account (prod, stage or dev)
+    account: ${self:provider.names.accountMap.${self:provider.stage}, "dev"}
+    accountMap:
+      beta: beta
+      prod: prod
+    # resource names
+    s3_bucket_genetics_vcf: ${self:provider.stage}-precisely-genetics-vcf
+    s3_bucket_genetics_23andme: ${self:provider.stage}-precisely-genetics-23andme
+
+  # environment for handlers and scripts:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
+    #AUTH0_CLIENT_ID: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_ID}
+    #AUTH0_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_SECRET}
 
     # Reflect these resources so they are available in code
     S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
-    S3_BUCKET_GENETICS_VCF: ${self:provider.stage}-precisely-genetics-vcf
-    S3_BUCKET_GENETICS_23ANDME: ${self:provider.stage}-precisely-genetics-23andme
+    S3_BUCKET_GENETICS_VCF: ${self:provider.names.s3_bucket_genetics_vcf}
+    S3_BUCKET_GENETICS_23ANDME: ${self:provider.names.s3_bucket_genetics_23andme}
 
-  # global role used by all lambda functions
-  # iamRoleStatements: # Additions to AWSLambdaVPCAccessExecutionRole
-  #   -  Effect: "Allow"
-  #      Action:
-  #        - "s3:GetObject"
-  #      Resource: "*"
-  #   - Effect: Allow
-  #     Action:
-  #       - KMS:Decrypt
-  #     Resource: ${self:custom.kmsSecrets.keyArn}
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:*
-  #       - dynamodb:Query
-  #       - dynamodb:Scan
-  #       - dynamodb:GetItem
-  #       - dynamodb:BatchGetItem
-  #       - dynamodb:PutItem
-  #       - dynamodb:UpdateItem
-  #       - dynamodb:DeleteItem
-  #     Resource: "arn:aws:dynamodb:us-east-1:*:table/${self:provider.stage}-*"
+
+iamRoleStatements:
+    - Effect: Allow
+      Action: KMS:Decrypt
+      Resource: ${self:custom.kmsSecrets.keyArn}
+
+resources:
+  - ${file(./serverless/kms.yml)}
+  - ${file(./serverless/cors.yml)}
+  - ${file(./serverless/dynogels-tables.js)}
 
 plugins:
   - serverless-webpack
-  - serverless-plugin-scripts
-  - serverless-offline
   - serverless-plugin-additional-stacks
-  - serverless-cloudformation-sub-variables
+  - serverless-kms-secrets
+  #- serverless-cloudformation-sub-variables
+  #- serverless-plugin-scripts
+  #- serverless-offline
 
 custom:
   dotenv:
     path: ../config/dev.env
-  serverless-offline:
-    port: 4000
   webpackIncludeModules: true
-  dynamodb: # local dynamodb settings
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-  dynogelsTables: &dynogelsTables
-    ${file(./serverless/dynogels-tables.js)}
-
-  additionalStackResources:
-    cognitoResources: &cognitoResources
-      ${file(serverless/cognito.yml)}
-  additionalStacks:
-    AuthStack:
-      Deploy: Before
-      <<: *cognitoResources
+  # additionalStackResources:
+  #   kmsResources: &kmsResources
+  #     ${file(serverless/kms.yml)}
+  # additionalStacks:
+  #   AuthStack:
+  #     Deploy: Before
+  #     <<: *kmsResources
+  serverless-kms-secrets:
+    secretsFile: ../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
+  kmsSecrets: ${file(../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
 
 functions:
-  ingester:
-    handler: src/services/genetics-pipeline/lambdas.vcfIngester
+  userAuthorizer:
+    handler: src/services/auth/handlers.userAuthorizer
+    cors: true
+  ingester: # is triggered by new file in S3_BUCKET_GENETICS_VCF
+    handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
       - s3:
-          bucket: ${self:provider.stage}-precisely-genetics-vcf
+          bucket: ${self:provider.names.s3_bucket_genetics_vcf}
           event: s3:ObjectCreated:*
   playground:
-    handler: src/services/graphql/lambdas.playgroundHandler
+    handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
           path: playground
           method: get
           cors: true
+          authorizer: userAuthorizer
+
   graphql:
-    handler: src/services/graphql/lambdas.apiHandler
+    handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
           path: api
           method: post
           cors: true
-          authorizer:
-            arn:
-              FN::GetAtt: [CognitoUserPool, Arn]
+          authorizer: userAuthorizer
   graphiql:
-    handler: src/services/graphql/lambdas.graphiqlHandler
+    handler: src/services/graphql/handlers.graphiqlHandler
     events:
       - http:
           path: graphiql

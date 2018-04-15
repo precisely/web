@@ -15,7 +15,7 @@ const options = {
 dynogels.AWS.config.update(options, true);
 
 export function envTableName(tableName: string): string {
-  return `${process.env.STAGE}-${tableName}`;
+  return `${process.env.STAGE}${tableName}`;
 }
 
 export function tableNameWithoutEnv(tableNameWithEnv: string): string {
