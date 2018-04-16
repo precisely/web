@@ -1,7 +1,7 @@
 S3BucketGeneticsVCF:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:provider.names.geneticsVCFBucket}
+    BucketName: ${self:provider.vars.geneticsVCFBucket}
 ResizeLambdaPermissionPhotosS3:
   Type: "AWS::Lambda::Permission"
   Properties:
@@ -12,4 +12,4 @@ ResizeLambdaPermissionPhotosS3:
     Action: "lambda:InvokeFunction"
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:provider.names.geneticsVCFBucket}
+    SourceArn: arn:aws:s3:::${self:provider.vars.geneticsVCFBucket}

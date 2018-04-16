@@ -7,13 +7,13 @@ provider:
   runtime: nodejs8.10
   stage: ${opt:stage, env:STAGE, "dev"}
   region: ${opt:region, env:REGION, "us-east-1"}
-  profile: ${opt:profile, env:PROFILE, self:provider.names.defaultProfile}
+  profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
 
-  names: # generated names and other work variables that can referred to throughout:
+  vars: # generated names and other work variables that can referred to throughout:
     # default AWS config profile name (used locally)
-    defaultProfile: ${self:provider.names.account}-profile-precisely
+    defaultProfile: ${self:provider.vars.account}-profile-precisely
     # name of the AWS account (prod, stage or dev)
-    account: ${self:provider.names.nonDevAccounts.${self:provider.stage}, "dev"}
+    account: ${self:provider.vars.nonDevAccounts.${self:provider.stage}, "dev"}
     nonDevAccounts:
       beta: beta
       prod: prod
@@ -30,9 +30,8 @@ provider:
 
     # Reflect these resources so they are available in code
     S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
-    S3_BUCKET_GENETICS_VCF: ${self:provider.names.geneticsVCFBucket}
-    S3_BUCKET_GENETICS_23ANDME: ${self:provider.names.genetics23andMeBucket}
-
+    S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
+    S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
 
 iamRoleStatements:
     - Effect: Allow
@@ -40,10 +39,10 @@ iamRoleStatements:
       Resource: ${self:custom.kmsSecrets.keyArn}
 
 resources:
-  - Resources: ${file(./serverless/kms.yml)}
-  - Resources: ${file(./serverless/cors.yml)}
-  - Resources: ${file(./serverless/dynogels-tables.js)}
-  - Resources: ${file(./serverless/genetics-buckets.yml)}
+  - Resources: ${file(./serverless/resources/kms.yml)}
+  - Resources: ${file(./serverless/resources/cors.yml)}
+  - Resources: ${file(./serverless/resources/dynogels-tables.js)}
+  - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
   - serverless-webpack
