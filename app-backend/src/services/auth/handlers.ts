@@ -64,8 +64,9 @@ const LambdaExecutionPolicyStatement: Statement = {
 
 export const userAuthorizer: CustomAuthorizerHandler =
     async (event: CustomAuthorizerEvent, context: Context, callback: CustomAuthorizerCallback) => {
-    // no need to verify
-    const decodedAuthToken = <{ claims: { sub: string} }> jwt.decode(event.authorizationToken, {complete: true});
+    const decodedAuthToken = <{claims: {sub: string}}>jwt.verify(
+      event.authorizationToken, process.env.AUTH0_CLIENT_SECRET
+    );
     const userId = decodedAuthToken.claims.sub;
     const policy: PolicyDocument = {
       Version: PolicyVersion,
@@ -81,7 +82,7 @@ export const userAuthorizer: CustomAuthorizerHandler =
     const result: CustomAuthorizerResult = {
       principalId: userId,
       policyDocument: policy,
-      context: {} // TODO: add user info
+      context: { userId }
     };
 
     callback(null, result);
