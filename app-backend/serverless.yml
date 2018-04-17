@@ -25,13 +25,15 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    #AUTH0_CLIENT_ID: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_ID}
-    #AUTH0_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_SECRET}
 
     # Reflect these resources so they are available in code
     S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
+
+    # AUTH0_CLIENT_ID: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_ID}
+    # AUTH0_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_SECRET}
+    # AUTH0_JWKS_URI: ${self:custom.kmsSecrets.secrets.AUTH0_JWKS_URI}
 
 iamRoleStatements:
     - Effect: Allow
@@ -68,36 +70,41 @@ custom:
   kmsSecrets: ${file(../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
 
 functions:
-  userAuthorizer:
+  UserAuthorizer:
     handler: src/services/auth/handlers.userAuthorizer
     cors: true
-  VCFIngester: # is triggered by new file in S3_BUCKET_GENETICS_VCF
+
+  # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
+  VCFIngester:
     handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
       - s3:
           bucket: GeneticsVCF
           event: s3:ObjectCreated:*
-  playground:
+
+  GraphQLPlayground:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
           path: playground
           method: get
           cors: true
-          authorizer: userAuthorizer
+          authorizer: UserAuthorizer
 
-  graphql:
+  GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
           path: api
           method: post
           cors: true
-          authorizer: userAuthorizer
-  graphiql:
+          authorizer: UserAuthorizer
+
+  GraphIQL:
     handler: src/services/graphql/handlers.graphiqlHandler
     events:
       - http:
           path: graphiql
           method: get
           cors: true
+          authorizer: UserAuthorizer

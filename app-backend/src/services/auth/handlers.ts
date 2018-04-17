@@ -1,89 +1,31 @@
 import {
-  CustomAuthorizerHandler, CustomAuthorizerEvent, CustomAuthorizerCallback, CustomAuthorizerResult,
-  PolicyDocument, Statement, Context
+  CustomAuthorizerHandler, CustomAuthorizerEvent,
+  CustomAuthorizerCallback, CustomAuthorizerResult,
+  Context
 } from 'aws-lambda';
-import * as jwt from 'jsonwebtoken';
-import { Genotype } from 'src/services/models';
+import { authenticate, Auth0AuthenticationResult } from './auth0';
+import {userPolicyDocument} from './policies';
 
-const PolicyVersion = '2012-10-17';
-export const DynamoReadActions = [
-  'dynamodb:Query',
-  'dynamodb:Scan',
-  'dynamodb:GetItem',
-  'dynamodb:BatchGetItem'
-];
+export const userAuthorizer: CustomAuthorizerHandler = async (
+  event: CustomAuthorizerEvent,
+  context: Context,
+  callback: CustomAuthorizerCallback
+) => {
+  // auth0 returns userId and scopes
+  const auth: Auth0AuthenticationResult = await authenticate(event);
 
-export const DynamoWriteActions = [
-  'dynamodb:PutItem',
-  'dynamodb:BatchPutItem'
-];
-
-function dynamoTableUserAccessStatement (
-  userId: string,
-  tableName: string,
-  action: string | string[],
-  region: string = '*',
-  accountId: string = '*'): Statement {
-  return {
-    Effect: 'Allow',
-    Action: action,
-    Resource: `arn:aws:dynamodb:${region}:${accountId}:table/${tableName}`,
-    Condition: {
-      'ForAllValues:StringEquals': {
-        'dynamodb:LeadingKeys': [ userId ]
-      }
-    }
-  };
-}
-
-function s3FolderUserAccessStatements(userId: string, bucket: string): Statement[] {
-  return [{
-    Sid: 'AllowAllS3ActionsInUserFolder',
-    Effect: 'Allow',
-    Action: 's3:*',
-    Resource: `aws:arn:s3:::${bucket}/${userId}/*`
-  }, {
-    Sid: 'AllowListingObjectsInS3UserFolder',
-    Effect: 'Allow',
-    Action: 's3:ListBucket',
-    Resource: `aws:arn:s3:::${bucket}`,
-    Condition: {
-      'StringEquals': {
-        's3:prefix': `${userId}/*`
-      }
-    }
-  }];
-}
-
-const LambdaExecutionPolicyStatement: Statement = {
-  Sid: 'AllowUserToExecuteFunctions',
-  Effect: 'Allow',
-  Action: [ 'lambda:Invoke', 'lambda:InvokeAsync' ],
-  Resource: `aws:arn:lambda:::*`,
-};
-
-export const userAuthorizer: CustomAuthorizerHandler =
-    async (event: CustomAuthorizerEvent, context: Context, callback: CustomAuthorizerCallback) => {
-    const decodedAuthToken = <{claims: {sub: string}}>jwt.verify(
-      event.authorizationToken, process.env.AUTH0_CLIENT_SECRET
-    );
-    const userId = decodedAuthToken.claims.sub;
-    const policy: PolicyDocument = {
-      Version: PolicyVersion,
-      Statement: [
-        LambdaExecutionPolicyStatement,
-        dynamoTableUserAccessStatement(userId, Genotype.tableName(), DynamoReadActions),
-        // in future:
-        // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
-        ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_VCF),
-        ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_23ANDME)
-      ]
-    };
+  if (auth) {
     const result: CustomAuthorizerResult = {
-      principalId: userId,
-      policyDocument: policy,
-      context: { userId }
+      principalId: auth.userId,
+      policyDocument: userPolicyDocument(auth.userId),
+      context: auth // this makes
+                    //   $context.authorizer.userId, and
+                    //   $context.authorizer.scopes
+                    // available in cloud formation
     };
 
     callback(null, result);
+  } else {
+    callback(new Error('Unauthorized'));
+  }
 };

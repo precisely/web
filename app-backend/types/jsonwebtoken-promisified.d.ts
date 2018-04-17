@@ -7,7 +7,7 @@
 // TypeScript Version: 2.2
 
 /// <reference types="node" />
-declare module "jsonwebtokens-promisified" {
+declare module "jsonwebtoken-promisified" {
   export class JsonWebTokenError extends Error {
     inner: Error;
 
