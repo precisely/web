@@ -89,7 +89,7 @@ workflows:
                     - build-backend
 
             # run this job only when dev branch is build
-            - stage-deploy-backend:
+            - beta-deploy-backend:
                 filters:
                     branches:
                         only:
@@ -98,13 +98,13 @@ workflows:
                     - build-backend
                     - build-frontend
 
-            - stage-deploy-frontend:
+            - beta-deploy-frontend:
                 filters:
                     branches:
                         only:
                             - dev
                 requires:
-                    - stage-deploy-backend
+                    - beta-deploy-backend
 
 jobs:
     build-frontend:
@@ -142,7 +142,7 @@ jobs:
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
 
 
-    stage-deploy-frontend:
+    beta-deploy-frontend:
         <<: *frontend_defaults
 
         steps:
@@ -152,12 +152,12 @@ jobs:
 
             - run:
                 name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
                 command: yarn deploy:stage
 
-    stage-deploy-backend:
+    beta-deploy-backend:
         <<: *backend_defaults
 
         steps:
@@ -167,7 +167,7 @@ jobs:
 
             - run:
                 name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n stage-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
                 command: yarn deploy:stage
