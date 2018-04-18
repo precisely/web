@@ -14,6 +14,13 @@ export const DynamoWriteActions = [
   'dynamodb:BatchPutItem'
 ];
 
+export const LambdaExecutionPolicyStatement: Statement = {
+  Sid: 'AllowUserToExecuteFunctions',
+  Effect: 'Allow',
+  Action: [ 'lambda:Invoke', 'lambda:InvokeAsync' ],
+  Resource: `aws:arn:lambda:::*`,
+};
+
 export function userPolicyDocument(userId: string): PolicyDocument {
   return {
     Version: PolicyVersion,
@@ -64,10 +71,3 @@ export function s3FolderUserAccessStatements(userId: string, bucket: string): St
     }
   }];
 }
-
-export const LambdaExecutionPolicyStatement: Statement = {
-  Sid: 'AllowUserToExecuteFunctions',
-  Effect: 'Allow',
-  Action: [ 'lambda:Invoke', 'lambda:InvokeAsync' ],
-  Resource: `aws:arn:lambda:::*`,
-};

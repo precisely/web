@@ -1,4 +1,6 @@
-service: precisely
+service:
+  name: precisely
+  awsKmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
@@ -9,7 +11,7 @@ provider:
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
 
-  vars: # generated names and other work variables that can referred to throughout:
+  vars: # keep DRY - define variables here, use them elsewhere in this yml: ${self:provider.vars.somevar}
     # default AWS config profile name (used locally)
     defaultProfile: ${self:provider.vars.account}-profile-precisely
     # name of the AWS account (prod, stage or dev)
@@ -20,8 +22,13 @@ provider:
     # resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
+    accountSecretsRoot: ${self:service}/${self:provider.vars.account}
+    kmsKeyArns:
+      dev: arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1
+      beta:
+      prod:
 
-  # environment for handlers (but not scripts in ./serverless!):
+  # environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
@@ -31,30 +38,38 @@ provider:
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
 
-    # AUTH0_CLIENT_ID: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_ID}
-    # AUTH0_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.AUTH0_CLIENT_SECRET}
-    # AUTH0_JWKS_URI: ${self:custom.kmsSecrets.secrets.AUTH0_JWKS_URI}
+    # these values need to be set correctly in Auth0
+    AUTH0_TENANT_NAME: ${self:provider.vars.account}-precisely
+    AUTH0_API_IDENTIFIER: https://${self:provider.vars.account}-precise.ly/graphql/api
+
+  # see: https://github.com/trek10inc/serverless-secrets
+  # We put secrets & configuration values here
+  # Using this approach, only credentials with access to an account
+  # can change these values. For example,
+  # environmentSecrets:
+    # AUTH0_CLIENT_SECRET: AUTH0_CLIENT_SECRET
 
 iamRoleStatements:
     - Effect: Allow
       Action: KMS:Decrypt
-      Resource: ${self:custom.kmsSecrets.keyArn}
+      Resource: ${self:provider.vars.kmsKeyArn}
 
 resources:
-  - Resources: ${file(./serverless/resources/kms.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js)}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
   - serverless-webpack
-  - serverless-plugin-additional-stacks
-  - serverless-kms-secrets
+  #- serverless-secrets
   #- serverless-cloudformation-sub-variables
-  #- serverless-plugin-scripts
-  #- serverless-offline
 
 custom:
+  # serverlessSecrets:
+  #   # providerOptions:
+  #   #   region: us-west-2
+  #   keys:
+  #     default: "dev-01"
   dotenv:
     path: ../config/dev.env
   webpackIncludeModules: true
@@ -65,9 +80,9 @@ custom:
   #   AuthStack:
   #     Deploy: Before
   #     <<: *kmsResources
-  serverless-kms-secrets:
-    secretsFile: ../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
-  kmsSecrets: ${file(../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
+  # serverless-kms-secrets:
+  #   secretsFile: ../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
+  # kmsSecrets: ${file(../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
 
 functions:
   UserAuthorizer:

@@ -2,10 +2,12 @@
 
 These are usually called by yarn.
 
-## deploy
+## sls
 
+Runs serverless using environment variables defined in `../config`
+
+### default deploy
 ```shell
-deploy stage {region}
+yarn sls deploy
 ```
-
-Prepares files and calls `serverless deploy -s stage -r region`. Uses the region in `config/defaults.env` if one is not provided
+Uses the `STAGE` set in `../config/default.env`.

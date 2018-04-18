@@ -29,13 +29,22 @@ export interface Auth0AuthenticationResult {
 }
 
 export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0AuthenticationResult> {
+  await require('serverless-secrets/client').load();
+
+  const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
+  const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
+  const AUTH0_JWKS_URI = `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`;
+  const AUTH0_ISSUER = `https://${AUTH0_DOMAIN}/`;
+  const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
+  const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10;
+
   const token: string = getToken(event);
 
   const client = JwksRsa({
       cache: true,
       rateLimit: true,
-      jwksRequestsPerMinute: parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10, // Default value
-      jwksUri: process.env.JWKS_URI
+      jwksRequestsPerMinute: AUTH0_JWKS_REQUESTS_PER_MINUTE,
+      jwksUri: AUTH0_JWKS_URI
   });
 
   var decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
@@ -45,8 +54,8 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
   const verified = <{ sub: string, scope: string }> await jwt.verifyAsync(
     token, signingKey,
     {
-      audience: process.env.AUTH0_API_IDENTIFIER, // e.g., https://dev-precise.ly/graphql - not a real uri
-      issuer: `https://${process.env.AUTH0_DOMAIN}/` // e.g., https://dev-precise.ly.auth0.com
+      audience: AUTH0_API_IDENTIFIER, // e.g., something like https://{stage}-precise.ly/graphql (not a real uri)
+      issuer:  AUTH0_ISSUER // e.g., something like https://{stage}-precise.ly.auth0.com
     }
   );
 

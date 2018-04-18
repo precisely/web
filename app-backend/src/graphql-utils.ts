@@ -18,14 +18,8 @@ export class ResolverContext {
     this.event = event;
   }
 
-  get cognitoUserId(): string {
-    const authorizer: { claims?: { sub: string }} = this.event.requestContext.authorizer;
-    return authorizer.claims.sub;
-  }
-
-  opaqueId(key: string) {
-    const authorizer: ExtendedAuthorizer = this.event.requestContext.authorizer;
-    return authorizer.claims.dataBridge && authorizer.claims.dataBridge[key];
+  get userId(): string {
+    return this.event.requestContext.authorizer.userId; // the auth0 userId "auth0|a6b34ff91"
   }
 }
 
