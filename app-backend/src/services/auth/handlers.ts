@@ -6,7 +6,7 @@ import {
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {userPolicyDocument} from './policies';
 
-export const userAuthorizer: CustomAuthorizerHandler = async (
+export const apiAuthorizer: CustomAuthorizerHandler = async (
   event: CustomAuthorizerEvent,
   context: Context,
   callback: CustomAuthorizerCallback
@@ -17,7 +17,7 @@ export const userAuthorizer: CustomAuthorizerHandler = async (
   if (auth) {
     const result: CustomAuthorizerResult = {
       principalId: auth.userId,
-      policyDocument: userPolicyDocument(auth.userId),
+      policyDocument: userPolicyDocument(auth.userId, auth.admin),
       context: auth // this makes
                     //   $context.authorizer.userId, and
                     //   $context.authorizer.scopes

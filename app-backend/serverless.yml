@@ -11,14 +11,16 @@ provider:
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
 
-  vars: # keep DRY - define variables here, use them elsewhere in this yml: ${self:provider.vars.somevar}
+  # Store commonly used or noteworthy values here
+  vars:
     # default AWS config profile name (used locally)
     defaultProfile: ${self:provider.vars.account}-profile-precisely
     # name of the AWS account (prod, stage or dev)
-    account: ${self:provider.vars.nonDevAccounts.${self:provider.stage}, "dev"}
+    account: ${self:provider.vars.nonDevAccounts.${self:provider.stage}, self:provider.vars.nonDevAccounts.default}
     nonDevAccounts:
       beta: beta
       prod: prod
+      default: dev
     # resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
@@ -27,32 +29,49 @@ provider:
       dev: arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1
       beta:
       prod:
+    nodeEnv:
+      beta: production
+      prod: production
+      default: development
+      # otherwise NODE_ENV it will be "development"
+    auth0TenantName: ${self:provider.vars.account}-precisely
+    auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
   # environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
 
-    # Reflect these resources so they are available in code
-    S3_BUCKETS: "S3_BUCKET_GENETICS_VCF,S3_BUCKET_GENETICS_23ANDME"
+    # NODE_ENV should only be "production" OR "development"
+    # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
+    #      https://webpack.js.org/guides/production/#specify-the-environment
+    # NODE_ENV is normally set automatically based on STAGE:
+    #   production for beta and prod
+    #   development for all other stages
+    # Override by setting the environment:
+    #   NODE_ENV={production|development} yarn sls ...
+    NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv.${self:provider.stage}, self:provider.vars.nodeEnv.default }
+
+    # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
 
-    # these values need to be set correctly in Auth0
-    AUTH0_TENANT_NAME: ${self:provider.vars.account}-precisely
-    AUTH0_API_IDENTIFIER: https://${self:provider.vars.account}-precise.ly/graphql/api
+    # Auth0 values - needed for verifying Auth0 tokens
+    AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
 
+  # Not using environmentSecrets, but maybe for future
   # see: https://github.com/trek10inc/serverless-secrets
   # We put secrets & configuration values here
   # Using this approach, only credentials with access to an account
   # can change these values. For example,
-  # environmentSecrets:
-    # AUTH0_CLIENT_SECRET: AUTH0_CLIENT_SECRET
+  environmentSecrets:
+    ADMIN_EMAILS: ADMIN_EMAILS
 
 iamRoleStatements:
-    - Effect: Allow
-      Action: KMS:Decrypt
-      Resource: ${self:provider.vars.kmsKeyArn}
+  - Effect: Allow
+    Action: KMS:Decrypt
+    Resource: ${self:provider.vars.kmsKeyArn}
 
 resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
@@ -61,32 +80,17 @@ resources:
 
 plugins:
   - serverless-webpack
-  #- serverless-secrets
+  - serverless-secrets
   #- serverless-cloudformation-sub-variables
 
 custom:
-  # serverlessSecrets:
-  #   # providerOptions:
-  #   #   region: us-west-2
-  #   keys:
-  #     default: "dev-01"
   dotenv:
     path: ../config/dev.env
   webpackIncludeModules: true
-  # additionalStackResources:
-  #   kmsResources: &kmsResources
-  #     ${file(serverless/kms.yml)}
-  # additionalStacks:
-  #   AuthStack:
-  #     Deploy: Before
-  #     <<: *kmsResources
-  # serverless-kms-secrets:
-  #   secretsFile: ../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
-  # kmsSecrets: ${file(../config/kms-secrets.${self:provider.stage}.${self:provider.region}.yml
 
 functions:
-  UserAuthorizer:
-    handler: src/services/auth/handlers.userAuthorizer
+  APIAuthorizer:
+    handler: src/services/auth/handlers.apiAuthorizer
     cors: true
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
@@ -101,10 +105,10 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: playground
+          path: api
           method: get
           cors: true
-          authorizer: UserAuthorizer
+          authorizer: APIAuthorizer
 
   GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler
@@ -113,13 +117,13 @@ functions:
           path: api
           method: post
           cors: true
-          authorizer: UserAuthorizer
+          authorizer: APIAuthorizer
 
-  GraphIQL:
-    handler: src/services/graphql/handlers.graphiqlHandler
-    events:
-      - http:
-          path: graphiql
-          method: get
-          cors: true
-          authorizer: UserAuthorizer
+  # GraphIQL:
+  #   handler: src/services/graphql/handlers.graphiqlHandler
+  #   events:
+  #     - http:
+  #         path: api/graphiql
+  #         method: get
+  #         cors: true
+  #         authorizer: APIAuthorizer

@@ -25,12 +25,15 @@ function getToken(event: CustomAuthorizerEvent): string {
 
 export interface Auth0AuthenticationResult {
   userId: string;
-  scopes: string[];
+  email?: string;
+  admin?: boolean;
 }
 
 export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0AuthenticationResult> {
   await require('serverless-secrets/client').load();
 
+  // ADMIN_EMAILS is set via yarn sls secrets:set -n /{stage}/adminEmails -t "alice@domain.com,bob@domain.com"
+  const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
   const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
   const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
   const AUTH0_JWKS_URI = `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`;
@@ -51,7 +54,7 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
   var kid = decodedJwt.header.kid; // key id
   const key = await client.getSigningKeyAsync(kid);
   const signingKey = key.publicKey || key.rsaPublicKey;
-  const verified = <{ sub: string, scope: string }> await jwt.verifyAsync(
+  const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
     token, signingKey,
     {
       audience: AUTH0_API_IDENTIFIER, // e.g., something like https://{stage}-precise.ly/graphql (not a real uri)
@@ -61,6 +64,7 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
 
   return {
     userId: verified.sub,
-    scopes: verified.scope && verified.scope.split(' ')
+    email: verified.email,
+    admin: ADMIN_EMAILS.indexOf(verified.email) !== -1
   };
 }
