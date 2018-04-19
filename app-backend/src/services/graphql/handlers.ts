@@ -6,9 +6,9 @@
 * without modification, are not permitted.
 */
 
-// import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
-import {graphqlLambda, graphiqlLambda} from 'apollo-server-lambda';
+import {graphqlLambda} from 'apollo-server-lambda';
+import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
 import preciselyTypeDefs from 'src/services/schema.graphql';
@@ -34,12 +34,6 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
   handler(event, context, callback);
 };
 
-export const graphiqlHandler: Handler =  graphiqlLambda({
-    endpointURL: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
+export const playgroundHandler: Handler = lambdaPlayground({
+  endpoint: process.env.API_URL_PATH
 });
-
-// export const playgroundHandler: Handler = lambdaPlayground({ endpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT });
-
-// export const graphiqlHandler: Handler = graphiqlLambda({
-//   endpointURL: process.env.REACT_APP_GRAPHQL_ENDPOINT || '/production/graphql',
-// });
