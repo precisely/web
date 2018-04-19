@@ -93,7 +93,6 @@
     "jsonfile": "4.0.0",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
-    "serverless-cloudformation-sub-variables": "^0.2.0",
     "serverless-dotenv-plugin": "^1.0.2",
     "serverless-dynamodb-client": "^0.0.2",
     "serverless-dynamodb-local": "0.2.26",

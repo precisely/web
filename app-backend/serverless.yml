@@ -97,7 +97,6 @@ resources:
 plugins:
   - serverless-webpack
   - serverless-secrets
-  #- serverless-cloudformation-sub-variables
 
 custom:
   dotenv:

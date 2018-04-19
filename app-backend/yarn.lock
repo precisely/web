@@ -5820,10 +5820,6 @@ serialize-javascript@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.4.0.tgz#7c958514db6ac2443a8abc062dc9f7886a7f6005"
 
-serverless-cloudformation-sub-variables@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/serverless-cloudformation-sub-variables/-/serverless-cloudformation-sub-variables-0.2.0.tgz#9d9fa4e7a7e3a6efe82b6e47f1584c7a9b1aa35f"
-
 serverless-dotenv-plugin@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/serverless-dotenv-plugin/-/serverless-dotenv-plugin-1.0.2.tgz#1470951d8408905ee7035eac2e658789e971b5fe"
