@@ -59,10 +59,10 @@ provider:
     # NODE_ENV should only be "production" OR "development"
     # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
     #      https://webpack.js.org/guides/production/#specify-the-environment
-    # NODE_ENV is normally set automatically based on STAGE:
+    # We set NODE_ENV automatically based on STAGE:
     #   production for beta and prod
     #   development for all other stages
-    # Override by setting the environment:
+    # Override by passing it as env var:
     #   NODE_ENV={production|development} yarn sls ...
     NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv.${self:provider.stage}, self:provider.vars.nodeEnv.default }
 
