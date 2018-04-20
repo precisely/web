@@ -15,6 +15,12 @@ provider:
   vars:
     account: ${self:provider.vars.nonDevAccounts.${self:provider.stage}, self:provider.vars.nonDevAccounts.default}
 
+    certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
+                        self:provider.vars.certificateMap.default}"
+    certificateMap:
+      prod: "*.precise.ly"
+      default: "*.codeprecisely.net"
+
     graphQLAPIPath: "/api"
 
     auth0TenantName: ${self:provider.vars.account}-precisely
@@ -81,18 +87,11 @@ provider:
     ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
 
     DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
-  # Not using environmentSecrets, but maybe for future
-  # see: https://github.com/trek10inc/serverless-secrets
-  # We put secrets & configuration values here
-  # Using this approach, only credentials with access to an account
-  # can change these values. For example,
-  # environmentSecrets:
-  #   ADMIN_EMAILS: ADMIN_EMAILS
 
-iamRoleStatements:
-  - Effect: Allow
-    Action: KMS:Decrypt
-    Resource: ${self:provider.vars.kmsKeyArn}
+# iamRoleStatements:
+#   - Effect: Allow
+#     Action: KMS:Decrypt
+#     Resource: ${self:provider.vars.kmsKeyArn}
 
 resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
@@ -100,8 +99,9 @@ resources:
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
-  - serverless-webpack
   - serverless-domain-manager
+  - serverless-webpack
+  - serverless-api-stage
   - serverless-dynamodb-local
   - serverless-offline # serverless-offline must be last in the list
 
@@ -111,12 +111,24 @@ custom:
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
+    certificateName: ${self:provider.vars.certificateName}
+    endpointType: 'regional'
   dynamodb: # dynamodb-local settings
     start:
       port: 8000
       inMemory: true
       migrate: true
       # seed: true
+  stageSettings: # serverless-api-stage plugin
+    CacheClusterEnabled: true
+    CacheClusterSize: '0.5'
+    # Variables:
+    #   foo: bar
+    #   baz: xyzzy
+    MethodSettings:
+      LoggingLevel: INFO
+      CachingEnabled: true
+      CacheTtlInSeconds: 3600
   webpackIncludeModules: true
 
 functions:
@@ -139,7 +151,7 @@ functions:
           path: ${self:provider.vars.graphQLAPIPath}
           method: get
           cors: true
-          authorizer: APIAuthorizer
+          #authorizer: APIAuthorizer
 
   GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler

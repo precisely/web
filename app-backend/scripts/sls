@@ -6,9 +6,9 @@
 APPBACKEND_DIR=$(cd `dirname $0`/.. && pwd)
 
 if [ -z "$STAGE" ]; then
-  env-cmd ../config/default.env ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+  env-cmd ../config/default.env ${APPBACKEND_DIR}/node_modules/.bin/sls $@
 elif [ -f ../config/${STAGE}.env ]; then
-  env-cmd ../config/${STAGE}.env ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+  env-cmd ../config/${STAGE}.env ${APPBACKEND_DIR}/node_modules/.bin/sls $@
 else
-  ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+  ${APPBACKEND_DIR}/node_modules/.bin/sls $@
 fi

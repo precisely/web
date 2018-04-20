@@ -1322,6 +1322,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+class.extend@0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/class.extend/-/class.extend-0.9.2.tgz#e1cbda3697cb31d3cdab1c001d269075c9031f78"
+
 cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
@@ -4323,6 +4327,10 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
+lodash@4.17.2:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+
 lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
@@ -4332,8 +4340,8 @@ lodash@^4.0.0, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.16.4, l
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 logform@^1.2.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/logform/-/logform-1.4.1.tgz#372a84eedb01dbace3bfbcd32b78d556b5ea8333"
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/logform/-/logform-1.4.2.tgz#4d303a396707a06f366eedd63375b0c347fd4e00"
   dependencies:
     colors "^1.2.0"
     fecha "^2.3.2"
@@ -5820,6 +5828,12 @@ serialize-javascript@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.4.0.tgz#7c958514db6ac2443a8abc062dc9f7886a7f6005"
 
+serverless-api-stage@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/serverless-api-stage/-/serverless-api-stage-1.3.0.tgz#6dc36ac760a41d81c0025cc271e487be920a4f7c"
+  dependencies:
+    lodash "^4.17.4"
+
 serverless-domain-manager@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-2.3.6.tgz#4ad0b51b27ed1bd69fe5a95ce7d53225d7a24c44"
@@ -5850,6 +5864,13 @@ serverless-dynamodb-local@^0.2.28:
     dynamodb-localhost "^0.0.5"
     lodash "^4.17.0"
 
+serverless-enable-api-logs@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/serverless-enable-api-logs/-/serverless-enable-api-logs-2.0.0.tgz#8028fd679df6ad8b6f25ba785edb644b6d40a78d"
+  dependencies:
+    class.extend "0.9.2"
+    lodash "4.17.2"
+
 serverless-offline@^3.20.3:
   version "3.20.3"
   resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-3.20.3.tgz#0b081e1a4f93b51c49f41299262c08c70594b2c5"
@@ -5865,10 +5886,6 @@ serverless-offline@^3.20.3:
     lodash "^4.17.4"
     uuid "^3.2.1"
     velocityjs "^0.9.3"
-
-serverless-plugin-additional-stacks@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/serverless-plugin-additional-stacks/-/serverless-plugin-additional-stacks-1.1.0.tgz#be2a575c4e48bb5304e237123c73cfcd05863213"
 
 serverless-plugin-scripts@^1.0.2:
   version "1.0.2"

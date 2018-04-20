@@ -1,0 +1,6 @@
+#!/bin/bash
+APPBACKEND_DIR=$(cd `dirname $0`/.. && pwd)
+if [ ! -d $APPBACKEND_DIR/node_modules/dynamodb-localhost/dynamodb/bin ]; then
+  yarn sls dynamodb install
+fi
+STAGE=offline yarn sls offline start

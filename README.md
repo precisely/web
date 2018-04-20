@@ -65,6 +65,35 @@ This is the staging account, it is intended to be as close as possible to the pr
 https://prod-precisely.signin.aws.amazon.com/console
 The production account. Admin access to this account is restricted to a few people. Like beta, the prod account is selected via the developer's local `prod-precisely-profile` AWS profile.
 
+## Developer subdomains
+
+Developer stages deployed to the dev account can be accessed using `{stage}.codeprecisely.net`.  To create your subdomain, you need to take a few steps:
+
+1. Set STAGE=your name in `config/default.env`, as per the instructions in that folder
+
+2. Create the domain:
+    ```shell
+    yarn sls create_domain
+    ```
+
+3. Temporarily comment out the serverless-domain-manager plugin in `app-backend/serverless.yml`:
+
+    ```yaml
+    plugins:
+      # - serverless-domain-manager
+      - ...
+    ```
+
+    This is necessary because of [an incompatibility](https://github.com/leftclickben/serverless-api-stage/issues/12 ) beween serverless-domain-manager and the APIGateway logging plugin, serverless-api-stage during initial deployment.
+
+4. Do you first deployment:
+    ```shell
+    yarn sls deploy
+    ```
+
+5. Uncomment the line from (3)
+
+You have a domain
 ## Offline mode
 
 ```shell

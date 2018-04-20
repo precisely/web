@@ -14,6 +14,7 @@ export const DynamoWriteActions = [
   'dynamodb:BatchPutItem'
 ];
 
+// TODO: lock this down - it currently allows all lambdas to be invoked
 export const LambdaExecutionPolicyStatement: Statement = {
   Sid: 'PreciselyUserAllowExecuteFunctions',
   Effect: 'Allow',
@@ -28,14 +29,39 @@ export const CloudWatchPolicyStatement: Statement = {
   Resource: '*'
 };
 
+/**
+ * Generates invoke policy
+ * @export
+ * @param {string} method - http verb
+ * @param {string} path - e.g., "api"
+ * @returns {Statement}
+ */
+export function apiAllowInvokePolicyStatement(
+  {method, path, region= '*', accountId= '*', apiId= '*'}:
+  {method: string, path: string, region?: string, accountId?: string, apiId?: string}): Statement {
+  return {
+    Effect: 'Allow',
+    Action: [ 'execute-api:Invoke' ],
+    Resource: [
+      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/${process.env.STAGE}/${method}/${path}`,
+      'arn:aws:execute-api:us-east-1:416000760642:3bm1ckvbx8/*/GET/api'
+    ]
+  };
+}
+
+const PublicPolicyStatements = [
+  LambdaExecutionPolicyStatement,
+  CloudWatchPolicyStatement,
+  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_IDENTIFIER})
+];
+
 export function adminPolicyDocument(): PolicyDocument {
   // Open access for admins so they can use API (esp in development)
   // TODO: need to lock this down for prod
   return {
     Version: PolicyVersion,
     Statement: [
-      LambdaExecutionPolicyStatement,
-      CloudWatchPolicyStatement,
+      ...PublicPolicyStatements,
       dynamoTableUserAccessStatement(null, Genotype.tableName(), [...DynamoReadActions,  ...DynamoWriteActions]),
       // in future:
       // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
@@ -49,7 +75,7 @@ export function userPolicyDocument(userId: string): PolicyDocument {
   return {
     Version: PolicyVersion,
     Statement: [
-      LambdaExecutionPolicyStatement,
+      ...PublicPolicyStatements,
       dynamoTableUserAccessStatement(userId, Genotype.tableName(), DynamoReadActions),
       // in future:
       // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
@@ -63,9 +89,7 @@ export function publicPolicyDocument(): PolicyDocument {
   // TODO: need to tighten up access
   return {
     Version: PolicyVersion,
-    Statement: [
-      LambdaExecutionPolicyStatement
-    ]
+    Statement: PublicPolicyStatements
   };
 }
 
