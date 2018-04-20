@@ -30,9 +30,7 @@ export interface Auth0AuthenticationResult {
 }
 
 export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0AuthenticationResult> {
-  await require('serverless-secrets/client').load();
 
-  // ADMIN_EMAILS is set via yarn sls secrets:set -n /{stage}/adminEmails -t "alice@domain.com,bob@domain.com"
   const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
   const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
   const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;

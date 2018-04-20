@@ -6,7 +6,8 @@ const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = {
   entry: slsw.lib.entries,
   target: 'node',
-  mode: process.env.NODE_ENV=='production' ? 'production' : 'development',
+  mode: process.env.NODE_ENV==='production' ? 'production' : 'development',
+  devtool: process.env.STAGE==='prod' ? null : 'eval',
   externals: ['pg-native', 'tedious', 'sqlite3', 'mysql2'],
   plugins: [
     new webpack.ContextReplacementPlugin(

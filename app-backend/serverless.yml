@@ -14,15 +14,21 @@ provider:
   # Store commonly used or noteworthy values here
   vars:
     account: ${self:provider.vars.nonDevAccounts.${self:provider.stage}, self:provider.vars.nonDevAccounts.default}
-    accountSecretsRoot: ${self:service}/${self:provider.vars.account}
 
-    apiUrlPath: ${self:provider.vars.urlPathPrefix}api
+    graphQLAPIPath: "/api"
 
     auth0TenantName: ${self:provider.vars.account}-precisely
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
     defaultProfile: ${self:provider.vars.account}-profile-precisely
+
+    # customDomain / Route53 config
+    domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
+               self:provider.vars.domainMap.default}"
+    domainMap:
+      prod: precise.ly
+      default: ${self:provider.stage}.codeprecisely.net
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
@@ -45,12 +51,6 @@ provider:
       default: development
       # otherwise NODE_ENV it will be "development"
 
-    urlPathPrefix: "${self:provider.vars.urlPathPrefixMap.${self:provider.stage},
-                      self:provider.vars.urlPathPrefixMap.default}"
-    urlPathPrefixMap:
-      prod: ""
-      default: ${self:provider.stage}/
-
   # environment for handlers
   environment:
     STAGE: ${self:provider.stage}
@@ -70,19 +70,23 @@ provider:
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
 
+    GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
+
     # Auth0 values - needed for verifying Auth0 tokens
     AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
     AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
 
-    API_URL_PATH: ${self:provider.vars.apiUrlPath}
+    # Quick and dirty way to define admins for now
+    # TODO: better approach
+    ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
 
   # Not using environmentSecrets, but maybe for future
   # see: https://github.com/trek10inc/serverless-secrets
   # We put secrets & configuration values here
   # Using this approach, only credentials with access to an account
   # can change these values. For example,
-  environmentSecrets:
-    ADMIN_EMAILS: ADMIN_EMAILS
+  # environmentSecrets:
+  #   ADMIN_EMAILS: ADMIN_EMAILS
 
 iamRoleStatements:
   - Effect: Allow
@@ -96,11 +100,14 @@ resources:
 
 plugins:
   - serverless-webpack
-  - serverless-secrets
+  - serverless-domain-manager
 
 custom:
-  dotenv:
-    path: ../config/dev.env
+  customDomain:
+    domainName: ${self:provider.vars.domain}
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
   webpackIncludeModules: true
 
 functions:
@@ -120,7 +127,7 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:provider.vars.apiUrlPath}
+          path: ${self:provider.vars.graphQLAPIPath}
           method: get
           cors: true
           authorizer: APIAuthorizer
@@ -129,7 +136,7 @@ functions:
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
-          path: ${self:provider.vars.apiUrlPath}
+          path: ${self:provider.vars.graphQLAPIPath}
           method: post
           cors: true
           authorizer: APIAuthorizer

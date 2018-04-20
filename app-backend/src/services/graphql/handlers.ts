@@ -35,5 +35,5 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
 };
 
 export const playgroundHandler: Handler = lambdaPlayground({
-  endpoint: process.env.API_URL_PATH
+  endpoint: process.env.GRAPHQL_API_PATH
 });

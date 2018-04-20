@@ -93,6 +93,7 @@
     "jsonfile": "4.0.0",
     "sequelize-mock": "0.10.2",
     "serverless": "1.24.1",
+    "serverless-domain-manager": "^2.3.6",
     "serverless-dotenv-plugin": "^1.0.2",
     "serverless-dynamodb-client": "^0.0.2",
     "serverless-dynamodb-local": "0.2.26",
