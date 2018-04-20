@@ -1,18 +1,15 @@
-import {SharedIniFileCredentials} from 'aws-sdk';
 export * from '@aneilbaboo/dynogels-promisified';
 import {Model, ModelConfiguration } from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/utils';
 
-const options = {
-  region: process.env.REACT_APP_AWS_AUTH_REGION,
-  credentials: new SharedIniFileCredentials({ profile: process.env.PROFILE }),
-  endpoint: process.env.DB === 'local' ? 'http://localhost:8000' : 'https://dynamodb.us-east-1.amazonaws.com'
-};
-
-// console.log('Starting dynogels with options:', options);
-
-dynogels.AWS.config.update(options, true);
+// Detect special 'offline' stage, use DynamoDB local
+if (process.env.STAGE === 'offline') {
+  dynogels.AWS.config.update({
+    region: 'localhost',
+    endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
+  }, true);
+}
 
 export function stageTableName(tableName: string): string {
   if (!process.env.STAGE) {

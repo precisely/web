@@ -6,7 +6,7 @@ type Genotype {
   variantCall: String
   zygosity: String
   startBase: String
-  chromosomeName: String
+  chromosome: String
   variantType: String
   quality: String
   createdAt: String

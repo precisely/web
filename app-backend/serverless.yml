@@ -80,6 +80,7 @@ provider:
     # TODO: better approach
     ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
 
+    DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
   # Not using environmentSecrets, but maybe for future
   # see: https://github.com/trek10inc/serverless-secrets
   # We put secrets & configuration values here
@@ -101,6 +102,8 @@ resources:
 plugins:
   - serverless-webpack
   - serverless-domain-manager
+  - serverless-dynamodb-local
+  - serverless-offline # serverless-offline must be last in the list
 
 custom:
   customDomain:
@@ -108,6 +111,12 @@ custom:
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
+  dynamodb: # dynamodb-local settings
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      # seed: true
   webpackIncludeModules: true
 
 functions:

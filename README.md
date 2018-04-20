@@ -65,6 +65,15 @@ This is the staging account, it is intended to be as close as possible to the pr
 https://prod-precisely.signin.aws.amazon.com/console
 The production account. Admin access to this account is restricted to a few people. Like beta, the prod account is selected via the developer's local `prod-precisely-profile` AWS profile.
 
+## Offline mode
+
+```shell
+cd app-backend
+yarn sls dynamodb install # one time setup
+yarn offline # start the backend server
+```
+Run the service using serverless-offline and a local dynamodb.
+
 ### Backend Server
 
 `yarn server`

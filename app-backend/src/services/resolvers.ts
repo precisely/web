@@ -13,5 +13,4 @@ import {merge} from 'lodash';
 
 export const resolvers: IResolvers = [
   genotypeResolvers,
-  reportResolvers
-].reduce(merge);
+  reportResolvers].reduce(merge);

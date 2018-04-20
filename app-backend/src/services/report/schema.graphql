@@ -21,5 +21,6 @@ extend type Query {
 }
 
 extend type Mutation {
-  saveReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
+  createReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
+  updateReport(slug: String!, title: String!, rawContent: String!, genes: [String]): Report,
 }

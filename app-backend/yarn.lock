@@ -661,7 +661,7 @@ aws-sdk@2.198.0:
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
 
-aws-sdk@^*, aws-sdk@^2.3.19, aws-sdk@^2.7.0, aws-sdk@^2.75.0:
+aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.3.19, aws-sdk@^2.7.0, aws-sdk@^2.75.0:
   version "2.224.1"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.224.1.tgz#82fe93e10b3e818f315c35ce8667cdc8db94a0b3"
   dependencies:
@@ -5820,6 +5820,13 @@ serialize-javascript@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.4.0.tgz#7c958514db6ac2443a8abc062dc9f7886a7f6005"
 
+serverless-domain-manager@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-2.3.6.tgz#4ad0b51b27ed1bd69fe5a95ce7d53225d7a24c44"
+  dependencies:
+    aws-sdk "^2.177.0"
+    chalk "^2.0.1"
+
 serverless-dotenv-plugin@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/serverless-dotenv-plugin/-/serverless-dotenv-plugin-1.0.2.tgz#1470951d8408905ee7035eac2e658789e971b5fe"
@@ -5834,18 +5841,18 @@ serverless-dynamodb-client@^0.0.2:
   dependencies:
     aws-sdk "^2.3.19"
 
-serverless-dynamodb-local@0.2.26:
-  version "0.2.26"
-  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.26.tgz#f8192ac077135f93bf55540fd5376db77d39ba19"
+serverless-dynamodb-local@^0.2.28:
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.28.tgz#5dc6a164872edd31d89cd2d975bae0f4a2e21b30"
   dependencies:
     aws-sdk "^2.7.0"
     bluebird "^3.4.6"
     dynamodb-localhost "^0.0.5"
     lodash "^4.17.0"
 
-serverless-offline@3.17.0:
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-3.17.0.tgz#c7d4d57e19427a5ec5c5b2c0b877933b4b6f9de9"
+serverless-offline@^3.20.3:
+  version "3.20.3"
+  resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-3.20.3.tgz#0b081e1a4f93b51c49f41299262c08c70594b2c5"
   dependencies:
     babel-register "^6.18.0"
     boom "^4.2.0"
@@ -5856,6 +5863,7 @@ serverless-offline@3.17.0:
     jsonpath-plus "^0.16.0"
     jsonwebtoken "^7.4.3"
     lodash "^4.17.4"
+    uuid "^3.2.1"
     velocityjs "^0.9.3"
 
 serverless-plugin-additional-stacks@^1.1.0:
@@ -5866,9 +5874,9 @@ serverless-plugin-scripts@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/serverless-plugin-scripts/-/serverless-plugin-scripts-1.0.2.tgz#21808c3cfd0a1a84e48c0660b0f6f370b5665486"
 
-serverless-secrets@^3.0.0-beta.12:
-  version "3.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/serverless-secrets/-/serverless-secrets-3.0.0-beta.12.tgz#7d8b2826208ec1c07c98a36198d538bb6f923aa0"
+"serverless-secrets@https://github.com/aneilbaboo/serverless-secrets.git#aneil/fix-process.env._HANDLER":
+  version "3.0.0-beta.11"
+  resolved "https://github.com/aneilbaboo/serverless-secrets.git#ab7d5dc3864d16c8c50c9264b9ed890594b9d0ee"
   dependencies:
     lodash "^4.17.4"
 

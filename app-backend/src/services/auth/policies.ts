@@ -15,11 +15,59 @@ export const DynamoWriteActions = [
 ];
 
 export const LambdaExecutionPolicyStatement: Statement = {
-  Sid: 'AllowUserToExecuteFunctions',
+  Sid: 'PreciselyUserAllowExecuteFunctions',
   Effect: 'Allow',
   Action: [ 'lambda:Invoke', 'lambda:InvokeAsync' ],
-  Resource: `aws:arn:lambda:::*`,
+  Resource: 'aws:arn:lambda:::*',
 };
+
+export const CloudWatchPolicyStatement: Statement = {
+  Sid: 'PreciselyUserAllowCloudWatchAccess',
+  Effect: 'Allow',
+  Action: [ 'cloudwatch:*' ],
+  Resource: '*'
+};
+
+export function adminPolicyDocument(): PolicyDocument {
+  // Open access for admins so they can use API (esp in development)
+  // TODO: need to lock this down for prod
+  return {
+    Version: PolicyVersion,
+    Statement: [
+      LambdaExecutionPolicyStatement,
+      CloudWatchPolicyStatement,
+      dynamoTableUserAccessStatement(null, Genotype.tableName(), [...DynamoReadActions,  ...DynamoWriteActions]),
+      // in future:
+      // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
+      ... s3FolderUserAccessStatements(null, process.env.S3_BUCKET_GENETICS_VCF),
+      ... s3FolderUserAccessStatements(null, process.env.S3_BUCKET_GENETICS_23ANDME)
+    ]
+  };
+}
+
+export function userPolicyDocument(userId: string): PolicyDocument {
+  return {
+    Version: PolicyVersion,
+    Statement: [
+      LambdaExecutionPolicyStatement,
+      dynamoTableUserAccessStatement(userId, Genotype.tableName(), DynamoReadActions),
+      // in future:
+      // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
+      ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_VCF),
+      ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_23ANDME)
+    ]
+  };
+}
+
+export function publicPolicyDocument(): PolicyDocument {
+  // TODO: need to tighten up access
+  return {
+    Version: PolicyVersion,
+    Statement: [
+      LambdaExecutionPolicyStatement
+    ]
+  };
+}
 
 /**
  * Create a user policy document
@@ -29,33 +77,15 @@ export const LambdaExecutionPolicyStatement: Statement = {
  * @param {boolean} admin - if provided, permissions allowed for all users' resources
  * @returns {PolicyDocument}
  */
-export function userPolicyDocument(userId: string, admin: boolean): PolicyDocument {
+export function policyDocument(userId: string, admin: boolean): PolicyDocument {
+  // admin policy
   if (admin) {
-    // Open access for admins so they can use API (esp in development)
-    // TODO: need to lock this down for prod
-    return {
-      Version: PolicyVersion,
-      Statement: [
-        LambdaExecutionPolicyStatement,
-        dynamoTableUserAccessStatement(null, Genotype.tableName(), [...DynamoReadActions,  ...DynamoWriteActions]),
-        // in future:
-        // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
-        ... s3FolderUserAccessStatements(null, process.env.S3_BUCKET_GENETICS_VCF),
-        ... s3FolderUserAccessStatements(null, process.env.S3_BUCKET_GENETICS_23ANDME)
-      ]
-    };
+   return adminPolicyDocument();
+  } else if (userId) {
+    // authenticated User policy
+    return userPolicyDocument(userId);
   } else {
-    return {
-      Version: PolicyVersion,
-      Statement: [
-        LambdaExecutionPolicyStatement,
-        dynamoTableUserAccessStatement(userId, Genotype.tableName(), DynamoReadActions),
-        // in future:
-        // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
-        ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_VCF),
-        ... s3FolderUserAccessStatements(userId, process.env.S3_BUCKET_GENETICS_23ANDME)
-      ]
-    };
+    return publicPolicyDocument();
   }
 }
 
