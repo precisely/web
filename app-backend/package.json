@@ -71,7 +71,8 @@
     "pg-hstore": "2.3.2",
     "sequelize": "4.35.2",
     "slugify": "^1.2.9",
-    "winston": "3.0.0-rc2"
+    "winston": "3.0.0-rc2",
+    "winston-cloudwatch": "https://github.com/flybondi/winston-cloudwatch.git#feature/winston3-support"
   },
   "devDependencies": {
     "@types/bluebird": "3.5.20",

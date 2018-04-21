@@ -151,7 +151,7 @@ functions:
           path: ${self:provider.vars.graphQLAPIPath}
           method: get
           cors: true
-          #authorizer: APIAuthorizer
+          authorizer: APIAuthorizer
 
   GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler

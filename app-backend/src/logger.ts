@@ -7,11 +7,16 @@
  */
 
 /* istanbul ignore next */
-const winston =  require('winston');
+const winston = require('winston');
+const WinstonCloudWatch = require('winston-cloudwatch');
 
 /* istanbul ignore next */
 export const log = winston.createLogger({
   transports: [
-    new winston.transports.Console()
+    new winston.transports.Console(),
+    new WinstonCloudWatch({
+      logGroupName: '/precisely/web',
+      logStreamName: 'aggregated-log'
+    })
   ]
 });
