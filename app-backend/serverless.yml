@@ -1,6 +1,6 @@
 service:
   name: precisely
-  awsKmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
+  awsKmsKeyArn: ${self:provider.vars.kmsKeyArn}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
@@ -40,10 +40,17 @@ provider:
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
 
+    kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     kmsKeyArns:
       dev: arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1
       beta:
       prod:
+
+    loggingLevel: ${self:provider.vars.loggingLevels.${self:provider.stage},
+                    self:provider.vars.loggingLevels.default}
+    loggingLevels:
+      prod: INFO
+      default: DEBUG
 
     # name of the AWS account (prod, stage or dev)
     nonDevAccounts:
@@ -57,11 +64,27 @@ provider:
       default: development
       # otherwise NODE_ENV it will be "development"
 
-  # environment for handlers
+  ##
+  ## Permissions
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "*"
+        - "logs:*"
+        - "cloudwatch:*"
+        - "lambda:invoke"
+      Resource: "*"
+    - Effect: Allow
+      Action: KMS:Decrypt
+      Resource: ${self:provider.vars.kmsKeyArn}
+
+  ##
+  ## Environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
 
+    LOGGER_LEVEL: ${self:provider.vars.loggingLevel}
     # NODE_ENV should only be "production" OR "development"
     # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
     #      https://webpack.js.org/guides/production/#specify-the-environment
@@ -87,11 +110,6 @@ provider:
     ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
 
     DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
-
-# iamRoleStatements:
-#   - Effect: Allow
-#     Action: KMS:Decrypt
-#     Resource: ${self:provider.vars.kmsKeyArn}
 
 resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
@@ -126,7 +144,7 @@ custom:
     #   foo: bar
     #   baz: xyzzy
     MethodSettings:
-      LoggingLevel: INFO
+      LoggingLevel: ${self:provider.vars.loggingLevel}
       CachingEnabled: true
       CacheTtlInSeconds: 3600
   webpackIncludeModules: true
@@ -151,7 +169,7 @@ functions:
           path: ${self:provider.vars.graphQLAPIPath}
           method: get
           cors: true
-          authorizer: APIAuthorizer
+          #authorizer: APIAuthorizer
 
   GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler

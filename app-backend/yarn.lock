@@ -18,6 +18,18 @@
     lodash "4.17.4"
     uuid "3.1.0"
 
+"@aneilbaboo/winston-cloudwatch@^1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/winston-cloudwatch/-/winston-cloudwatch-1.13.0.tgz#6e483def44825ecae07f9961c866b39ab694f979"
+  dependencies:
+    async "^2.6.0"
+    aws-sdk "^2.186.0"
+    chalk "^2.3.0"
+    lodash.assign "^4.2.0"
+    lodash.find "^4.6.0"
+    lodash.isempty "^4.4.0"
+    proxy-agent "^2.2.0"
+
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.44.tgz#2a02643368de80916162be70865c97774f3adbd9"
@@ -7335,18 +7347,6 @@ winchan@^0.2.0:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
-
-"winston-cloudwatch@https://github.com/flybondi/winston-cloudwatch.git#feature/winston3-support":
-  version "1.13.0"
-  resolved "https://github.com/flybondi/winston-cloudwatch.git#bdae5a6194caaf23b0a9a51c27b5860da089270f"
-  dependencies:
-    async "^2.6.0"
-    aws-sdk "^2.186.0"
-    chalk "^2.3.0"
-    lodash.assign "^4.2.0"
-    lodash.find "^4.6.0"
-    lodash.isempty "^4.4.0"
-    proxy-agent "^2.2.0"
 
 winston-transport@^3.0.1:
   version "3.1.0"
