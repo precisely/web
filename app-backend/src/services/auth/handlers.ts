@@ -12,8 +12,13 @@ export const apiAuthorizer: CustomAuthorizerHandler = (
   context: Context,
   callback: CustomAuthorizerCallback
 ) => makeUserPolicy(event, context)
-      .then(result => callback(null, result))
-      .catch(err => callback(err));
+      .then(result => {
+        callback(null, result);
+      })
+      .catch(err => {
+        log.info('apiAuthorizer: %s', err);
+        callback(err);
+      });
 
 function offlineAuthentication(event: CustomAuthorizerEvent): Auth0AuthenticationResult {
   return {
@@ -23,12 +28,13 @@ function offlineAuthentication(event: CustomAuthorizerEvent): Auth0Authenticatio
 }
 
 async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): Promise<CustomAuthorizerResult> {
+  console.log('hello');
   log.info(`apiAuthorizer event:${JSON.stringify(event)}`);
   // auth0 returns userId and scopes
   const auth: Auth0AuthenticationResult = process.env.STAGE === 'offline' ?
   offlineAuthentication(event) :
   await authenticate(event);
-  log.debug('apiAuthorizer authentication result: %j', auth);
+  log.info('apiAuthorizer authentication result: %j', auth);
 
   if (auth) {
     const authUserPolicy: CustomAuthorizerResult = {
@@ -39,14 +45,14 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
                     //   $context.authorizer.scopes
                     // available in cloud formation
     };
-    log.debug('makeUserPolicy => (authenticated user) %j', authUserPolicy);
+    log.info('makeUserPolicy => (authenticated user) %j', authUserPolicy);
     return authUserPolicy;
   } else {
     const publicPolicy: CustomAuthorizerResult = {
       principalId: null,
       policyDocument: publicPolicyDocument()
     };
-    log.debug('makeUserPolicy => (anonymous user) %j', publicPolicy);
+    log.info('makeUserPolicy => (anonymous user) %j', publicPolicy);
     return publicPolicy;
 
   }
