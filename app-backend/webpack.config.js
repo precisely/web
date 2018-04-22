@@ -15,8 +15,13 @@ module.exports = {
             path.resolve(__dirname, '../src')
     ),
     new webpack.ContextReplacementPlugin(
-      /logform/,
-      /(.*)\.js/
+      /logform/, '.', {
+        './combine': './combine.js',
+        './colorize': './colorize.js',
+        './timestamp': './timestamp.js',
+        './splat': './splat.js',
+        './printf': './printf.js'
+      }
     )
   ],
   resolve: {
