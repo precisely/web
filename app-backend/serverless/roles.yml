@@ -1,0 +1,22 @@
+---
+AuthenticatedUser:
+  Type: AWS::IAM::Role
+  Properties:
+    Path: /authenticated
+    RoleName:
+      Fn::Join: [ '', ["${self:provider.stage}", {Ref: AWS::Region}, {Ref: Authenticated} ] ]
+    AssumeRolePolicyDocument:
+      ${file(./severless/policies/assume-role.yml)}
+
+    # note that these rights are needed if you want your function to be able to communicate with resources within your vpc
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+    Policies:
+      - PolicyName: AuthenticatedUserPolicy
+      PolicyDocument:
+          Version: '2017'
+          Statement:
+            # allow lambdas to write logs
+            - ${file(./serverless/statements/allow-lambda-logging.yml)}
+            - ${file(./serverless/statements/put-deployment-bucket.yml)}
+...

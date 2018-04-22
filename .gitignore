@@ -13,5 +13,11 @@ jspm_packages
 .idea
 coverage
 
-# Production Config
-config/security.env.prod
+# Yarn stuff
+yarn-error.log
+
+# Ignore .env files
+config/*.env
+
+# https://github.com/trek10inc/serverless-secrets#processing-during-packaging
+.serverless-secrets.json

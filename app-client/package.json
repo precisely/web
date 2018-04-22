@@ -38,7 +38,7 @@
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
-      "<rootDir>/src/__mocks__/localStorage.js"
+      "<rootDir>/__mocks__/localStorage.js"
     ],
     "testRegex": "(/tests/.*-test|\\.(test|spec))\\.(ts|tsx)$",
     "testEnvironment": "node",
@@ -53,7 +53,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "amazon-cognito-identity-js": "<rootDir>/src/__mocks__/amazon-cognito-identity-js/index.js"
+      "amazon-cognito-identity-js": "<rootDir>/__mocks__/amazon-cognito-identity-js/index.js"
     },
     "moduleFileExtensions": [
       "web.ts",
@@ -67,11 +67,6 @@
       "json",
       "node"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "./tsconfig.test.json"
-      }
-    },
     "moduleDirectories": [
       "node_modules",
       "."
@@ -102,6 +97,7 @@
     ]
   },
   "dependencies": {
+    "@types/bluebird": "^3.5.20",
     "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "1.1.5",
     "apollo-client": "2.2.1",
@@ -110,6 +106,7 @@
     "autoprefixer": "7.1.6",
     "aws-sdk": "2.188.0",
     "axios": "0.17.1",
+    "bluebird": "3.5.1",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
     "css-loader": "0.28.4",
@@ -125,6 +122,8 @@
     "iscroll": "5.2.0",
     "iscroll-react": "1.0.3",
     "jest": "22.0.4",
+    "markdown-components": "1.2.0",
+    "memory-streams": "0.1.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
@@ -182,6 +181,7 @@
     "@types/react-transition-group": "2.0.6",
     "@types/reactstrap": "5.0.12",
     "@types/redux-logger": "3.0.5",
+    "apollo-mocknetworkinterface": "2.0.0",
     "babel-eslint": "7.2.3",
     "enzyme": "3.1.0",
     "enzyme-adapter-react-16": "1.0.2",

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "build/dist",
     "experimentalDecorators": true,
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es5",
     "lib": ["es6"],
     "sourceMap": true,
@@ -15,15 +15,14 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
-      "@types/",
+      "node_modules/@types",
       "./types"
     ],
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "*"
-      ]
+      "src/*": [ "src/*" ],
+      "*": [ "*" ]
     }
   },
   "exclude": [

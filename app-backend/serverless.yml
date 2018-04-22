@@ -1,91 +1,184 @@
-service: precisely
+service:
+  name: precisely
+  awsKmsKeyArn: ${self:provider.vars.kmsKeyArn}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  stage: dev
-  region: us-east-1
-  profile: ${opt:stage, self:provider.stage}-profile-precisely
-  environment:
-    SECRETS: ${self:custom.kmsSecrets.secrets.SECRETS}
-    REGION: ${self:provider.region}
-    NODE_ENV: ${opt:stage, self:provider.stage}
-    AWS_PROFILE: ${opt:stage, self:provider.stage}-profile-precisely 
-    # Storing profile in env too as `sls invoke local` ignores the AWS profile in provider (needed for setup:database)
+  runtime: nodejs8.10
+  stage: ${opt:stage, env:STAGE, "dev"}
+  region: ${opt:region, env:REGION, "us-east-1"}
+  profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
+
+  # Store commonly used or noteworthy values here
+  vars:
+    account: ${self:provider.vars.accountFromStage.${self:provider.stage}, self:provider.vars.accountFromStage.default}
+
+    # name of the AWS account (prod, stage or dev)
+    accountFromStage:
+      beta: beta
+      prod: prod
+      offline: offline # Note: there is no AWS "offline" account
+                       # This mapping exists to ensure no AWS resources are used when STAGE=offline
+      default: dev
+
+    certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
+                        self:provider.vars.certificateMap.default}"
+    certificateMap:
+      prod: "*.precise.ly"
+      default: "*.codeprecisely.net"
+
+    graphQLAPIPath: "/api"
+
+    auth0TenantName: ${self:provider.vars.account}-precisely
+    auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
+
+    # default AWS config profile name (used locally)
+    defaultProfile: ${self:provider.vars.account}-profile-precisely
+
+    # customDomain / Route53 config
+    domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
+               self:provider.vars.domainMap.default}"
+    domainMap:
+      prod: precise.ly
+      default: ${self:provider.stage}.codeprecisely.net
+
+    # S3 resource names
+    geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
+    genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
+
+    kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
+    kmsKeyArns:
+      dev: "arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1"
+      beta: "TODO add arn"
+      prod: "TODO add arn"
+      offline: ""
+
+    logLevel: ${self:provider.vars.logLevels.${self:provider.stage},
+                    self:provider.vars.logLevels.default}
+    logLevels:
+      prod: INFO
+      default: DEBUG
+
+    nodeEnv:
+      beta: production
+      prod: production
+      default: development
+      # otherwise NODE_ENV it will be "development"
+
+  ##
+  ## Permissions
   iamRoleStatements:
-    -  Effect: "Allow"
-       Action:
-         - "s3:GetObject"
-       Resource: "*"
     - Effect: Allow
       Action:
-        - KMS:Decrypt
-      Resource: ${self:custom.kmsSecrets.keyArn} 
+        - "*"
+        - "logs:*"
+        - "cloudwatch:*"
+        - "lambda:invoke"
+      Resource: "*"
     - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:table/*"
+      Action: KMS:Decrypt
+      Resource: ${self:provider.vars.kmsKeyArn}
+
+  ##
+  ## Environment for handlers
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+
+    LOG_LEVEL: ${self:provider.vars.logLevel}
+    # NODE_ENV should only be "production" OR "development"
+    # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
+    #      https://webpack.js.org/guides/production/#specify-the-environment
+    # We set NODE_ENV automatically based on STAGE:
+    #   production for beta and prod
+    #   development for all other stages
+    # Override by passing it as env var:
+    #   NODE_ENV={production|development} yarn sls ...
+    NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv.${self:provider.stage}, self:provider.vars.nodeEnv.default }
+
+    # S3 buckets
+    S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
+    S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
+
+    GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
+
+    # Auth0 values - needed for verifying Auth0 tokens
+    AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
+
+    # Quick and dirty way to define admins for now
+    # TODO: better approach
+    ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
+
+    DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
+
+resources:
+  - Resources: ${file(./serverless/resources/cors.yml)}
+  - Resources: ${file(./serverless/resources/dynogels-tables.js)}
+  - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
+  - serverless-domain-manager
   - serverless-webpack
+  - serverless-api-stage
   - serverless-dynamodb-local
-  - serverless-kms-secrets
-  - serverless-plugin-scripts
-  - serverless-offline
+  - serverless-offline # serverless-offline must be last in the list
 
 custom:
-  scripts:
-    hooks:
-      'deploy:finalize': yarn setup:database -- -s ${opt:stage, self:provider.stage}
-  serverless-offline:
-    port: 4000
-  webpackIncludeModules: true
-  serverless-kms-secrets:
-    secretsFile: kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml
-  kmsSecrets: ${file(./kms-secrets/kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
-  dynamodb:
+  customDomain:
+    domainName: ${self:provider.vars.domain}
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    certificateName: ${self:provider.vars.certificateName}
+    endpointType: 'regional'
+  dynamodb: # dynamodb-local settings
     start:
       port: 8000
       inMemory: true
       migrate: true
+      # seed: true
+  stageSettings: # serverless-api-stage plugin
+    CacheClusterEnabled: true
+    CacheClusterSize: '0.5'
+    # Variables:
+    #   foo: bar
+    #   baz: xyzzy
+    MethodSettings:
+      LoggingLevel: INFO
+      CachingEnabled: true
+      CacheTtlInSeconds: 3600
+  webpackIncludeModules: true
 
 functions:
-  graphql:
-    handler: src/handler.graphqlHandler
+  APIAuthorizer:
+    handler: src/services/auth/handlers.apiAuthorizer
+    cors: true
+
+  # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
+  VCFIngester:
+    handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
-    - http:
-        path: api
-        method: post
-        cors: true
-        authorizer:
-          arn: ${env:COGNITO_ARN}
-  setupDatabase:
-    handler: src/dynogels-db/setup.setupDatabase
-  ingester:
-    handler: src/ingest-service/genotypeIngester.genotypeIngester
+      - s3:
+          bucket: GeneticsVCF
+          event: s3:ObjectCreated:*
+
+  GraphQLPlayground:
+    handler: src/services/graphql/handlers.playgroundHandler
     events:
-    - s3:
-        bucket: ${opt:stage, 'dev'}-precisely-genetics-ga4gh
-        event: s3:ObjectCreated:*
-  playground:
-    handler: src/handler.playgroundHandler
+      - http:
+          path: ${self:provider.vars.graphQLAPIPath}
+          method: get
+          cors: true
+          #authorizer: APIAuthorizer
+
+  GraphQLAPI:
+    handler: src/services/graphql/handlers.apiHandler
     events:
-    - http:
-        path: playground
-        method: get
-        cors: true
-  graphiql:
-    handler: src/handler.graphiqlHandler
-    events:
-    - http:
-        path: graphiql
-        method: get
-        cors: true
+      - http:
+          path: ${self:provider.vars.graphQLAPIPath}
+          method: post
+          cors: true
+          authorizer: APIAuthorizer

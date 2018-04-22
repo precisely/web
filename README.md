@@ -5,30 +5,103 @@
 
 ## Quick Setup
 
-You need to have Node 6 or higher and `nvm` [installed](https://github.com/creationix/nvm#installation) on your system.
+### Dependencies
 
-- Install Dependencies.
+* Ensure nvm is installed:
+https://github.com/creationix/nvm#installation
 
-   `npm i -g serverless`
+### Clone this repo
+```shell
+git clone git@github.com:precisely/web
+cd web
+```
 
-   `yarn install`
+### Use correct node version
+```shell
+nvm use
+```
 
-- Install required packages and Node v6.10.3 (If you haven't fixed [npm permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions), you may have to use `sudo`)
-
-   `yarn setup`
-
-## Managing Node Version
-
-- As AWS Lambda only supports v6.10.3 and v4.3.2 of Node.js, we are using `nvm` to manage versions.
-- Make sure to run `nvm use` in this directory if you have changed your nodeJS version for any reason.
+You may need to `nvm install {recommended-version}`
 - If you are a [zsh](http://ohmyz.sh) user then you can configure your shell to call `nvm use` automatically in a directory with a .nvmrc file. [Read here.](https://github.com/creationix/nvm#zsh)
 
 
-## Quick Start
+### Install packages
+```shell
+yarn install
+```
 
-Make sure you have your developer access key and secret token saved under `dev-profile-precisely` profile.
+### Configure AWS profiles
+Setup AWS credentials for environments, and name them as follows:
+* `dev-precisely`
+* `beta-precisely`
+* `prod-precisely` - if you are a prod admin
 
-    sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+You'll need your developer access key and secret. Ask Aneil.
+
+```shell
+sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+```
+
+### Stack
+
+* AWS: Lambda, DynamoDB, ECS, APIGateway, CloudFormation, Route53
+* Auth0
+* Typescript, Apollo, GraphQL
+* Serverless
+
+### AWS Accounts
+
+We maintain 3 AWS accounts: dev, stage and prod.
+
+#### dev
+https://dev-precisely.signin.aws.amazon.com/console
+Used for development. Serverless creates separate resources for each developer, deployed as a separate serverless stage. This is configured by setting `STAGE` in config/default.env to your name. When you invoke `yarn sls {cmd}`, the environment is setup using config/default.env.
+
+#### beta
+https://beta-precisely.signin.aws.amazon.com/console
+This is the staging account, it is intended to be as close as possible to the prod account. After code from the dev branch passes tests, CircleCI automatically deploys the beta stage to the beta account. The serverless.yml file uses the developer's local `beta-precisely-profile` AWS profile to deploy, so this account should be configured with the beta credentials.
+
+#### prod
+https://prod-precisely.signin.aws.amazon.com/console
+The production account. Admin access to this account is restricted to a few people. Like beta, the prod account is selected via the developer's local `prod-precisely-profile` AWS profile.
+
+## Developer subdomains
+
+Developer stages deployed to the dev account can be accessed using `{stage}.codeprecisely.net`.  To create your subdomain, you need to take a few steps:
+
+1. Set STAGE=your name in `config/default.env`, as per the instructions in that folder
+
+2. Create the domain:
+    ```shell
+    yarn sls create_domain
+    ```
+
+3. Temporarily comment out the serverless-domain-manager plugin in `app-backend/serverless.yml`:
+
+    ```yaml
+    plugins:
+      # - serverless-domain-manager
+      - ...
+    ```
+
+    This is necessary because of [an incompatibility](https://github.com/leftclickben/serverless-api-stage/issues/12 ) beween serverless-domain-manager and the APIGateway logging plugin, serverless-api-stage during initial deployment.
+
+4. Do you first deployment:
+    ```shell
+    yarn sls deploy
+    ```
+
+5. Uncomment the line from (3)
+
+You have a domain
+## Offline mode
+
+```shell
+cd app-backend
+yarn sls dynamodb install # one time setup
+yarn offline # start the backend server
+```
+Run the service using serverless-offline and a local dynamodb.
 
 ### Backend Server
 
@@ -56,29 +129,16 @@ This will run both concurrently but is not recommended when you want to view bac
 * Branching structure to be followed:
     * https://graysonkoonce.com/stacked-pull-requests-keeping-github-diffs-small/
 
-* All the secrets are managed using AWS KMS. To know more about how to encrypt new secrets or update/use them, read [wiki](https://github.com/precisely/web/wiki/AWS-Key-Management#usage).
+* All the secrets are managed using [serverless-secrets](https://github.com/trek10inc/serverless-secrets ) which uses [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html ) under the hood.
 
-* Currently available environment variables are listed [here](https://github.com/precisely/web/wiki/AWS-Key-Management#list-of-the-environment-variables-stored-currently-for-reference). Please do not forget to update the list if (and when) you add new variables.
+Environment variables are set and retrieved using:
+```shell
+yarn sls secrets list-remote # list
+yarn sls secrets get -n {secret-name}
+yarn sls secrets set -n {secret-name} -t {secret-value}
+```
 
-### Seeding Data
-
-* To create seed data and cognito users,
-    * For `dev` environment:
-        * `yarn seed:create:dev [LIMIT]`: will create users in cognito pool of dev account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
-    * For `stage` environment:
-        * `yarn seed:create:stage [LIMIT]`: will create users in cognito pool of stage account and other DB data at `"app-backend\src\seed-data\data\"` in JSON format. 
-    * LIMIT is optional here with default value of 10. E.g: `yarn seed:create:stage 100`
-
-* To seed data in Database:
-    * For `local` databases (helpful during active development):
-        * `yarn seed:local`: will put the created seed data from JSON files to appropriate tables.
-        * NOTE: Make sure to run postgres and dynamoDB locally before seeding data.
-    * For `dev` databases:
-        * `yarn seed:dev`: will put the created seed data from JSON files to appropriate tables.'
-        * Will pick up credentials from `dev-profile-precisely` set [here](#setup-for-deployment).
-    * For `stage` databases:
-        * `yarn seed:stage`: will put the created seed data from JSON files to appropriate tables.
-        * Will pick up credentials from `stage-profile-precisely` set [here](#setup-for-deployment).
+If you add a secret, update the `environmentSecrets:` section of serverless.yml to provide access to the values in code.
 
 ## Managing Roles
 
@@ -92,108 +152,63 @@ This will run both concurrently but is not recommended when you want to view bac
 
 * More info provided [here](https://github.com/precisely/web/wiki/Managing-Roles-for-AWS-Users).
 
+## Auth0
+We maintain 3 tenants, matching the three different AWS environments:
+
+* dev-precisely.auth0.com
+* beta-precisely.auth0.com
+* prod-precisely.auth0.com
+
+Currently, all dev stages share the same dev tenant and users.
+
 ## Usage
+https://www.packtpub.com/graphics/9781784393755/graphics/3755OT_01_28.jpg">
 
-### Usage of Local DynamoDB
-To use the local dynamodb, open `:8000/shell` of your localhost. `http://localhost:8000/shell`.
+### GraphQL GUI
 
-<img width="800" height="500" alt="dynamodb" src="https://www.packtpub.com/graphics/9781784393755/graphics/3755OT_01_28.jpg">
-
-### Usage of GraphQL Playground
-To use the GraphQL Playground, open `/playground` of your Serverless service. With serverless offline it is `http://localhost:4000/playground`.
+1. Login on the site (this gets an auth token from Auth0 and saves it in your local storage)
+2. Navigate to `/api/gui`
 
 <img width="800" height="500" alt="playground" src="https://user-images.githubusercontent.com/1587005/32695336-96dbbe16-c70d-11e7-96b9-c7ef4e9ba32c.gif">
 
-### Usage of GraphiQL
- To use the GraphiQL, open `/graphiql` of your Serverless service. With serverless offline it is `http://localhost:4000/graphiql`.
+## Deployment
 
-<img width="800" height="500" alt="graphiql" src="https://user-images.githubusercontent.com/1587005/32695300-943e355e-c70c-11e7-9fac-2c9324a242c4.gif">
-
-
-## Setup for Deployment
 
 Configure your AWS keys. Here you can find a [2min walkthrough](https://www.youtube.com/watch?v=mRkUnA3mEt4) how to do retrieve the keys.
 
-- For `Development`
+1. Create default.env file
 
-    Make sure you have your development access key and secret token saved under `dev-profile-precisely` profile.
-
-    ```
-    sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
-    ```
-
-    You need to make sure you have access to your deployed lambda functions.
-
-    - Both (Backend and Frontend)
-        ```
-        yarn deploy:dev
-        ```
-
-    - Backend Server only
-        ```
-        cd app-backend/
-        yarn deploy:dev
-        ```
-
-    - Frontend Client only
-        ```
-        cd app-client/
-        yarn deploy:dev
-        ```
-        - Your deployment url will be : http://dev-precisely-01.s3-website-us-east-1.amazonaws.com/
-
-- For `Staging`: (**Auto Deployed on commits in `dev` branch**)
-
-    Make sure you have your staging access key and secret token saved under `stage-profile-precisely` profile.
-
-    ```
-    sls config credentials --provider aws -n stage-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+    * Copy `config/default.env.sample` to `config.default.env`
+    * Modify `config/default.env`, e.g., if your name is "Narasimha":
+    ```shell
+    # default.env
+    STAGE=narasimha
     ```
 
-    You need to make sure you have access to your deployed lambda functions.
+2. Configure AWS profile(s):
+    Get keys from Aneil
 
-    - Both (Backend and Frontend)
-        ```
-        yarn deploy:stage
-        ```
+    ```shell
+    # dev profile
+    sls config credentials --provider aws -n dev-profile-precisely --key <dev_aws_access_key> --secret <dev_aws_secret_key>
 
-    - Backend Server only
-        ```
-        cd app-backend/
-        yarn deploy:stage
-        ```
+    # beta profile
+    sls config credentials --provider aws -n beta-profile-precisely --key <beta_aws_access_key> --secret <beta_aws_secret_key>
 
-    - Frontend Client only
-        ```
-        cd app-client/
-        yarn deploy:stage
-        ```
-        - Your deployment url will be : http://stage-precisely-01.s3-website-us-east-1.amazonaws.com/
-
-- For `Production`:
-
-    Make sure you have your production access key and secret token saved under `prod-profile-precisely` profile.
-
-    ```
-    sls config credentials --provider aws -n prod-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
+    # prod profile
+    sls config credentials --provider aws -n prod-profile-precisely --key <prod_aws_access_key> --secret <prod_aws_secret_key>
     ```
 
-    You need to make sure you have access to your deployed lambda functions.
+3. Deploy!
 
-   - Both (Backend and Frontend)
-        ```
-        yarn deploy:prod
-        ```
+    ```shell
+    yarn sls deploy # both back and front end to dev account & STAGE={your-name}
+    cd app-backend && yarn sls deploy # backend only
+    cd app-frontend && yarn sls deploy # front end only
 
-    - Backend Server only
-        ```
-        cd app-backend/
-        yarn deploy:prod
-        ```
+    STAGE=beta yarn sls deploy # both to beta acct using your beta-profile-precisely creds
+    STAGE=prod yarn sls deploy # both to prod acct using your prod-profile-precisely creds
+    ```
 
-    - Frontend Client only
-        ```
-        cd app-client/
-        yarn deploy:prod
-        ```
-        - Your deployment url will be : http://prod-precisely-01.s3-website.us-east-2.amazonaws.com/
+    ### Notes
+    `beta` is normally deployed automatically by CircleCI, so you should only deploy to beta in special circumstances.
