@@ -64,6 +64,7 @@
     "jwks-rsa": "^1.2.1",
     "jwks-rsa-promisified": "^1.0.2",
     "lodash.camelcase": "^4.3.0",
+    "logform": "1.5.0",
     "sequelize": "4.35.2",
     "slugify": "^1.2.9",
     "winston": "3.0.0-rc2"

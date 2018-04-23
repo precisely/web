@@ -13,15 +13,6 @@ module.exports = {
     new webpack.ContextReplacementPlugin(
             /sequelize(\\|\/)/,
             path.resolve(__dirname, '../src')
-    ),
-    new webpack.ContextReplacementPlugin(
-      /logform/, '.', {
-        './combine': './combine.js',
-        './colorize': './colorize.js',
-        './timestamp': './timestamp.js',
-        './splat': './splat.js',
-        './printf': './printf.js'
-      }
     )
   ],
   resolve: {
