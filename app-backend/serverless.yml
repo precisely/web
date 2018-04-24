@@ -10,6 +10,7 @@ provider:
   stage: ${opt:stage, env:STAGE, "dev"}
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
+  deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
 
   # Store commonly used or noteworthy values here
   vars:
@@ -76,6 +77,7 @@ provider:
         - "logs:*"
         - "cloudwatch:*"
         - "lambda:invoke"
+        - "sts:*"
       Resource: "*"
     - Effect: Allow
       Action: KMS:Decrypt
@@ -124,12 +126,13 @@ plugins:
   - serverless-webpack
   - serverless-api-stage
   - serverless-dynamodb-local
+  - serverless-shell
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
   customDomain:
     domainName: ${self:provider.vars.domain}
-    basePath: ''
+    #basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
     certificateName: ${self:provider.vars.certificateName}
@@ -151,11 +154,35 @@ custom:
       CachingEnabled: true
       CacheTtlInSeconds: 3600
   webpackIncludeModules: true
+  authorizers:
+    APIAuthorizer:
+      name: APIAuthorizer
+      type: REQUEST
+      resultTtlInSeconds: 0
+      identitySource: method.request.header.Authorization, context.identity.sourceIp
 
 functions:
   APIAuthorizer:
     handler: src/services/auth/handlers.apiAuthorizer
+    type: REQUEST
     cors: true
+
+  GraphQLPlayground:
+    handler: src/services/graphql/handlers.playgroundHandler
+    events:
+      - http:
+          path: ${self:provider.vars.graphQLAPIPath}
+          method: get
+          cors: true
+
+  GraphQLAPI:
+    handler: src/services/graphql/handlers.apiHandler
+    events:
+      - http:
+          path: ${self:provider.vars.graphQLAPIPath}
+          method: post
+          cors: true
+          authorizer: ${self:custom.authorizers.APIAuthorizer}
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:
@@ -165,20 +192,3 @@ functions:
           bucket: GeneticsVCF
           event: s3:ObjectCreated:*
 
-  GraphQLPlayground:
-    handler: src/services/graphql/handlers.playgroundHandler
-    events:
-      - http:
-          path: ${self:provider.vars.graphQLAPIPath}
-          method: get
-          cors: true
-          #authorizer: APIAuthorizer
-
-  GraphQLAPI:
-    handler: src/services/graphql/handlers.apiHandler
-    events:
-      - http:
-          path: ${self:provider.vars.graphQLAPIPath}
-          method: post
-          cors: true
-          authorizer: APIAuthorizer

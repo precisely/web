@@ -28,15 +28,13 @@ function offlineAuthentication(event: CustomAuthorizerEvent): Auth0Authenticatio
 }
 
 async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): Promise<CustomAuthorizerResult> {
-  console.log('hello');
-  log.info(`apiAuthorizer event:${JSON.stringify(event)}`);
+  log.info('ApiAuthorizer event: %j', JSON.stringify(event));
   // auth0 returns userId and scopes
-  const auth: Auth0AuthenticationResult = process.env.STAGE === 'offline' ?
-  offlineAuthentication(event) :
-  await authenticate(event);
-  log.info('apiAuthorizer authentication result: %j', auth);
-
-  if (auth) {
+  try {
+    const auth: Auth0AuthenticationResult = (process.env.STAGE === 'offline' ?
+      offlineAuthentication(event) :
+      await authenticate(event)
+    );
     const authUserPolicy: CustomAuthorizerResult = {
       principalId: auth.userId,
       policyDocument: policyDocument(auth.userId, auth.admin),
@@ -45,15 +43,14 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
                     //   $context.authorizer.scopes
                     // available in cloud formation
     };
-    log.info('makeUserPolicy => (authenticated user) %j', authUserPolicy);
+    log.debug('ApiAuthorizer => (authenticated user policy) %j', authUserPolicy);
     return authUserPolicy;
-  } else {
+  } catch (e) {
     const publicPolicy: CustomAuthorizerResult = {
-      principalId: null,
+      principalId: 'public',
       policyDocument: publicPolicyDocument()
     };
-    log.info('makeUserPolicy => (anonymous user) %j', publicPolicy);
+    log.debug('ApiAuthorizer => (anonymous user policy) %j', publicPolicy);
     return publicPolicy;
-
   }
 }

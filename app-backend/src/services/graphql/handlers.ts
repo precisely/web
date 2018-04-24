@@ -8,6 +8,7 @@
 
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda} from 'apollo-server-lambda';
+// import {graphiqlLambda} from 'apollo-server-lambda';
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
@@ -31,9 +32,41 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
     context: new ResolverContext(event, context)
   });
 
-  handler(event, context, callback);
+  withCORS(handler, event, context, callback);
 };
 
-export const playgroundHandler: Handler = lambdaPlayground({
-  endpoint: process.env.GRAPHQL_API_PATH
-});
+function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
+  log.info('APIGateway event: ', event);
+  // tslint:disable-next-line
+  const callbackFilter = function (error: Error, output: any ) {
+    Object.assign(output.headers, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+      'Access-Control-Allow-Credentials' : true // Required for cookies, authorization headers with HTTPS
+    });
+    callback(error, output);
+  };
+
+  handler(event, context, callbackFilter);
+}
+
+export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
+  // tslint:disable-next-line
+  const handler = lambdaPlayground({
+    endpoint: `${process.env.GRAPHQL_API_PATH}`,
+    htmlTitle: (
+      process.env.STAGE !== 'prod' ?
+      `${process.env.STAGE}:Precise.ly GraphQL Playground`
+      : `Precise.ly GraphQL Playground`
+    )
+  });
+
+  withCORS(handler, event, context, callback);
+};
+
+// export const graphiqlHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
+//   // tslint:disable-next-line
+//   const handler = graphiqlLambda({ endpointURL: process.env.GRAPHQL_API_PATH });
+
+//   withCORS(handler, event, context, callback);
+// };

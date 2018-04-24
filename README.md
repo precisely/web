@@ -107,10 +107,9 @@ Run the service using serverless-offline and a local dynamodb.
 
 `yarn server`
 
-- Api endpoint ([http://localhost:4000/api](http://localhost:4000/api))
+- GraphQL API endpoint ([http://localhost:4000/api](http://localhost:4000/api))
+  - GET (GraphQL Playground GUI) and POST (GraphQL API)
 - Local Dynamodb ([http://localhost:8000/shell](http://localhost:8000/shell))
-- Start GraphiQL ([http://localhost:4000/graphiql](http://localhost:4000/graphiql))
-- Start GraphQL Playground ([http://localhost:4000/playground](http://localhost:4000/playground))
 
 ### Frontend Client
 

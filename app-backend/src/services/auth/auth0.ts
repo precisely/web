@@ -7,18 +7,15 @@ import {log} from 'src/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: CustomAuthorizerEvent): string {
-    if (!event.type || event.type.toUpperCase() !== 'TOKEN') {
-        throw new Error(`Expected event.type parameter to have value TOKEN`);
+    if (!event.type || event.type === 'REQUEST') {
+        throw new Error(`Expected event.type parameter to have value REQUEST`);
     }
 
-    const tokenString = event.authorizationToken;
-    if (!tokenString) {
-        throw new Error(`Expected event.authorizationToken parameter to be set`);
-    }
+    const tokenString: string = event.headers.Authorization;
 
     var match = tokenString.match(/^Bearer (.*)$/i);
     if (!match || match.length < 2) {
-        throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
+        throw new Error(`Invalid Authorization token - '${tokenString.substr(0, 50)}...' does not match 'Bearer .*'`);
     }
     return match[1];
 }
@@ -55,7 +52,7 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
   log.debug('auth0.authenticate getting signing key for %s', kid);
   const key = await client.getSigningKeyAsync(kid);
 
-  log.debug('auth0.authenticate key %s', key);
+  log.silly('auth0.authenticate key %j', key);
 
   const signingKey = key.publicKey || key.rsaPublicKey;
   const verified = <{ sub: string, email: string }> await jwt.verifyAsync(

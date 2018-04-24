@@ -1,3 +1,4 @@
+---
 # This response is needed for custom authorizer failures cors support ¯\_(ツ)_/¯
 GatewayResponse:
   Type: 'AWS::ApiGateway::GatewayResponse'
@@ -19,3 +20,4 @@ AuthFailureGatewayResponse:
     RestApiId:
       Ref: 'ApiGatewayRestApi'
     StatusCode: '401'
+...

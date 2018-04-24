@@ -38,21 +38,23 @@ export const CloudWatchPolicyStatement: Statement = {
  */
 export function apiAllowInvokePolicyStatement(
   {method, path, region= '*', accountId= '*', apiId= '*'}:
-  {method: string, path: string, region?: string, accountId?: string, apiId?: string}): Statement {
+  {method: string, path: string, region?: string, accountId?: string, apiId?: string}
+): Statement {
+  method = method ? method.toUpperCase() : 'GET';
   return {
     Effect: 'Allow',
-    Action: [ 'execute-api:Invoke' ],
+    Action: [ 'execute-api:Invoke', 'execute-api:InvokeAsync' ],
     Resource: [
-      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/${process.env.STAGE}/${method}/${path}`,
-      'arn:aws:execute-api:us-east-1:416000760642:3bm1ckvbx8/*/GET/api'
+      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/*/${method}/${path}`,
     ]
   };
 }
 
 const PublicPolicyStatements = [
+  // APIGatewayPolicyStatement,
   LambdaExecutionPolicyStatement,
   CloudWatchPolicyStatement,
-  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_IDENTIFIER})
+  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_PATH})
 ];
 
 export function adminPolicyDocument(): PolicyDocument {

@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "console": "TS_NODE_COMPILER_OPTIONS=\"{\\\"module\\\":\\\"commonjs\\\"}\" ts-node -r tsconfig-paths/register -c \"require('ts-node').register()\"",
+    "shell": "scripts/sls shell",
+    "log": "scripts/log",
     "deploy": "yarn sls deploy",
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
     "offline": "scripts/offline",
@@ -101,6 +103,7 @@
     "serverless-offline": "^3.20.3",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-secrets": "https://github.com/aneilbaboo/serverless-secrets.git#aneil/fix-process.env._HANDLER",
+    "serverless-shell": "^0.4.1",
     "serverless-webpack": "4.1.0",
     "ts-jest": "22.0.1",
     "ts-loader": "^4.1.0",

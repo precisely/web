@@ -16,6 +16,7 @@ export const LOG_DATA_SEP = '\t|\t';
 
 type FormatInfo = { timestamp: number, level: number | string, message: string };
 
+
 const shouldLogToCloudWatchAggregate = !(process.env.STAGE === 'prod' || process.env.STAGE === 'offline');
 
 const transports = shouldLogToCloudWatchAggregate ? [
@@ -32,19 +33,17 @@ const transports = shouldLogToCloudWatchAggregate ? [
   })
 ];
 
+const BaseFormat = [
+  format.timestamp(),
+  format.splat(),
+  format.printf(
+    (info: FormatInfo) => `${info.timestamp} ${info.level}: ${info.message}${LOG_DATA_SEP}`)
+];
+
+const ColorizedFormat = [ format.colorize(), ...BaseFormat ];
+
 /* istanbul ignore next */
 export const log = winston.createLogger({
-  level,
-  transports,
-
-  // note: if you add or remove formats, make sure to update
-  // webpack.config.js ContextReplacementPlugin for /logform/
-  // I submitted a PR to address the underlying issue:
-  // https://github.com/winstonjs/logform/pull/24
-  format: format.combine(
-    format.colorize(),
-    format.timestamp(),
-    format.splat(),
-    format.printf(
-      (info: FormatInfo) => `${info.timestamp} ${info.level}: ${info.message}${LOG_DATA_SEP}`))
+  level, transports,
+  format: format.combine.apply(format, process.env.STAGE === 'offline' ? ColorizedFormat : BaseFormat)
 });
