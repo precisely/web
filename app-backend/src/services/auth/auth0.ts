@@ -7,17 +7,17 @@ import {log} from 'src/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: CustomAuthorizerEvent): string {
-    if (!event.type || event.type === 'REQUEST') {
-        throw new Error(`Expected event.type parameter to have value REQUEST`);
-    }
+  if (!event.type || event.type !== 'REQUEST') {
+    throw new Error(`Expected event.type parameter to have value REQUEST`);
+  }
 
-    const tokenString: string = event.headers.Authorization;
+  const tokenString: string = event.headers.Authorization;
 
-    var match = tokenString.match(/^Bearer (.*)$/i);
-    if (!match || match.length < 2) {
-        throw new Error(`Invalid Authorization token - '${tokenString.substr(0, 50)}...' does not match 'Bearer .*'`);
-    }
-    return match[1];
+  var match = tokenString.match(/^Bearer (.*)$/i);
+  if (!match || match.length < 2) {
+    throw new Error(`Invalid Authorization token - '${tokenString.substr(0, 50)}...' does not match 'Bearer .*'`);
+  }
+  return match[1];
 }
 
 export interface Auth0AuthenticationResult {
@@ -35,11 +35,7 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
   const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
   const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10;
 
-  log.info('AUTH0_API_IDENTIFIER %s', AUTH0_API_IDENTIFIER);
-  log.info('AUTH0_JWKS_URI %s', AUTH0_JWKS_URI);
-
   const token: string = getToken(event);
-
   const client = JwksRsa({
       cache: true,
       rateLimit: true,
@@ -47,12 +43,11 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
       jwksUri: AUTH0_JWKS_URI
   });
 
-  var decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
-  var kid = decodedJwt.header.kid; // key id
-  log.debug('auth0.authenticate getting signing key for %s', kid);
+  const decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
+  const kid = decodedJwt.header.kid; // key id
   const key = await client.getSigningKeyAsync(kid);
-
-  log.silly('auth0.authenticate key %j', key);
+  log.debug('auth0.authenticate decodedJWT=%j', decodedJwt);
+  log.silly('auth0.authenticate retrieved signingKey %j', key);
 
   const signingKey = key.publicKey || key.rsaPublicKey;
   const verified = <{ sub: string, email: string }> await jwt.verifyAsync(

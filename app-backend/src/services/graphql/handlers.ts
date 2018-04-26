@@ -31,9 +31,37 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
     rootValue: null,
     context: new ResolverContext(event, context)
   });
+  log.silly('graphql.apiHandler EVENT: %j CONTEXT: %j', event, context);
+  withCORS(handler, event, context, (err, result) => {
+    if (err) {
+      log.error('graphql.apiHandler error', err);
+    } else {
+      log.info('graphql.apiHandler result', result);
+    }
+    callback(err, result);
+  });
+};
 
+const PlaygroundHTMLTitle = (process.env.STAGE !== 'prod' ?
+`${process.env.STAGE}:Precise.ly GraphQL Playground`
+: `Precise.ly GraphQL Playground`
+);
+
+export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
+  // tslint:disable-next-line
+  const handler = lambdaPlayground({
+    endpoint: process.env.GRAPHQL_API_PATH,
+    htmlTitle: PlaygroundHTMLTitle
+  });
   withCORS(handler, event, context, callback);
 };
+
+// export const graphiqlHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
+//   // tslint:disable-next-line
+//   const handler = graphiqlLambda({ endpointURL: process.env.GRAPHQL_API_PATH });
+
+//   withCORS(handler, event, context, callback);
+// };
 
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
   log.info('APIGateway event: ', event);
@@ -49,24 +77,3 @@ function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, ca
 
   handler(event, context, callbackFilter);
 }
-
-export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
-  // tslint:disable-next-line
-  const handler = lambdaPlayground({
-    endpoint: `${process.env.GRAPHQL_API_PATH}`,
-    htmlTitle: (
-      process.env.STAGE !== 'prod' ?
-      `${process.env.STAGE}:Precise.ly GraphQL Playground`
-      : `Precise.ly GraphQL Playground`
-    )
-  });
-
-  withCORS(handler, event, context, callback);
-};
-
-// export const graphiqlHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
-//   // tslint:disable-next-line
-//   const handler = graphiqlLambda({ endpointURL: process.env.GRAPHQL_API_PATH });
-
-//   withCORS(handler, event, context, callback);
-// };

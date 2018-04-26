@@ -72,16 +72,19 @@ provider:
   ## Permissions
   iamRoleStatements:
     - Effect: Allow
-      Action:
-        - "*"
-        - "logs:*"
-        - "cloudwatch:*"
-        - "lambda:invoke"
-        - "sts:*"
+      Action: "*"
       Resource: "*"
     - Effect: Allow
-      Action: KMS:Decrypt
-      Resource: ${self:provider.vars.kmsKeyArn}
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+        - logs:DescribeLogStreams
+      Resource: arn:aws:logs:*:*:*
+    - Effect: Allow # TODO: tightent this permission up
+      Action:
+        - cloudwatch:*
+      Resource: "*"
 
   ##
   ## Environment for handlers
@@ -144,34 +147,33 @@ custom:
       migrate: true
       # seed: true
   stageSettings: # serverless-api-stage plugin
-    CacheClusterEnabled: true
-    CacheClusterSize: '0.5'
+    # CacheClusterEnabled: true
+    # CacheClusterSize: '0.5'
     # Variables:
     #   foo: bar
     #   baz: xyzzy
     MethodSettings:
       LoggingLevel: INFO
-      CachingEnabled: true
-      CacheTtlInSeconds: 3600
+      CachingEnabled: false
+      # CacheTtlInSeconds: 3600
   webpackIncludeModules: true
-  authorizers:
-    APIAuthorizer:
-      name: APIAuthorizer
-      type: REQUEST
-      resultTtlInSeconds: 0
-      identitySource: method.request.header.Authorization, context.identity.sourceIp
+  # authorizers:
+  #   APIAuthorizer:
+  #     name: APIAuthorizer
+  #     type: REQUEST
+  #     # resultTtlInSeconds: 0
+  #     # identitySource: method.request.header.Authorization, context.identity.sourceIp
 
 functions:
   APIAuthorizer:
     handler: src/services/auth/handlers.apiAuthorizer
-    type: REQUEST
     cors: true
 
   GraphQLPlayground:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:provider.vars.graphQLAPIPath}
+          path: ${self:provider.vars.graphQLAPIPath}/playground
           method: get
           cors: true
 
@@ -182,7 +184,9 @@ functions:
           path: ${self:provider.vars.graphQLAPIPath}
           method: post
           cors: true
-          authorizer: ${self:custom.authorizers.APIAuthorizer}
+          authorizer:
+            name: APIAuthorizer
+            type: request
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:

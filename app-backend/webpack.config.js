@@ -8,7 +8,7 @@ module.exports = {
   target: 'node',
   mode: process.env.NODE_ENV==='production' ? 'production' : 'development',
   devtool: process.env.STAGE==='prod' ? null : 'eval',
-  externals: ['pg-native', 'tedious', 'sqlite3', 'mysql2'],
+  externals: [],
   plugins: [
     new webpack.ContextReplacementPlugin(
             /sequelize(\\|\/)/,

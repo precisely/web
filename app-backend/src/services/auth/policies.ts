@@ -22,10 +22,23 @@ export const LambdaExecutionPolicyStatement: Statement = {
   Resource: 'aws:arn:lambda:::*',
 };
 
-export const CloudWatchPolicyStatement: Statement = {
-  Sid: 'PreciselyUserAllowCloudWatchAccess',
+export const LogPolicyStatement: Statement = {
+  Sid: 'AllowLogging',
   Effect: 'Allow',
-  Action: [ 'cloudwatch:*' ],
+  Action: [
+    'logs:PutLogEvents',
+    'logs:CreateLogGroup',
+    'logs:CreateLogStream'
+  ],
+  Principal: '*'
+};
+
+export const CloudWatchPolicyStatement: Statement = {
+  Sid: 'AllowCloudWatchLogWriting',
+  Effect: 'Allow',
+  Action: [
+    'cloudwatch:*' // TODO: tighten this up!
+  ],
   Resource: '*'
 };
 
@@ -45,16 +58,23 @@ export function apiAllowInvokePolicyStatement(
     Effect: 'Allow',
     Action: [ 'execute-api:Invoke', 'execute-api:InvokeAsync' ],
     Resource: [
-      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/*/${method}/${path}`,
+      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/*/${method}${path}`,
     ]
   };
 }
 
+const STSAllowStatement = {
+  Effect: 'Allow',
+  Action: 'sts:AssumeRole',
+  Principal: { Service: [ 'lambda.amazonaws.com', 'apigateway.amazonaws.com' ] }
+};
+
 const PublicPolicyStatements = [
-  // APIGatewayPolicyStatement,
-  LambdaExecutionPolicyStatement,
+  STSAllowStatement,
   CloudWatchPolicyStatement,
-  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_PATH})
+  LambdaExecutionPolicyStatement,
+  LogPolicyStatement,
+  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_PATH}),
 ];
 
 export function adminPolicyDocument(): PolicyDocument {
@@ -94,6 +114,15 @@ export function publicPolicyDocument(): PolicyDocument {
     Statement: PublicPolicyStatements
   };
 }
+
+export const CrazyOpenAccessPolicyDocument = {
+  Version: PolicyVersion,
+  Statement: [{
+    Effect: 'Allow',
+    Action: [ '*' ],
+    Resource: [ '*' ]
+  }]
+};
 
 /**
  * Create a user policy document
