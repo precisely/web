@@ -25,7 +25,7 @@ const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
   // Adds Cloudwatch logging at
   // /precisely/web/{stage}/aggregated-log
   new WinstonCloudWatch({ // aggregate view across all lambda fns
-    LOG_LEVEL,
+    logLevel: LOG_LEVEL,
     logGroupName: `/precisely/web/${process.env.STAGE}`,
     logStreamName: 'aggregated-log'
   })
