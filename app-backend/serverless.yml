@@ -176,7 +176,7 @@ functions:
           authorizer:
             name: APIAuthorizer
             type: request
-            authorizerResultTtlInSeconds : 0
+            resultTtlInSeconds: 0
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:
