@@ -64,7 +64,7 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 // };
 
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
-  log.info('APIGateway event: ', event);
+  log.debug('APIGateway event: %j, context: %j', event, context);
   // tslint:disable-next-line
   const callbackFilter = function (error: Error, output: any ) {
     Object.assign(output.headers, {

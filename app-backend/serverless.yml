@@ -11,6 +11,7 @@ provider:
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
   deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
+  role: PreciselyDefaultRole
 
   # Store commonly used or noteworthy values here
   vars:
@@ -69,24 +70,6 @@ provider:
       # otherwise NODE_ENV it will be "development"
 
   ##
-  ## Permissions
-  iamRoleStatements:
-    - Effect: Allow
-      Action: "*"
-      Resource: "*"
-    - Effect: Allow
-      Action:
-        - logs:CreateLogGroup
-        - logs:CreateLogStream
-        - logs:PutLogEvents
-        - logs:DescribeLogStreams
-      Resource: arn:aws:logs:*:*:*
-    - Effect: Allow # TODO: tightent this permission up
-      Action:
-        - cloudwatch:*
-      Resource: "*"
-
-  ##
   ## Environment for handlers
   environment:
     STAGE: ${self:provider.stage}
@@ -107,6 +90,7 @@ provider:
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
 
+    DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
@@ -120,11 +104,14 @@ provider:
     DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
 
 resources:
+  - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js)}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
+  # Comment out this line on first-time deployment of a new stage
+  # (or after the stage has been removed)
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
@@ -187,6 +174,7 @@ functions:
           authorizer:
             name: APIAuthorizer
             type: request
+            authorizerResultTtlInSeconds : 0
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:

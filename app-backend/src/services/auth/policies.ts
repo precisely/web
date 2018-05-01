@@ -1,81 +1,6 @@
 import { Statement, PolicyDocument } from 'aws-lambda';
 import {Genotype} from 'src/services/genotype/models';
-
-export const PolicyVersion = '2012-10-17';
-export const DynamoReadActions = [
-  'dynamodb:Query',
-  'dynamodb:Scan',
-  'dynamodb:GetItem',
-  'dynamodb:BatchGetItem'
-];
-
-export const DynamoWriteActions = [
-  'dynamodb:PutItem',
-  'dynamodb:BatchPutItem'
-];
-
-// TODO: lock this down - it currently allows all lambdas to be invoked
-export const LambdaExecutionPolicyStatement: Statement = {
-  Sid: 'PreciselyUserAllowExecuteFunctions',
-  Effect: 'Allow',
-  Action: [ 'lambda:Invoke', 'lambda:InvokeAsync' ],
-  Resource: 'aws:arn:lambda:::*',
-};
-
-export const LogPolicyStatement: Statement = {
-  Sid: 'AllowLogging',
-  Effect: 'Allow',
-  Action: [
-    'logs:PutLogEvents',
-    'logs:CreateLogGroup',
-    'logs:CreateLogStream'
-  ],
-  Principal: '*'
-};
-
-export const CloudWatchPolicyStatement: Statement = {
-  Sid: 'AllowCloudWatchLogWriting',
-  Effect: 'Allow',
-  Action: [
-    'cloudwatch:*' // TODO: tighten this up!
-  ],
-  Resource: '*'
-};
-
-/**
- * Generates invoke policy
- * @export
- * @param {string} method - http verb
- * @param {string} path - e.g., "api"
- * @returns {Statement}
- */
-export function apiAllowInvokePolicyStatement(
-  {method, path, region= '*', accountId= '*', apiId= '*'}:
-  {method: string, path: string, region?: string, accountId?: string, apiId?: string}
-): Statement {
-  method = method ? method.toUpperCase() : 'GET';
-  return {
-    Effect: 'Allow',
-    Action: [ 'execute-api:Invoke', 'execute-api:InvokeAsync' ],
-    Resource: [
-      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/*/${method}${path}`,
-    ]
-  };
-}
-
-const STSAllowStatement = {
-  Effect: 'Allow',
-  Action: 'sts:AssumeRole',
-  Principal: { Service: [ 'lambda.amazonaws.com', 'apigateway.amazonaws.com' ] }
-};
-
-const PublicPolicyStatements = [
-  STSAllowStatement,
-  CloudWatchPolicyStatement,
-  LambdaExecutionPolicyStatement,
-  LogPolicyStatement,
-  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_PATH}),
-];
+import {camelCase} from 'lodash';
 
 export function adminPolicyDocument(): PolicyDocument {
   // Open access for admins so they can use API (esp in development)
@@ -98,6 +23,7 @@ export function userPolicyDocument(userId: string): PolicyDocument {
     Version: PolicyVersion,
     Statement: [
       ...PublicPolicyStatements,
+      apiAllowInvokePolicyStatement({method: 'POST', path: process.env.GRAPHQL_API_PATH}),
       dynamoTableUserAccessStatement(userId, Genotype.tableName(), DynamoReadActions),
       // in future:
       // dynamoTableUserAccessStatement(userId, SurveyResults.tableName(), DynamoWriteActions + DynamoReadActions),
@@ -108,21 +34,40 @@ export function userPolicyDocument(userId: string): PolicyDocument {
 }
 
 export function publicPolicyDocument(): PolicyDocument {
-  // TODO: need to tighten up access
   return {
     Version: PolicyVersion,
     Statement: PublicPolicyStatements
   };
 }
 
-export const CrazyOpenAccessPolicyDocument = {
-  Version: PolicyVersion,
-  Statement: [{
+//
+//
+//
+//  Support methods and definitions
+//
+//
+//
+
+/**
+ * Generates invoke policy
+ * @export
+ * @param {string} method - http verb
+ * @param {string} path - e.g., "api"
+ * @returns {Statement}
+ */
+export function apiAllowInvokePolicyStatement(
+  {method, path, region= '*', accountId= '*', apiId= '*'}:
+  {method: string, path: string, region?: string, accountId?: string, apiId?: string}
+): Statement {
+  method = method ? method.toUpperCase() : 'GET';
+  return {
     Effect: 'Allow',
-    Action: [ '*' ],
-    Resource: [ '*' ]
-  }]
-};
+    Action: [ 'execute-api:Invoke' ],
+    Resource: [
+      `arn:aws:execute-api:${process.env.REGION}:${accountId}:${apiId}/*/${method}${path}`,
+    ]
+  };
+}
 
 /**
  * Create a user policy document
@@ -172,17 +117,82 @@ export function s3FolderUserAccessStatements(userId: string, bucket: string): St
       's3:prefix': `${userId}/*`
     }
   }} : {};
-
+  const bucketCamelCase = camelCase(bucket);
   return [{
-    Sid: 'AllowAllS3ActionsInUserFolder',
+    Sid: `AllowAllS3ActionsInUserFolder${bucketCamelCase}`,
     Effect: 'Allow',
     Action: 's3:*',
-    Resource: `aws:arn:s3:::${bucket}/${userId}/*`
+    Resource: `arn:aws:s3:::${bucket}/${userId}/*`
   }, {
-    Sid: 'AllowListingObjectsInS3UserFolder',
+    Sid: `AllowListingObjectsInS3UserFolder${bucketCamelCase}`,
     Effect: 'Allow',
     Action: 's3:ListBucket',
-    Resource: `aws:arn:s3:::${bucket}`,
+    Resource: `arn:aws:s3:::${bucket}`,
     ...condition
   }];
 }
+
+export const PolicyVersion = '2012-10-17';
+export const DynamoReadActions = [
+  'dynamodb:Query',
+  'dynamodb:Scan',
+  'dynamodb:GetItem',
+  'dynamodb:BatchGetItem'
+];
+
+export const DynamoWriteActions = [
+  'dynamodb:PutItem',
+  'dynamodb:BatchPutItem'
+];
+
+// TODO: lock this down - it currently allows all lambdas to be invoked
+export const LambdaExecutionPolicyStatement: Statement = {
+  Sid: 'PreciselyUserAllowExecuteFunctions',
+  Effect: 'Allow',
+  Action: [ 'lambda:InvokeFunction', 'lambda:InvokeAsync' ],
+  Resource: 'arn:aws:lambda:::*',
+};
+
+export const LogPolicyStatement: Statement = {
+  Sid: 'AllowLogging',
+  Effect: 'Allow',
+  Action: [
+    'logs:PutLogEvents',
+    'logs:CreateLogGroup',
+    'logs:CreateLogStream'
+  ],
+  Resource: '*'
+};
+
+export const CloudWatchPolicyStatement: Statement = {
+  Sid: 'AllowCloudWatchLogWriting',
+  Effect: 'Allow',
+  Action: [
+    'cloudwatch:*' // TODO: tighten this up!
+  ],
+  Resource: '*'
+};
+
+const STSAllowStatement = {
+  Effect: 'Allow',
+  Action: 'sts:AssumeRole',
+  Resource: '*'
+  // Principal: { Service: [ 'lambda.amazonaws.com', 'apigateway.amazonaws.com' ] }
+};
+
+const PublicPolicyStatements = [
+  STSAllowStatement,
+  CloudWatchPolicyStatement,
+  LambdaExecutionPolicyStatement,
+  LogPolicyStatement,
+  apiAllowInvokePolicyStatement({method: 'GET', path: process.env.GRAPHQL_API_PATH}),
+];
+
+export const CrazyOpenAccessPolicyDocument = {
+  Version: PolicyVersion,
+  Statement: [{
+    Effect: 'Allow',
+    Action: [ '*' ],
+    Resource: [ '*' ]
+  }]
+};
