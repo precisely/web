@@ -74,6 +74,7 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
+    ACCOUNT_ID: "#{AWS::AccountId}"
 
     LOG_LEVEL: ${self:provider.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
@@ -113,6 +114,7 @@ plugins:
   # Comment out this line on first-time deployment of a new stage
   # (or after the stage has been removed)
   - serverless-domain-manager
+  - serverless-pseudo-parameters
   - serverless-webpack
   - serverless-api-stage
   - serverless-dynamodb-local

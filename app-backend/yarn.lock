@@ -5956,6 +5956,10 @@ serverless-plugin-scripts@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/serverless-plugin-scripts/-/serverless-plugin-scripts-1.0.2.tgz#21808c3cfd0a1a84e48c0660b0f6f370b5665486"
 
+serverless-pseudo-parameters@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/serverless-pseudo-parameters/-/serverless-pseudo-parameters-1.6.0.tgz#0a2532e56f04f95f6d0c17490de42c4c498c65f6"
+
 "serverless-secrets@https://github.com/aneilbaboo/serverless-secrets.git#aneil/fix-process.env._HANDLER":
   version "3.0.0-beta.11"
   resolved "https://github.com/aneilbaboo/serverless-secrets.git#ab7d5dc3864d16c8c50c9264b9ed890594b9d0ee"
