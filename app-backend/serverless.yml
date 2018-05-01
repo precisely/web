@@ -1,6 +1,6 @@
 service:
   name: precisely
-  awsKmsKeyArn: ${self:provider.vars.kmsKeyArn}
+  # awsKmsKeyArn: ${self:provider.vars.kmsKeyArn}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
@@ -50,12 +50,12 @@ provider:
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
 
-    kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
-    kmsKeyArns:
-      dev: "arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1"
-      beta: "TODO add arn"
-      prod: "TODO add arn"
-      offline: ""
+    # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
+    # kmsKeyArns:
+    #   dev: "arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1"
+    #   beta: "TODO add arn"
+    #   prod: "TODO add arn"
+    #   offline: ""
 
     logLevel: ${self:provider.vars.logLevels.${self:provider.stage},
                     self:provider.vars.logLevels.default}
@@ -128,7 +128,7 @@ custom:
     stage: ${self:provider.stage}
     createRoute53Record: true
     certificateName: ${self:provider.vars.certificateName}
-    endpointType: 'regional'
+    endpointType: regional
   dynamodb: # dynamodb-local settings
     start:
       port: 8000
