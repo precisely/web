@@ -5,22 +5,23 @@ import {
   PolicyDocument
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
-import { log } from 'src/logger';
+import {makeLogger} from 'src/logger';
 
 export const apiAuthorizer: CustomAuthorizerHandler = (
   event: CustomAuthorizerEvent,
   context: Context,
   callback: CustomAuthorizerCallback
 ): void => {
-   makeUserPolicy(event, context)
-    .then(result => {
-      callback(null, result);
-    })
-    .catch(err => {
-      log.info('apiAuthorizer: %s', err);
-      callback(err);
-    });
-  };
+  const log = makeLogger(event.requestContext);
+  makeUserPolicy(event, context)
+  .then(result => {
+    callback(null, result);
+  })
+  .catch(err => {
+    log.info('apiAuthorizer: %s', err);
+    callback(err);
+  });
+};
 
 function offlineAuthentication(event: CustomAuthorizerEvent): Auth0AuthenticationResult {
   return {
@@ -42,12 +43,12 @@ const InvokeAPIPolicyDocument: PolicyDocument = {
 };
 
 async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): Promise<CustomAuthorizerResult> {
-  const requestId = event.requestContext.requestId;
-  log.silly('APIAuthorizer event: %j [%s]', event, requestId);
+  const log = makeLogger(event.requestContext);
+  log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
   const auth: Auth0AuthenticationResult = (process.env.STAGE === 'offline' ?
     offlineAuthentication(event) :
-    await authenticate(event)
+    await authenticate(event, log)
   );
   const authUserPolicy: CustomAuthorizerResult = {
     principalId: auth.principalId,
@@ -58,8 +59,8 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
                   // available in cloud formation
   };
   log.switch({
-    silly: ['APIAuthorizer => (success) %j [%s]', authUserPolicy, requestId],
-    info: ['APIAuthorizer authenticated principalId: %s [%s]', auth.principalId, requestId]
+    silly: ['APIAuthorizer returns policy: %j', authUserPolicy],
+    info: ['APIAuthorizer allow principalId: %s', auth.principalId]
   });
 
   return authUserPolicy;

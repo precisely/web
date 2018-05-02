@@ -14,24 +14,25 @@ import {makeExecutableSchema} from 'graphql-tools';
 
 import preciselyTypeDefs from 'src/services/schema.graphql';
 import {resolvers} from 'src/services/resolvers';
-import {log} from 'src/logger';
+import {makeLogger} from 'src/logger';
 
 import { ResolverContext } from 'src/graphql-utils';
 
-const PreciselySchema = makeExecutableSchema({
-  typeDefs: preciselyTypeDefs,
-  resolvers,
-  logger: log
-});
-
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+  const log = makeLogger(event.requestContext);
+  const PreciselySchema = makeExecutableSchema({
+    typeDefs: preciselyTypeDefs,
+    resolvers,
+    logger: { log(message: string) { log.info(message); } }
+  });
+
   const handler = graphqlLambda({
     schema: PreciselySchema,
     tracing: true,
     rootValue: null,
     context: new ResolverContext(event, context)
   });
-  log.silly('graphql.apiHandler EVENT: %j CONTEXT: %j', event, context);
+  log.silly('graphql.apiHandler EVENT: %j\t\tCONTEXT: %j', event, context);
   withCORS(handler, event, context, (err, result) => {
     if (err) {
       log.error('graphql.apiHandler error', err);
@@ -64,6 +65,7 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 // };
 
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
+  const log = makeLogger(event.requestContext);
   log.debug('APIGateway event: %j, context: %j', event, context);
   // tslint:disable-next-line
   const callbackFilter = function (error: Error, output: any ) {

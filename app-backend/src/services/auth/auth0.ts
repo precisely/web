@@ -3,7 +3,7 @@
 import * as JwksRsa from 'jwks-rsa-promisified';
 import * as jwt from 'jsonwebtoken-promisified';
 import { CustomAuthorizerEvent } from 'aws-lambda';
-import {log} from 'src/logger';
+import { Logger } from 'src/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: CustomAuthorizerEvent): string {
@@ -26,7 +26,7 @@ export interface Auth0AuthenticationResult {
   role?: string;
 }
 
-export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0AuthenticationResult> {
+export async function authenticate(event: CustomAuthorizerEvent, log: Logger): Promise<Auth0AuthenticationResult> {
   try {
     const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
     const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
@@ -47,8 +47,7 @@ export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0A
     const decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
     const kid = decodedJwt.header.kid; // key id
     const key = await client.getSigningKeyAsync(kid);
-    log.debug('auth0.authenticate decodedJWT=%j', decodedJwt);
-    log.silly('auth0.authenticate retrieved signingKey %j', key);
+    log.silly('auth0.authenticate decodedJWT=%j signingKey %j', decodedJwt, key);
 
     const signingKey = key.publicKey || key.rsaPublicKey;
     const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
