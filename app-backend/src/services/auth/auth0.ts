@@ -21,46 +21,53 @@ function getToken(event: CustomAuthorizerEvent): string {
 }
 
 export interface Auth0AuthenticationResult {
-  userId: string;
+  principalId: string;
   email?: string;
-  admin?: boolean;
+  role?: string;
 }
 
 export async function authenticate(event: CustomAuthorizerEvent): Promise<Auth0AuthenticationResult> {
-  const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
-  const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
-  const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
-  const AUTH0_JWKS_URI = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
-  const AUTH0_ISSUER = `https://${AUTH0_DOMAIN}/`;
-  const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
-  const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10;
+  try {
+    const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
+    const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
+    const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
+    const AUTH0_JWKS_URI = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
+    const AUTH0_ISSUER = `https://${AUTH0_DOMAIN}/`;
+    const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
+    const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10;
 
-  const token: string = getToken(event);
-  const client = JwksRsa({
-      cache: true,
-      rateLimit: true,
-      jwksRequestsPerMinute: AUTH0_JWKS_REQUESTS_PER_MINUTE,
-      jwksUri: AUTH0_JWKS_URI
-  });
+    const token: string = getToken(event);
+    const client = JwksRsa({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: AUTH0_JWKS_REQUESTS_PER_MINUTE,
+        jwksUri: AUTH0_JWKS_URI
+    });
 
-  const decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
-  const kid = decodedJwt.header.kid; // key id
-  const key = await client.getSigningKeyAsync(kid);
-  log.debug('auth0.authenticate decodedJWT=%j', decodedJwt);
-  log.silly('auth0.authenticate retrieved signingKey %j', key);
+    const decodedJwt = < { header: { kid: string} }> jwt.decode(token, { complete: true });
+    const kid = decodedJwt.header.kid; // key id
+    const key = await client.getSigningKeyAsync(kid);
+    log.debug('auth0.authenticate decodedJWT=%j', decodedJwt);
+    log.silly('auth0.authenticate retrieved signingKey %j', key);
 
-  const signingKey = key.publicKey || key.rsaPublicKey;
-  const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
-    token, signingKey,
-    {
-      audience: AUTH0_API_IDENTIFIER, // e.g., something like https://{stage}-precise.ly/graphql (not a real uri)
-      issuer:  AUTH0_ISSUER // e.g., something like https://{stage}-precise.ly.auth0.com
-    }
-  );
+    const signingKey = key.publicKey || key.rsaPublicKey;
+    const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
+      token, signingKey,
+      {
+        audience: AUTH0_API_IDENTIFIER, // e.g., something like https://{stage}-precise.ly/graphql (not a real uri)
+        issuer:  AUTH0_ISSUER // e.g., something like https://{stage}-precise.ly.auth0.com
+      }
+    );
 
-  return {
-    userId: verified.sub,
-    email: verified.email,
-    admin: ADMIN_EMAILS.indexOf(verified.email) !== -1
-  };
+    return {
+      principalId: verified.sub,
+      email: verified.email,
+      role: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin' : 'user'
+    };
+  } catch (e) {
+    return {
+      principalId: 'public',
+      role: 'public'
+    };
+  }
 }

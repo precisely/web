@@ -36,7 +36,7 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
     if (err) {
       log.error('graphql.apiHandler error', err);
     } else {
-      log.info('graphql.apiHandler result', result);
+      log.info('graphql.apiHandler result %j', result);
     }
     callback(err, result);
   });
@@ -67,11 +67,13 @@ function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, ca
   log.debug('APIGateway event: %j, context: %j', event, context);
   // tslint:disable-next-line
   const callbackFilter = function (error: Error, output: any ) {
-    Object.assign(output.headers, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-      'Access-Control-Allow-Credentials' : true // Required for cookies, authorization headers with HTTPS
-    });
+    if (output) {
+      Object.assign(output.headers, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Credentials' : true // Required for cookies, authorization headers with HTTPS
+      });
+    }
     callback(error, output);
   };
 

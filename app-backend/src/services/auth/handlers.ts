@@ -1,10 +1,10 @@
 import {
   CustomAuthorizerHandler, CustomAuthorizerEvent,
   CustomAuthorizerCallback, CustomAuthorizerResult,
-  Context
+  Context,
+  PolicyDocument
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
-import {policyDocument, publicPolicyDocument } from './policies';
 import { log } from 'src/logger';
 
 export const apiAuthorizer: CustomAuthorizerHandler = (
@@ -24,40 +24,43 @@ export const apiAuthorizer: CustomAuthorizerHandler = (
 
 function offlineAuthentication(event: CustomAuthorizerEvent): Auth0AuthenticationResult {
   return {
-    userId: 'auth0|0001',
+    principalId: 'auth0|0001',
     email: 'aneil@precise.ly'
   };
 }
 
+const InvokeAPIPolicyDocument: PolicyDocument = {
+  Version: '2012-10-17',
+  Statement: [{
+    Effect: 'Allow',
+    Action: 'execute-api:Invoke',
+    Resource: [
+      // tslint:disable-next-line
+      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/POST${process.env.GRAPHQL_API_PATH}`
+    ]
+  }]
+};
+
 async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): Promise<CustomAuthorizerResult> {
-  log.info('APIAuthorizer event: %j typeof=%s', event, typeof event);
+  const requestId = event.requestContext.requestId;
+  log.silly('APIAuthorizer event: %j [%s]', event, requestId);
   // auth0 returns userId and scopes
-  try {
-    const auth: Auth0AuthenticationResult = (process.env.STAGE === 'offline' ?
-      offlineAuthentication(event) :
-      await authenticate(event)
-    );
-    const authUserPolicy: CustomAuthorizerResult = {
-      principalId: '*', // auth.userId,
-      policyDocument: policyDocument(auth.userId, auth.admin),
-      context: auth // this makes
-                    //   $context.authorizer.userId, and
-                    //   $context.authorizer.scopes
-                    // available in cloud formation
-    };
-    log.debug('APIAuthorizer => (authenticated user policy) %j', authUserPolicy);
-    return authUserPolicy;
-  } catch (e) {
-    log.silly('APIAuthorizer failed to authenticate: ', e);
-    const publicPolicy: CustomAuthorizerResult = {
-      principalId: '*',
-      policyDocument: publicPolicyDocument()
-    };
-    log.debug('APIAuthorizer => (anonymous user policy) %j', publicPolicy);
-    return publicPolicy;
-    // log.error(e);
-    // const openAccess = { principalId: '*', policyDocument: CrazyOpenAccessPolicyDocument};
-    // log.debug('APIAuthorizer => crazy open-ended policy document', openAccess);
-    // return openAccess;
-  }
+  const auth: Auth0AuthenticationResult = (process.env.STAGE === 'offline' ?
+    offlineAuthentication(event) :
+    await authenticate(event)
+  );
+  const authUserPolicy: CustomAuthorizerResult = {
+    principalId: auth.principalId,
+    policyDocument: InvokeAPIPolicyDocument,
+    context: auth // this makes
+                  //   $context.authorizer.principalId, and
+                  //   $context.authorizer.role
+                  // available in cloud formation
+  };
+  log.switch({
+    silly: ['APIAuthorizer => (success) %j [%s]', authUserPolicy, requestId],
+    info: ['APIAuthorizer authenticated principalId: %s [%s]', auth.principalId, requestId]
+  });
+
+  return authUserPolicy;
 }

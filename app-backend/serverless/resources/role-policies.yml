@@ -1,0 +1,32 @@
+---
+# used by roles.yml, not included directly
+PreciselyDefaultPolicy:
+  PolicyName: PreciselyDefaultPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - Effect: Allow # note that these rights are given in the default policy and are required if you want logs out of your lambda(s)
+        Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+        Resource:
+          - 'Fn::Join':
+            - ':'
+            - - arn:aws:logs
+              - Ref: AWS::Region
+              - Ref: AWS::AccountId
+              - log-group:/aws/lambda/*:*:*
+      - Effect: Allow
+        Action: s3:PutObject
+        Resource:
+          - arn:aws:s3:::${self:provider.deploymentBucket}
+PreciselyAPIPolicy:
+  PolicyName: PreciselyAPIPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
+...

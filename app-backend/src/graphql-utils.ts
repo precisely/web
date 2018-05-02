@@ -19,7 +19,7 @@ export class ResolverContext {
   }
 
   get userId(): string {
-    return this.event.requestContext.authorizer.userId; // the auth0 userId "auth0|a6b34ff91"
+    return this.event.requestContext.authorizer.principalId; // the auth0 userId "auth0|a6b34ff91"
   }
 }
 

@@ -108,7 +108,7 @@ provider:
 resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
-  - Resources: ${file(./serverless/resources/dynogels-tables.js)}
+  - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
@@ -143,7 +143,7 @@ custom:
     #   foo: bar
     #   baz: xyzzy
     MethodSettings:
-      LoggingLevel: INFO
+      LoggingLevel: INFO # INFO ERR or NONE
       CachingEnabled: false
       # CacheTtlInSeconds: 3600
   webpackIncludeModules: true
@@ -157,12 +157,13 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:provider.vars.graphQLAPIPath}/playground
+          path: ${self:provider.vars.graphQLAPIPath}
           method: get
           cors: true
 
   GraphQLAPI:
     handler: src/services/graphql/handlers.apiHandler
+    role: PreciselyGraphQLAPIRole
     events:
       - http:
           path: ${self:provider.vars.graphQLAPIPath}

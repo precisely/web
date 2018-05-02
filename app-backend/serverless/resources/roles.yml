@@ -1,9 +1,9 @@
+---
 PreciselyDefaultRole:
   Type: AWS::IAM::Role
   Properties:
-    Path: /
     RoleName: PreciselyDefaultRole
-    AssumeRolePolicyDocument:
+    AssumeRolePolicyDocument: &DefaultAssumeRolePolicyDocument
       Version: '2012-10-17'
       Statement:
         - Effect: Allow
@@ -13,27 +13,19 @@ PreciselyDefaultRole:
               - lambda.amazonaws.com
           Action: sts:AssumeRole
     # note that these rights are needed if you want your function to be able to communicate with resources within your vpc
-    ManagedPolicyArns:
+    ManagedPolicyArns: &DefaultManagedPolicyArns
       - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
       - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Policies:
-      - PolicyName: PreciselyDefaultPolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow # note that these rights are given in the default policy and are required if you want logs out of your lambda(s)
-              Action:
-                - logs:CreateLogGroup
-                - logs:CreateLogStream
-                - logs:PutLogEvents
-              Resource:
-                - 'Fn::Join':
-                  - ':'
-                  - - 'arn:aws:logs'
-                    - Ref: 'AWS::Region'
-                    - Ref: 'AWS::AccountId'
-                    - 'log-group:/aws/lambda/*:*:*'
-            - Effect: "Allow"
-              Action: "s3:PutObject"
-              Resource:
-                - "arn:aws:s3:::${self:provider.vars.account}-precisely-deployment-bucket"
+      - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
+PreciselyGraphQLAPIRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: PreciselyGraphQLAPIRole
+    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
+    ManagedPolicyArns: *DefaultManagedPolicyArns
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
+      - ${file(./serverless/resources/role-policies.yml):PreciselyAPIPolicy}
+...
