@@ -60,7 +60,7 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
   };
   log.switch({
     silly: ['APIAuthorizer returns policy: %j', authUserPolicy],
-    info: ['APIAuthorizer allow principalId: %s', auth.principalId]
+    info: ['APIAuthorizer allow principalId: %s (%s)', auth.principalId, auth.role]
   });
 
   return authUserPolicy;
