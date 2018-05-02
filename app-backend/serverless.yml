@@ -25,6 +25,11 @@ provider:
                        # This mapping exists to ensure no AWS resources are used when STAGE=offline
       default: dev
 
+    authorizerTTL:
+      dev: ${env:AUTHORIZER_TTL, self:provider.vars.authorizerTTL.devDefault}
+      default: 300
+      devDefault: 0
+
     certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
                         self:provider.vars.certificateMap.default}"
     certificateMap:
@@ -136,15 +141,21 @@ custom:
       migrate: true
       # seed: true
   stageSettings: # serverless-api-stage plugin
-    # CacheClusterEnabled: true
-    # CacheClusterSize: '0.5'
-    # Variables:
-    #   foo: bar
-    #   baz: xyzzy
-    MethodSettings:
-      LoggingLevel: INFO # INFO ERR or NONE
-      CachingEnabled: false
-      # CacheTtlInSeconds: 3600
+    ${self:custom.stageSettingsMap.${self:provider.vars.account}, self:custom.stageSettingsMap.default}
+
+  stageSettingsMap:
+    dev:
+      MethodSettings:
+        LoggingLevel: INFO # INFO ERR or NONE
+        CachingEnabled: false
+    default:
+      CacheClusterEnabled: true
+      CacheClusterSize: '0.5'
+      MethodSettings:
+        LoggingLevel: INFO # INFO ERR or NONE
+        CachingEnabled: true
+        CacheTtlInSeconds: 3600
+
   webpackIncludeModules: true
 
 functions:
@@ -173,7 +184,7 @@ functions:
           authorizer:
             name: APIAuthorizer
             type: request
-            resultTtlInSeconds: 0
+            resultTtlInSeconds: ${self:provider.vars.authorizerTTL.${self:provider.vars.account},self:provider.vars.authorizerTTL.default}
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:
