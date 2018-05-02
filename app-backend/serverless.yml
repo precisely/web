@@ -11,7 +11,6 @@ provider:
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
   deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
-  role: PreciselyDefaultRole
 
   # Store commonly used or noteworthy values here
   vars:
@@ -112,8 +111,8 @@ resources:
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
 
 plugins:
-  # Comment out this line on first-time deployment of a new stage
-  # (or after the stage has been removed)
+  # Comment out the `serverless-domain-manager` line
+  # on first-time deployment of a new stage, then uncomment it and redeploy
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
@@ -150,10 +149,12 @@ custom:
 
 functions:
   APIAuthorizer:
+    role: PreciselyDefaultRole
     handler: src/services/auth/handlers.apiAuthorizer
     cors: true
 
   GraphQLPlayground:
+    role: PreciselyDefaultRole
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
@@ -162,8 +163,8 @@ functions:
           cors: true
 
   GraphQLAPI:
-    handler: src/services/graphql/handlers.apiHandler
     role: PreciselyGraphQLAPIRole
+    handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
           path: ${self:provider.vars.graphQLAPIPath}
