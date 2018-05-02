@@ -16,6 +16,7 @@ provider:
   # Store commonly used or noteworthy values here
   vars:
     account: ${self:provider.vars.accountFromStage.${self:provider.stage}, self:provider.vars.accountFromStage.default}
+    accountId: "#{AWS::AccountId}"
 
     # name of the AWS account (prod, stage or dev)
     accountFromStage:
@@ -74,7 +75,7 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    ACCOUNT_ID: "#{AWS::AccountId}"
+    ACCOUNT_ID: ${self:provider.vars.accountId}
 
     LOG_LEVEL: ${self:provider.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
@@ -114,11 +115,11 @@ plugins:
   # Comment out this line on first-time deployment of a new stage
   # (or after the stage has been removed)
   - serverless-domain-manager
-  - serverless-pseudo-parameters
   - serverless-webpack
   - serverless-api-stage
   - serverless-dynamodb-local
   - serverless-shell
+  - serverless-pseudo-parameters
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
@@ -146,12 +147,6 @@ custom:
       CachingEnabled: false
       # CacheTtlInSeconds: 3600
   webpackIncludeModules: true
-  # authorizers:
-  #   APIAuthorizer:
-  #     name: APIAuthorizer
-  #     type: REQUEST
-  #     # resultTtlInSeconds: 0
-  #     # identitySource: method.request.header.Authorization, context.identity.sourceIp
 
 functions:
   APIAuthorizer:
