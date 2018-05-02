@@ -1,3 +1,4 @@
+import {isArray} from 'util';
 /*
  * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -25,7 +26,7 @@ const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
   // Adds Cloudwatch logging at
   // /precisely/web/{stage}/aggregated-log
   new WinstonCloudWatch({ // aggregate view across all lambda fns
-    logLevel: LOG_LEVEL,
+    level: LOG_LEVEL,
     logGroupName: `/precisely/web/${process.env.STAGE}`,
     logStreamName: 'aggregated-log'
   })
@@ -40,18 +41,6 @@ const BaseFormat = [
 
 const ColorizedFormat = [ format.colorize(), ...BaseFormat ];
 
-winston.levelValue = function levelValue(level: number | string) {
-  if (typeof level === 'string') {
-    return this.levels[level.toLowerCase()];
-  } else {
-    return level;
-  }
-};
-
-winston.shouldLog = function shouldLog(level: number | string) {
-  return this.levelValue(this.level) >= this.levelValue(level);
-};
-
 // no colorization when logging to AWS
 const LOG_FORMAT = format.combine.apply(format, process.env.STAGE === 'offline' ? ColorizedFormat : BaseFormat);
 
@@ -60,3 +49,26 @@ export const log = winston.createLogger({
   level: LOG_LEVEL,
   format: LOG_FORMAT
 });
+
+log.levelValue = function levelValue(level: number | string) {
+  if (typeof level === 'string') {
+    return this.levels[level.toLowerCase()];
+  } else {
+    return level;
+  }
+};
+
+log.shouldLog = function shouldLog(level: number | string) {
+  return this.levelValue(this.level) >= this.levelValue(level);
+};
+
+log.switch = function (levels: { [key: string]: (string|number|object)[] }) {
+  for (let logLevel of Object.keys(this.levels)) {
+    if (levels.hasOwnProperty(logLevel) && this.shouldLog(logLevel)) {
+      let args = levels[logLevel];
+      args = isArray(args) ? args : [args];
+      this[logLevel].apply(this, args);
+      break;
+    }
+  }
+};
