@@ -11,6 +11,7 @@ provider:
 
 plugins:
   - serverless-finch
+  - serverless-shell
 
 custom:
   client:

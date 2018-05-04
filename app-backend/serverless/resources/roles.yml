@@ -2,7 +2,7 @@
 PreciselyDefaultRole:
   Type: AWS::IAM::Role
   Properties:
-    RoleName: PreciselyDefaultRole
+    RoleName: ${self:provider.stage}-PreciselyDefaultRole
     AssumeRolePolicyDocument: &DefaultAssumeRolePolicyDocument
       Version: '2012-10-17'
       Statement:
@@ -22,7 +22,7 @@ PreciselyDefaultRole:
 PreciselyGraphQLAPIRole:
   Type: AWS::IAM::Role
   Properties:
-    RoleName: PreciselyGraphQLAPIRole
+    RoleName: ${self:provider.stage}-PreciselyGraphQLAPIRole
     AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
     ManagedPolicyArns: *DefaultManagedPolicyArns
     Policies:

@@ -13,17 +13,11 @@ provider:
   deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
 
   # Store commonly used or noteworthy values here
-  vars:
-    account: ${self:provider.vars.accountFromStage.${self:provider.stage}, self:provider.vars.accountFromStage.default}
-    accountId: "#{AWS::AccountId}"
 
-    # name of the AWS account (prod, stage or dev)
-    accountFromStage:
-      beta: beta
-      prod: prod
-      offline: offline # Note: there is no AWS "offline" account
-                       # This mapping exists to ensure no AWS resources are used when STAGE=offline
-      default: dev
+  vars: 
+    account: ${file(../serverless/common.yml):account}
+    accountFromStage: ${file(../serverless/common.yml):accountFromStage}
+    accountId: ${file(../serverless/common.yml):accountId}
 
     authorizerTTL:
       dev: ${env:AUTHORIZER_TTL, self:provider.vars.authorizerTTL.devDefault}
@@ -38,7 +32,7 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${self:provider.vars.account}-precisely
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
@@ -46,7 +40,7 @@ provider:
 
     # customDomain / Route53 config
     domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
-               self:provider.vars.domainMap.default}"
+                self:provider.vars.domainMap.default}"
     domainMap:
       prod: precise.ly
       default: ${self:provider.stage}.codeprecisely.net
@@ -73,6 +67,7 @@ provider:
       prod: production
       default: development
       # otherwise NODE_ENV it will be "development"
+
 
   ##
   ## Environment for handlers
