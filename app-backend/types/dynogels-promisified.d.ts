@@ -22,10 +22,10 @@ declare module "@aneilbaboo/dynogels-promisified" {
   // Dynogels global functions
   export function dynamoDriver(dynamoDB: AWS.DynamoDB): AWS.DynamoDB;
   export function reset(): void;
-  export function define<Attributes>(
+  export function define<Attributes, Methods={}>(
     modelName: string,
     config: ModelConfiguration
-  ): Model<Attributes>;
+  ): Model<Attributes, Methods>;
 
   export function createTables(callback: (err: Error | string) => void): void;
   export function createTables(
@@ -55,81 +55,81 @@ declare module "@aneilbaboo/dynogels-promisified" {
 
   export type LifeCycleAction = "create" | "update" | "destroy";
 
-  export interface Model<Attributes = { any: any }> {
-    new (attrs: Attributes): Item<Attributes>;
+  export interface Model<Attributes = { any: any }, Methods = {} > {
+    new (attrs: Attributes): Item<Attributes, Methods>;
 
     get(
       hashKey: any,
       rangeKey: any,
       options: GetItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
     get(
       haskKey: any,
       options: GetItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    get(hashKey: any, callback: DynogelsItemCallback<Attributes>): void;
+    get(hashKey: any, callback: DynogelsItemCallback<Attributes, Methods>): void;
     get(
       hashKey: any,
       rangeKey: any,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
     create(
       item: any,
       options: CreateItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    create(item: any, callback: DynogelsItemCallback<Attributes>): void;
+    create(item: any, callback: DynogelsItemCallback<Attributes, Methods>): void;
     update(
       item: any,
       options: UpdateItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    update(item: any, callback: DynogelsItemCallback<Attributes>): void;
+    update(item: any, callback: DynogelsItemCallback<Attributes, Methods>): void;
     destroy(
       hashKey: any,
       rangeKey: any,
       options: DestroyItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
     destroy(
       haskKey: any,
       options: DestroyItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    destroy(hashKey: any, callback: DynogelsItemCallback<Attributes>): void;
+    destroy(hashKey: any, callback: DynogelsItemCallback<Attributes, Methods>): void;
     destroy(
       hashKey: any,
       rangeKey: any,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
     destroy(
       item: any,
       options: DestroyItemOptions,
-      callback: DynogelsItemCallback<Attributes>
+      callback: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    destroy(item: any, callback: DynogelsItemCallback<Attributes>): void;
-    query(hashKey: any): Query<Attributes>;
-    scan(): Scan<Attributes>;
-    parallelScan(totalSegments: number): Scan<Attributes>;
+    destroy(item: any, callback: DynogelsItemCallback<Attributes, Methods>): void;
+    query(hashKey: any): Query<Attributes, Methods>;
+    scan(): Scan<Attributes, Methods>;
+    parallelScan(totalSegments: number): Scan<Attributes, Methods>;
     getItems(
       items: string[] | Array<{ [key: string]: string }>,
-      callback: (err: Error, items: Item<Attributes>[]) => void
+      callback: (err: Error, items: Item<Attributes, Methods>[]) => void
     ): void;
     getItems(
       items: string[] | Array<{ [key: string]: string }>,
       options: GetItemOptions,
-      callback: (err: Error, items: Item<Attributes>[]) => void
+      callback: (err: Error, items: Item<Attributes, Methods>[]) => void
     ): void;
     batchGetItems(
       items: string[] | Array<{ [key: string]: string }>,
-      callback: (err: Error, items: Item<Attributes>[]) => void
+      callback: (err: Error, items: Item<Attributes, Methods>[]) => void
     ): void;
     batchGetItems(
       items: string[] | Array<{ [key: string]: string }>,
       options: GetItemOptions,
-      callback: (err: Error, items: Item<Attributes>[]) => void
+      callback: (err: Error, items: Item<Attributes, Methods>[]) => void
     ): void;
     dynamoCreateTableParams(): Object;
     dynamoCreateTableParams(options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions): Object;
@@ -155,7 +155,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
 
     after(
       action: LifeCycleAction,
-      listener: (item: Item<Attributes>) => void
+      listener: (item: Item<Attributes, Methods>) => void
     ): void;
     before(
       action: LifeCycleAction,
@@ -170,51 +170,51 @@ declare module "@aneilbaboo/dynogels-promisified" {
       hashKey: any,
       rangeKey: any,
       options: GetItemOptions
-    ): Promise<Item<Attributes>>;
-    getAsync(haskKey: any, options: GetItemOptions): Promise<Item<Attributes>>;
-    getAsync(hashKey: any): Promise<Item<Attributes>>;
-    getAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes>>;
+    ): Promise<Item<Attributes, Methods>>;
+    getAsync(haskKey: any, options: GetItemOptions): Promise<Item<Attributes, Methods>>;
+    getAsync(hashKey: any): Promise<Item<Attributes, Methods>>;
+    getAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes, Methods>>;
     createAsync(
       item: Attributes,
       options: CreateItemOptions
-    ): Promise<Item<Attributes>>;
-    createAsync(item: Attributes): Promise<Item<Attributes>>;
+    ): Promise<Item<Attributes, Methods>>;
+    createAsync(item: Attributes): Promise<Item<Attributes, Methods>>;
     updateAsync(
       item: Attributes,
       options: UpdateItemOptions
-    ): Promise<Item<Attributes>>;
-    updateAsync(item: Attributes): Promise<Item<Attributes>>;
+    ): Promise<Item<Attributes, Methods>>;
+    updateAsync(item: Attributes): Promise<Item<Attributes, Methods>>;
     destroyAsync(
       hashKey: any,
       rangeKey: any,
       options: DestroyItemOptions
-    ): Promise<Item<Attributes>>;
+    ): Promise<Item<Attributes, Methods>>;
     destroyAsync(
       haskKey: any,
       options: DestroyItemOptions
-    ): Promise<Item<Attributes>>;
-    destroyAsync(hashKey: any): Promise<Item<Attributes>>;
-    destroyAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes>>;
+    ): Promise<Item<Attributes, Methods>>;
+    destroyAsync(hashKey: any): Promise<Item<Attributes, Methods>>;
+    destroyAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes, Methods>>;
     destroyAsync(
       item: Attributes,
       options: DestroyItemOptions
-    ): Promise<Item<Attributes>>;
-    destroyAsync(item: Attributes): Promise<Item<Attributes>>;
-    parallelScan(totalSegments: number): Scan<Attributes>;
+    ): Promise<Item<Attributes, Methods>>;
+    destroyAsync(item: Attributes): Promise<Item<Attributes, Methods>>;
+    parallelScan(totalSegments: number): Scan<Attributes, Methods>;
     getItemsAsync(
       items: string[] | Array<{ [key: string]: string }>
-    ): Promise<Item<Attributes>[]>;
+    ): Promise<Item<Attributes, Methods>[]>;
     getItemsAsync(
       items: string[] | Array<{ [key: string]: string }>,
       options: GetItemOptions
-    ): Promise<Item<Attributes>[]>;
+    ): Promise<Item<Attributes, Methods>[]>;
     batchGetItemsAsync(
       items: string[] | Array<{ [key: string]: string }>
-    ): Promise<Item<Attributes>[]>;
+    ): Promise<Item<Attributes, Methods>[]>;
     batchGetItemsAsync(
       items: string[] | Array<{ [key: string]: string }>,
       options: GetItemOptions
-    ): Promise<Item<Attributes>[]>;
+    ): Promise<Item<Attributes, Methods>[]>;
     createTableAsync(
       options: { [key: string]: CreateTablesOptions } | DynogelsGlobalOptions
     ): Promise<AWS.DynamoDB.CreateTableOutput>;
@@ -225,12 +225,12 @@ declare module "@aneilbaboo/dynogels-promisified" {
     updateTableAsync(): Promise<AWS.DynamoDB.UpdateTableOutput>;
     describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
     deleteTableAsync(): void;
-    query(hashKey: any): Query<Attributes>;
+    query(hashKey: any): Query<Attributes, Methods>;
   }
 
-  export type DynogelsItemCallback<Attributes = { any: any }> = (
+  export type DynogelsItemCallback<Attributes = { any: any }, Methods = {}> = (
     err: Error,
-    data: Item<Attributes>
+    data: Item<Attributes, Methods>
   ) => void;
 
   export interface Throughput {
@@ -292,29 +292,29 @@ declare module "@aneilbaboo/dynogels-promisified" {
     dynamodb?: AWS.DynamoDB;
   }
 
-  export interface Item<Attributes = { any: any }> {
+  export type Item<Attributes = { any: any }, Methods extends {} = {}> = Methods & {
     get<K extends keyof Attributes>(key: K): Attributes[K];
     get(): Attributes;
-    set(params: {}): Item<Attributes>;
-    save(callback?: DynogelsItemCallback<Attributes>): void;
+    set(params: {}): Item<Attributes, Methods>;
+    save(callback?: DynogelsItemCallback<Attributes, Methods>): void;
     update(
       options: UpdateItemOptions,
-      callback?: DynogelsItemCallback<Attributes>
+      callback?: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    update(callback?: DynogelsItemCallback<Attributes>): void;
+    update(callback?: DynogelsItemCallback<Attributes, Methods>): void;
     destroy(
       options: DestroyItemOptions,
-      callback?: DynogelsItemCallback<Attributes>
+      callback?: DynogelsItemCallback<Attributes, Methods>
     ): void;
-    destroy(callback?: DynogelsItemCallback<Attributes>): void;
+    destroy(callback?: DynogelsItemCallback<Attributes, Methods>): void;
     toJSON(): any;
     toPlainObject(): any;
 
-    saveAsync(): Promise<Item<Attributes>>;
-    updateAsync(options: UpdateItemOptions): Promise<Item<Attributes>>;
-    updateAsync(): Promise<Item<Attributes>>;
-    destroyAsync(options: DestroyItemOptions): Promise<Item<Attributes>>;
-    destroyAsync(): Promise<Item<Attributes>>;
+    saveAsync(): Promise<Item<Attributes, Methods>>;
+    updateAsync(options: UpdateItemOptions): Promise<Item<Attributes, Methods>>;
+    updateAsync(): Promise<Item<Attributes, Methods>>;
+    destroyAsync(options: DestroyItemOptions): Promise<Item<Attributes, Methods>>;
+    destroyAsync(): Promise<Item<Attributes, Methods>>;
   }
 
   export interface BaseChain<T> {
@@ -337,64 +337,64 @@ declare module "@aneilbaboo/dynogels-promisified" {
     ne(value: any): T;
   }
 
-  export interface ExecResult<Attributes> {
-    Items: Item<Attributes>[];
+  export interface ExecResult<Attributes, Methods> {
+    Items: Item<Attributes, Methods>[];
     Count: number;
     LastEvaluatedKey?: any;
   }
 
-  //export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes>>;
-  export type QueryChain<Attributes = { [key: string]: any }> = ExtendedChain<
-    Query<Attributes>
+  //export type QueryWhereChain<Attributes={[key:string]:any}> = BaseChain<Query<Attributes, Methods>>;
+  export type QueryChain<Attributes = { [key: string]: any }, Methods = {}> = ExtendedChain<
+    Query<Attributes, Methods>
   >;
 
-  export interface Query<Attributes = { any: any }> {
-    limit(number: number): Query<Attributes>;
-    filterExpression(expression: any): Query<Attributes>;
-    expressionAttributeNames(data: any): Query<Attributes>;
-    expressionAttributeValues(data: any): Query<Attributes>;
-    projectionExpression(data: any): Query<Attributes>;
-    usingIndex(name: string): Query<Attributes>;
-    consistentRead(read: boolean): Query<Attributes>;
-    addKeyCondition(condition: any): Query<Attributes>;
-    addFilterCondition(condition: any): Query<Attributes>;
-    startKey(hashKey: any, rangeKey: any): Query<Attributes>;
-    attributes(attrs: any): Query<Attributes>;
-    ascending(): Query<Attributes>;
-    descending(): Query<Attributes>;
-    select(value: any): Query<Attributes>;
-    returnConsumedCapacity(value: any): Query<Attributes>;
-    loadAll(): Query<Attributes>;
-    where(keyName: string): QueryChain<Attributes>;
-    filter(keyName: string): QueryChain<Attributes>;
+  export interface Query<Attributes = { any: any }, Methods = {}> {
+    limit(number: number): Query<Attributes, Methods>;
+    filterExpression(expression: any): Query<Attributes, Methods>;
+    expressionAttributeNames(data: any): Query<Attributes, Methods>;
+    expressionAttributeValues(data: any): Query<Attributes, Methods>;
+    projectionExpression(data: any): Query<Attributes, Methods>;
+    usingIndex(name: string): Query<Attributes, Methods>;
+    consistentRead(read: boolean): Query<Attributes, Methods>;
+    addKeyCondition(condition: any): Query<Attributes, Methods>;
+    addFilterCondition(condition: any): Query<Attributes, Methods>;
+    startKey(hashKey: any, rangeKey: any): Query<Attributes, Methods>;
+    attributes(attrs: any): Query<Attributes, Methods>;
+    ascending(): Query<Attributes, Methods>;
+    descending(): Query<Attributes, Methods>;
+    select(value: any): Query<Attributes, Methods>;
+    returnConsumedCapacity(value: any): Query<Attributes, Methods>;
+    loadAll(): Query<Attributes, Methods>;
+    where(keyName: string): QueryChain<Attributes, Methods>;
+    filter(keyName: string): QueryChain<Attributes, Methods>;
     exec(): stream.Readable;
-    exec(callback: (err: Error, data: ExecResult<Attributes>) => void): void;
+    exec(callback: (err: Error, data: ExecResult<Attributes, Methods>) => void): void;
 
-    execAsync(): Promise<ExecResult<Attributes>>;
+    execAsync(): Promise<ExecResult<Attributes, Methods>>;
   }
 
-  export interface ScanWhereChain<Attributes = { [key: string]: any }> {
-    notNull(): Scan<Attributes>;
+  export interface ScanWhereChain<Attributes = { [key: string]: any }, Methods = {}> {
+    notNull(): Scan<Attributes, Methods>;
   }
 
-  export interface Scan<Attributes = { any: any }> {
-    limit(number: number): Scan<Attributes>;
-    addFilterCondition(condition: any): Scan<Attributes>;
-    startKey(hashKey: any, rangeKey?: any): Scan<Attributes>;
-    attributes(attrs: any): Scan<Attributes>;
-    select(value: any): Scan<Attributes>;
-    returnConsumedCapacity(): Scan<Attributes>;
-    segments(segment: any, totalSegments: number): Scan<Attributes>;
-    where(keyName: string): ScanWhereChain<Attributes>;
-    filterExpression(expression: any): Scan<Attributes>;
-    expressionAttributeNames(data: any): Scan<Attributes>;
-    expressionAttributeValues(data: any): Scan<Attributes>;
-    projectionExpression(data: any): Scan<Attributes>;
+  export interface Scan<Attributes = { any: any }, Methods = {}> {
+    limit(number: number): Scan<Attributes, Methods>;
+    addFilterCondition(condition: any): Scan<Attributes, Methods>;
+    startKey(hashKey: any, rangeKey?: any): Scan<Attributes, Methods>;
+    attributes(attrs: any): Scan<Attributes, Methods>;
+    select(value: any): Scan<Attributes, Methods>;
+    returnConsumedCapacity(): Scan<Attributes, Methods>;
+    segments(segment: any, totalSegments: number): Scan<Attributes, Methods>;
+    where(keyName: string): ScanWhereChain<Attributes, Methods>;
+    filterExpression(expression: any): Scan<Attributes, Methods>;
+    expressionAttributeNames(data: any): Scan<Attributes, Methods>;
+    expressionAttributeValues(data: any): Scan<Attributes, Methods>;
+    projectionExpression(data: any): Scan<Attributes, Methods>;
     exec(): stream.Readable;
-    exec(callback: (err: Error, data: ExecResult<Attributes>) => void): void;
-    loadAll(): Scan<Attributes>;
+    exec(callback: (err: Error, data: ExecResult<Attributes, Methods>) => void): void;
+    loadAll(): Scan<Attributes, Methods>;
 
-    execAsync(): Promise<ExecResult<Attributes>>;
+    execAsync(): Promise<ExecResult<Attributes, Methods>>;
   }
 
   export type tableResolve = () => string;

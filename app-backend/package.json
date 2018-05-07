@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "console": "TS_NODE_COMPILER_OPTIONS=\"{\\\"module\\\":\\\"commonjs\\\"}\" ts-node -r tsconfig-paths/register -c \"require('ts-node').register()\"",
-    "shell": "scripts/sls shell",
+    "shell": "SLS_DEBUG=* scripts/sls shell",
     "log": "scripts/log",
     "deploy": "yarn sls deploy",
     "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",

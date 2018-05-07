@@ -7,16 +7,9 @@
 */
 
 import * as Joi from 'joi';
-import {defineModel, Model, Item, types} from 'src/db/dynamo/dynogels';
+import {defineModel, Item, types} from 'src/db/dynamo/dynogels';
 import slugify from 'slugify';
 const {uuid} = types;
-
-type ReportCreateArgs = {
-  title: string,
-  slug?: string,
-  rawContent: string,
-  genes: string[]
-};
 
 export interface ReportAttributes {
   id?: string;
@@ -28,33 +21,26 @@ export interface ReportAttributes {
   genes?: string[];
 }
 
-const StaticMethods = {
-  async findBySlug(slug: string): Promise<Report> {
-    const result = await Report.query(slug).usingIndex('slugIndex').execAsync();
-    return result && result.Items[0];
-  },
+// Instance methods
+class ReportMethods {
+}
 
-  async safeCreate({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report> {
-    if (slug && Report.findBySlug(slug)) {
-      throw new Error(`Cannot create report with slug "${slug}" - Report already exists`);
-    } else {
-      slug = await findUniqueSlug(title);
-    }
-
-    return await Report.createAsync({slug, title, rawContent, genes});
-  }
-
+type ReportCreateArgs = {
+  title: string,
+  slug?: string,
+  rawContent: string,
+  genes: string[]
 };
 
-export interface Report extends Item<ReportAttributes>, ReportAttributes {
+interface ReportStaticMethods {
+  findBySlug(slug: string): Promise<Report>;
+  safeCreate({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report>;
+  findUniqueSlug(s: string): Promise<string>;
 }
 
-export interface ReportModel extends Model<ReportAttributes> {
-  findBySlug?(slug: string): Promise<Report>;
-  safeCreate?({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report>;
-}
+export interface Report extends Item<ReportAttributes, ReportMethods> {}
 
-export const Report: ReportModel = defineModel<ReportAttributes>('report', {
+export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticMethods>('report', {
   hashKey: 'id',
 
   timestamps : true,
@@ -74,9 +60,27 @@ export const Report: ReportModel = defineModel<ReportAttributes>('report', {
     hashKey: 'slug',
     type: 'global'
   }]
-}, StaticMethods);
+});
 
-async function findUniqueSlug(s: string): Promise<string> {
+//
+// STATIC METHODS
+//
+Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
+  const result = await Report.query(slug).usingIndex('slugIndex').execAsync();
+  return result && result.Items[0];
+};
+
+Report.safeCreate = async function safeCreate({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report> {
+  if (slug && Report.findBySlug(slug)) {
+    throw new Error(`Cannot create report with slug "${slug}" - Report already exists`);
+  } else {
+    slug = await Report.findUniqueSlug(title);
+  }
+
+  return await Report.createAsync({slug, title, rawContent, genes});
+};
+
+Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {
   let index = 1;
   let baseSlug = slugify(s);
   let slug = baseSlug;
@@ -88,4 +92,9 @@ async function findUniqueSlug(s: string): Promise<string> {
     }
     slug = `${baseSlug}-${++index}`;
   }
-}
+};
+
+//
+// INSTANCE METHODS
+//
+// Report.prototype.foo = function foo() {}

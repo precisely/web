@@ -1,5 +1,6 @@
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { IResolverObject } from 'graphql-tools';
+import {Item} from 'src/db/dynamo/dynogels';
 
 export type ExtendedAuthorizer = {
   claims?: {
@@ -23,10 +24,10 @@ export class ResolverContext {
   }
 }
 
-export function modelFieldsResolver<T>(fields: string[]): IResolverObject {
+export function dynamoFieldResolver<T>(fields: (keyof T)[]): IResolverObject {
   let resolver = {};
   for (const field of fields) {
-    resolver[field] = (obj: T) => obj[field];
+    resolver[<string> field] = (obj: Item<T>) => obj.get(field);
   }
   return resolver;
 }

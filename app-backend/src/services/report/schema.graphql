@@ -1,18 +1,15 @@
 type Report {
   id: String,
+  owner: String,
   title: String,
   slug: String,
   rawContent: String,
   parsedContent: String,
   topLevel: Boolean,
-  genes: [String],
+  requiredVariants: [String],
   createdAt: String
   updatedAt: String
-  userData: UserData,
-}
-
-type UserData {
-  genotypes: [Genotype]
+  userVariants: UserData,
 }
 
 extend type Query {

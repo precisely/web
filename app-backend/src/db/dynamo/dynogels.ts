@@ -23,16 +23,16 @@ export function tableNameWithoutStage(tableNameWithEnv: string): string {
   return result[1];
 }
 
-export function defineModel<Attributes, Methods = {}>(
+export function defineModel<Attributes, InstanceMethods = {}, StaticMethods = {}>(
   tableName: string,
   config: ModelConfiguration,
-  methods?: Methods):
-  Model<Attributes> & Methods {
-
+  staticMethods?: { new(): StaticMethods }
+):
+  Model<Attributes, InstanceMethods> & Partial<StaticMethods> {
   const fullName = stageTableName(tableName);
-  const baseModel = dynogels.define<Attributes>(fullName, config);
+  const baseModel = dynogels.define<Attributes, InstanceMethods>(fullName, config);
 
-  return extend(baseModel, methods);
+  return extend(baseModel, staticMethods ? staticMethods.prototype : {});
 }
 
 export default dynogels;

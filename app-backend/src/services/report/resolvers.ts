@@ -7,6 +7,7 @@
 */
 
 import {Report} from './models';
+import {dynamoFieldResolver} from 'src/graphql-utils';
 
 export interface ReportCreateUpdateArgs {
   title: string;
@@ -31,5 +32,9 @@ export const resolvers = {
     async updateReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
       return await Report.createAsync({title, rawContent: content, genes});
     }
-  }
+  },
+  Report: dynamoFieldResolver<Report>(['id', 'slug', 'title'])
 };
+
+const r = new Report({});
+r.

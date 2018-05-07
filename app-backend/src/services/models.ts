@@ -1,2 +1,2 @@
 export * from './report/models';
-export * from './genotype/models';
+export * from './variant-call/models';
