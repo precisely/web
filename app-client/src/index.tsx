@@ -11,7 +11,7 @@ import * as ReactDOM from 'react-dom';
 import initReactFastclick from 'react-fastclick';
 import {Provider} from 'react-redux';
 import {StyleRoot} from 'radium';
-import {BrowserRouter} from 'react-router-dom';
+import {Router} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
 import {HttpLink} from 'apollo-link-http';
@@ -22,6 +22,9 @@ import {Basepage} from 'src/features/common/Basepage';
 import {utils} from 'src/utils';
 import * as Bluebird from 'bluebird';
 import * as AWS from 'aws-sdk';
+import history from './routes/history';
+import { Location, Action } from 'history';
+import { currentUser } from './constants/currentUser';
 
 initReactFastclick();
 
@@ -48,9 +51,9 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <StyleRoot>
         <ToastContainer hideProgressBar />
-        <BrowserRouter>
+        <Router history={history}>
           <Basepage />
-        </BrowserRouter>
+        </Router>
       </StyleRoot>
     </ApolloProvider>
   </Provider>,

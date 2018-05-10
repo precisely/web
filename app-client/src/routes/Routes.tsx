@@ -11,7 +11,6 @@ import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
 import {AuthRoute} from 'src/routes/AuthRoute';
 import {LoadingPage} from 'src/features/common/LoadingPage';
-import {currentUser} from 'src/constants/currentUser';
 
 // tslint:disable
 /* istanbul ignore next */
@@ -34,15 +33,22 @@ function LoadComponent(componentName: string, path?: string) {
 export class Routes extends React.Component {
 
   render(): JSX.Element {
+
     return (
       <Switch>
         <AuthRoute
             path="/"
             component={LoadComponent('Homepage', 'homepage/Homepage')}
+            exact
         />
         <AuthRoute
             path="/view-report"
             component={LoadComponent('Report', 'report/Report')}
+        />
+        <Route
+            path="/login"
+            exact
+            component={LoadComponent('Login', 'user/Login')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound', 'common/NotFound')} />

@@ -9,6 +9,27 @@ provider:
   region: us-east-1
   profile: ${opt:stage, self:provider.stage}-profile-precisely
 
+  ##
+  ## Store commonly used or noteworthy values here
+  vars: 
+    account: ${file(../serverless/common.yml):account}
+    accountFromStage: ${file(../serverless/common.yml):accountFromStage}
+    accountId: ${file(../serverless/common.yml):accountId}
+
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+
+  ##
+  ## Environment for handlers
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    ACCOUNT_ID: ${self:provider.vars.accountId}
+
+    LOG_LEVEL: ${self:provider.vars.logLevel}
+    # Auth0 values - needed for verifying Auth0 tokens
+    AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
+
 plugins:
   - serverless-finch
   - serverless-shell

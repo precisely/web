@@ -25,6 +25,10 @@ export class AuthRoute extends React.Component<AuthRouteProps> {
           <Route {...routeProps} />;
     }
 
-    currentUser.showLogin();
+    if (!routeProps.path.indexOf('login')) {
+      return <Redirect from={routeProps.path} to="/login" />;
+    }
+
+    return <Route {...routeProps} />;
   } 
 }

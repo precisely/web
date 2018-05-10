@@ -18,9 +18,6 @@ unroll.use(it);
 configure({adapter: new Adapter()});
 
 describe('Tests for AuthRoute', () => {
-  const onEnter = jest.fn<boolean>((value: boolean): boolean => {
-    return value;
-  });
 
   class DummyComponent extends React.Component {
     // tslint:disable-next-line
@@ -32,9 +29,7 @@ describe('Tests for AuthRoute', () => {
   describe('When onEnter returns true', () => {
     const componentTree: ShallowWrapper = shallow(
       <AuthRoute
-          onEnter={() => onEnter(true)}
           path="/dummyPath"
-          redirectTo="dummyRedirectPath"
           exact
           component={DummyComponent}
       />
@@ -48,9 +43,7 @@ describe('Tests for AuthRoute', () => {
   describe('When onEnter returns false', () => {
     const componentTree: ShallowWrapper = shallow(
       <AuthRoute
-          onEnter={() => onEnter(false)}
           path="/dummyPath"
-          redirectTo="dummyRedirectPath"
           component={DummyComponent}
       />
     );

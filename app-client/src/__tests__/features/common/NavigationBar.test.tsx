@@ -32,8 +32,8 @@ type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>,
 
 describe('NavigationBar tests.', () => {
 
-  currentUser.logOut = jest.fn<void>();
-  currentUser.isLoggedIn = jest.fn<boolean>().mockReturnValueOnce(true).mockReturnValue(false);
+  currentUser.logout = jest.fn<void>();
+  currentUser.isAuthenticated = jest.fn<boolean>().mockReturnValueOnce(true).mockReturnValue(false);
 
   const getComponentTree = (): ComponentTree => {
     return shallow(
@@ -50,7 +50,7 @@ describe('NavigationBar tests.', () => {
 
     it('should log out when button is clicked', () => {
       componentTree.find(NavLink).at(1).simulate('click');
-      expect(currentUser.logOut).toBeCalled();
+      expect(currentUser.logout).toBeCalled();
       expect(mockedHistory.replace).toBeCalledWith('/');
     });
   });
