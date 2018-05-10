@@ -97,12 +97,14 @@
     ]
   },
   "dependencies": {
+    "@types/auth0-lock": "^11.4.3",
     "@types/bluebird": "^3.5.20",
     "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "1.1.5",
     "apollo-client": "2.2.1",
     "apollo-client-preset": "1.0.6",
     "apollo-link-http": "1.3.2",
+    "auth0-lock": "^11.6.1",
     "autoprefixer": "7.1.6",
     "aws-sdk": "2.188.0",
     "axios": "0.17.1",
@@ -158,6 +160,7 @@
     "tslint": "5.7.0",
     "tslint-loader": "3.5.3",
     "tslint-react": "3.2.0",
+    "types": "^0.1.1",
     "typescript": "2.6.1",
     "url-loader": "0.5.9",
     "webpack": "3.5.1",

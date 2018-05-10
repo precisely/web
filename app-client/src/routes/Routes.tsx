@@ -37,52 +37,11 @@ export class Routes extends React.Component {
     return (
       <Switch>
         <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
             path="/"
-            exact
             component={LoadComponent('Homepage', 'homepage/Homepage')}
         />
         <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/login"
-            exact
-            component={LoadComponent('Login', 'user/Login')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/signup"
-            exact
-            component={LoadComponent('Signup', 'user/Signup')}
-        />
-        <AuthRoute
-            onEnter={currentUser.isLoggedIn}
-            redirectTo="/login"
-            path="/dashboard"
-            exact
-            component={LoadComponent('Dashboard', 'user/Dashboard')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/reset-password/:email"
-            exact
-            component={LoadComponent('ResetPassword', 'user/ResetPassword')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/forgot-password"
-            exact
-            component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
-        />
-        <AuthRoute
-            onEnter={currentUser.isLoggedIn}
-            redirectTo="/login"
             path="/view-report"
-            exact
             component={LoadComponent('Report', 'report/Report')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />

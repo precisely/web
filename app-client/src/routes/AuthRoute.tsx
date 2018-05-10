@@ -7,22 +7,24 @@
 */
 
 import * as React from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import {Route, Redirect, RouteProps} from 'react-router-dom';
+import { currentUser } from '../constants/currentUser';
 
-export interface AuthRouteProps {
-  onEnter: () => boolean;
-  // tslint:disable-next-line no-any
-  component: any;
-  path: string;
-  redirectTo: string;
-  exact?: boolean;
+export interface AuthRouteProps extends RouteProps {
+  authenticatedRedirect?: string;
 }
 
 export class AuthRoute extends React.Component<AuthRouteProps> {
   render(): JSX.Element {
-    const {onEnter, component, path, redirectTo, exact} = this.props;
-    const routeProps = exact ? {path, component, exact} : {path, component};
-    
-    return onEnter() ? <Route {...routeProps} /> : <Redirect from={path} to={redirectTo} />;
+    const routeProps: RouteProps = this.props;
+    const {authenticatedRedirect} = this.props;
+
+    if (currentUser.isAuthenticated()) {
+      return authenticatedRedirect ? 
+          <Redirect from={routeProps.path} to={authenticatedRedirect} /> :
+          <Route {...routeProps} />;
+    }
+
+    currentUser.showLogin();
   } 
 }

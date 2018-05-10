@@ -39,12 +39,12 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
     this.setState({isOpen: !this.state.isOpen});
   }
 
-  handleClick = (loggedIn: boolean): void => {
-    if (loggedIn) {
-      currentUser.logOut();
+  handleClick = (): void => {
+    if (currentUser.isAuthenticated()) {
+      currentUser.logout();
       this.props.history.replace('/');
     } else {
-      this.props.history.push('/login');
+      currentUser.showLogin();
     }
   }
 
@@ -57,7 +57,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
   }
 
   render() {
-    const loggedIn: boolean = currentUser.isLoggedIn();
     const {isOpen, backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;
@@ -74,8 +73,8 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
               <NavLink href="/about-us">ABOUT US</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick(loggedIn)}>
-                {loggedIn ? 'LOG OUT' : 'LOG IN'}
+              <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
+                {currentUser.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
               </NavLink>
             </NavItem>
           </Nav>

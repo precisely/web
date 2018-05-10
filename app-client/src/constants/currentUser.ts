@@ -1,4 +1,3 @@
-import {AWSUser} from 'src/utils/AWSUser.ts';
+import { AuthUser } from '../utils/AuthUser';
 
-// tslint:disable-next-line
-export const currentUser = new AWSUser();
+export const currentUser = new AuthUser();

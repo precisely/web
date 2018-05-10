@@ -39,8 +39,10 @@ provider:
     defaultProfile: ${self:provider.vars.account}-profile-precisely
 
     # customDomain / Route53 config
-    domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
-                self:provider.vars.domainMap.default}"
+    domain: "${
+        self:provider.vars.domainMap.${self:provider.vars.account},
+        self:provider.vars.domainMap.default
+    }"
     domainMap:
       prod: precise.ly
       default: ${self:provider.stage}.codeprecisely.net
