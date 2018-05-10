@@ -19,20 +19,21 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {store} from 'src/store';
 import {Basepage} from 'src/features/common/Basepage';
-import {utils} from 'src/utils';
 import * as Bluebird from 'bluebird';
 import * as AWS from 'aws-sdk';
 import history from './routes/history';
-import { Location, Action } from 'history';
 import { currentUser } from './constants/currentUser';
 
 initReactFastclick();
+
+// tslint:disable-next-line
+console.log('Authenticated User: ', currentUser);
 
 const client = new ApolloClient({
   link: new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
     headers: {
-      Authorization: utils.getTokenFromLocalStorage()
+      Authorization: ''
     }
   }),
   cache: new InMemoryCache(),

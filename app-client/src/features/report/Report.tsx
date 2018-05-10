@@ -16,6 +16,7 @@ import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/features/report/queries';
 import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
+import { currentUser } from '../../constants/currentUser';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -25,6 +26,10 @@ export class ReportImpl extends React.Component<ReportProps> {
 
   componentWillMount(): void {
     this.setState({isLoading: true});
+
+    // tslint:disable-next-line
+    console.log('Proof', currentUser);
+    
   }
 
   renderReports = (): JSX.Element | string => {
