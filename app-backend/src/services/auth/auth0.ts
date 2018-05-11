@@ -23,7 +23,7 @@ function getToken(event: CustomAuthorizerEvent): string {
 export interface Auth0AuthenticationResult {
   principalId: string;
   email?: string;
-  roles?: string[];
+  roles?: string;
 }
 
 export async function authenticate(event: CustomAuthorizerEvent, log: Logger): Promise<Auth0AuthenticationResult> {
@@ -61,12 +61,12 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     return {
       principalId: verified.sub,
       email: verified.email,
-      roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? ['admin', 'user'] : ['user']
+      roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin,user' : 'user'
     };
   } catch (e) {
     return {
       principalId: 'public',
-      roles: ['public']
+      roles: 'public'
     };
   }
 }

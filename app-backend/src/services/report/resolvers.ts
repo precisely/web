@@ -7,7 +7,8 @@
 */
 
 import {Report} from './models';
-import {dynamoFieldResolver} from 'src/common/graphql-context';
+import { dynamoFieldResolver } from 'src/db/dynamo';
+import { ReportAttributes } from 'src/services/report/models';
 
 export interface ReportCreateUpdateArgs {
   title: string;
@@ -33,6 +34,5 @@ export const resolvers = {
       return await Report.createAsync({title, rawContent: content, genes});
     }
   },
-  Report: dynamoFieldResolver<Report>(['id', 'slug', 'title'])
+  Report: dynamoFieldResolver<ReportAttributes>(['id', 'slug', 'title'])
 };
-
