@@ -9,7 +9,7 @@
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
 import {Genotype} from 'src/services/genotype/models';
-import {log} from 'src/logger';
+import {log} from 'src/common/logger';
 
 interface GA4GH {
   referenceName: string;

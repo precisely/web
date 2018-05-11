@@ -1,7 +1,7 @@
 export * from '@aneilbaboo/dynogels-promisified';
 import {Model, ModelConfiguration } from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
-import {extend} from 'src/utils';
+import {extend} from 'src/common/utils';
 
 // Detect special 'offline' stage, use DynamoDB local
 if (process.env.STAGE === 'offline') {

@@ -3,7 +3,7 @@
 import * as JwksRsa from 'jwks-rsa-promisified';
 import * as jwt from 'jsonwebtoken-promisified';
 import { CustomAuthorizerEvent } from 'aws-lambda';
-import { Logger } from 'src/logger';
+import { Logger } from 'src/common/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: CustomAuthorizerEvent): string {

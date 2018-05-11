@@ -14,9 +14,9 @@ import {makeExecutableSchema} from 'graphql-tools';
 
 import preciselyTypeDefs from 'src/services/schema.graphql';
 import {resolvers} from 'src/services/resolvers';
-import {makeLogger} from 'src/logger';
+import {makeLogger} from 'src/common/logger';
 
-import { GraphQLContext } from 'src/graphql-context';
+import { GraphQLContext } from 'src/common/graphql-context';
 
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
   const log = makeLogger(event.requestContext);

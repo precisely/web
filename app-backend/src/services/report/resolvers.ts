@@ -7,7 +7,7 @@
 */
 
 import {Report} from './models';
-import {dynamoFieldResolver} from 'src/graphql-context';
+import {dynamoFieldResolver} from 'src/common/graphql-context';
 
 export interface ReportCreateUpdateArgs {
   title: string;

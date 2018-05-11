@@ -1,4 +1,4 @@
-import {TypedError} from 'src/errors';
+import {TypedError} from 'src/common/errors';
 import { get as getNestedPath } from 'lodash';
 
 type ScopeMatchType = '**' | true | false;

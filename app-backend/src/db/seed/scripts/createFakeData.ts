@@ -12,7 +12,7 @@
 // import {vendorDataTypeList} from '../../user-data-map/models/UserDataMap';
 // import {ReportAttributes} from '../../report-service/models/Report';
 // import {GenotypeAttributes} from 'src/services/Genotype';
-// import {log} from 'src/logger';
+// import {log} from 'src/common/logger';
 // const jsonfile = require('jsonfile');
 
 // let limit = parseInt(process.argv.pop(), 10);

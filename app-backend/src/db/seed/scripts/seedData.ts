@@ -7,7 +7,7 @@
 */
 
 import {seedReport, seedGenotype} from './seedDynamo';
-import {log} from 'src/logger';
+import {log} from 'src/common/logger';
 
 export const setEnvironment = (secrets: string) => {
   const lines: string[] = secrets.slice(1, secrets.length - 1).split(',');
