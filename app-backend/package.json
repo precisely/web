@@ -40,6 +40,9 @@
       "js"
     ],
     "mapCoverage": true,
+    "moduleNameMapper": {
+      "src/(.*)": "<rootDir>/src/$1"
+    },
     "setupFiles": [
       "jest-plugin-context/setup"
     ]
