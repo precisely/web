@@ -56,8 +56,8 @@ function scopePartMatches(requestedPart: string, providedPart: string,  context:
     return true;
   } else if (providedPart[0] === '$') {
     const contextKey = providedPart.slice(1);
-    const contextValue = `${getNestedPath(context, contextKey)}`;
-    return  contextValue === requestedPart;
+    const contextValue = getNestedPath(context, contextKey);
+    return contextValue && `${contextValue}` === requestedPart;
   } else {
     return false;
   }

@@ -1,6 +1,10 @@
 import {makeScopes} from './scopes';
 
-export const RoleScopes = {
+export interface RoleScopes {
+  [key: string]: string[][];
+}
+
+export const PreciselyRoles: RoleScopes = {
   user: makeScopes(
     'variantCall:read:$userId',
     'report:read:public:*',
