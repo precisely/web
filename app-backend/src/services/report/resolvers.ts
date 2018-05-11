@@ -7,7 +7,7 @@
 */
 
 import {Report} from './models';
-import {dynamoFieldResolver} from 'src/graphql-utils';
+import {dynamoFieldResolver} from 'src/graphql-context';
 
 export interface ReportCreateUpdateArgs {
   title: string;
@@ -36,5 +36,3 @@ export const resolvers = {
   Report: dynamoFieldResolver<Report>(['id', 'slug', 'title'])
 };
 
-const r = new Report({});
-r.
