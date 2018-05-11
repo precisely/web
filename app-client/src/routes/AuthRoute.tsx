@@ -8,7 +8,8 @@
 
 import * as React from 'react';
 import {Route, Redirect, RouteProps} from 'react-router-dom';
-import { currentUser } from '../constants/currentUser';
+import { utils } from '../utils';
+const {currentUser} = require('../constants/currentUser');
 
 export interface AuthRouteProps extends RouteProps {
   authenticatedRedirect?: string;
@@ -25,7 +26,8 @@ export class AuthRoute extends React.Component<AuthRouteProps> {
           <Route {...routeProps} />;
     }
 
-    if (!routeProps.path.indexOf('login')) {
+    if (routeProps.path.indexOf('login')) {
+      utils.setLastPageBeforeLogin(routeProps.path);
       return <Redirect from={routeProps.path} to="/login" />;
     }
 

@@ -54,6 +54,7 @@ export class AuthUser {
 
   logout = () => {
     this.setAuthStorage();
+    window.location.href = '/';
   }
 
   setAuthStorage = (
@@ -69,9 +70,9 @@ export class AuthUser {
 
   isAuthenticated = () => {
     let expiresAt = Number(localStorage.getItem('expiresAt'));
-    let accessToken = localStorage.getItem('accessToken');
+    let accessToken: string = localStorage.getItem('accessToken');
 
-    return accessToken && expiresAt > new Date().getTime();
+    return accessToken.length > 0  && expiresAt > 0 && expiresAt > new Date().getTime();
   }
 
   showLogin = () => {

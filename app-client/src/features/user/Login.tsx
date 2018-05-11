@@ -10,25 +10,30 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {header} from 'src/constants/styleGuide';
-import { currentUser } from '../../constants/currentUser';
-import history from 'src/routes/history';
+const {currentUser} = require('../../constants/currentUser');
+import { utils } from '../../utils';
+import { loginAndSignupPanel, header } from '../../constants/styleGuide';
 
 @Radium
 export class Login extends React.Component<RouteComponentProps<void>> {
 
-  componentWillMount() {
+  componentDidMount() {
     if (currentUser.isAuthenticated()) {
-      history.goBack();
+      const lastLocation = utils.getLastPageBeforeLogin();
+      this.props.history.push(lastLocation);
+    } else {
+      currentUser.showLogin();
     }
   }
-    
+
   render(): JSX.Element {
 
     return (
       <div>
         <NavigationBar {...this.props} />
-        <h3 style={header}>Welcome back</h3>
+        <div className="mx-auto" style={loginAndSignupPanel}>
+          <h1 style={header}>Welcome back</h1>
+        </div>
       </div>
     );
   }

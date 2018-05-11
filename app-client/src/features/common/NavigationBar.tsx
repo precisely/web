@@ -8,7 +8,6 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {RouteComponentProps} from 'react-router';
 import {currentUser} from 'src/constants/currentUser';
 import {CSS} from 'src/interfaces';
 import {
@@ -29,7 +28,7 @@ export interface NavigationBarState {
 }
 
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, NavigationBarState> {
+export class NavigationBar extends React.Component {
   state = {
     isOpen: false,
     backgroundColor: 'transparent',
@@ -42,7 +41,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
   handleClick = (): void => {
     if (currentUser.isAuthenticated()) {
       currentUser.logout();
-      this.props.history.replace('/');
     } else {
       currentUser.showLogin();
     }

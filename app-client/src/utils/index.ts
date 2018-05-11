@@ -6,18 +6,22 @@
 * without modification, are not permitted.
 */
 
-import { currentUser } from '../constants/currentUser';
-
 export const utils = {
 
-  isEmpty: function(object: Object): boolean {
+  isEmpty: function(object: Object) {
     return (!object || !Object.keys(object).length);
   },
 
-  getEnvironment: function(): string {
+  getEnvironment: function() {
     return process.env.NODE_ENV || '';
   },
 
-  currentUser: currentUser
+  setLastPageBeforeLogin: function(path: string) {
+    localStorage.setItem('lastPageBeforeLogin', path);
+  },
+
+  getLastPageBeforeLogin: function() {
+    return localStorage.getItem('lastPageBeforeLogin');
+  }
 
 };
