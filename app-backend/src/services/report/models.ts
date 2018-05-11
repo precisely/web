@@ -52,7 +52,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     rawContent: Joi.string(),
     parsedContent: Joi.string(),
     topLevel: Joi.boolean(),
-    genes: Joi.array().items(Joi.string())
+    variants: Joi.array().items(Joi.string())
   },
 
   indexes: [{

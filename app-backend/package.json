@@ -7,13 +7,12 @@
     "shell": "SLS_DEBUG=* scripts/sls shell",
     "log": "scripts/log",
     "deploy": "yarn sls deploy",
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
+    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "offline": "scripts/offline",
     "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",
     "sls": "./scripts/sls",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src",
-    "dynogels:tables": "ts-node -r tsconfig-paths/register -O '{\"module\": \"commonjs\"}' scripts/dynogels-tables.ts"
+    "eslint": "eslint src"
   },
   "jest": {
     "collectCoverage": true,
@@ -34,7 +33,7 @@
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testRegex": ".*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"

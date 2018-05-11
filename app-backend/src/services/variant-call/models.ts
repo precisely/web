@@ -16,7 +16,7 @@ export class VariantCallAttributes {
     * @type {string}
     * @memberof VariantCallAttributes
     */
-   sampleId?: string;
+   callSetId?: string;
    // start index with respect to sequence - must be string for DynamoDB indexing
    startBaseIndex?: string;
    // end index of variant
@@ -70,7 +70,7 @@ export const VariantCall = defineModel<
       // Core VCF data
       //
       // this is equivalent to GA4GH callset Id
-      sampleId: Joi.string(),
+      callSetId: Joi.string(),
       // start index with respect to sequence - must be string for DynamoDB indexing
       startBaseIndex: Joi.string(),
       // end index of variant
@@ -86,14 +86,14 @@ export const VariantCall = defineModel<
       // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
       genotypeLikelihood: Joi.array().items(Joi.number()).length(3).optional(),
       // Filter
-      filter: Joi.array().items(Joi.string().uppercase().valid(...VariantFilter)),
+      filter: Joi.array().items(Joi.string().uppercase().valid(...VariantFilter)).optional(),
 
       //
       // Annotations
       //
-      rsId: Joi.string(),
-      gene: Joi.string(),
-      zygosity: Joi.string().valid(...Zygosity), // heterozygous, homozygou,
+      rsId: Joi.string().optional(),
+      gene: Joi.string().optional(),
+      zygosity: Joi.string().valid(...Zygosity).optional(), // heterozygous, homozygou,
     }
   }
 );
@@ -121,3 +121,4 @@ VariantCall.prototype.start = function () {
 VariantCall.prototype.end = function () {
   return parseInt(this.get('endBaseIndex'), 10);
 };
+

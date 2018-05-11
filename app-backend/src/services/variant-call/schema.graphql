@@ -1,14 +1,18 @@
 type Genotype {
-  opaqueId: String
-  sampleId: String
-  source: String
+  userId: String
+  callSetId: String
+  start: Number
+  end: Number
+  alternateBases: String[]
+  referenceBases: String
+  genotype: Number[]
+  genotypeLikelihood: Number[]
+  filter: String[]
+
+  rsId: String
   gene: String
-  variantCall: String
   zygosity: String
-  startBase: String
-  chromosome: String
-  variantType: String
-  quality: String
+
   createdAt: String
   updatedAt: String
 }
