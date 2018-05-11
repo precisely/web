@@ -7,7 +7,7 @@
 */
 
 import * as AWS from 'aws-sdk';
-import {log} from 'src/logger';
+import {log} from 'src/common/logger';
 
 export const sendEmail = async (recipients: string[], senderUsername: string, subject: string, message: string) => {
 

@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {ReportAttributes, Report, GenotypeAttributes, Genotype} from 'src/services/models';
-import {log} from 'src/logger';
+import {log} from 'src/common/logger';
 const jsonPath = path.join(__dirname, '../data/');
 
 export function seedDataBridge() {

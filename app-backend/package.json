@@ -17,7 +17,7 @@
   },
   "jest": {
     "collectCoverage": true,
-    "cover ageDirectory": "coverage",
+    "coverageDirectory": "coverage",
     "coverageReporters": [
       "html",
       "text",
@@ -39,7 +39,9 @@
       "ts",
       "js"
     ],
-    "mapCoverage": true,
+    "moduleNameMapper": {
+      "src/(.*)": "<rootDir>/src/$1"
+    },
     "setupFiles": [
       "jest-plugin-context/setup"
     ]

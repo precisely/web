@@ -1,10 +1,10 @@
-/*
-* Copyright (c) 2011-Present, Precise.ly, Inc.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+/**
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
 
 jest.mock('aws-sdk', () => {
   return {
@@ -28,8 +28,8 @@ jest.mock('aws-sdk', () => {
 });
 
 import * as AWS from 'aws-sdk';
-import {log} from '../../logger';
-import {sendEmail} from '../../email/sendEmail';
+import {log} from 'src/common/logger';
+import {sendEmail} from './services';
 
 describe('sendEmail tests', () => {
 

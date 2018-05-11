@@ -14,9 +14,9 @@ import {makeExecutableSchema} from 'graphql-tools';
 
 import preciselyTypeDefs from 'src/services/schema.graphql';
 import {resolvers} from 'src/services/resolvers';
-import {makeLogger} from 'src/logger';
+import {makeLogger} from 'src/common/logger';
 
-import { ResolverContext } from 'src/graphql-utils';
+import { GraphQLContext } from 'src/services/auth';
 
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
   const log = makeLogger(event.requestContext);
@@ -30,7 +30,7 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
     schema: PreciselySchema,
     tracing: true,
     rootValue: null,
-    context: new ResolverContext(event, context)
+    context: new GraphQLContext(event, context)
   });
   log.silly('graphql.apiHandler EVENT: %j\t\tCONTEXT: %j', event, context);
   withCORS(handler, event, context, (err, result) => {

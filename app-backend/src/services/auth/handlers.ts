@@ -5,7 +5,7 @@ import {
   PolicyDocument
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
-import {makeLogger} from 'src/logger';
+import {makeLogger} from 'src/common/logger';
 
 export const apiAuthorizer: CustomAuthorizerHandler = (
   event: CustomAuthorizerEvent,

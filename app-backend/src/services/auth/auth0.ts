@@ -3,7 +3,7 @@
 import * as JwksRsa from 'jwks-rsa-promisified';
 import * as jwt from 'jsonwebtoken-promisified';
 import { CustomAuthorizerEvent } from 'aws-lambda';
-import { Logger } from 'src/logger';
+import { Logger } from 'src/common/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: CustomAuthorizerEvent): string {
@@ -23,7 +23,7 @@ function getToken(event: CustomAuthorizerEvent): string {
 export interface Auth0AuthenticationResult {
   principalId: string;
   email?: string;
-  role?: string;
+  roles?: string;
 }
 
 export async function authenticate(event: CustomAuthorizerEvent, log: Logger): Promise<Auth0AuthenticationResult> {
@@ -61,12 +61,12 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     return {
       principalId: verified.sub,
       email: verified.email,
-      role: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin' : 'user'
+      roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin,user' : 'user'
     };
   } catch (e) {
     return {
       principalId: 'public',
-      role: 'public'
+      roles: 'public'
     };
   }
 }
