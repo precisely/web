@@ -1,4 +1,4 @@
 declare module "jest-plugin-context" {
-  import 'jest';
-  export var context: jest.Describe;
+  var context: (name: string, fn: () => void) => void;
+  export default context;
 }
