@@ -13,7 +13,7 @@ import { CSS } from 'src/interfaces';
 export const buttonDefault: string = '#6c757d';
 export const buttonHover: string = '#545b62';
 export const defaultBackground: string = '#F5F5F5';
-export const authLockButtonBackground: string = '#FB4200';
+export const authLockButtonBackground: string = '#FF8A4B';
 
 export const helveticaFont: CSS = {
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
