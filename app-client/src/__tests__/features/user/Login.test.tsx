@@ -63,6 +63,23 @@ describe('Login tests After Logging In :', () => {
     />
   );
 
+  unroll(
+    'it should display #count #elementName elements :',
+    (
+      done: () => void,
+      args: { elementName: string; element: EnzymePropSelector; count: number }
+    ) => {
+      expect(componentTree.find(args.element).length).toBe(args.count);
+      done();
+    },
+    [
+      // tslint:disable-next-line
+      ['elementName', 'element', 'count'],
+      ['NavigationBar', NavigationBar, 1],
+      ['h1', 'h1', 1]
+    ]
+  );
+
   it('it should have History action as PUSH : ', () => {
     currentUser[`__mockisAuthenticatedSuccessCase`]();
     expect(mockedHistory.action).toEqual('PUSH');
