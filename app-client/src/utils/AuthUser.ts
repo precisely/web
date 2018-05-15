@@ -1,6 +1,6 @@
 import Auth0Lock from 'auth0-lock';
 import { Auth0UserProfile, Auth0Error } from 'auth0-js';
-import { defaultBackground } from '../constants/styleGuide';
+import { authLockButtonBackground } from '../constants/styleGuide';
 const logo = require('./../assets/logo.png');
 
 export class AuthUser {
@@ -8,7 +8,10 @@ export class AuthUser {
   auth0Options = {
     theme: {
       logo: logo,
-      primaryColor: defaultBackground
+      primaryColor: authLockButtonBackground
+    },
+    languageDictionary: {
+      title: 'Precisely'
     },
     auth: {
       redirectUrl: process.env.REACT_APP_CALLBACK_URL,
