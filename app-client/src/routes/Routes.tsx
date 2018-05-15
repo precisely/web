@@ -36,7 +36,7 @@ export class Routes extends React.Component {
 
     return (
       <Switch>
-        <AuthRoute
+        <Route
             path="/"
             component={LoadComponent('Homepage', 'homepage/Homepage')}
             exact
