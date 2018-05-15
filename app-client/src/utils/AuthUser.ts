@@ -21,28 +21,28 @@ export class AuthUser {
   constructor() {
 
     this.lock = new Auth0Lock(
-        process.env.REACT_APP_AUTH0_CLIENT_ID, 
+        process.env.REACT_APP_AUTH0_CLIENT_ID,
         process.env.REACT_APP_AUTH0_TENANT,
         this.auth0Options
       );
 
-    this.lock.on('authenticated', this.onAuthentication);     
+    this.lock.on('authenticated', this.onAuthentication);
     this.lock.on('authorization_error', error => {
       // tslint:disable-next-line
       console.log('something went wrong', error);
-      
+
     });
-    
+
   }
 
   onAuthentication = (authResult: AuthResult) => {
     // tslint:disable-next-line
     console.log('Entering Authentication');
-    
+
     this.lock.getUserInfo(authResult.accessToken, (error: Auth0Error, profile: Auth0UserProfile) => {
       if (error) {
         return;
-      } 
+      }
       this.setAuthStorage(
         authResult.accessToken,
         (new Date().getTime() + authResult.expiresIn * 1000).toString(),
@@ -58,9 +58,9 @@ export class AuthUser {
   }
 
   setAuthStorage = (
-      accessToken: string = '', 
-      expiresAt: string = '', 
-      profile: string = '', 
+      accessToken: string = '',
+      expiresAt: string = '',
+      profile: string = '',
       authResult: string = '') => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('expiresAt', expiresAt);
@@ -72,7 +72,7 @@ export class AuthUser {
     let expiresAt = Number(localStorage.getItem('expiresAt'));
     let accessToken: string = localStorage.getItem('accessToken');
 
-    return accessToken.length > 0  && expiresAt > 0 && expiresAt > new Date().getTime();
+    return (accessToken) && accessToken.length > 0  && expiresAt > 0 && expiresAt > new Date().getTime();
   }
 
   showLogin = () => {
