@@ -10,3 +10,17 @@ accountFromStage:
   default: dev
 
 auth0TenantName: ${self:provider.vars.account}-precisely
+
+# customDomain / Route53 config
+domain: "${
+    self:provider.vars.domainMap.${self:provider.vars.account},
+    self:provider.vars.domainMap.default
+}"
+domainMap:
+  prod: precise.ly
+  offline: localhost
+  default: ${self:provider.stage}.codeprecisely.net
+
+frontendURLMap: 
+  offline: "http://${self:provider.vars.domain}:3000"
+  def

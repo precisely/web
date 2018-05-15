@@ -18,6 +18,10 @@ provider:
 
     auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
 
+    # customDomain / Route53 config
+    domain: ${file(../serverless/common.yml):domain}
+    domainMap: ${file(../serverless/common.yml):domainMap}
+
   ##
   ## Environment for handlers
   environment:
@@ -27,8 +31,9 @@ provider:
 
     LOG_LEVEL: ${self:provider.vars.logLevel}
     # Auth0 values - needed for verifying Auth0 tokens
-    AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
-    AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
+    REACT_APP_AUTH0_TENANT: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    REACT_APP_AUTH0_CLIENT_ID: ${self:provider.vars.auth0APIIdentifier}
+    REACT_APP_CALLBACK_URL: ""
 
 plugins:
   - serverless-finch
