@@ -21,6 +21,8 @@ provider:
     # customDomain / Route53 config
     domain: ${file(../serverless/common.yml):domain}
     domainMap: ${file(../serverless/common.yml):domainMap}
+    
+    reactURL: ${file(../serverless/common.yml):reactURL}
 
   ##
   ## Environment for handlers
@@ -33,7 +35,7 @@ provider:
     # Auth0 values - needed for verifying Auth0 tokens
     REACT_APP_AUTH0_TENANT: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
     REACT_APP_AUTH0_CLIENT_ID: ${self:provider.vars.auth0APIIdentifier}
-    REACT_APP_CALLBACK_URL: ""
+    REACT_APP_CALLBACK_URL: "${self:provider.vars.reactURL.${self:provider.vars.account}}
 
 plugins:
   - serverless-finch

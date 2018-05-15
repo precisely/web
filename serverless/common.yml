@@ -21,6 +21,8 @@ domainMap:
   offline: localhost
   default: ${self:provider.stage}.codeprecisely.net
 
-frontendURLMap: 
+reactURL:
   offline: "http://${self:provider.vars.domain}:3000"
-  def
+  default: "https://${self:provider.vars.domain}"
+
+
