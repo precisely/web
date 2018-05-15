@@ -32,7 +32,7 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName.${self:providers.vars.account}}
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)

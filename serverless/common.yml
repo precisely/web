@@ -9,7 +9,9 @@ accountFromStage:
                     # This mapping exists to ensure no AWS resources are used when STAGE=offline
   default: dev
 
-auth0TenantName: ${self:provider.vars.account}-precisely
+auth0TenantName: 
+  default: ${self:provider.vars.account}-precisely
+  offline: dev-precisely
 
 # customDomain / Route53 config
 domain: "${
