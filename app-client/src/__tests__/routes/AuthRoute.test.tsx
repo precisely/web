@@ -5,20 +5,20 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  */
+jest.mock('./../../constants/currentUser');
+import * as React from "react";
+import * as Adapter from "enzyme-adapter-react-16";
+import { ShallowWrapper, shallow, configure } from "enzyme";
+import { Route, Redirect } from "react-router-dom";
+import { AuthRoute } from "src/routes/AuthRoute";
+import { currentUser } from "./../../constants/currentUser";
 
-import * as React from 'react';
-import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper, shallow, configure} from 'enzyme';
-import {Route, Redirect} from 'react-router-dom';
-import {AuthRoute} from 'src/routes/AuthRoute';
-
-const unroll = require('unroll');
+const unroll = require("unroll");
 unroll.use(it);
 
-configure({adapter: new Adapter()});
+configure({ adapter: new Adapter() });
 
-describe('Tests for AuthRoute', () => {
-
+describe("Tests for AuthRoute", () => {
   class DummyComponent extends React.Component {
     // tslint:disable-next-line
     constructor(props: any) {
@@ -26,31 +26,24 @@ describe('Tests for AuthRoute', () => {
     }
   }
 
-  describe('When onEnter returns true', () => {
+  describe("When onEnter returns true", () => {
+    currentUser[`__mockisAuthenticatedSuccessCase`]();
     const componentTree: ShallowWrapper = shallow(
-      <AuthRoute
-          path="/dummyPath"
-          exact
-          component={DummyComponent}
-      />
+      <AuthRoute path="/dummyPath" exact component={DummyComponent} />
     );
 
-    it('should test for Route component', () => {
+    it("should test for Route component", () => {
       expect(componentTree.find(Route).length).toBe(1);
     });
   });
 
-  describe('When onEnter returns false', () => {
+  describe("When onEnter returns false", () => {
     const componentTree: ShallowWrapper = shallow(
-      <AuthRoute
-          path="/dummyPath"
-          component={DummyComponent}
-      />
+      <AuthRoute path="/dummyPath" component={DummyComponent} />
     );
 
-    it('should test for Redirect component', () => {
+    it("should test for Redirect component", () => {
       expect(componentTree.find(Redirect).length).toBe(1);
     });
   });
-
 });
