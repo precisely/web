@@ -7,14 +7,13 @@
 */
 
 import {Report} from './models';
-import { dynamoFieldResolver } from 'src/db/dynamo';
-import { ReportAttributes } from 'src/services/report/models';
+import { scoped } from 'src/services/auth';
 
 export interface ReportCreateUpdateArgs {
   title: string;
   slug: string;
   content: string;
-  genes: string[];
+  variants: string[];
 }
 
 export const resolvers = {
@@ -27,12 +26,18 @@ export const resolvers = {
     }
   },
   Mutation: {
-    async createReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
-      return Report.safeCreate({title, rawContent: content, genes});
+    async createReport(_: {}, {title, content, variants}: ReportCreateUpdateArgs): Promise<Report> {
+      return Report.safeCreate({title, rawContent: content, variants});
     },
-    async updateReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
-      return await Report.createAsync({title, rawContent: content, genes});
+    async updateReport(_: {}, {title, content, variants}: ReportCreateUpdateArgs): Promise<Report> {
+      return await Report.createAsync({title, rawContent: content, variants});
     }
   },
-  Report: dynamoFieldResolver<ReportAttributes>(['id', 'slug', 'title'])
+  Report: {
+    id(report: Report) { return report.get('id'); },
+    slug(report: Report) { return report.get('slug'); },
+    title(report: Report) { return report.get('title'); },
+    rawContent(report: Report) { return report.get('rawContent'); },
+    owner(report: Report) { return report.get('ownerId'); }
+  }
 };

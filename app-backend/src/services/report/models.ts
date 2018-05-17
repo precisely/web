@@ -15,10 +15,11 @@ export interface ReportAttributes {
   id?: string;
   slug?: string;
   title?: string;
+  ownerId?: string;
   rawContent?: string;
   parsedContent?: string;
   topLevel?: boolean;
-  genes?: string[];
+  variants?: string[];
 }
 
 // Instance methods
@@ -29,12 +30,12 @@ type ReportCreateArgs = {
   title: string,
   slug?: string,
   rawContent: string,
-  genes: string[]
+  variants: string[]
 };
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report>;
-  safeCreate({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report>;
+  safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
 }
 
@@ -49,6 +50,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     id: uuid(),
     slug: Joi.string().required(),
     title: Joi.string().required(),
+    ownerId: Joi.string().required(),
     rawContent: Joi.string(),
     parsedContent: Joi.string(),
     topLevel: Joi.boolean(),
@@ -70,14 +72,14 @@ Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
   return result && result.Items[0];
 };
 
-Report.safeCreate = async function safeCreate({slug, title, rawContent, genes}: ReportCreateArgs): Promise<Report> {
+Report.safeCreate = async function safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report> {
   if (slug && Report.findBySlug(slug)) {
     throw new Error(`Cannot create report with slug "${slug}" - Report already exists`);
   } else {
     slug = await Report.findUniqueSlug(title);
   }
 
-  return await Report.createAsync({slug, title, rawContent, genes});
+  return await Report.createAsync({slug, title, rawContent, variants});
 };
 
 Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {
