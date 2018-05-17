@@ -70,6 +70,14 @@ function mockCurrentUser() {
       currentUser.isAuthenticated.mockReturnValueOnce(false);
     },
 
+    logout: jest.fn(),
+    __mockLogoutSuccessCase() {
+      currentUser.logout.mockReturnValueOnce(true);
+    },
+    __mockLogoutFailureCase() {
+      currentUser.logout.mockReturnValueOnce(false);
+    },
+
     showLogin: jest.fn(),
     __mockshowLoginSuccessCase() {
       currentUser.showLogin.mockReturnValueOnce(true);

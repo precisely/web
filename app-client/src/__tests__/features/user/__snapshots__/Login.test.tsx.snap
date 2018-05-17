@@ -68,6 +68,7 @@ exports[`Login tests Snapshot Testing : renders correctly 1`] = `
           <a
             className="nav-link"
             data-radium={true}
+            id="loginStatus"
             onClick={[Function]}
             style={
               Object {

@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login tests Snapshot Testing : renders correctly 1`] = `
+<nav
+  className="rmq-4a0d0fdc navbar navbar navbar-toggleable-md navbar-light sticky-top"
+  data-radium={true}
+  expand="md"
+  style={
+    Object {
+      "backgroundColor": "transparent",
+      "letterSpacing": "-1px",
+      "transition": "background-color 0.4s ease",
+    }
+  }
+>
+  <a
+    className="navbar-brand"
+    data-radium={true}
+    href="/"
+  >
+    <img
+      alt="precise.ly"
+      data-radium={true}
+      id="brand-logo"
+      src="precisely-logo.png"
+      style={
+        Object {
+          "width": "10em",
+        }
+      }
+    />
+  </a>
+  <button
+    className="navbar-toggler-right navbar-toggler"
+    onClick={[Function]}
+    type="button"
+  >
+    <span
+      className="navbar-toggler-icon"
+    />
+  </button>
+  <div
+    className="collapse navbar-collapse"
+    data-radium={true}
+    style={Object {}}
+  >
+    <ul
+      className="ml-auto navbar-nav"
+      data-radium={true}
+    >
+      <li
+        className="pr-4 nav-item"
+      >
+        <a
+          className="nav-link"
+          href="/about-us"
+          onClick={[Function]}
+        >
+          ABOUT US
+        </a>
+      </li>
+      <li
+        className="nav-item"
+      >
+        <a
+          className="nav-link"
+          data-radium={true}
+          id="loginStatus"
+          onClick={[Function]}
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
+        >
+          LOG IN
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+`;
