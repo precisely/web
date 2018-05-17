@@ -5028,7 +5028,7 @@ opn@^5.0.0:
   dependencies:
     is-wsl "^1.1.0"
 
-optimist@^0.6.1:
+optimist@^0.6.1, optimist@~0.6:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.6.1.tgz#da3ea74686fa21a19a111c326e90eb15a0196686"
   dependencies:
@@ -7249,6 +7249,12 @@ webpack@^4.5.0:
     uglifyjs-webpack-plugin "^1.2.4"
     watchpack "^1.5.0"
     webpack-sources "^1.0.1"
+
+websequencediagrams@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/websequencediagrams/-/websequencediagrams-0.1.1.tgz#3e24b1ba91424023519da0665f47908e04d1a159"
+  dependencies:
+    optimist "~0.6"
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   version "1.0.3"

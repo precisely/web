@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+if [ -z "$1" ]; then
+  echo "usage: wsd input [-v]"
+  echo "-v open file for viewing after creation"
+  exit 1
+fi
+APPBACKEND_DIR=$(cd `dirname $0`/.. && pwd)
+DIRNAME=$(dirname $1)
+BASENAME=$(basename $1)
+FILENAME="${BASENAME%.*}"
+OUTPUT=${DIRNAME}/${FILENAME}.png
+
+${APPBACKEND_DIR}/node_modules/.bin/wsd_get "${1}" -o "${OUTPUT}"
+echo Wrote ${OUTPUT}
+
+if [ "$2" == "-v" ]; then
+  open $OUTPUT
+fi

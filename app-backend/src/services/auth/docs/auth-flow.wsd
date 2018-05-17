@@ -1,0 +1,14 @@
+title Authentication Flow
+
+Browser->Auth0: Authentication Request
+Auth0->Browser: JWKS Token
+Browser->API Gateway: JWKS Token
+API Gateway->Custom Authorizer: JWKS Token
+Custom Authorizer->Auth0: Request Public Key (Occassionally)
+Auth0->Custom Authorizer: Return Public Key
+note right of Custom Authorizer: Custom Authorizer verifies Token
+Custom Authorizer->API Gateway: Permission (+ userId & roles)
+API Gateway->GraphQL Lambda Function: Event
+
+
+
