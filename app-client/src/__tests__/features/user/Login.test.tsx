@@ -16,6 +16,7 @@ import {
   mockedMatch,
   mockedLocation
 } from 'src/__tests__/testSetup';
+import * as renderer from 'react-test-renderer';
 import { NavigationBar } from 'src/features/common/NavigationBar';
 import { currentUser } from './../../../constants/currentUser';
 import * as Radium from 'radium';
@@ -32,6 +33,7 @@ describe('Login tests Before Logging In : ', () => {
       history={mockedHistory}
       match={mockedMatch()}
       location={mockedLocation}
+      staticContext={{}}
     />
   );
 
@@ -60,6 +62,7 @@ describe('Login tests After Logging In :', () => {
       history={mockedHistory}
       match={mockedMatch()}
       location={mockedLocation}
+      staticContext={{}}
     />
   );
 
@@ -88,5 +91,21 @@ describe('Login tests After Logging In :', () => {
   it('it should redirect if user is already logged in', () => {
     currentUser[`__mockisAuthenticatedSuccessCase`]();
     expect(mockedHistory.location.pathname).toEqual('demoPathName');
+  });
+});
+
+describe('Login tests Snapshot Testing :', () => {
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Login
+          history={mockedHistory}
+          match={mockedMatch()}
+          location={mockedLocation}
+          staticContext={{}}
+        />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

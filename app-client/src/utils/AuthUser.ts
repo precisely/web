@@ -11,7 +11,7 @@ export class AuthUser {
       primaryColor: authLockButtonBackground
     },
     languageDictionary: {
-      title: 'Precisely'
+      title: 'Precise.ly'
     },
     auth: {
       redirectUrl: process.env.REACT_APP_CALLBACK_URL,
@@ -54,12 +54,12 @@ export class AuthUser {
         );
       }
     );
-  };
+  }
 
   logout = () => {
     this.setAuthStorage();
     window.location.href = '/';
-  };
+  }
 
   setAuthStorage = (
     accessToken: string = '',
@@ -71,7 +71,7 @@ export class AuthUser {
     localStorage.setItem('expiresAt', expiresAt);
     localStorage.setItem('profile', profile);
     localStorage.setItem('authResult', authResult);
-  };
+  }
 
   isAuthenticated = () => {
     let expiresAt = Number(localStorage.getItem('expiresAt'));
@@ -83,9 +83,9 @@ export class AuthUser {
       expiresAt > 0 &&
       expiresAt > new Date().getTime()
     );
-  };
+  }
 
   showLogin = () => {
     this.lock.show();
-  };
+  }
 }
