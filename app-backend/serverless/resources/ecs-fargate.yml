@@ -15,7 +15,7 @@ ECSTaskDefinition:
     Cpu: 256
     ContainerDefinitions:
       - 
-        Name: ${self:provider.stage}-DefaultContainerDefinitionName
+        Name: ${self:provider.vars.ecsContainerName}
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest

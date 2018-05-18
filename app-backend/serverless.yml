@@ -54,6 +54,8 @@ provider:
 
     # ECS Fargate 
     ecsTaskDefinitionName: ${self:provider.stage}-ECSFargate
+    ecsContainerName: ${self:provider.stage}-DefaultContainerDefinitionName
+
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
     #   dev: "arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1"
@@ -219,6 +221,7 @@ functions:
       ECS_CLUSTER_NAME:
         Ref: ECSCluster
       ECS_TASK_NAME: ${self:provider.vars.ecsTaskDefinitionName}
+      ECS_CONTAINER_NAME: ${self:provider.vars.ecsContainerName}
 
     events:
       - s3:

@@ -76,7 +76,6 @@ export async function rawUploadTrigger(event: S3CreateEvent, context: Context, c
 
     const ecs = new AWS.ECS();
 
-    const SECRETS = await getEnvironmentVariables();
     const subnetIds = [
       process.env.SUBNET_ONE,
       process.env.SUBNET_TWO
@@ -96,7 +95,7 @@ export async function rawUploadTrigger(event: S3CreateEvent, context: Context, c
       overrides: {
         containerOverrides: [
           {
-            name: process,
+            name: process.env.ECS_CONTAINER_NAME,
             environment: [
               {
                 name: 'S3_RAW_DATA_BUCKET',
@@ -112,11 +111,11 @@ export async function rawUploadTrigger(event: S3CreateEvent, context: Context, c
               },
               {
                 name: 'AWS_ACCESS_KEY_ID',
-                value: SECRETS[`AWS_ECS_ACCESS_KEY`]
+                value: process.env.ECS_AWS_ACCESS_KEY_ID
               },
               {
                 name: 'AWS_SECRET_ACCESS_KEY',
-                value: SECRETS[`AWS_ECS_SECRET_KEY`]
+                value: process.env.ECS_AWS_ACCESS_KEY
               }
             ]
           }
