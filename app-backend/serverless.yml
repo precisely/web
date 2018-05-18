@@ -157,6 +157,16 @@ custom:
   webpackIncludeModules: true
 
 functions:
+  # DummyCloudFormationTest:
+  #       role: PreciselyDefaultRole
+  #       handler: src/services/dummy/handlers.dummy
+  #       events:
+  #         - http:
+  #             path: '/dummy'
+  #             method: get
+  #             cors: true
+# Comment out all the functions and uncomment the dummy lambda and the S3 config above to speed up deployment
+# This is useful to test changes related cloudformation  
   APIAuthorizer:
     role: PreciselyDefaultRole
     handler: src/services/auth/handlers.apiAuthorizer
@@ -191,4 +201,4 @@ functions:
       - s3:
           bucket: GeneticsVCF
           event: s3:ObjectCreated:*
-
+  

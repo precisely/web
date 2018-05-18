@@ -19,6 +19,10 @@ ECSTaskDefinition:
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
+        Environment:
+          -
+            Name: REGION_NAME
+            Value: ${self:provider.region}
     RequiresCompatibilities:
       - FARGATE
 
