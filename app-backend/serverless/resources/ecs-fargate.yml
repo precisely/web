@@ -9,7 +9,7 @@ ECSTaskDefinition:
   Properties: 
     ExecutionRoleArn: 
       Fn::GetAtt: ['PreciselyECSRole', 'Arn']
-    Family: ECSFargate
+    Family: ${self:provider.vars.ecsTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512
     Cpu: 256

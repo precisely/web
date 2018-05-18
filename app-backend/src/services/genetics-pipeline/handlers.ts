@@ -65,3 +65,68 @@ export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, cal
     }
   });
 };
+
+export async function rawUploadTrigger(event: S3CreateEvent, context: Context, callback: Callback) {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  try {
+    const rawDataBucket = event.Records[0].s3.bucket.name;
+    const rawDataFilename = event.Records[0].s3.object.key;
+
+    const ecs = new AWS.ECS();
+
+    const SECRETS = await getEnvironmentVariables();
+    const subnetIds = [
+      process.env.SUBNET_ONE,
+      process.env.SUBNET_TWO
+    ];
+
+    const params: AWS.ECS.Types.RunTaskRequest = {
+      cluster: process.env.CLUSTER_NAME,
+      launchType: 'FARGATE',
+      taskDefinition: process.env.TASK_NAME,
+      count: 1,
+      networkConfiguration: {
+        awsvpcConfiguration: {
+          subnets: subnetIds,
+          assignPublicIp: 'ENABLED'
+        }
+      },
+      overrides: {
+        containerOverrides: [
+          {
+            name: process,
+            environment: [
+              {
+                name: 'S3_RAW_DATA_BUCKET',
+                value: rawDataBucket
+              },
+              {
+                name: 'S3_BUCKET_GENETICS_VCF',
+                value: process.env.S3_BUCKET_GENETICS_VCF
+              },
+              {
+                name: 'GENOTYPE_RAW_FILENAME',
+                value: rawDataFilename
+              },
+              {
+                name: 'AWS_ACCESS_KEY_ID',
+                value: SECRETS[`AWS_ECS_ACCESS_KEY`]
+              },
+              {
+                name: 'AWS_SECRET_ACCESS_KEY',
+                value: SECRETS[`AWS_ECS_SECRET_KEY`]
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    await ecs.runTask(params).promise();
+    log.info(`ECS TASK TRIGGERED FOR ${rawDataFilename}`);
+  } catch (error) {
+    log.error(`Error Occurred: ${error}`);
+  }
+}

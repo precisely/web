@@ -29,7 +29,7 @@ PreciselyGraphQLAPIRole:
       - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):PreciselyAPIPolicy}
 
-PreciselyECSRole:
+PreciselyECSTaskCreateRole:
   Type: AWS::IAM::Role 
   Properties: 
     RoleName: ${self:provider.stage}-PreciselyECSRole
@@ -44,5 +44,11 @@ PreciselyECSRole:
     ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
 
-      
+PreciselyECSTriggerRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:provider.stage}-PreciselyECSTriggerRole
+    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):ECSTriggerPolicy}
 ...

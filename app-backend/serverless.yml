@@ -49,7 +49,11 @@ provider:
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
+    geneticsAkesogenBucket: ${self:provider.stage}-precisely-genetics-akesogen
+    geneticsAncestryBucket: ${self:provider.stage}-precisely-genetics-ancestry
 
+    # ECS Fargate 
+    ecsTaskDefinitionName: ${self:provider.stage}-ECSFargate
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
     #   dev: "arn:aws:kms:us-east-1:416000760642:key/0105d430-1fa0-4621-add0-56ca31cbbee1"
@@ -91,6 +95,8 @@ provider:
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
+    S3_BUCKET_GENETICS_AKESOGEN: ${self:provider.vars.geneticsAkesogenBucket}
+    S3_BUCKET_GENETICS_ANCESTRY: ${self:provider.vars.geneticsAncestryBucket}
 
     DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
@@ -199,6 +205,29 @@ functions:
     handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
       - s3:
-          bucket: GeneticsVCF
+          bucket: ${self:provider.vars.geneticsVCFBucket}
+          event: s3:ObjectCreated:*
+
+  # Raw data uploader is triggered by new file in any of the raw data buckets
+  RawDataUploadLambdaFunction:
+    handler: src/services/genetics-pipeline/handlers.rawDataUpload
+    environment:
+      SUBNET_ONE:
+        Ref: DefaultSubnetOne
+      SUBNET_TWO:
+        Ref: DefaultSubnetTwo
+      ECS_CLUSTER_NAME:
+        Ref: ECSCluster
+      ECS_TASK_NAME: ${self:provider.vars.ecsTaskDefinitionName}
+
+    events:
+      - s3:
+          bucket: ${self:provider.vars.genetics23andMeBucket}
+          event: s3:ObjectCreated:*
+      - s3:
+          bucket: ${self:provider.vars.geneticsAkesogenBucket}
+          event: s3:ObjectCreated:*
+      - s3:
+          bucket: ${self:provider.vars.geneticsAncestryBucket}
           event: s3:ObjectCreated:*
   

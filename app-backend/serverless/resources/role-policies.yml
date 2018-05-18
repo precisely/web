@@ -21,6 +21,7 @@ PreciselyDefaultPolicy:
         Action: s3:PutObject
         Resource:
           - arn:aws:s3:::${self:provider.deploymentBucket}
+
 PreciselyAPIPolicy:
   PolicyName: PreciselyAPIPolicy
   PolicyDocument:
@@ -29,4 +30,18 @@ PreciselyAPIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.read}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
+
+ECSTriggerPolicy:
+  PolicyName: ecsTriggerPolicy
+    PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:GetObject"
+            Resource: "arn:aws:s3:::*/*"
+          - Effect: Allow
+            Action:
+              - "ecs:RunTask"
+            Resource: "*"
 ...
