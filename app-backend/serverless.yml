@@ -32,7 +32,11 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName.${self:providers.vars.account}}
+    auth0TenantName:
+      "${
+          file(../serverless/common.yml):auth0TenantName.${self:provider.vars.account},
+          file(../serverless/common.yml):auth0TenantName.default
+      }"
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
@@ -106,6 +110,8 @@ resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
+  - Resources: ${file(./serverless/resources/subnet.yml)}
+  - Resources: ${file(./serverless/resources/ecs-fargate.yml)}
 
 plugins:
   # Comment out the `serverless-domain-manager` line

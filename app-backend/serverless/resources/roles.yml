@@ -28,4 +28,21 @@ PreciselyGraphQLAPIRole:
     Policies:
       - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):PreciselyAPIPolicy}
+
+PreciselyECSRole:
+  Type: AWS::IAM::Role 
+  Properties: 
+    RoleName: ${self:provider.stage}-PreciselyECSRole
+    AssumeRolePolicyDocument: 
+      <<: *DefaultAssumeRolePolicyDocument
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - ecs-tasks.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+      
 ...

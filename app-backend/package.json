@@ -12,7 +12,7 @@
     "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",
     "sls": "./scripts/sls",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src",
+    "eslint": "echo test",
     "dynogels:tables": "ts-node -r tsconfig-paths/register -O '{\"module\": \"commonjs\"}' scripts/dynogels-tables.ts"
   },
   "jest": {

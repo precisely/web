@@ -1,0 +1,39 @@
+---
+ECSCluster:
+  Type: "AWS::ECS::Cluster"
+  Properties:
+    ClusterName: ${self:provider.stage}-DefaultECSClusterName
+
+ECSTaskDefinition:
+  Type: "AWS::ECS::TaskDefinition"
+  Properties: 
+    ExecutionRoleArn: 
+      Fn::GetAtt: ['PreciselyECSRole', 'Arn']
+    Family: ECSFargate
+    NetworkMode: awsvpc
+    Memory: 512
+    Cpu: 256
+    ContainerDefinitions:
+      - 
+        Name: ${self:provider.stage}-DefaultContainerDefinitionName
+        Memory: 512
+        Cpu: 256
+        Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
+    RequiresCompatibilities:
+      - FARGATE
+
+ECSService:
+  Type: "AWS::ECS::Service"
+  Properties: 
+    Cluster: ${self:provider.stage}-DefaultECSClusterName
+    ServiceName: ${self:provider.stage}-DefaultECSServiceName
+    TaskDefinition: 
+      Ref: ECSTaskDefinition
+    DesiredCount: 0
+    LaunchType: FARGATE
+    NetworkConfiguration:
+      AwsvpcConfiguration:
+        Subnets:
+          - Ref: DefaultSubnetOne
+          - Ref: DefaultSubnetTwo
+        AssignPublicIp: ENABLED
