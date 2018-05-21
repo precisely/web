@@ -5,19 +5,20 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  */
+
 jest.mock('src/constants/currentUser');
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import { ShallowWrapper, shallow, configure, EnzymePropSelector } from 'enzyme';
-import { Route, Redirect} from 'react-router-dom';
-import { AuthRoute} from 'src/routes/AuthRoute';
-import { currentUser } from './../../constants/currentUser';
+import {ShallowWrapper,shallow,configure,EnzymePropSelector} from 'enzyme';
+import {Route, Redirect} from 'react-router-dom';
+import {AuthRoute} from 'src/routes/AuthRoute';
+import {currentUser} from 'src/constants/currentUser';
 
 const unroll = require('unroll');
 unroll.use(it);
 
-configure({ adapter: new Adapter() });
+configure({adapter:new Adapter()});
 
 describe('Tests for AuthRoute', () => {
 
@@ -54,7 +55,7 @@ describe('Tests for AuthRoute', () => {
       expect(componentTree.find(Redirect).length).toBe(1);
     });
 
-    it('should render the router component when', () => {
+    it('should render the router component when the routeProps path contains an incorrect path', () => {
       currentUser[`__mockisAuthenticatedFailureCase`]();
       const componentTree = getComponentTree('login');
       expect(componentTree.find(Route).length).toBe(1);

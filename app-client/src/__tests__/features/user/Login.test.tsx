@@ -5,107 +5,68 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  */
-jest.mock('./../../../constants/currentUser');
+
+jest.mock('src/constants/currentUser');
+
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import { RouteComponentProps } from 'react-router';
-import { ShallowWrapper, shallow, configure, EnzymePropSelector } from 'enzyme';
-import { Login } from 'src/features/user/Login';
+import * as Radium from 'radium';
+import * as renderer from 'react-test-renderer';
+import {RouteComponentProps} from 'react-router';
+import {configure,shallow,ShallowWrapper} from 'enzyme';
+import {Login} from 'src/features/user/Login';
+import {currentUser} from 'src/constants/currentUser';
 import {
   mockedHistory,
   mockedMatch,
   mockedLocation
 } from 'src/__tests__/testSetup';
-import * as renderer from 'react-test-renderer';
-import { NavigationBar } from 'src/features/common/NavigationBar';
-import { currentUser } from './../../../constants/currentUser';
-import * as Radium from 'radium';
 
 Radium.TestMode.enable();
-const unroll = require('unroll');
-unroll.use(it);
 
 configure({ adapter: new Adapter() });
 
-describe('Login tests Before Logging In : ', () => {
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
-    <Login
-      history={mockedHistory}
-      match={mockedMatch()}
-      location={mockedLocation}
-      staticContext={{}}
-    />
-  );
-
-  unroll(
-    'it should display #count #elementName elements :',
-    (
-      done: () => void,
-      args: { elementName: string; element: EnzymePropSelector; count: number }
-    ) => {
-      expect(componentTree.find(args.element).length).toBe(args.count);
-      done();
-    },
-    [
-      // tslint:disable-next-line
-      ['elementName', 'element', 'count'],
-      ['NavigationBar', NavigationBar, 1],
-      ['h1', 'h1', 1]
-    ]
-  );
-});
-
 describe('Login tests After Logging In :', () => {
-  currentUser[`__mockisAuthenticatedSuccessCase`]();
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
-    <Login
-      history={mockedHistory}
-      match={mockedMatch()}
-      location={mockedLocation}
-      staticContext={{}}
-    />
-  );
-
-  unroll(
-    'it should display #count #elementName elements :',
-    (
-      done: () => void,
-      args: { elementName: string; element: EnzymePropSelector; count: number }
-    ) => {
-      expect(componentTree.find(args.element).length).toBe(args.count);
-      done();
-    },
-    [
-      // tslint:disable-next-line
-      ['elementName', 'element', 'count'],
-      ['NavigationBar', NavigationBar, 1],
-      ['h1', 'h1', 1]
-    ]
-  );
-
-  it('it should have History action as PUSH : ', () => {
-    currentUser[`__mockisAuthenticatedSuccessCase`]();
-    expect(mockedHistory.action).toEqual('PUSH');
-  });
-
-  it('it should redirect if user is already logged in', () => {
-    currentUser[`__mockisAuthenticatedSuccessCase`]();
-    expect(mockedHistory.location.pathname).toEqual('demoPathName');
-  });
-});
-
-describe('Login tests Snapshot Testing :', () => {
-  it('renders correctly', () => {
-    const tree = renderer
-      .create(
+    const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
         <Login
           history={mockedHistory}
           match={mockedMatch()}
           location={mockedLocation}
           staticContext={{}}
         />
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+    );
+
+    it('it should not render the Login component if user is authenticated : ', () => {
+      currentUser[`__mockisAuthenticatedSuccessCase`]();
+      expect(componentTree.find(Login).length).toBe(0);
+    });
+
+    it('it should have History action as PUSH : ', () => {
+      currentUser[`__mockisAuthenticatedSuccessCase`]();
+      expect(mockedHistory.location.search).toEqual('demoSearchString');
+    });
+    it('it should not call push action on MockedHistory: ', () => {
+      currentUser[`__mockisAuthenticatedSuccessCase`]();
+      expect(mockedHistory.push).not.toBeCalled();
+    });
+    it('it should redirect if user is already logged in', () => {
+      currentUser[`__mockisAuthenticatedSuccessCase`]();
+      expect(mockedHistory.location.pathname).toEqual('demoPathName');
+    });
+});
+
+describe('Login tests Snapshot Testing :', () => {
+    it('renders correctly', () => {
+        const tree = renderer
+          .create(
+            <Login
+              history={mockedHistory}
+              match={mockedMatch()}
+              location={mockedLocation}
+              staticContext={{}}
+            />
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+    });
 });

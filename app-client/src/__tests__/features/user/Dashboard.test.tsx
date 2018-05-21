@@ -25,7 +25,12 @@ describe('Dashboard tests.', () => {
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>> =
       shallow(
-      <Dashboard history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
+      <Dashboard
+        history={mockedHistory}
+        match={mockedMatch()}
+        location={mockedLocation}
+        staticContext={{}}
+      />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

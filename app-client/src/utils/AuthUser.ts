@@ -31,7 +31,7 @@ export class AuthUser {
 
     this.lock.on('authenticated', this.onAuthentication);
     this.lock.on('authorization_error', (error: Error) => {
-      // TODO - toster needs to be added
+      // TODO - toaster needs to be added
       // tslint:disable-next-line
       console.log('something went wrong', error.message);
     });

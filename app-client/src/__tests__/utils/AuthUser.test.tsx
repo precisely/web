@@ -1,6 +1,13 @@
-// jest.mock('src/utils/AuthUser');
-import { authUser } from '../../utils/__mocks__/AuthUser';
-import { currentUser } from 'src/constants/currentUser';
+/*
+ * Copyright (c) 2017-Present, CauseCode Technologies Pvt Ltd, India.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
+
+import {authUser} from 'src/utils/__mocks__/AuthUser';
+import {currentUser} from 'src/constants/currentUser';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -29,8 +36,7 @@ describe('AuthUser tests', () => {
     expect(window.location.href).toEqual('http://localhost/');
   });
 
-  it('It should set authStorage after authentication',()=>{
-    authUser.__mockSetAuthStorageSuccessCase();
+  it('It should set auth0Options after onAuthentication is called', () => {
     currentUser.onAuthentication({
       accessToken: 'dummyToken',
       expiresIn: 200,
@@ -39,10 +45,10 @@ describe('AuthUser tests', () => {
       state: null,
       tokenType: ''
     });
-    expect(window.location.href).toEqual('http://localhost/');
+    expect(currentUser.auth0Options).toBeTruthy();
   });
 
-  it('It should set authStorage after authentication',()=>{
+  it('It should call show method of Auth-Lock',()=>{
     currentUser.showLogin();
     expect(currentUser.lock.show).toBeCalled();
   });

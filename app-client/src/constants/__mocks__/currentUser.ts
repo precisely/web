@@ -1,26 +1,5 @@
 function mockCurrentUser() {
   return {
-    login: jest.fn(),
-    __mockLoginSuccessCase() {
-      currentUser.login.mockImplementationOnce(
-        (email: string, password: string, onSuccess: () => void) => {
-          onSuccess();
-        }
-      );
-    },
-    __mockLoginFailureCase() {
-      currentUser.login.mockImplementationOnce(
-        (
-          email: string,
-          password: string,
-          onSuccess: () => void,
-          onFailure: (error: Error) => void
-        ) => {
-          onFailure(new Error('Unable to login'));
-        }
-      );
-    },
-
     signup: jest.fn(),
     __mockSignupSuccessCase() {
       currentUser.signup.mockImplementationOnce(
@@ -38,26 +17,6 @@ function mockCurrentUser() {
           onFailure: (error: Error) => void
         ) => {
           onFailure(new Error('Unable to signup'));
-        }
-      );
-    },
-
-    forgotPassword: jest.fn(),
-    __mockForgotPasswordSuccessCase() {
-      currentUser.forgotPassword.mockImplementationOnce(
-        (email: string, onSuccess: () => void) => {
-          onSuccess();
-        }
-      );
-    },
-    __mockForgotPasswordFailureCase() {
-      currentUser.forgotPassword.mockImplementationOnce(
-        (
-          email: string,
-          onSuccess: () => void,
-          onFailure: (error: Error) => void
-        ) => {
-          onFailure(new Error('Unable to process forgot password.'));
         }
       );
     },

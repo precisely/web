@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import {Route, Redirect, RouteProps} from 'react-router-dom';
-import { utils } from '../utils';
+import {utils} from 'src/utils';
 const {currentUser} = require('../constants/currentUser');
 
 export interface AuthRouteProps extends RouteProps {

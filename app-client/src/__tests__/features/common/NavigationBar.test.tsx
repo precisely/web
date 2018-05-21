@@ -4,17 +4,12 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as renderer from 'react-test-renderer';
-import { ShallowWrapper, shallow, configure } from 'enzyme';
-import { NavigationBar } from 'src/features/common/NavigationBar';
-import { currentUser } from './../../../constants/currentUser';
+import {ShallowWrapper,shallow,configure} from 'enzyme';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {currentUser} from './../../../constants/currentUser';
 
 configure({ adapter: new Adapter() });
 Radium.TestMode.enable();
-
-const map = {};
-document.addEventListener = jest.fn((event, cb) => {
-  map[event] = cb;
-});
 
 describe('Login tests Snapshot Testing :', () => {
   it('renders correctly', () => {
@@ -73,17 +68,6 @@ describe('Login Test After Login: ', () => {
 describe('Login Test After Logout: ', () => {
   const componentTree: ShallowWrapper = shallow(<NavigationBar />);
   it('should render Log In link in the navigation bar when the user is unauthenticated.', () => {
-    currentUser[`__mockLogoutFailureCase`]();
-    componentTree.find('#loginStatus').simulate('click');
-    expect(
-      componentTree
-        .find('#loginStatus')
-        .children()
-        .text()
-    ).toEqual('LOG IN');
-  });
-
-  it('Checks if user is unaunthenticated', () => {
     currentUser[`__mockLogoutFailureCase`]();
     componentTree.find('#loginStatus').simulate('click');
     expect(
