@@ -4,6 +4,8 @@ DefaultVPC:
     EnableDnsSupport: true
     EnableDnsHostnames: true
     CidrBlock: '10.0.0.0/24'
+    Tags:
+      Name: ${self:provider.stage}-DefaultCustomVPC
 
 DefaultSubnetOne:
   Type: 'AWS::EC2::Subnet'
@@ -13,6 +15,8 @@ DefaultSubnetOne:
     MapPublicIpOnLaunch: true
     VpcId:
       Ref: DefaultVPC
+    Tags:
+      Name: ${self:provider.stage}-DefaultSubnetOne
 
 DefaultSubnetTwo:
   Type: 'AWS::EC2::Subnet'
@@ -22,6 +26,9 @@ DefaultSubnetTwo:
     MapPublicIpOnLaunch: true
     VpcId:
       Ref: DefaultVPC
+    Tags:
+      Name: ${self:provider.stage}-DefaultSubnetTwo
+    
 
 DefaultVPCSecurityGroup:
   Type: 'AWS::EC2::SecurityGroup'
