@@ -21,6 +21,7 @@ function Auth0Lock(data) {
     }
     callback(new Error('UNAUTHORIZED!!!'));
   })
+
   this.show = jest.fn()
 }
 

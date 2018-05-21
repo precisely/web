@@ -56,7 +56,7 @@ describe('Tests for AuthRoute', () => {
 
     it('should render the router component when', () => {
       currentUser[`__mockisAuthenticatedFailureCase`]();
-      const componentTree = getComponentTree('test');
+      const componentTree = getComponentTree('login');
       expect(componentTree.find(Route).length).toBe(1);
     });
   });
