@@ -37,9 +37,6 @@ export class AuthUser {
   }
 
   onAuthentication = (authResult: AuthResult) => {
-    // tslint:disable-next-line
-    console.log('Entering Authentication');
-
     this.lock.getUserInfo(
       authResult.accessToken,
       (error: Auth0Error, profile: Auth0UserProfile) => {
