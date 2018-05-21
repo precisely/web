@@ -16,7 +16,7 @@ function mockCurrentUser() {
           onSuccess: () => void,
           onFailure: (error: Error) => void
         ) => {
-          onFailure(new Error("Unable to login"));
+          onFailure(new Error('Unable to login'));
         }
       );
     },
@@ -37,7 +37,7 @@ function mockCurrentUser() {
           onSuccess: () => void,
           onFailure: (error: Error) => void
         ) => {
-          onFailure(new Error("Unable to signup"));
+          onFailure(new Error('Unable to signup'));
         }
       );
     },
@@ -57,7 +57,7 @@ function mockCurrentUser() {
           onSuccess: () => void,
           onFailure: (error: Error) => void
         ) => {
-          onFailure(new Error("Unable to process forgot password."));
+          onFailure(new Error('Unable to process forgot password.'));
         }
       );
     },
@@ -108,7 +108,7 @@ function mockCurrentUser() {
           successCallback?: () => void,
           failureCallback?: (error: Error) => void
         ) => {
-          failureCallback(new Error("Unable to reset the password."));
+          failureCallback(new Error('Unable to reset the password.'));
         }
       );
     },

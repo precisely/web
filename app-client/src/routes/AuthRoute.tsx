@@ -21,7 +21,7 @@ export class AuthRoute extends React.Component<AuthRouteProps> {
     const {authenticatedRedirect} = this.props;
 
     if (currentUser.isAuthenticated()) {
-      return authenticatedRedirect ? 
+      return authenticatedRedirect ?
           <Redirect from={routeProps.path} to={authenticatedRedirect} /> :
           <Route {...routeProps} />;
     }
@@ -32,5 +32,5 @@ export class AuthRoute extends React.Component<AuthRouteProps> {
     }
 
     return <Route {...routeProps} />;
-  } 
+  }
 }

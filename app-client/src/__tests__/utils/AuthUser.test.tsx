@@ -41,4 +41,9 @@ describe('AuthUser tests', () => {
     });
     expect(window.location.href).toEqual('http://localhost/');
   });
+
+  it('It should set authStorage after authentication',()=>{
+    currentUser.showLogin();
+    expect(currentUser.lock.show).toBeCalled();
+  });
 });

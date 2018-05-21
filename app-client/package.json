@@ -54,7 +54,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "amazon-cognito-identity-js": "<rootDir>/__mocks__/amazon-cognito-identity-js/index.js"
+      "auth0-lock": "<rootDir>/__mocks__/auth0-lock/index.js"
     },
     "moduleFileExtensions": [
       "web.ts",

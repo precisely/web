@@ -1,4 +1,4 @@
-import { currentUser } from '../../constants/currentUser';
+// import { currentUser } from '../../constants/currentUser';
 
 function mockAuthUser() {
   return {
@@ -24,10 +24,10 @@ function mockAuthUser() {
 
     isAuthenticated: jest.fn(),
     __mockisAuthenticatedSuccessCase() {
-      authUser.isAuthenticated.mockReturnValueOnce(true);
+      authUser.isAuthenticated.mockReturnValue(true);
     },
     __mockisAuthenticatedFailureCase() {
-      authUser.isAuthenticated.mockReturnValueOnce(false);
+      authUser.isAuthenticated.mockReturnValue(false);
     },
 
     logout: jest.fn(),
