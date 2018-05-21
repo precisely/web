@@ -31,7 +31,7 @@ describe('Login Test After Login: ', () => {
     ).toEqual('LOG IN');
   });
 
-  it('Checks if user is unaunthenticated', () => {
+  it('should render Log In link in the navigation bar when the user is unauthenticated.', () => {
     currentUser[`__mockisAuthenticatedSuccessCase`]();
     componentTree.find('#loginStatus').simulate('click');
     expect(
@@ -42,18 +42,9 @@ describe('Login Test After Login: ', () => {
     ).toEqual('LOG IN');
   });
 
-  it('Checks if user is aunthenticated', () => {
-    currentUser[`__mockisAuthenticatedSuccessCase`]();
-    componentTree.find('.navbar-toggler-right').simulate('click');
-    expect(
-      componentTree
-        .find('#loginStatus')
-        .children()
-        .text()
-    ).toEqual('LOG OUT');
-  });
-
-  it('Checks if user is aunthenticated', () => {
+  it(
+    'should render Log Out link in the navigation bar when the user is authenticated after toggle button is clicked',
+    () => {
     currentUser[`__mockisAuthenticatedSuccessCase`]();
     componentTree.find('.navbar-toggler-right').simulate('click');
     expect(
