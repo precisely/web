@@ -1,8 +1,7 @@
 import Auth0Lock from 'auth0-lock';
 import { Auth0UserProfile, Auth0Error } from 'auth0-js';
-import { authLockButtonBackground } from '../constants/styleGuide';
-const logo = require('./../assets/logo.png');
-
+import { authLockButtonBackground } from 'src/constants/styleGuide';
+const logo = require('src/assets/logo.png');
 export class AuthUser {
   lock: Auth0LockStatic;
   auth0Options = {
