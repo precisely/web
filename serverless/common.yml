@@ -9,9 +9,12 @@ accountFromStage:
                     # This mapping exists to ensure no AWS resources are used when STAGE=offline
   default: dev
 
-auth0TenantName: 
+
+auth0TenantNameMap: 
   default: ${self:provider.vars.account}-precisely
   offline: dev-precisely
+
+auth0TenantName: ${self:provider.vars.auth0TenantNameMap.${self:provider.vars.account}, self:provider.vars.auth0TenantNameMap.default}
 
 # customDomain / Route53 config
 domain: "${
@@ -23,7 +26,8 @@ domainMap:
   offline: localhost
   default: ${self:provider.stage}.codeprecisely.net
 
-reactURL:
+reactURL: ${self:provider.vars.reactURLMap.${self:provider.vars.account}, self:provider.vars.reactURLMap.default}
+reactURLMap:
   offline: "http://${self:provider.vars.domain}:3000"
   default: "https://${self:provider.vars.domain}"
 
