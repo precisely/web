@@ -6,8 +6,8 @@
  * without modification, are not permitted.
  */
 import Auth0Lock from 'auth0-lock';
-import { Auth0UserProfile, Auth0Error } from 'auth0-js';
-import { authLockButtonBackground } from 'src/constants/styleGuide';
+import {Auth0UserProfile, Auth0Error} from 'auth0-js';
+import {authLockButtonBackground} from 'src/constants/styleGuide';
 const logo = require('src/assets/logo.png');
 export class AuthUser {
   lock: Auth0LockStatic;

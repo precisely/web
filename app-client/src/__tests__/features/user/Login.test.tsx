@@ -26,7 +26,8 @@ Radium.TestMode.enable();
 
 configure({ adapter: new Adapter() });
 
-describe('Login tests After Logging In :', () => {
+describe('Login tests After Logging Out :', () => {
+    currentUser[`__mockisAuthenticatedFailureCase`]();
     const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
         <Login
           history={mockedHistory}
@@ -36,15 +37,29 @@ describe('Login tests After Logging In :', () => {
         />
     );
 
-    it('should not render the Login component if user is authenticated : ', () => {
-      currentUser[`__mockisAuthenticatedSuccessCase`]();
-      expect(componentTree.find(Login).length).toBe(0);
+    it('should call showLogin method if user is unauthenticated : ', () => {
+      expect(currentUser.showLogin).toBeCalled();
     });
+});
 
-    it('should redirect if user is already logged in', () => {
-      currentUser[`__mockisAuthenticatedSuccessCase`]();
-      expect(mockedHistory.location.pathname).toEqual('demoPathName');
-    });
+describe('Login tests After Logging In :', () => {
+  currentUser[`__mockisAuthenticatedSuccessCase`]();
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
+      <Login
+        history={mockedHistory}
+        match={mockedMatch()}
+        location={mockedLocation}
+        staticContext={{}}
+      />
+  );
+
+  it('should call push method on mockedHistory if user is authenticated : ', () => {
+    expect(mockedHistory.push).toBeCalled();
+  });
+
+  it('should not render the Login component if user is authenticated : ', () => {
+    expect(componentTree.find(Login).length).toBe(0);
+  });
 });
 
 describe('Login tests Snapshot Testing :', () => {
