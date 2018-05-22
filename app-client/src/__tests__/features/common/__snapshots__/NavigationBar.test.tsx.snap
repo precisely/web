@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Login tests Snapshot Testing : renders correctly 1`] = `
+exports[`NavigationBar tests Snapshot Testing : renders correctly 1`] = `
 <nav
   className="rmq-4a0d0fdc navbar navbar navbar-toggleable-md navbar-light sticky-top"
   data-radium={true}
