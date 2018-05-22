@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
 import Auth0Lock from 'auth0-lock';
 import { Auth0UserProfile, Auth0Error } from 'auth0-js';
 import { authLockButtonBackground } from 'src/constants/styleGuide';
