@@ -30,10 +30,10 @@ function mockCurrentUser() {
 
     isAuthenticated: jest.fn(),
     __mockisAuthenticatedSuccessCase() {
-      currentUser.isAuthenticated.mockReturnValueOnce(true);
+      currentUser.isAuthenticated.mockReturnValue(true);
     },
     __mockisAuthenticatedFailureCase() {
-      currentUser.isAuthenticated.mockReturnValueOnce(false);
+      currentUser.isAuthenticated.mockReturnValue(false);
     },
 
     logout: jest.fn(),
