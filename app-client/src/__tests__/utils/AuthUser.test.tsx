@@ -17,12 +17,12 @@ describe('AuthUser tests', () => {
     failureCallback.mockReset();
   });
 
-  it('It should set the window location to base after logout ', () => {
+  it('should set the window location to base after logout ', () => {
     currentUser.logout();
     expect(window.location.href).toEqual('http://localhost/');
   });
 
-  it('It should set auth0Options after onAuthentication is called', () => {
+  it('should set auth0Options after onAuthentication is called', () => {
     currentUser.onAuthentication({
       accessToken: 'dummyToken',
       expiresIn: 200,
@@ -34,7 +34,7 @@ describe('AuthUser tests', () => {
     expect(currentUser.auth0Options).toBeTruthy();
   });
 
-  it('It should call show method of Auth-Lock',()=>{
+  it('should call show method of Auth-Lock',()=>{
     currentUser.showLogin();
     expect(currentUser.lock.show).toBeCalled();
   });

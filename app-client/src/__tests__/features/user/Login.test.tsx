@@ -36,12 +36,12 @@ describe('Login tests After Logging In :', () => {
         />
     );
 
-    it('it should not render the Login component if user is authenticated : ', () => {
+    it('should not render the Login component if user is authenticated : ', () => {
       currentUser[`__mockisAuthenticatedSuccessCase`]();
       expect(componentTree.find(Login).length).toBe(0);
     });
 
-    it('it should redirect if user is already logged in', () => {
+    it('should redirect if user is already logged in', () => {
       currentUser[`__mockisAuthenticatedSuccessCase`]();
       expect(mockedHistory.location.pathname).toEqual('demoPathName');
     });
