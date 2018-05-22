@@ -75,10 +75,7 @@ export class AuthUser {
     let accessToken: string = localStorage.getItem('accessToken');
 
     return (
-      accessToken &&
-      accessToken.length > 0 &&
-      expiresAt > 0 &&
-      expiresAt > new Date().getTime()
+      accessToken && accessToken.length > 0 && expiresAt > 0 && expiresAt > new Date().getTime()
     );
   }
 
