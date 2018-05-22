@@ -8,7 +8,7 @@ ECSTaskDefinition:
   Type: "AWS::ECS::TaskDefinition"
   Properties: 
     ExecutionRoleArn: 
-      Fn::GetAtt: ['PreciselyECSRole', 'Arn']
+      Fn::GetAtt: [PreciselyECSTaskRole, 'Arn']
     Family: ${self:provider.vars.ecsTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512

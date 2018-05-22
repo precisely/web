@@ -5,7 +5,8 @@ DefaultVPC:
     EnableDnsHostnames: true
     CidrBlock: '10.0.0.0/24'
     Tags:
-      Name: ${self:provider.stage}-DefaultCustomVPC
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultCustomVPC
 
 DefaultSubnetOne:
   Type: 'AWS::EC2::Subnet'
@@ -16,7 +17,8 @@ DefaultSubnetOne:
     VpcId:
       Ref: DefaultVPC
     Tags:
-      Name: ${self:provider.stage}-DefaultSubnetOne
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultSubnetOne
 
 DefaultSubnetTwo:
   Type: 'AWS::EC2::Subnet'
@@ -27,9 +29,9 @@ DefaultSubnetTwo:
     VpcId:
       Ref: DefaultVPC
     Tags:
-      Name: ${self:provider.stage}-DefaultSubnetTwo
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultSubnetTwo
     
-
 DefaultVPCSecurityGroup:
   Type: 'AWS::EC2::SecurityGroup'
   Properties:

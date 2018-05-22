@@ -66,7 +66,7 @@ export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, cal
   });
 };
 
-export async function rawUploadTrigger(event: S3CreateEvent, context: Context, callback: Callback) {
+export async function rawDataUpload(event: S3CreateEvent, context: Context, callback: Callback) {
 
   context.callbackWaitsForEmptyEventLoop = false;
 
@@ -76,22 +76,10 @@ export async function rawUploadTrigger(event: S3CreateEvent, context: Context, c
 
     const ecs = new AWS.ECS();
 
-    const subnetIds = [
-      process.env.SUBNET_ONE,
-      process.env.SUBNET_TWO
-    ];
-
     const params: AWS.ECS.Types.RunTaskRequest = {
-      cluster: process.env.CLUSTER_NAME,
       launchType: 'FARGATE',
       taskDefinition: process.env.TASK_NAME,
       count: 1,
-      networkConfiguration: {
-        awsvpcConfiguration: {
-          subnets: subnetIds,
-          assignPublicIp: 'ENABLED'
-        }
-      },
       overrides: {
         containerOverrides: [
           {
@@ -108,14 +96,6 @@ export async function rawUploadTrigger(event: S3CreateEvent, context: Context, c
               {
                 name: 'GENOTYPE_RAW_FILENAME',
                 value: rawDataFilename
-              },
-              {
-                name: 'AWS_ACCESS_KEY_ID',
-                value: process.env.ECS_AWS_ACCESS_KEY_ID
-              },
-              {
-                name: 'AWS_SECRET_ACCESS_KEY',
-                value: process.env.ECS_AWS_ACCESS_KEY
               }
             ]
           }

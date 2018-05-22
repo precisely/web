@@ -23,7 +23,7 @@ PreciselyDefaultPolicy:
           - arn:aws:s3:::${self:provider.deploymentBucket}
 
 PreciselyAPIPolicy:
-  PolicyName: PreciselyAPIPolicy
+  PolicyName: ${self:provider.stage}-PreciselyAPIPolicy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:
@@ -31,17 +31,30 @@ PreciselyAPIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
 
+ECSTaskPolicy:
+  PolicyName: ${self:provider.stage}-ECSTriggerPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - Effect: Allow
+        Action:
+          - "s3:GetObject"
+        Resource: 
+          - Fn::GetAtt: [S3BucketGeneticsVCF, Arn]
+          - Fn::GetAtt: [S3BucketGenetics23andMe, Arn]
+
 ECSTriggerPolicy:
-  PolicyName: ecsTriggerPolicy
-    PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Action:
-              - "s3:GetObject"
-            Resource: "arn:aws:s3:::*/*"
-          - Effect: Allow
-            Action:
-              - "ecs:RunTask"
-            Resource: "*"
+  PolicyName: ${self:provider.stage}-ECSTriggerPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - Effect: Allow
+        Action:
+          - "s3:GetObject"
+        Resource: "arn:aws:s3:::*/*"
+      - Effect: Allow
+        Action:
+          - "ecs:RunTask"
+        Resource: "*"
+  
 ...

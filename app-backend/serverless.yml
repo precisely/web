@@ -207,11 +207,11 @@ functions:
     handler: src/services/genetics-pipeline/handlers.vcfIngester
     events:
       - s3:
-          bucket: ${self:provider.vars.geneticsVCFBucket}
+          bucket: GeneticsVCF
           event: s3:ObjectCreated:*
 
   # Raw data uploader is triggered by new file in any of the raw data buckets
-  RawDataUploadLambdaFunction:
+  RawDataUpload:
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
       SUBNET_ONE:
@@ -223,14 +223,22 @@ functions:
       ECS_TASK_NAME: ${self:provider.vars.ecsTaskDefinitionName}
       ECS_CONTAINER_NAME: ${self:provider.vars.ecsContainerName}
 
+    role: 
+      'Fn::GetAtt': ["PreciselyECSTriggerRole", "Arn"]
+    vpc:
+      securityGroupIds:
+        - Ref: DefaultVPCSecurityGroup
+      subnetIds:
+        - Ref: DefaultSubnetOne
+        - Ref: DefaultSubnetTwo
     events:
       - s3:
-          bucket: ${self:provider.vars.genetics23andMeBucket}
+          bucket: Genetics23andMe
           event: s3:ObjectCreated:*
       - s3:
-          bucket: ${self:provider.vars.geneticsAkesogenBucket}
+          bucket: GeneticsAkesogen
           event: s3:ObjectCreated:*
       - s3:
-          bucket: ${self:provider.vars.geneticsAncestryBucket}
+          bucket: GeneticsAncestry
           event: s3:ObjectCreated:*
   

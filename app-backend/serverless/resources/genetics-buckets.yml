@@ -40,4 +40,4 @@ RawDataUploadLambdaPermission:
     Action: lambda:InvokeFunction
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:provider.vars.gBucket}
+    SourceArn: arn:aws:s3:::${self:provider.vars.genetics23andMeBucket}
