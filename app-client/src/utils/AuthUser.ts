@@ -65,12 +65,7 @@ export class AuthUser {
     window.location.href = '/';
   }
 
-  setAuthStorage = (
-    accessToken: string = '',
-    expiresAt: string = '',
-    profile: string = '',
-    authResult: string = ''
-  ) => {
+  setAuthStorage= (accessToken: string = '', expiresAt: string = '', profile: string = '', authResult: string = '') => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('expiresAt', expiresAt);
     localStorage.setItem('profile', profile);
