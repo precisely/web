@@ -38,12 +38,6 @@ function mockCurrentUser() {
     },
 
     showLogin: jest.fn(),
-    __mockshowLoginSuccessCase() {
-      currentUser.showLogin.mockReturnValueOnce(true);
-    },
-    __mockshowLoginFailureCase() {
-      currentUser.showLogin.mockReturnValueOnce(false);
-    },
 
     resetPassword: jest.fn(),
     __mockResetPasswordSuccessCase() {

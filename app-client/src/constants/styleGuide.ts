@@ -8,7 +8,7 @@
 
 // All the global CSS styles and color constants should be written here
 
-import { CSS } from 'src/interfaces';
+import {CSS} from 'src/interfaces';
 
 export const buttonDefault: string = '#6c757d';
 export const buttonHover: string = '#545b62';
