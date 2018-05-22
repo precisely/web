@@ -41,14 +41,6 @@ describe('Login tests After Logging In :', () => {
       expect(componentTree.find(Login).length).toBe(0);
     });
 
-    it('it should have History action as PUSH : ', () => {
-      currentUser[`__mockisAuthenticatedSuccessCase`]();
-      expect(mockedHistory.location.search).toEqual('demoSearchString');
-    });
-    it('it should not call push action on MockedHistory: ', () => {
-      currentUser[`__mockisAuthenticatedSuccessCase`]();
-      expect(mockedHistory.push).not.toBeCalled();
-    });
     it('it should redirect if user is already logged in', () => {
       currentUser[`__mockisAuthenticatedSuccessCase`]();
       expect(mockedHistory.location.pathname).toEqual('demoPathName');
