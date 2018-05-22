@@ -34,4 +34,11 @@ describe('Tests for utils/index.ts', () => {
     process.env.NODE_ENV = '';
     expect(utils.getEnvironment()).toEqual('');
   });
+
+  it('should test lastPageBeforeLogin', () => {
+    expect(utils.getLastPageBeforeLogin()).toEqual(undefined);
+    utils.setLastPageBeforeLogin('/dummyPath');
+    expect(utils.getLastPageBeforeLogin()).toEqual('/dummyPath');
+  });
 });
+

@@ -12,10 +12,10 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import * as Radium from 'radium';
 import * as renderer from 'react-test-renderer';
-import {RouteComponentProps} from 'react-router';
-import {configure,shallow,ShallowWrapper} from 'enzyme';
+import {configure, shallow} from 'enzyme';
 import {Login} from 'src/features/user/Login';
 import {currentUser} from 'src/constants/currentUser';
+import {utils} from 'src/utils';
 import {
   mockedHistory,
   mockedMatch,
@@ -24,56 +24,50 @@ import {
 
 Radium.TestMode.enable();
 
-configure({ adapter: new Adapter() });
+configure({adapter: new Adapter()});
 
-describe('Login tests After Logging Out :', () => {
-    currentUser[`__mockisAuthenticatedFailureCase`]();
-    const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
-        <Login
-          history={mockedHistory}
-          match={mockedMatch()}
-          location={mockedLocation}
-          staticContext={{}}
-        />
-    );
-
-    it('should call showLogin method if user is unauthenticated : ', () => {
-      expect(currentUser.showLogin).toBeCalled();
-    });
-});
-
-describe('Login tests After Logging In :', () => {
-  currentUser[`__mockisAuthenticatedSuccessCase`]();
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> = shallow(
+describe('Login tests', () => {
+  const getComponentTree = () =>
+    shallow(
       <Login
         history={mockedHistory}
         match={mockedMatch()}
         location={mockedLocation}
         staticContext={{}}
       />
-  );
+    );
 
-  it('should call push method on mockedHistory if user is authenticated : ', () => {
-    expect(mockedHistory.push).toBeCalled();
-  });
-
-  it('should not render the Login component if user is authenticated : ', () => {
-    expect(componentTree.find(Login).length).toBe(0);
-  });
-});
-
-describe('Login tests Snapshot Testing :', () => {
-    it('renders correctly', () => {
-        const tree = renderer
-          .create(
-            <Login
-              history={mockedHistory}
-              match={mockedMatch()}
-              location={mockedLocation}
-              staticContext={{}}
-            />
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+  describe('After Logging Out :', () => {
+    currentUser[`__mockisAuthenticatedFailureCase`]();
+    getComponentTree();
+    it('should call showLogin method if user is unauthenticated : ', () => {
+      expect(currentUser.showLogin).toBeCalled();
     });
+  });
+
+  describe('After Logging In :', () => {
+    currentUser[`__mockisAuthenticatedSuccessCase`]();
+    utils.getLastPageBeforeLogin = jest.fn().mockReturnValue('dummyPath');
+    getComponentTree();
+
+    it('should call push method on mockedHistory if user is authenticated : ', () => {
+      expect(mockedHistory.push).toBeCalledWith('dummyPath');
+    });
+  });
+
+  describe('Snapshot Testing :', () => {
+    it('renders correctly', () => {
+      const tree = renderer
+        .create(
+          <Login
+            history={mockedHistory}
+            match={mockedMatch()}
+            location={mockedLocation}
+            staticContext={{}}
+          />
+        )
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+  });
 });

@@ -10,9 +10,9 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-const {currentUser} = require('../../constants/currentUser');
-import { utils } from '../../utils';
-import { loginAndSignupPanel, header } from '../../constants/styleGuide';
+const {currentUser} = require('src/constants/currentUser');
+import {utils} from 'src/utils';
+import {loginAndSignupPanel, header} from 'src/constants/styleGuide';
 
 @Radium
 export class Login extends React.Component<RouteComponentProps<void>> {
