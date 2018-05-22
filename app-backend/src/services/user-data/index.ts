@@ -1,5 +1,4 @@
 import { VariantCall } from 'src/services/models';
-import { TypedError } from 'src/errors';
 
 export class UserData {
   variants: string[];
@@ -15,12 +14,12 @@ export class UserData {
   }
 
   async variantCalls(): Promise<VariantCall[]> {
-    this.checkScope('variantCall:query');
     const result = await VariantCall.query(this.userId).execAsync();
     return result && result.Items;
   }
 
-
-
+  // in future
+  // surveys
   
+
 }

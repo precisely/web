@@ -3,7 +3,7 @@ import context from 'jest-plugin-context';
 import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';
 import { AuthResponseContext } from 'aws-lambda';
 import { PreciselyRoles } from './roles';
-import { makeScopes } from 'src/services/auth/scopes';
+import { compileScopes } from 'src/services/auth/scopes';
 
 describe('GraphQLContext', function () {
   context('roles', function () {
@@ -56,16 +56,16 @@ describe('GraphQLContext', function () {
     });
   });
 
-  context('checkScope', function () {
+  context('testScope', function () {
     it('should not throw an error if the provided scope is available', function () {
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'testRole'
       }}),
       makeLambdaContext(),
       {
-        testRole: makeScopes('serviceX:read')
+        testRole: compileScopes('serviceX:read')
       });
-      expect(() => gqlContext.checkScope('serviceX:read')).not.toThrow();
+      expect(gqlContext.testScope('serviceX:read')).toBeTruthy();
     });
 
     it('should throw an error if the provided scope is not available', function () {
@@ -74,9 +74,9 @@ describe('GraphQLContext', function () {
       }}),
       makeLambdaContext(),
       {
-        testRole: makeScopes('serviceX:read')
+        testRole: compileScopes('serviceX:read')
       });
-      expect(() => gqlContext.checkScope('notAccessible:read')).toThrow();
+      expect(gqlContext.testScope('notAccessible:read')).toBeFalsy();
     });
 
     it('should not throw an error if the requested scope is matched with variable', function () {
@@ -86,9 +86,9 @@ describe('GraphQLContext', function () {
       }}),
       makeLambdaContext(),
       {
-        testRole: makeScopes('serviceX:read:$userId')
+        testRole: compileScopes('serviceX:read:$userId')
       });
-      expect(() => gqlContext.checkScope('serviceX:read:auth0|123')).not.toThrow();
+      expect(gqlContext.testScope('serviceX:read:auth0|123')).toBeTruthy();
     });
 
     it('should throw an error if the requested scope refers to variable with a different value', function () {
@@ -98,9 +98,9 @@ describe('GraphQLContext', function () {
       }}),
       makeLambdaContext(),
       {
-        testRole: makeScopes('serviceX:read:$userId')
+        testRole: compileScopes('serviceX:read:$userId')
       });
-      expect(() => gqlContext.checkScope('serviceX:read:auth0|WRONG_USERID')).toThrow();
+      expect(gqlContext.testScope('serviceX:read:auth0|WRONG_USERID')).toBeFalsy();
     });
   });
 });

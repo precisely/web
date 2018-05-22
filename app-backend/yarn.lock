@@ -5511,6 +5511,10 @@ raw-body@~2.1.7:
     iconv-lite "0.4.13"
     unpipe "1.0.0"
 
+rbac-plus@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/rbac-plus/-/rbac-plus-1.1.2.tgz#3ace9fc475a6ad0939d9a89ac899159ca95e6bf9"
+
 rc@^1.0.1, rc@^1.1.6:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.7.tgz#8a10ca30d588d00464360372b890d06dacd02297"

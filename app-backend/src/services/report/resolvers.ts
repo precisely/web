@@ -7,7 +7,31 @@
 */
 
 import {Report} from './models';
-import { scoped } from 'src/services/auth';
+import accessControl from 'src/common/access-control';
+import { Context } from 'rbac-plus';
+import { GraphQLContext } from 'src/services/auth/graphql-context';
+// import { reactToMarkdownComponents } from 'src/app-client/src/features/markdown/react-to-markdown';
+import { VariantCallAttributes } from 'src/services/variant-call/models';
+
+function reportPublished({resource}: Context) {
+  return resource.get('state') === 'published';
+}
+
+function userOwnsResource({user, resource}: Context) {
+  return user.id === resource.get('ownerId');
+}
+
+function assignOwnerId({user}: Context) {
+  return { ownerId: user.id };
+}
+
+accessControl
+  .grant('user')
+    .resource('Report')
+      .action('read').where(reportPublished)
+      .action('create').withConstraint(assignOwnerId)
+      .action('update').where(userOwnsResource)
+        .withConstraint(assignOwnerId);
 
 export interface ReportCreateUpdateArgs {
   title: string;
@@ -26,8 +50,12 @@ export const resolvers = {
     }
   },
   Mutation: {
-    async createReport(_: {}, {title, content, variants}: ReportCreateUpdateArgs): Promise<Report> {
-      return Report.safeCreate({title, rawContent: content, variants});
+    async createReport(
+      _: {}, {title, content, variants}: ReportCreateUpdateArgs, context: GraphQLContext): Promise<Report> {
+      const permission = await context.can('report:create');
+      return Report.safeCreate({...permission.constraint,
+        title, rawContent: content, variants
+      });
     },
     async updateReport(_: {}, {title, content, variants}: ReportCreateUpdateArgs): Promise<Report> {
       return await Report.createAsync({title, rawContent: content, variants});

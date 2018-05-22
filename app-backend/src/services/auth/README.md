@@ -18,66 +18,30 @@ On login, Auth0 authenticates a user and issues a token, which the user's browse
 See [AWS: Output from a custom authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-lambda-authorizer-output.html ).
 
 ## Authorization
-During the authentication step, the custom authorizer assigns *roles* such as `admin`, `user` or `public` to the user. Each role is associated with a set of *scopes*. The current user's roles and scopes are available through the resolver's [context](https://graphql.org/learn/execution/#root-fields-resolvers), which will always be a [`GraphQLContext`](graphql-context.ts) instance.
 
-The roles are defined in [roles.ts](roles.ts), and look something like:
-```typescript
-const RoleScopes = {
-  user: compileScopes(
-    // these are role scopes
-    'Report:read': { state: 'published', public: true },
-    'VariantCall:read': { userId: '$userId' },
-    ...
-  ),
-  author: compileScopes(
-    ...
-  ),
-  etc ...
-}
-```
+The GraphQL handler generates a context object ([`GraphQLContext`](graphql-context.ts)), which is passed as the context argument to GraphQL resolver functions. The GraphQLContext contains helpful information like `userId` and `roles` and provides a method for testing whether the current user can perform an action.
 
-### Scopes
+Roles [RBACPlus](https://github.com/aneilbaboo/rbac-plus) to define roles and scopes (permissions).
 
-As hinted in the above example, scopes provide granular access to resources. They are colon-delimited strings structured as `{resource}:{accessType}:{restrictions}`. For example,`Report:write:id=a123456789` provides write access to the report with id `a123456789`.
-
-A user is granted permission to access a resource when one of the scopes granted to the user (the *user scopes*) matches the scope associated the resource (the *resource scope*).
-
-Resources are protected using the `@scoped` decorator. Since decorators can only be applied to class methods, write your resolver methods in the form of a class, and apply the decorator like so:
+Resolvers can test whether access is permitted by using the `GraphQLContext.can(scope, resource)` method, or the `@scope` decorator.
 
 ```typescript
+import {accessControl} from 'access-control';
+accessControl
+  .grant('user')
+    .resource('Report')
+      .action('read').fields()
+      .action('update').where(userIsOwner).withConstraint()
+      .action('delete').where(userIsOwner).withConstraint(ensureOwnerIdIsUserId);
+
 class ReportResolver {
-  // this is a resource scope
-  @scoped('report:read')
-  static id(report: Report) { return report.get('id'); }
-  ...
+  @scope('admin', 'Report:read')
+  id(report: Report, args: any, context: GraphQLContext) {
+    ...
+  }
 }
 ```
 
-#### Scope variables
-
-Scope variables allow interpolating values from a context (described below) into a scope.
-
-`${variable}` - interpolates a value from an object, either the resolver context or the resource. This is called the *object interpolation operator*.
-`@{variable}` - interpolates the value of a resolver argument. This is only valid for resoure scopes.
-
-##### Tests
-
-Scopes values can be tested in
-##### In Role Scopes
-
-Role scope variables are resolved with respect to the current GraphQLContext. For example `Report:write:ownerId=${userId}` produces a scope where `$userId` is substituted with the context's `.userId` property. The resulting scope grants access to all reports owned by the current authenticated user.
-
-##### In Resource Scopes
-Resource scope variables are resolved with respect to the resolver's target (the first argument). This is typically a dynogels model. For this reason variables are resolved first with respect to the model instances properties then with respect to its attributes (using `model.get(scopeVariable)`).
-
-For example,
-```typescript
-class Query {
-  @scoped('Report:write:ownerId=@ownerId')
-  saveReport(report: Report, {ownerId, title, text, slug})
-}
 
 
 
-
-##
