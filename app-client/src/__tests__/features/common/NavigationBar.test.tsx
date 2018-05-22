@@ -3,17 +3,17 @@ jest.mock('src/constants/currentUser');
 import * as React from 'react';
 import * as Radium from 'radium';
 import * as Adapter from 'enzyme-adapter-react-16';
-import * as renderer from 'react-test-renderer';
-import {ShallowWrapper,shallow,configure} from 'enzyme';
+import * as Renderer from 'react-test-renderer';
+import {ShallowWrapper, shallow, configure} from 'enzyme';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {currentUser} from 'src/constants/currentUser';
 
-configure({ adapter: new Adapter() });
+configure({adapter: new Adapter()});
 Radium.TestMode.enable();
 
 describe('Login tests Snapshot Testing :', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<NavigationBar />).toJSON();
+    const tree = Renderer.create(<NavigationBar />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
