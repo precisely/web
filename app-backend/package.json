@@ -69,7 +69,7 @@
     "jwks-rsa-promisified": "^1.0.2",
     "lodash.camelcase": "^4.3.0",
     "logform": "1.5.0",
-    "rbac-plus": "^1.1.2",
+    "rbac-plus": "^1.2.3",
     "sequelize": "4.35.2",
     "slugify": "^1.2.9",
     "winston": "3.0.0-rc2"
