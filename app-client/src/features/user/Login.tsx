@@ -10,7 +10,6 @@ import {Component} from 'react';
 import {authLockButtonBackground} from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
 import { utils } from '../../utils';
-import { currentUser } from '../../constants/currentUser';
 const logo = require('src/assets/logo.png');
 export class Login extends Component<RouteComponentProps<void>> {
   lock = new Auth0Lock(
@@ -55,21 +54,15 @@ export class Login extends Component<RouteComponentProps<void>> {
       JSON.stringify(authResult)
     );
     this.setState({isLoggedIn: true});
-  }
-
-  componentDidMount() {
-    // Avoid showing Lock when hash is parsed.
-    if ( !(/access_token|id_token|error/.test(this.props.location.hash)) ) {
-      // this.lock.show();
-    }
+    this.props.history.push(utils.getLastPageBeforeLogin());
   }
 
   render(): JSX.Element {
-    if (!currentUser.isAuthenticated()) {
+    
+    // Avoid showing Lock when hash is parsed.
+    if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !this.state.isLoggedIn) {
       this.lock.show();
-      return null;
     }
-    this.props.history.push(utils.getLastPageBeforeLogin());
     return null;
   }
 }

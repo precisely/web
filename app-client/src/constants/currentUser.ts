@@ -1,4 +1,4 @@
-import { User } from "../utils/User";
+import { User } from '../utils/User';
 
 /*
  * Copyright (c) 2011-Present, Precise.ly, Inc.
