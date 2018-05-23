@@ -1,27 +1,35 @@
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from './auth0';
-import _permissions from './permissions';
+import _accessControl from './accessControl';
 import { RBACPlus, IPermission } from 'rbac-plus';
 import { TypedError } from 'src/common/errors';
+import { Item } from 'src/db/dynamo/dynogels';
 
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
   constructor(
     public readonly event: APIGatewayEvent,
     public readonly lambdaContext: LambdaContext,
-    public permissions: RBACPlus = _permissions) {
+    public readonly accessControl: RBACPlus = _accessControl) {
   }
 
   // tslint:disable-next-line
-  can(scope: string, resource?: any): IPermission {
-    let result: IPermission = {};
+  async can<T>(scope: string, resource?: Item<T>): Promise<IPermission> {
+    let permission: IPermission;
     for (const role of this.roles) {
-      this.permissions.can(role, scope, {
+      permission = await this.accessControl.can(role, scope, {
         event: this.event,
-        user: { id: this.userId, roles: this.roles }
+        user: {
+          id: this.userId,
+          roles: this.roles },
+        resource: resource
       });
+      if (permission.granted) {
+        return permission;
+      }
     }
-    return result;
+
+    return permission || {};
   }
 
   /**
@@ -46,6 +54,8 @@ export class GraphQLContext {
   }
 }
 
+type GraphQLTarget = any; // tslint:disable-line
+
 /**
  * Scope decorator - useful when a scope
  * E.g.,
@@ -58,27 +68,21 @@ export class GraphQLContext {
  * };
  *
  * @export
- * @param {string} resourceScopes
- * @returns {string} resolvedScope
+ * @param {string} scope
+ * @returns {Function} graphQL resolver function
  */
 export function scoped(scope: string) {
   // tslint:disable-next-line
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: GraphQLTarget, propertyKey: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
     const methodName: string = method.name;
     // tslint:disable-next-line
-    descriptor.value = function (obj: any, args: any, context: GraphQLContext) {
-      let permission = context.can(scope, obj);
+    descriptor.value = async function (obj: GraphQLTarget, args: any, context: GraphQLContext, root: any) {
+      let permission = await context.can(scope, obj);
       if (permission.granted) {
-        if (permission.constraint.fields) {
-          let fields = <string[]> permission.constraint.fields;
-          if (fields.indexOf(methodName) !== -1) {
-            return method.apply(this, arguments);
-          }
-        }
-
+        return method.call(this, obj, args, context, root);
       } else {
-        throw new TypedError(`Not authorized for ${scope}`, 'accessDenied');
+        throw new TypedError(`Method ${methodName} not authorized for ${scope}`, 'accessDenied');
       }
     };
   };
