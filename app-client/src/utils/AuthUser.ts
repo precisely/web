@@ -76,9 +76,10 @@ export class AuthUser {
     let expiresAt = Number(localStorage.getItem('expiresAt'));
     let accessToken: string = localStorage.getItem('accessToken');
 
-    return (
-      accessToken && accessToken.length > 0 && expiresAt > 0 && expiresAt > new Date().getTime()
-    );
+    if (accessToken && accessToken.length > 0 && expiresAt > 0 && expiresAt > new Date().getTime()) {
+      return accessToken;
+    }
+    return false;
   }
 
   showLogin = () => {
