@@ -5,7 +5,7 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  */
-
+/* 
 import {currentUser} from 'src/constants/currentUser';
 
 describe('AuthUser tests', () => {
@@ -39,3 +39,4 @@ describe('AuthUser tests', () => {
     expect(currentUser.lock.show).toBeCalled();
   });
 });
+ */

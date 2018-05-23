@@ -19,9 +19,19 @@ export const utils = {
   setLastPageBeforeLogin: function(path: string) {
     localStorage.setItem('lastPageBeforeLogin', path);
   },
-
+  setAuthStorage: function (
+      accessToken: string = '', 
+      expiresAt: string = '', 
+      profile: string = '', 
+      authResult: string = '') {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', expiresAt);
+    localStorage.setItem('profile', profile);
+    localStorage.setItem('authResult', authResult);
+  },
   getLastPageBeforeLogin: function() {
-    return localStorage.getItem('lastPageBeforeLogin');
+    const lastPage = localStorage.getItem('lastPageBeforeLogin');
+    return lastPage ? lastPage : process.env.REACT_APP_URL;
   }
 
 };

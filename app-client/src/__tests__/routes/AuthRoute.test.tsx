@@ -31,7 +31,7 @@ describe('Tests for AuthRoute', () => {
   }
 
   const getComponentTree = (path: string, redirectPath?: string) => shallow(
-    <AuthRoute path={path} exact component={DummyComponent} authenticatedRedirect={redirectPath}/>
+    <AuthRoute path={path} exact component={DummyComponent} />
   );
 
   unroll('It should render the #componentName when user is authenticated and the redirect path is #redirectPath.', (

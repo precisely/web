@@ -7,30 +7,19 @@
 */
 
 import * as React from 'react';
-import {Route, Redirect, RouteProps} from 'react-router-dom';
-import {utils} from 'src/utils';
+import {Route, RouteProps, Redirect} from 'react-router-dom';
+import { utils } from '../utils';
 const {currentUser} = require('../constants/currentUser');
 
-export interface AuthRouteProps extends RouteProps {
-  authenticatedRedirect?: string;
-}
-
-export class AuthRoute extends React.Component<AuthRouteProps> {
+export class AuthRoute extends React.Component<RouteProps> {
   render(): JSX.Element {
     const routeProps: RouteProps = this.props;
-    const {authenticatedRedirect} = this.props;
 
     if (currentUser.isAuthenticated()) {
-      return authenticatedRedirect ?
-          <Redirect from={routeProps.path} to={authenticatedRedirect} /> :
-          <Route {...routeProps} />;
+      utils.setLastPageBeforeLogin('');
+      return <Route {...routeProps} />;
     }
-
-    if (routeProps.path.indexOf('login')) {
-      utils.setLastPageBeforeLogin(routeProps.path);
-      return <Redirect from={routeProps.path} to="/login" />;
-    }
-
-    return <Route {...routeProps} />;
+    utils.setLastPageBeforeLogin(routeProps.path);
+    return <Redirect from={routeProps.path} to={{pathname: '/login', state: {referrer: routeProps.path}}} />;
   }
 }
