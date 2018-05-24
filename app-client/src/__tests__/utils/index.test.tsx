@@ -35,8 +35,7 @@ describe('Tests for utils/index.ts', () => {
     expect(utils.getEnvironment()).toEqual('');
   });
 
-  it('should test lastPageBeforeLogin', () => {
-    expect(utils.getLastPageBeforeLogin()).toEqual(undefined);
+  it('should be able to get last page before login if set', () => {
     utils.setLastPageBeforeLogin('/dummyPath');
     expect(utils.getLastPageBeforeLogin()).toEqual('/dummyPath');
   });

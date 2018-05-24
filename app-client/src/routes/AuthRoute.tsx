@@ -20,6 +20,6 @@ export class AuthRoute extends React.Component<RouteProps> {
       return <Route {...routeProps} />;
     }
     utils.setLastPageBeforeLogin(routeProps.path);
-    return <Redirect from={routeProps.path} to={{pathname: '/login', state: {referrer: routeProps.path}}} />;
+    return <Redirect from={routeProps.path} to={'/login'} />;
   }
 }

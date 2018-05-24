@@ -10,7 +10,7 @@ jest.mock('src/constants/currentUser');
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper,shallow,configure,EnzymePropSelector} from 'enzyme';
+import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Route, Redirect} from 'react-router-dom';
 import {AuthRoute} from 'src/routes/AuthRoute';
 import {currentUser} from 'src/constants/currentUser';
@@ -18,10 +18,9 @@ import {currentUser} from 'src/constants/currentUser';
 const unroll = require('unroll');
 unroll.use(it);
 
-configure({adapter:new Adapter()});
+configure({adapter: new Adapter()});
 
 describe('Tests for AuthRoute', () => {
-
 
   class DummyComponent extends React.Component {
     // tslint:disable-next-line
@@ -30,35 +29,24 @@ describe('Tests for AuthRoute', () => {
     }
   }
 
-  const getComponentTree = (path: string, redirectPath?: string) => shallow(
-    <AuthRoute path={path} exact component={DummyComponent} />
-  );
-
-  unroll('It should render the #componentName when user is authenticated and the redirect path is #redirectPath.', (
+  unroll(
+    'The route should #result if authentication #isAuthenticated',
+    (
       done: () => void,
-      args: {component: EnzymePropSelector, componentName: string, redirectPath: string}
-  ) => {
-    currentUser[`__mockisAuthenticatedSuccessCase`]();
-    const componentTree: ShallowWrapper = getComponentTree('/dummyPath', args.redirectPath);
-    expect(componentTree.find(args.component).length).toBe(1);
-    done();
-  }, [ // tslint:disable-next-line
-      ['component', 'componentName', 'redirectPath'],
-      [Route, 'Route', ''],
-      [Redirect, 'Redirect', '/dashboard'],
-  ]);
+      testArgs: {mock: string, component: React.Component}
+    ) => {
+      currentUser[testArgs.mock]();
+      const componentTree = shallow(
+        <AuthRoute path="/dummy" exact component={DummyComponent} />
+      );
 
-  describe('When the user is not authorized', () => {
-    it('should redirect to the login page when the routeProps path contains "login"', () => {
-      currentUser[`__mockisAuthenticatedFailureCase`]();
-      const componentTree = getComponentTree('/login');
-      expect(componentTree.find(Redirect).length).toBe(1);
-    });
-
-    it('should render the router component when the routeProps path contains an incorrect path', () => {
-      currentUser[`__mockisAuthenticatedFailureCase`]();
-      const componentTree = getComponentTree('login');
-      expect(componentTree.find(Route).length).toBe(1);
-    });
-  });
+      expect(componentTree.find(testArgs.component).length).toBe(1);
+      done();
+    },
+    [
+      ['mock', 'component', 'result', 'isAuthenticated'],
+      ['__mockisAuthenticatedSuccessCase', Route, 'render', 'passes'],
+      ['__mockisAuthenticatedFailureCase', Redirect, 'redirect', 'fails']
+    ]
+  );
 });
