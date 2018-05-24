@@ -45,10 +45,10 @@ export class Routes extends React.Component {
             path="/view-report"
             component={LoadComponent('Report', 'report/Report')}
         />
-        <Route
+        <Route 
             path="/login"
             exact
-            component={LoadComponent('Login', 'user/Login')}
+            render={props => LoadComponent('Login', 'user/Login')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound', 'common/NotFound')} />

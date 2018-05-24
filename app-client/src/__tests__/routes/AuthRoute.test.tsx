@@ -10,7 +10,7 @@ jest.mock('src/constants/currentUser');
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
+import {shallow, configure} from 'enzyme';
 import {Route, Redirect} from 'react-router-dom';
 import {AuthRoute} from 'src/routes/AuthRoute';
 import {currentUser} from 'src/constants/currentUser';
