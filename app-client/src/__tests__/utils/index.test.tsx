@@ -40,4 +40,3 @@ describe('Tests for utils/index.ts', () => {
     expect(utils.getLastPageBeforeLogin()).toEqual('/dummyPath');
   });
 });
-
