@@ -3374,6 +3374,10 @@ inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+interleave26@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/interleave26/-/interleave26-1.0.0.tgz#21393563dc81913315dfa846be57ca4e7d7fef60"
+
 invariant@^2.2.2:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"

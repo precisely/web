@@ -63,6 +63,7 @@
     "graphql-playground-middleware-lambda": "1.4.3",
     "graphql-tag": "^2.8.0",
     "graphql-tools": "2.23.1",
+    "interleave26": "^1.0.0",
     "jest-transform-graphql": "2.1.0",
     "jsonwebtoken-promisified": "^1.0.3",
     "jwks-rsa": "^1.2.1",

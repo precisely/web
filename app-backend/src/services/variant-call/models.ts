@@ -10,36 +10,36 @@ import * as Joi from 'joi';
 import {defineModel, Item} from 'src/db/dynamo/dynogels';
 
 export class VariantCallAttributes {
-   /**
-    *  this is equivalent to GA4GH callset Id
-    *
-    * @type {string}
-    * @memberof VariantCallAttributes
-    */
-   callSetId?: string;
-   // start index with respect to sequence - must be string for DynamoDB indexing
-   startBaseIndex?: string;
-   // end index of variant
-   endBaseIndex?: string;
-   // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
-   alternateBases?: string[];
-   // sequence being replaced e.g., "A"
-   referenceBases?: string;
-   // sequence name e.g., chr1
-   referenceName?: string;
-   // array of 1-based indexes into alternateBases
-   genotype?: number[];
-   // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
-   genotypeLikelihood?: number;
-   // Filter
-   filter?: string[];
+  userId: string;
+  variantId: string; // referenceName:startBaseIndex:callSetId
+                     // chr1:123918556:947101386017
 
-   //
-   // Annotations
-   //
-   rsId?: string;
-   gene?: string;
-   zygosity?: string;
+  // this is equivalent to GA4GH callset Id - this is the id of a dataset
+  // uploaded by the user, produced by Akesogen, etc.
+  callSetId?: string;
+  // sequence name e.g., chr1
+  referenceName?: string;
+  // start index with respect to sequence - must be string for DynamoDB indexing
+  startBaseIndex?: string;
+  // end index of variant
+  endBaseIndex?: string;
+  // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
+  alternateBases?: string[];
+  // sequence being replaced e.g., "A"
+  referenceBases?: string;
+  // array of 1-based indexes into alternateBases
+  genotype?: number[];
+  // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
+  genotypeLikelihood?: number;
+  // Filter
+  filter?: string[];
+
+  //
+  // Annotations
+  //
+  rsId?: string;
+  gene?: string;
+  zygosity?: string;
 }
 
 interface VariantCallMethods {
@@ -66,9 +66,14 @@ export const VariantCall = defineModel<
     timestamps : true,
 
     schema : {
+      userId: Joi.string(),
+      variantId: Joi.string().regex(/^\w+:\d+:\w+$/),
+
       //
       // Core VCF data
       //
+      // sequence name e.g., chr1
+      referenceName: Joi.string(),
       // this is equivalent to GA4GH callset Id
       callSetId: Joi.string(),
       // start index with respect to sequence - must be string for DynamoDB indexing
@@ -79,8 +84,6 @@ export const VariantCall = defineModel<
       alternateBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]+)|<NON_REF>/)).min(1),
       // sequence being replaced e.g., "A"
       referenceBases: Joi.string().uppercase().regex(/[ATGC]+/),
-      // sequence name e.g., chr1
-      referenceName: Joi.string(),
       // array of 1-based indexes into alternateBases
       genotype: Joi.array().items(Joi.number()),
       // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
@@ -101,7 +104,7 @@ export const VariantCall = defineModel<
 //
 // STATIC METHOD DEFINITIONS
 //
-VariantCall.forUser = async function forUser(opaqueId: string, genes?: string[]): Promise<VariantCall[]> {
+VariantCall.forUser = async function forUser(opaqueId: string, start?: string[]): Promise<VariantCall[]> {
   let query = await VariantCall.query(opaqueId);
   if (genes && genes.length > 0) {
     query = query.where('gene').in(genes);
@@ -121,4 +124,3 @@ VariantCall.prototype.start = function () {
 VariantCall.prototype.end = function () {
   return parseInt(this.get('endBaseIndex'), 10);
 };
-
