@@ -53,10 +53,13 @@ export class Login extends Component<RouteComponentProps<void>> {
       (new Date().getTime() + authResult.expiresIn * 1000).toString(),
       JSON.stringify(authResult)
     );
-    this.setState({isLoggedIn: true});
     this.props.history.push(utils.getLastPageBeforeLogin());
   }
 
+  componentWillMount() {
+    this.setState({isLoggedIn: true});
+  }
+  
   render(): JSX.Element {
     
     // Avoid showing Lock when hash is parsed.

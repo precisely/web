@@ -6,7 +6,7 @@
  * without modification, are not permitted.
  */
 
-/* jest.mock('src/constants/currentUser');
+jest.mock('src/constants/currentUser');
 
 import * as React from 'react';
 import * as Radium from 'radium';
@@ -66,4 +66,4 @@ describe('Login Test After Logout: ', () => {
         .text()
     ).toEqual('LOG IN');
   });
-}); */
+});
