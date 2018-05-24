@@ -37,14 +37,6 @@ describe('Login tests', () => {
       />
     );
 
-/*   describe('After Logging Out :', () => {
-    currentUser[`__mockisAuthenticatedFailureCase`]();
-    getComponentTree();
-    it('should call showLogin method if user is unauthenticated : ', () => {
-      expect(currentUser.showLogin).toBeCalled();
-    });
-  }); */
-
   describe('After Logging In :', () => {
     currentUser[`__mockisAuthenticatedSuccessCase`]();
     utils.getLastPageBeforeLogin = jest.fn().mockReturnValue('dummyPath');
