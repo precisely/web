@@ -8,34 +8,18 @@
 
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
-import { LoadableComponent } from 'react-loadable';
 const {currentUser} = require('../constants/currentUser');
 
-/* export class AuthRoute extends React.Component<RouteProps> {
-  render(): JSX.Element {
-    const routeProps: RouteProps = this.props;
-
-    if (currentUser.isAuthenticated()) {
-      utils.setLastPageBeforeLogin('');
-      return <Route {...routeProps} />;
-    }
-    utils.setLastPageBeforeLogin(routeProps.path);
-    return <Redirect from={routeProps.path} to={{pathname: '/login', state: {referrer: routeProps.path}}} />;
-  }
-
-} */
-
 // tslint:disable-next-line
-const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any> & LoadableComponent, ...rest: any[]) => {
+const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any>, ...rest: any[]) => {
   const finalProps = Object.assign({}, ...rest);
-  return (
-    React.createElement(component, finalProps)
-  );
+  const MergedComponent = component;
+  return <MergedComponent {...finalProps} />;
 };
 
 interface AuthProps {
   // tslint:disable-next-line
-  component: React.ComponentClass<any> | React.StatelessComponent<any> & LoadableComponent;
+  component: React.ComponentClass<any> | React.StatelessComponent<any>;
   exact?: boolean;
   path: string;
 }
@@ -45,14 +29,14 @@ export const AuthRoute = (authProps: AuthProps) => {
   return (
     <Route 
         {...rest} 
-        render={routeProps => {
+        render={ routeProps => {
           return currentUser.isAuthenticated() ? (
             renderMergedProps(authProps.component, routeProps, rest)
           ) : (
             <Redirect 
               to={{
                 pathname: '/login',
-                state: { from: routeProps.location }
+                state: { from: routeProps.location.pathname }
               }}
             />
           );

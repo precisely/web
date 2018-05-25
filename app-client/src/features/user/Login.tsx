@@ -47,13 +47,6 @@ export class Login extends Component<RouteComponentProps<void>> {
     });
   }
 
-  // tslint:disable-next-line
-  componentWillReceiveProps(nextProps: any) {
-    if (nextProps.location !== this.props.location) {
-      this.setState({ prevPage: this.props.location });
-    }
-  }
-
   onAuthentication = (authResult: AuthResult) => {
     utils.setAuthStorage(
       authResult.accessToken,
@@ -61,16 +54,17 @@ export class Login extends Component<RouteComponentProps<void>> {
       JSON.stringify(authResult)
     );
     this.setState({isLoggedIn: true});
+    const lastPage = utils.getLastPageBeforeLogin();
+    utils.setLastPageBeforeLogin('/');
+    this.props.history.push(lastPage);
   }
 
   render(): JSX.Element {
-    
     // Avoid showing Lock when hash is parsed.
     if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !this.state.isLoggedIn) {
+      utils.setLastPageBeforeLogin(this.props.location.state.from);
       this.lock.show();
-    } else {
-      this.props.history.push(this.props.location.state.referrer);
-    }
+    } 
     return null;
   }
 }

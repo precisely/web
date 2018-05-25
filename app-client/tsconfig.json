@@ -2,7 +2,8 @@
   "compilerOptions": {
     "outDir": "build/dist",
     "experimentalDecorators": true,
-    "target": "es7",
+    "module": "esnext",
+    "target": "es5",
     "lib": ["es7", "dom", "dom.iterable", "esnext.asynciterable"],
     "sourceMap": true,
     "allowJs": true,

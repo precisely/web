@@ -9,8 +9,8 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
-import {AuthRoute} from 'src/routes/AuthRoute';
 import {LoadingPage} from 'src/features/common/LoadingPage';
+import { AuthRoute } from './AuthRoute';
 
 // tslint:disable
 /* istanbul ignore next */
@@ -48,7 +48,7 @@ export class Routes extends React.Component {
         <Route 
             path="/login"
             exact
-            render={props => LoadComponent('Login', 'user/Login')}
+            component={LoadComponent('Login', 'user/Login')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound', 'common/NotFound')} />
