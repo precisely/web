@@ -53,7 +53,10 @@ export class Login extends Component<RouteComponentProps<void>> {
       (new Date().getTime() + authResult.expiresIn * 1000).toString(),
       JSON.stringify(authResult)
     );
-    this.props.history.push(utils.getLastPageBeforeLogin());
+    this.setState({isLoggedIn: true});
+    const lastPage = utils.getLastPageBeforeLogin();
+    utils.setLastPageBeforeLogin('/');
+    this.props.history.push(lastPage);
   }
 
   componentWillMount() {
@@ -61,11 +64,11 @@ export class Login extends Component<RouteComponentProps<void>> {
   }
   
   render(): JSX.Element {
-    
     // Avoid showing Lock when hash is parsed.
     if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !this.state.isLoggedIn) {
+      utils.setLastPageBeforeLogin(this.props.location.state.from);
       this.lock.show();
-    }
+    } 
     return null;
   }
 }
