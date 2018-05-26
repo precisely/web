@@ -3,7 +3,6 @@ import context from 'jest-plugin-context';
 import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';
 import { AuthResponseContext } from 'aws-lambda';
 import { RBACPlus } from 'rbac-plus';
-import accessControl from 'src/common/access-control';
 
 describe('GraphQLContext', function () {
   context('roles', function () {

@@ -4,6 +4,8 @@ import _accessControl from './accessControl';
 import { RBACPlus, IPermission } from 'rbac-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
+import { IResolverObject } from 'graphql-tools';
+import { isArray } from 'util';
 
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
@@ -14,22 +16,43 @@ export class GraphQLContext {
   }
 
   // tslint:disable-next-line
-  async can<T>(scope: string, resource?: Item<T>): Promise<IPermission> {
-    let permission: IPermission;
-    for (const role of this.roles) {
-      permission = await this.accessControl.can(role, scope, {
-        event: this.event,
-        user: {
-          id: this.userId,
-          roles: this.roles },
-        resource: resource
-      });
-      if (permission.granted) {
-        return permission;
+  async can<M>(scope: string, resource?: M): Promise<IPermission> {
+    const context = {
+      event: this.event,
+      user: {
+        id: this.userId,
+        roles: this.roles },
+      resource: resource
+    };
+
+    return await this.accessControl.can(this.roles, scope, context);
+  }
+
+  /**
+   * Returns access-control validated resource(s) or throws access control error,
+   * or if the resources is an array, replaces the
+   *
+   * @template M
+   * @param {string} scope
+   * @param {(M | (M[]))} res
+   * @returns {(Promise<M | (M | Error)[]>)}
+   * @memberof GraphQLContext
+   */
+  async valid<M>(scope: string, res: M[] | M, fields?: string[]): Promise<M | (Error | M)[] > {
+    if (isArray(res)) {
+      const resources = res;
+      const validResources = await Promise.all(resources.map(async resource => {
+        const permission = await this.can(scope, resource);
+        return  permission.granted ? resource : new TypedError(scope, 'accessDenied');
+      }));
+      return validResources;
+    } else {
+      const resource = res;
+      if (await this.can(scope, resource)) {
+        return resource;
       }
     }
-
-    return permission || {};
+    throw new TypedError(scope, 'accessDenied');
   }
 
   /**
@@ -52,38 +75,77 @@ export class GraphQLContext {
   get userId(): string {
     return this.event.requestContext.authorizer.principalId; // the auth0 userId "auth0|a6b34ff91"
   }
-}
 
-type GraphQLTarget = any; // tslint:disable-line
+  /**
+   * Generates a GraphQL resolver for the given attributes of a DynamoDB model
+   *   The resolver methods check that access is permitted and return the value of the field
+   *
+   * @static
+   * @param {string} resource
+   * @param {string[]} attrs
+   * @returns {IResolverObject}
+   * @memberof GraphQLContext
+   */
+  public static dynamoAttributeResolver<T>(resource: string, attrs: (keyof T)[]): IResolverObject {
+    let resolver = {};
+    for (const attr of attrs) {
+      const scope = `${resource}:read:${attr}`;
+      resolver[<string> attr] = async (obj: Item<T>, {}: {}, context: GraphQLContext) => {
+        return context.can(scope, obj) && obj.get(attr);
+      };
+    }
+    return resolver;
+  }
 
-/**
- * Scope decorator - useful when a scope
- * E.g.,
- * class FooResolver {
- *   @scoped('Foo:read') // user must have the 'foo:read' scope
- *   static read(foo: Foo) { return Foo.get('value'); }
- * }
- * export const resolvers = {
- *   Foo: FooResolver
- * };
- *
- * @export
- * @param {string} scope
- * @returns {Function} graphQL resolver function
- */
-export function scoped(scope: string) {
-  // tslint:disable-next-line
-  return function (target: GraphQLTarget, propertyKey: string, descriptor: PropertyDescriptor) {
-    const method = descriptor.value;
-    const methodName: string = method.name;
-    // tslint:disable-next-line
-    descriptor.value = async function (obj: GraphQLTarget, args: any, context: GraphQLContext, root: any) {
-      let permission = await context.can(scope, obj);
-      if (permission.granted) {
-        return method.call(this, obj, args, context, root);
-      } else {
-        throw new TypedError(`Method ${methodName} not authorized for ${scope}`, 'accessDenied');
-      }
-    };
-  };
+  /**
+   * Generates a GraphQL resolver for the given properties of an object
+   *   The resolver methods check that access is permitted and return the value of the property
+   *
+   * @static
+   * @param {string} resource
+   * @param {string[]} props
+   * @memberof GraphQLContext
+   */
+  public static propertyResolver(resource: string, props: string[]) {
+    let resolver = {};
+    for (const prop of props) {
+      const scope = `${resource}:read:${prop}`;
+      resolver[<string> prop] = async (obj: any, {}: {}, context: GraphQLContext) => { // tslint:disable-line
+        return context.can(scope, obj) && obj[prop];
+      };
+    }
+  }
 }
+// type GraphQLTarget = any; // tslint:disable-line
+
+// /**
+//  * Scope decorator - useful when a scope
+//  * E.g.,
+//  * class FooResolver {
+//  *   @scoped('Foo:read') // user must have the 'foo:read' scope
+//  *   static read(foo: Foo) { return Foo.get('value'); }
+//  * }
+//  * export const resolvers = {
+//  *   Foo: FooResolver
+//  * };
+//  *
+//  * @export
+//  * @param {string} scope
+//  * @returns {Function} graphQL resolver function
+//  */
+// export function scoped(scope: string) {
+//   // tslint:disable-next-line
+//   return function (target: GraphQLTarget, propertyKey: string, descriptor: PropertyDescriptor) {
+//     const method = descriptor.value;
+//     const methodName: string = method.name;
+//     // tslint:disable-next-line
+//     descriptor.value = async function (obj: GraphQLTarget, args: any, context: GraphQLContext, root: any) {
+//       let permission = await context.can(scope, obj);
+//       if (permission.granted) {
+//         return method.call(this, obj, args, context, root);
+//       } else {
+//         throw new TypedError(`Method ${methodName} not authorized for ${scope}`, 'accessDenied');
+//       }
+//     };
+//   };
+// }
