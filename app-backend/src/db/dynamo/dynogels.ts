@@ -2,6 +2,7 @@ export * from '@aneilbaboo/dynogels-promisified';
 import {Model, ModelConfiguration } from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
+import {log} from 'src/common/logger';
 
 // Detect special 'offline' stage, use DynamoDB local
 if (process.env.STAGE === 'offline') {
@@ -12,10 +13,12 @@ if (process.env.STAGE === 'offline') {
 }
 
 export function stageTableName(tableName: string): string {
-  if (!process.env.STAGE) {
-    throw new Error('STAGE environment variable not set');
+  let stage = process.env.STAGE;
+  if (!stage) {
+    log.warn('STAGE environment variable not set');
+    stage = 'nostage';
   }
-  return `${process.env.STAGE}-${tableName}`;
+  return `${stage}-${tableName}`;
 }
 
 export function tableNameWithoutStage(tableNameWithEnv: string): string {
