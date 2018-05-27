@@ -5,7 +5,7 @@ import { RBACPlus, IPermission } from 'rbac-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
 import { IResolverObject } from 'graphql-tools';
-import { isArray } from 'util';
+import { isArray, isString } from 'util';
 
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
@@ -48,7 +48,8 @@ export class GraphQLContext {
       return validResources;
     } else {
       const resource = res;
-      if (await this.can(scope, resource)) {
+      const permission = await this.can(scope, resource);
+      if (permission.granted) {
         return resource;
       }
     }
@@ -86,66 +87,68 @@ export class GraphQLContext {
    * @returns {IResolverObject}
    * @memberof GraphQLContext
    */
-  public static dynamoAttributeResolver<T>(resource: string, attrs: (keyof T)[]): IResolverObject {
-    let resolver = {};
-    for (const attr of attrs) {
-      const scope = `${resource}:read:${attr}`;
-      resolver[<string> attr] = async (obj: Item<T>, {}: {}, context: GraphQLContext) => {
-        return context.can(scope, obj) && obj.get(attr);
-      };
-    }
-    return resolver;
+  public static dynamoAttributeResolver<T>(
+    resource: string,
+    attrs: (keyof T)[] | { [key: string]: keyof T }
+  ): IResolverObject {
+    return this.propertyResolver(
+      resource, attrs,
+      (mappedKey: keyof T) => (obj: Item<T>) => obj.get(mappedKey));
   }
 
   /**
    * Generates a GraphQL resolver for the given properties of an object
    *   The resolver methods check that access is permitted and return the value of the property
    *
+   * E.g., GraphQLContext.propertyResolver('mymodel', [
+   *   'field1', 'field2'
+   * ])
+   * or
+   * GraphQLContext.propertyResolver('mymodel', {
+   *   gqlField1: 'modelProp1', gqlField2: 'modelProp2'
+   * })
+   * or
+   * GraphQLContext.propertyResolver('mymodel', {
+   *   gqlField1: 'modelProp1', gqlField2: (obj: MyModel) => obj.get('field2')
+   * })
+   *
    * @static
    * @param {string} resource
    * @param {string[]} props
    * @memberof GraphQLContext
    */
-  public static propertyResolver(resource: string, props: string[]) {
-    let resolver = {};
-    for (const prop of props) {
+  public static propertyResolver(
+    resource: string,
+    props: PropertyMapArg,
+    accessGenerator?: PropertyAccessorGenerator
+  ): IResolverObject {
+    let resolver: IResolverObject = {};
+    accessGenerator = accessGenerator || ((key: string) => ((obj: any) => obj[key])); // tslint:disable-line
+    const normMap: NormalizedPropertyMap = normalizePropertyMap(props, accessGenerator);
+    for (const prop in normMap) {
       const scope = `${resource}:read:${prop}`;
+      const accessor = normMap[prop];
       resolver[<string> prop] = async (obj: any, {}: {}, context: GraphQLContext) => { // tslint:disable-line
-        return context.can(scope, obj) && obj[prop];
+        return await context.valid(scope, obj) && accessor(obj);
       };
     }
+    return resolver;
   }
 }
-// type GraphQLTarget = any; // tslint:disable-line
 
-// /**
-//  * Scope decorator - useful when a scope
-//  * E.g.,
-//  * class FooResolver {
-//  *   @scoped('Foo:read') // user must have the 'foo:read' scope
-//  *   static read(foo: Foo) { return Foo.get('value'); }
-//  * }
-//  * export const resolvers = {
-//  *   Foo: FooResolver
-//  * };
-//  *
-//  * @export
-//  * @param {string} scope
-//  * @returns {Function} graphQL resolver function
-//  */
-// export function scoped(scope: string) {
-//   // tslint:disable-next-line
-//   return function (target: GraphQLTarget, propertyKey: string, descriptor: PropertyDescriptor) {
-//     const method = descriptor.value;
-//     const methodName: string = method.name;
-//     // tslint:disable-next-line
-//     descriptor.value = async function (obj: GraphQLTarget, args: any, context: GraphQLContext, root: any) {
-//       let permission = await context.can(scope, obj);
-//       if (permission.granted) {
-//         return method.call(this, obj, args, context, root);
-//       } else {
-//         throw new TypedError(`Method ${methodName} not authorized for ${scope}`, 'accessDenied');
-//       }
-//     };
-//   };
-// }
+type PropertyAccessor = (obj: any) => any; // tslint:disable-line
+type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
+type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
+type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
+import {fromPairs, zip, mapValues} from 'lodash';
+export function normalizePropertyMap(
+  inMap: PropertyMapArg,
+  accessGenerator?: PropertyAccessorGenerator): NormalizedPropertyMap {
+  if (isArray(inMap)) {
+    return fromPairs(zip(inMap, inMap.map(accessGenerator))); // tslint:disable-line
+  } else {
+    return mapValues(inMap, (value: PropertyAccessor | string) => {
+      return isString(value) ? accessGenerator(value) : value;
+    });
+  }
+}

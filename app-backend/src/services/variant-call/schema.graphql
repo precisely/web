@@ -1,18 +1,20 @@
-type Genotype {
-  userId: String
-  callSetId: String
-  start: Number
-  end: Number
-  alternateBases: String[]
-  referenceBases: String
-  genotype: Number[]
-  genotypeLikelihood: Number[]
-  filter: String[]
+type VariantCall {
+  userId: String,
+  variantId: String,
 
-  rsId: String
-  gene: String
-  zygosity: String
+  callSetId: String,
+  startBaseIndex: Number,
+  endBaseIndex: Number,
+  alternateBases: [String],
+  referenceBases: String,
+  genotype: [Number],
+  genotypeLikelihood: [Number],
+  filter: [String],
 
-  createdAt: String
+  rsId: String,
+  gene: String,
+  zygosity: String,
+
+  createdAt: String,
   updatedAt: String
 }

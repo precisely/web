@@ -11,11 +11,14 @@ import {defineModel, Item, types} from 'src/db/dynamo/dynogels';
 import slugify from 'slugify';
 const {uuid} = types;
 
+export type ReportState = 'published' | 'draft';
+
 export interface ReportAttributes {
   id?: string;
   slug?: string;
   title?: string;
   ownerId?: string;
+  state?: ReportState;
   rawContent?: string;
   parsedContent?: string;
   topLevel?: boolean;
@@ -26,16 +29,18 @@ export interface ReportAttributes {
 class ReportMethods {
 }
 
-type ReportCreateArgs = {
-  title: string,
-  slug?: string,
-  rawContent: string,
-  variants: string[]
-};
+// type ReportCreateArgs = {
+//   ownerId: string,
+//   title: string,
+//   slug?: string,
+//   rawContent: string,
+//   variants: string[]
+// };
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report>;
-  safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report>;
+  // safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report>;
+  saveNew(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
 }
 
@@ -51,6 +56,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     slug: Joi.string().required(),
     title: Joi.string().required(),
     ownerId: Joi.string().required(),
+    state: Joi.string().valid('published', 'draft').default('draft'),
     rawContent: Joi.string(),
     parsedContent: Joi.string(),
     topLevel: Joi.boolean(),
@@ -72,14 +78,15 @@ Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
   return result && result.Items[0];
 };
 
-Report.safeCreate = async function safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report> {
+Report.saveNew = async function saveNew(report: Report): Promise<Report> {
+  let slug = report.get('slug');
   if (slug && Report.findBySlug(slug)) {
     throw new Error(`Cannot create report with slug "${slug}" - Report already exists`);
   } else {
-    slug = await Report.findUniqueSlug(title);
+    slug = await Report.findUniqueSlug(report.get('title'));
+    report.set({ slug });
   }
-
-  return await Report.createAsync({slug, title, rawContent, variants});
+  return report.saveAsync();
 };
 
 Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {

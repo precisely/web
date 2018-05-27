@@ -104,10 +104,10 @@ export const VariantCall = defineModel<
 //
 // STATIC METHOD DEFINITIONS
 //
-VariantCall.forUser = async function forUser(opaqueId: string, start?: string[]): Promise<VariantCall[]> {
-  let query = await VariantCall.query(opaqueId);
-  if (genes && genes.length > 0) {
-    query = query.where('gene').in(genes);
+VariantCall.forUser = async function forUser(userId: string, start?: string[]): Promise<VariantCall[]> {
+  let query = await VariantCall.query(userId);
+  if (start && start.length > 0) {
+    query = query.where('startBaseIndex').in(start);
   }
   const result = await query.execAsync();
 
