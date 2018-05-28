@@ -241,4 +241,3 @@ functions:
       - s3:
           bucket: GeneticsAncestry
           event: s3:ObjectCreated:*
-  
