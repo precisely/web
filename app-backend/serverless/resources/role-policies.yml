@@ -32,7 +32,7 @@ PreciselyAPIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
 
 ECSTaskPolicy:
-  PolicyName: ${self:provider.stage}-ECSTriggerPolicy
+  PolicyName: ${self:provider.stage}-ECSTaskPolicy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:
@@ -51,10 +51,15 @@ ECSTriggerPolicy:
       - Effect: Allow
         Action:
           - "s3:GetObject"
+          - "s3:PutObject"
         Resource: "arn:aws:s3:::*/*"
       - Effect: Allow
         Action:
           - "ecs:RunTask"
-        Resource: "*"
-  
+          - "ec2:DescribeNetworkInterfaces" 
+          - "ec2:CreateNetworkInterface"
+          - "ec2:DeleteNetworkInterface"
+        Resource: "ecs:*"
+      
+
 ...
