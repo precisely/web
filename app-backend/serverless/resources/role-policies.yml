@@ -31,8 +31,8 @@ PreciselyAPIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
 
-ECSTaskPolicy:
-  PolicyName: ${self:provider.stage}-ECSTaskPolicy
+IngestionECSTaskPolicy:
+  PolicyName: ${self:provider.stage}-IngestionECSTaskPolicy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:
@@ -43,8 +43,8 @@ ECSTaskPolicy:
           - Fn::GetAtt: [S3BucketGeneticsVCF, Arn]
           - Fn::GetAtt: [S3BucketGenetics23andMe, Arn]
 
-ECSTriggerPolicy:
-  PolicyName: ${self:provider.stage}-ECSTriggerPolicy
+RawUploadLambdaPolicy:
+  PolicyName: ${self:provider.stage}-RawUploadLambdaPolicy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:
@@ -59,7 +59,7 @@ ECSTriggerPolicy:
           - "ec2:DescribeNetworkInterfaces" 
           - "ec2:CreateNetworkInterface"
           - "ec2:DeleteNetworkInterface"
-        Resource: "ecs:*"
+        Resource: "arn:aws:ecs:::*/*"
       
 
 ...

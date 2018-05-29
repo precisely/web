@@ -1,21 +1,21 @@
 ---
-ECSCluster:
+DefaultECSCluster:
   Type: "AWS::ECS::Cluster"
   Properties:
     ClusterName: ${self:provider.stage}-DefaultECSClusterName
 
-ECSTaskDefinition:
+IngestionECSTaskDefinition:
   Type: "AWS::ECS::TaskDefinition"
   Properties: 
     ExecutionRoleArn: 
-      Fn::GetAtt: [PreciselyECSTaskRole, 'Arn']
-    Family: ${self:provider.vars.ecsTaskDefinitionName}
+      Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
+    Family: ${self:provider.vars.ingestionECSTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512
     Cpu: 256
     ContainerDefinitions:
       - 
-        Name: ${self:provider.vars.ecsContainerName}
+        Name: ${self:provider.vars.ingestionContainerName}
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
@@ -29,10 +29,11 @@ ECSTaskDefinition:
 ECSService:
   Type: "AWS::ECS::Service"
   Properties: 
-    Cluster: ${self:provider.stage}-DefaultECSClusterName
+    Cluster: 
+      Ref: DefaultECSCluster 
     ServiceName: ${self:provider.stage}-DefaultECSServiceName
     TaskDefinition: 
-      Ref: ECSTaskDefinition
+      Ref: IngestionECSTaskDefinition
     DesiredCount: 0
     LaunchType: FARGATE
     NetworkConfiguration:

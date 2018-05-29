@@ -52,9 +52,9 @@ provider:
     geneticsAkesogenBucket: ${self:provider.stage}-precisely-genetics-akesogen
     geneticsAncestryBucket: ${self:provider.stage}-precisely-genetics-ancestry
 
-    # ECS Fargate 
-    ecsTaskDefinitionName: ${self:provider.stage}-ECSFargate
-    ecsContainerName: ${self:provider.stage}-DefaultContainerDefinitionName
+    # Ingestion ECS Fargate Task
+    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
+    ingestionContainerName: ${self:provider.stage}-DefaultIngestionContainerName
 
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
@@ -219,12 +219,12 @@ functions:
       SUBNET_TWO:
         Ref: DefaultSubnetTwo
       ECS_CLUSTER_NAME:
-        Ref: ECSCluster
-      ECS_TASK_NAME: ${self:provider.vars.ecsTaskDefinitionName}
-      ECS_CONTAINER_NAME: ${self:provider.vars.ecsContainerName}
+        Ref: DefaultECSCluster
+      ECS_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
+      ECS_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
 
     role: 
-      'Fn::GetAtt': ["PreciselyECSTriggerRole", "Arn"]
+      'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
     vpc:
       securityGroupIds:
         - Ref: DefaultVPCSecurityGroup
@@ -234,10 +234,4 @@ functions:
     events:
       - s3:
           bucket: Genetics23andMe
-          event: s3:ObjectCreated:*
-      - s3:
-          bucket: GeneticsAkesogen
-          event: s3:ObjectCreated:*
-      - s3:
-          bucket: GeneticsAncestry
           event: s3:ObjectCreated:*
