@@ -8,7 +8,7 @@
 
 import * as AWS from 'aws-sdk';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
-import {Genotype} from 'src/services/genotype/models';
+import {VariantCall} from 'src/services/variant-call/models';
 import {log} from 'src/common/logger';
 
 interface GA4GH {
@@ -45,7 +45,7 @@ export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, cal
 
         log.info(`Creating entry for opaqueID: ${opaqueId} & gene: ${ga4ghAttributes.variant.gene_symbol}`);
 
-        Genotype.createAsync({
+        VariantCall.createAsync({
           opaqueId,
           sampleId: ga4ghAttributes.sample.id,
           source: ga4ghAttributes.source,

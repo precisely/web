@@ -2,8 +2,8 @@ import { GraphQLContext } from './graphql-context';
 import context from 'jest-plugin-context';
 import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';
 import { AuthResponseContext } from 'aws-lambda';
-import { PreciselyRoles } from './roles';
-import { makeScopes } from 'src/services/auth/scopes';
+import { RBACPlus, IContext } from 'rbac-plus';
+import { defineModel } from 'src/db/dynamo/dynogels';
 
 describe('GraphQLContext', function () {
   context('roles', function () {
@@ -31,76 +31,166 @@ describe('GraphQLContext', function () {
     });
   });
 
-  context('scopes', function () {
-    it('scopes should contain the combined scopes of the event roles', function () {
-      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        roles: 'admin,user'
-      }}), makeLambdaContext());
-      expect(gqlContext.scopes).toEqual([
-        ...PreciselyRoles.admin,
-        ...PreciselyRoles.user
-      ]);
-    });
-    it('scopes should contain no scopes if empty roles is provided', function () {
-      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        roles: ''
-      }}), makeLambdaContext());
-      expect(gqlContext.scopes).toEqual([ ]);
+  context('accessControl', function () {
+    const rbac = new RBACPlus();
+    const event = makeEvent({ authorizer: { roles: 'user' }});
+    const lambdaCtx = makeLambdaContext();
+    const gqlContext = new GraphQLContext(event, lambdaCtx, rbac);
+
+    context('can', function () {
+      it('should return the expected permissions defined in an RBACPlus instance', async function () {
+        rbac.grant('user').scope('report:read').where();
+
+        const reportReadPermission = await gqlContext.can('report:read');
+        expect(reportReadPermission.granted).toBeTruthy();
+
+        const reportWritePermission = await gqlContext.can('report:write');
+        expect(reportWritePermission.granted).toBeFalsy();
+        expect(reportWritePermission.denied).toEqual([]);
+      });
     });
 
-    it('scopes should contain no scopes if roles is missing', function () {
-      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        principalId: 'auth0|123',
-      }}), makeLambdaContext());
-      expect(gqlContext.scopes).toEqual([ ]);
+    context('valid', function () {
+      it('should return the resource if permission is provided', async function () {
+        rbac.grant('user').scope('report:read').where();
+        const report = { type: 'report' };
+        expect(await gqlContext.valid('report:read', report)).toEqual(report);
+      });
+
+      it('should throw an error if permission is denied', async function () {
+        rbac.grant('user').scope('report:read').where();
+        const report = { type: 'report' };
+        const promise = gqlContext.valid('report:restricted-action', report);
+        return expect(promise).rejects.toBeInstanceOf(Error);
+      });
+
+      it('should return an array with resources or errors depending on permission grant', async function () {
+        function resourceValid({resource}: IContext) { return resource.valid; }
+        rbac.grant('user').scope('report:read-valid').where(resourceValid);
+
+        const validResource = { valid: true };
+        const invalidResource = { valid: false };
+        const resources = await gqlContext.valid('report:read-valid', [
+          validResource, invalidResource, invalidResource, validResource
+        ]);
+        expect(resources[0]).toEqual(validResource);
+        expect(resources[1]).toBeInstanceOf(Error);
+        expect(resources[2]).toBeInstanceOf(Error);
+        expect(resources[3]).toEqual(validResource);
+      });
+
     });
   });
 
-  context('checkScope', function () {
-    it('should not throw an error if the provided scope is available', function () {
-      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        roles: 'testRole'
-      }}),
-      makeLambdaContext(),
-      {
-        testRole: makeScopes('serviceX:read')
-      });
-      expect(() => gqlContext.checkScope('serviceX:read')).not.toThrow();
+  context('propertyResolver', function () {
+
+    it('should return resolvers for each of the provided fields', function () {
+      const resolver = GraphQLContext.propertyResolver('mymodel', ['foo', 'bar']);
+      expect(resolver.foo).toBeInstanceOf(Function);
+      expect(resolver.bar).toBeInstanceOf(Function);
     });
 
-    it('should throw an error if the provided scope is not available', function () {
+    it('should provide a fn which resolves a permitted attribute (foo) of the root object', async function () {
+      const rbac = new RBACPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        roles: 'testRole'
-      }}),
-      makeLambdaContext(),
-      {
-        testRole: makeScopes('serviceX:read')
-      });
-      expect(() => gqlContext.checkScope('notAccessible:read')).toThrow();
+        roles: 'user'
+      }}), makeLambdaContext(),
+      rbac);
+
+      rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar');
+      const resolver = GraphQLContext.propertyResolver('mymodel', ['foo', 'bar']);
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      const mymodel = { foo: 'foo value', bar: 'bar value' };
+      const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
+      return expect(fooResult).resolves.toBe('foo value');
     });
 
-    it('should not throw an error if the requested scope is matched with variable', function () {
+    it('should provide a fn which rejects a disallowed attribute (bar) of the root object', async function () {
+      const rbac = new RBACPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        principalId: 'auth0|123',
-        roles: 'testRole'
-      }}),
-      makeLambdaContext(),
-      {
-        testRole: makeScopes('serviceX:read:$userId')
-      });
-      expect(() => gqlContext.checkScope('serviceX:read:auth0|123')).not.toThrow();
+        roles: 'user'
+      }}), makeLambdaContext(),
+      rbac);
+      rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar'); // disallow bar!
+
+      const resolver = GraphQLContext.propertyResolver('mymodel', ['foo', 'bar']);
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      const mymodel = { foo: 'foo value', bar: 'bar value' };
+
+      const barResult = (<ResolverFn> resolver.bar)(mymodel, null, gqlContext);
+      return expect(barResult).rejects.toBeInstanceOf(Error);
     });
 
-    it('should throw an error if the requested scope refers to variable with a different value', function () {
+    it('should provide a fn which resolves to alternate properties', async function () {
+      const rbac = new RBACPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
-        principalId: 'auth0|123',
-        roles: 'testRole'
-      }}),
-      makeLambdaContext(),
-      {
-        testRole: makeScopes('serviceX:read:$userId')
+        roles: 'user'
+      }}), makeLambdaContext(),
+      rbac);
+
+      rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar');
+      const resolver = GraphQLContext.propertyResolver('mymodel', {
+        foo: 'internalFoo',
+        bar: 'internalBar'
       });
-      expect(() => gqlContext.checkScope('serviceX:read:auth0|WRONG_USERID')).toThrow();
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      const mymodel = { internalFoo: 'foo value', internalBar: 'bar value' };
+      const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
+      return expect(fooResult).resolves.toBe('foo value');
+    });
+  });
+
+  context('dynamoAttributeResolver', function () {
+    interface MyModelAttributes {
+      foo?: string;
+      bar?: string;
+    }
+    process.env.STAGE = process.env.STAGE || 'test';
+    const MyModel = defineModel<MyModelAttributes>('mymodel', {
+      hashKey: 'foo',
+      rangeKey: 'bar'
+    });
+
+    it('should return resolvers for each of the provided fields', function () {
+      const resolver = GraphQLContext.dynamoAttributeResolver<MyModelAttributes>('mymodel', ['foo', 'bar']);
+      expect(resolver.foo).toBeInstanceOf(Function);
+      expect(resolver.bar).toBeInstanceOf(Function);
+    });
+
+    it('should provide a fn which resolves a permitted attribute (foo) of the root object', async function () {
+      const rbac = new RBACPlus();
+      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
+        roles: 'user'
+      }}), makeLambdaContext(),
+      rbac);
+
+      rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar');
+      const resolver = GraphQLContext.dynamoAttributeResolver<MyModelAttributes>('mymodel', ['foo', 'bar']);
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      const mymodel = new MyModel({ foo: 'foo value', bar: 'bar value' });
+      const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
+      return expect(fooResult).resolves.toBe('foo value');
+    });
+
+    it('should provide a fn which rejects a disallowed attribute (bar) of the root object', async function () {
+      const rbac = new RBACPlus();
+      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
+        roles: 'user'
+      }}), makeLambdaContext(),
+      rbac);
+      rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar'); // disallow bar!
+
+      const resolver = GraphQLContext.dynamoAttributeResolver<MyModelAttributes>('mymodel', ['foo', 'bar']);
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      const mymodel = new MyModel({ foo: 'foo value', bar: 'bar value' });
+
+      const barResult = (<ResolverFn> resolver.bar)(mymodel, null, gqlContext);
+      return expect(barResult).rejects.toBeInstanceOf(Error);
     });
   });
 });

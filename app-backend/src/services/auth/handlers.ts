@@ -55,12 +55,12 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
     policyDocument: InvokeAPIPolicyDocument,
     context: auth // this makes
                   //   $context.authorizer.principalId, and
-                  //   $context.authorizer.role
+                  //   $context.authorizer.roles
                   // available in cloud formation
   };
   log.switch({
     silly: ['APIAuthorizer returns policy: %j', authUserPolicy],
-    info: ['APIAuthorizer allow principalId: %s (%s)', auth.principalId, auth.role]
+    info: ['APIAuthorizer allow %j', auth]
   });
 
   return authUserPolicy;

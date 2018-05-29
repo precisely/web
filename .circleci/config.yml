@@ -9,6 +9,8 @@ ALIASES:
         docker:
             # specify the version you desire here
             - image: aneilbaboo/node:8.10
+              environment:
+                STAGE: test
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
@@ -56,16 +58,16 @@ ALIASES:
             name: Installing Dependencies
             command: yarn install
 
-    install_dynamodb: &install_dynamodb
-        run:
-            name: Installing DynamoDB
-            command: yarn dynamodb:install
+    # install_dynamodb: &install_dynamodb
+    #     run:
+    #         name: Installing DynamoDB
+    #         command: yarn dynamodb:install
 
     run_tests: &run_tests
         run:
             name: Run Tests
             command: |
-                yarn test
+                yarn test --coverage
                 yarn tslint
                 yarn eslint
 
@@ -125,7 +127,7 @@ jobs:
             - *checkout
             - *restore_backend_cache
             - *yarn_install
-            - *install_dynamodb
+            # - *install_dynamodb
             - *save_backend_cache
             - *run_tests
             - *upload_coverage_report

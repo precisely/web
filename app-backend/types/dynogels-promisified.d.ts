@@ -225,7 +225,6 @@ declare module "@aneilbaboo/dynogels-promisified" {
     updateTableAsync(): Promise<AWS.DynamoDB.UpdateTableOutput>;
     describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
     deleteTableAsync(): void;
-    query(hashKey: any): Query<Attributes, Methods>;
   }
 
   export type DynogelsItemCallback<Attributes = { any: any }, Methods = {}> = (
@@ -373,7 +372,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
     execAsync(): Promise<ExecResult<Attributes, Methods>>;
   }
 
-  export interface ScanWhereChain<Attributes = { [key: string]: any }, Methods = {}> {
+  export interface ScanWhereChain<Attributes = { [key: string]: any }, Methods = {}> extends ExtendedChain<Scan<Attributes, Methods>>{
     notNull(): Scan<Attributes, Methods>;
   }
 

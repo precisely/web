@@ -6,33 +6,88 @@
 * without modification, are not permitted.
 */
 
-import {Report} from './models';
-import { dynamoFieldResolver } from 'src/db/dynamo';
-import { ReportAttributes } from 'src/services/report/models';
+import {Report, ReportState} from './models';
+import accessControl from 'src/common/access-control';
+import { IContext } from 'rbac-plus';
+import { GraphQLContext } from 'src/services/auth/graphql-context';
+// import { reactToMarkdownComponents } from 'src/app-client/src/features/markdown/react-to-markdown';
+// import { VariantCallAttributes } from 'src/services/variant-call/models';
 
-export interface ReportCreateUpdateArgs {
+function reportPublished({resource}: IContext) {
+  return resource.get('state') === 'published';
+}
+
+function userOwnsResource({user, resource}: IContext) {
+  return user.id === resource.get('ownerId');
+}
+
+accessControl
+  .grant('user')
+    .resource('report')
+      .read.onFields('*', '!rawContent').where(reportPublished)
+      .read.onFields('*').where(userOwnsResource)
+      .create.where(userOwnsResource)
+      .update.where(userOwnsResource);
+
+export interface ReportCreateArgs {
   title: string;
   slug: string;
   content: string;
-  genes: string[];
+  variants: string[];
+}
+
+export interface ReportUpdateArgs extends ReportCreateArgs {
+  id: string;
 }
 
 export const resolvers = {
   Query: {
-    reports() {
-      return Report.scan().execAsync();
+    async reports(_: {}, { state }: { state?: ReportState }, context: GraphQLContext) { // tslint:disable-line
+      let query = Report.scan();
+      if (state) {
+        query.where('state').equals(state);
+      }
+      const result = await query.execAsync();
+
+      return await context.valid('report:read', result && result.Items);
     },
-    report(_: {}, {slug}: {slug: string}): Promise<Report> {
-      return Report.findBySlug(slug);
+    async report(_: {}, {slug}: {slug: string}, context: GraphQLContext) {
+      const report = await Report.findBySlug(slug);
+      return await context.valid('report:read', report);
     }
   },
   Mutation: {
-    async createReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
-      return Report.safeCreate({title, rawContent: content, genes});
+    async createReport(
+      _: {}, {title, content, variants}: ReportCreateArgs, context: GraphQLContext
+    ): Promise<Report> {
+      const report = <Report> await context.valid('report:create',
+        new Report({
+          ownerId: context.userId,
+          rawContent: content,
+          title, variants
+        })
+      );
+      return await Report.saveNew(report);
     },
-    async updateReport(_: {}, {title, content, genes}: ReportCreateUpdateArgs): Promise<Report> {
-      return await Report.createAsync({title, rawContent: content, genes});
+    async updateReport(
+      _: {},
+      {id, title, content}: ReportUpdateArgs,
+      context: GraphQLContext
+    ) {
+      const report = <Report> await context.valid(
+        'report:update',
+        await Report.getAsync(id)
+      );
+      // process raw content here
+
+      report.set({
+        title: title || report.get('title'),
+        context: context || report.get('rawContent')
+      });
+      return await report.updateAsync();
     }
   },
-  Report: dynamoFieldResolver<ReportAttributes>(['id', 'slug', 'title'])
+  Report: GraphQLContext.dynamoAttributeResolver('report', [
+    'id', 'slug', 'title', 'rawContent', 'owner'
+  ])
 };

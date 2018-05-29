@@ -7,6 +7,7 @@
 */
 
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
+
 import {graphqlLambda} from 'apollo-server-lambda';
 // import {graphiqlLambda} from 'apollo-server-lambda';
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
@@ -15,7 +16,6 @@ import {makeExecutableSchema} from 'graphql-tools';
 import preciselyTypeDefs from 'src/services/schema.graphql';
 import {resolvers} from 'src/services/resolvers';
 import {makeLogger} from 'src/common/logger';
-
 import { GraphQLContext } from 'src/services/auth';
 
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {

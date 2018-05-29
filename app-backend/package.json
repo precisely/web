@@ -6,17 +6,17 @@
     "console": "TS_NODE_COMPILER_OPTIONS=\"{\\\"module\\\":\\\"commonjs\\\"}\" ts-node -r tsconfig-paths/register -c \"require('ts-node').register()\"",
     "shell": "SLS_DEBUG=* scripts/sls shell",
     "log": "scripts/log",
+    "wsd": "scripts/wsd",
     "deploy": "yarn sls deploy",
-    "test": "jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql --collectCoverageFrom=!src/interfaces.ts",
+    "test": "jest",
+    "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "offline": "scripts/offline",
     "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",
     "sls": "./scripts/sls",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src",
-    "dynogels:tables": "ts-node -r tsconfig-paths/register -O '{\"module\": \"commonjs\"}' scripts/dynogels-tables.ts"
+    "eslint": "eslint src"
   },
   "jest": {
-    "collectCoverage": true,
     "coverageDirectory": "coverage",
     "coverageReporters": [
       "html",
@@ -34,7 +34,8 @@
       "^.+\\.ts?$": "./node_modules/ts-jest/preprocessor.js",
       "\\.(gql|graphql)$": "jest-transform-graphql"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testEnvironment": "node",
+    "testRegex": ".*\\.(test|spec)\\.(ts?)$",
     "moduleFileExtensions": [
       "ts",
       "js"
@@ -63,12 +64,14 @@
     "graphql-playground-middleware-lambda": "1.4.3",
     "graphql-tag": "^2.8.0",
     "graphql-tools": "2.23.1",
+    "interleave26": "^1.0.0",
     "jest-transform-graphql": "2.1.0",
     "jsonwebtoken-promisified": "^1.0.3",
     "jwks-rsa": "^1.2.1",
     "jwks-rsa-promisified": "^1.0.2",
     "lodash.camelcase": "^4.3.0",
     "logform": "1.5.0",
+    "rbac-plus": "^1.5.0",
     "sequelize": "4.35.2",
     "slugify": "^1.2.9",
     "winston": "3.0.0-rc2"
@@ -91,7 +94,7 @@
     "eslint": "4.17.0",
     "faker": "4.1.0",
     "imports-loader": "0.7.1",
-    "jest": "^22.4.3",
+    "jest": "^22.4.4",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
     "sequelize-mock": "0.10.2",
@@ -117,6 +120,7 @@
     "unroll": "1.5.0",
     "webpack": "^4.5.0",
     "webpack-graphql-loader": "0.1.0",
-    "webpack-node-externals": "1.6.0"
+    "webpack-node-externals": "1.6.0",
+    "websequencediagrams": "^0.1.1"
   }
 }
