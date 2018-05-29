@@ -8,7 +8,7 @@
     "log": "scripts/log",
     "wsd": "scripts/wsd",
     "deploy": "yarn sls deploy",
-    "test": "STAGE=test jest",
+    "test": "jest",
     "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "offline": "scripts/offline",
     "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",

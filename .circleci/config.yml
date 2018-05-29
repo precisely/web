@@ -9,6 +9,8 @@ ALIASES:
         docker:
             # specify the version you desire here
             - image: aneilbaboo/node:8.10
+              environment:
+                STAGE: test
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
