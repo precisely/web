@@ -43,6 +43,7 @@ IngestionECSTaskRole:
           Action: sts:AssumeRole
     ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonSESFullAccess
     Policies:
       - ${file(./serverless/resources/role-policies.yml):IngestionECSTaskPolicy}
 

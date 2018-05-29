@@ -66,6 +66,15 @@ export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, cal
   });
 };
 
+function getUserEmailFromFilename(filename: string) {
+  // TODO extract user id from filename
+  return getUserFromAuth0('dummyUserId').email;
+}
+
+function getUserFromAuth0(userId: string) {
+  return {email: 'vishesh@causecode.com'};
+}
+
 export async function rawDataUpload(event: S3CreateEvent, context: Context, callback: Callback) {
 
   context.callbackWaitsForEmptyEventLoop = false;
@@ -96,6 +105,10 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
               {
                 name: 'GENOTYPE_RAW_FILENAME',
                 value: rawDataFilename
+              },
+              {
+                name: 'USER_EMAIL',
+                value: getUserEmailFromFilename(rawDataFilename)
               }
             ]
           }
