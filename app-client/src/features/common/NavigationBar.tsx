@@ -8,7 +8,6 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {RouteComponentProps} from 'react-router';
 import {currentUser} from 'src/constants/currentUser';
 import {CSS} from 'src/interfaces';
 import {
@@ -29,7 +28,7 @@ export interface NavigationBarState {
 }
 
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, NavigationBarState> {
+export class NavigationBar extends React.Component {
   state = {
     isOpen: false,
     backgroundColor: 'transparent',
@@ -39,10 +38,9 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
     this.setState({isOpen: !this.state.isOpen});
   }
 
-  handleClick = (loggedIn: boolean): void => {
-    if (loggedIn) {
-      currentUser.logOut();
-      this.props.history.replace('/');
+  handleClick = (): void => {
+    if (currentUser.isAuthenticated()) {
+      currentUser.logout();
     } else {
       this.props.history.push('/login');
     }
@@ -57,7 +55,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
   }
 
   render() {
-    const loggedIn: boolean = currentUser.isLoggedIn();
     const {isOpen, backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;
@@ -74,8 +71,8 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
               <NavLink href="/about-us">ABOUT US</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick(loggedIn)}>
-                {loggedIn ? 'LOG OUT' : 'LOG IN'}
+              <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
+                {currentUser.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
               </NavLink>
             </NavItem>
           </Nav>

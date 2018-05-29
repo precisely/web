@@ -8,21 +8,39 @@
 
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
+const {currentUser} = require('../constants/currentUser');
 
-export interface AuthRouteProps {
-  onEnter: () => boolean;
-  // tslint:disable-next-line no-any
-  component: any;
-  path: string;
-  redirectTo: string;
+// tslint:disable-next-line
+const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any>, ...rest: any[]) => {
+  const finalProps = Object.assign({}, ...rest);
+  const MergedComponent = component;
+  return <MergedComponent {...finalProps} />;
+};
+
+interface AuthProps {
+  // tslint:disable-next-line
+  component: React.ComponentClass<any> | React.StatelessComponent<any>;
   exact?: boolean;
+  path: string;
 }
 
-export class AuthRoute extends React.Component<AuthRouteProps> {
-  render(): JSX.Element {
-    const {onEnter, component, path, redirectTo, exact} = this.props;
-    const routeProps = exact ? {path, component, exact} : {path, component};
-    
-    return onEnter() ? <Route {...routeProps} /> : <Redirect from={path} to={redirectTo} />;
-  } 
-}
+export const AuthRoute = (authProps: AuthProps) => {
+  const {component, ...rest} = authProps;
+  return (
+    <Route 
+        {...rest} 
+        render={ routeProps => {
+          return currentUser.isAuthenticated() ? (
+            renderMergedProps(authProps.component, routeProps, rest)
+          ) : (
+            <Redirect 
+              to={{
+                pathname: '/login',
+                state: { from: routeProps.location.pathname }
+              }}
+            />
+          );
+        }}
+    />
+  );
+};

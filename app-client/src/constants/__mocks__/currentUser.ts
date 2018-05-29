@@ -1,80 +1,28 @@
-
+/*
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
 function mockCurrentUser() {
   return {
-    login: jest.fn(),
-    __mockLoginSuccessCase() {
-      currentUser.login.mockImplementationOnce((email: string, password: string, onSuccess: () => void) => {
-        onSuccess();
-      });
+    isAuthenticated: jest.fn(),
+    __mockisAuthenticatedSuccessCase() {
+      currentUser.isAuthenticated.mockReturnValue(true);
     },
-    __mockLoginFailureCase() {
-      currentUser.login.mockImplementationOnce((
-          email: string,
-          password: string,
-          onSuccess: () => void,
-          onFailure: (error: Error) => void
-      ) => {
-        onFailure(new Error('Unable to login'));
-      });
+    __mockisAuthenticatedFailureCase() {
+      currentUser.isAuthenticated.mockReturnValue(false);
     },
 
-    signup: jest.fn(),
-    __mockSignupSuccessCase() {
-      currentUser.signup.mockImplementationOnce((email: string, password: string, onSuccess: () => void) => {
-        onSuccess();
-      });
+    logout: jest.fn(),
+    __mockLogoutSuccessCase() {
+      currentUser.logout.mockReturnValueOnce(true);
     },
-    __mockSignupFailureCase() {
-      currentUser.signup.mockImplementationOnce((
-          email: string,
-          password: string,
-          onSuccess: () => void,
-          onFailure: (error: Error) => void
-      ) => {
-        onFailure(new Error('Unable to signup'));
-      });
+    __mockLogoutFailureCase() {
+      currentUser.logout.mockReturnValueOnce(false);
     },
-
-    forgotPassword: jest.fn(),
-    __mockForgotPasswordSuccessCase() {
-      currentUser.forgotPassword.mockImplementationOnce((email: string, onSuccess: () => void) => {
-        onSuccess();
-      });
-    },
-    __mockForgotPasswordFailureCase() {
-      currentUser.forgotPassword.mockImplementationOnce((
-          email: string,
-          onSuccess: () => void,
-          onFailure: (error: Error) => void
-      ) => {
-        onFailure(new Error('Unable to process forgot password.'));
-      });
-    },
-
-    resetPassword: jest.fn(),
-    __mockResetPasswordSuccessCase() {
-      currentUser.resetPassword.mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-      ) => {
-        successCallback();
-      });
-    },
-    __mockResetPasswordFailureCase() {
-      currentUser.resetPassword.mockImplementationOnce((
-          email: string,
-          verificationCode: string,
-          newPassword: string,
-          successCallback?: () => void,
-          failureCallback?: (error: Error) => void
-      ) => {
-        failureCallback(new Error('Unable to reset the password.'));
-      });
-    },
-
-    __resetCurrentUserMocks: () => currentUser = mockCurrentUser(),
+    __resetCurrentUserMocks: () => (currentUser = mockCurrentUser())
   };
 }
 

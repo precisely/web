@@ -6,102 +6,64 @@
  * without modification, are not permitted.
  */
 
-import * as React from 'react';
-import * as Adapter from 'enzyme-adapter-react-16';
-import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {RouteComponentProps} from 'react-router';
-import {NavigationBar, NavigationBarState} from 'src/features/common/NavigationBar';
-import {currentUser} from 'src/constants/currentUser';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'src/features/common/ReusableComponents';
+jest.mock('src/constants/currentUser');
 
-const unroll = require('unroll');
-unroll.use(it);
+import * as React from 'react';
+import * as Radium from 'radium';
+import * as Adapter from 'enzyme-adapter-react-16';
+import * as Renderer from 'react-test-renderer';
+import {ShallowWrapper, shallow, configure} from 'enzyme';
+import {NavigationBar} from 'src/features/common/NavigationBar';
+import {currentUser} from 'src/constants/currentUser';
 
 configure({adapter: new Adapter()});
+Radium.TestMode.enable();
 
-type ComponentTree = ShallowWrapper<RouteComponentProps<{email: string} | void>, NavigationBarState>;
+describe('NavigationBar tests Snapshot Testing :', () => {
+  it('renders correctly', () => {
+    const tree = Renderer.create(<NavigationBar />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
 
-describe('NavigationBar tests.', () => {
+describe('NavigationBar Test After Login: ', () => {
+  const componentTree: ShallowWrapper = shallow(<NavigationBar />);
 
-  currentUser.logOut = jest.fn<void>();
-  currentUser.isLoggedIn = jest.fn<boolean>().mockReturnValueOnce(true).mockReturnValue(false);
-
-  const getComponentTree = (): ComponentTree => {
-    return shallow(
-        <NavigationBar
-            history={mockedHistory}
-            match={mockedMatch<{email: string}>({email: 'test@example.com'})}
-            location={mockedLocation}
-        />
-    );
-  };
-
-  describe('When user is logged in', () => {
-    const componentTree: ComponentTree = getComponentTree();
-
-    it('should log out when button is clicked', () => {
-      componentTree.find(NavLink).at(1).simulate('click');
-      expect(currentUser.logOut).toBeCalled();
-      expect(mockedHistory.replace).toBeCalledWith('/');
-    });
+  it('should render Log In link in the navigation bar when the user is unauthenticated.', () => {
+    currentUser[`__mockisAuthenticatedSuccessCase`]();
+    componentTree.find('#loginStatus').simulate('click');
+    expect(
+      componentTree
+        .find('#loginStatus')
+        .children()
+        .text()
+    ).toEqual('LOG IN');
   });
 
-  describe('When user is logged out', () => {
-    const componentTree: ComponentTree = getComponentTree();
-
-    it('should redirect to login page when button is clicked', () => {
-      componentTree.find(NavLink).at(1).simulate('click');
-      expect(mockedHistory.replace).toBeCalledWith('/');
-    });
-
-    unroll('it should display #count #elementName elements', (
-        done: () => void,
-        args: {elementName: string, element: EnzymePropSelector, count: number}
-    ) => {
-      expect(componentTree.find(args.element).length).toBe(args.count);
-      done();
-    }, [ // tslint:disable-next-line
-      ['elementName', 'element', 'count'],
-      ['Navbar', Navbar, 1],
-      ['NavbarBrand', NavbarBrand, 1],
-      ['NavbarToggler', NavbarToggler, 1],
-      ['Collapse', Collapse, 1],
-      ['Nav', Nav, 1],
-      ['NavItem', NavItem, 2],
-      ['NavLink', NavLink, 2],
-    ]);
-
-    it('should set the state of isOpen to true', () => {
-      componentTree.find(NavbarToggler).simulate('click');
-      expect(componentTree.state().isOpen).toBeTruthy();
-    });
+  it(
+    'should render Log Out link in the navigation bar when the user is authenticated after toggle button is clicked',
+    () => {
+    currentUser[`__mockisAuthenticatedSuccessCase`]();
+    componentTree.find('.navbar-toggler-right').simulate('click');
+    expect(
+      componentTree
+        .find('#loginStatus')
+        .children()
+        .text()
+    ).toEqual('LOG OUT');
   });
+});
 
-  describe('When the handleScroll is executed.', () => {
-
-    const componentTree: ComponentTree = getComponentTree();
-
-    unroll('it should set the background color to #color when the scrollY position is #scrollY', (
-        done: () => void,
-        args: {scrollY: number, color: string}
-    ) => {
-      Object.defineProperty(window, 'scrollY', {value: args.scrollY, writable: true});
-      componentTree.instance()[`handleScroll`]();
-      expect(componentTree.state().backgroundColor).toBe(args.color);
-      done();
-    }, [ // tslint:disable-next-line
-      ['scrollY', 'color'],
-      [100, 'white'],
-      [20, 'transparent'],
-    ]);
+describe('Login Test After Logout: ', () => {
+  const componentTree: ShallowWrapper = shallow(<NavigationBar />);
+  it('should render Log In link in the navigation bar when the user is unauthenticated.', () => {
+    currentUser[`__mockLogoutFailureCase`]();
+    componentTree.find('#loginStatus').simulate('click');
+    expect(
+      componentTree
+        .find('#loginStatus')
+        .children()
+        .text()
+    ).toEqual('LOG IN');
   });
 });

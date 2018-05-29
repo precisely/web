@@ -32,18 +32,15 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName.${self:providers.vars.account}}
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
     defaultProfile: ${self:provider.vars.account}-profile-precisely
 
     # customDomain / Route53 config
-    domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
-                self:provider.vars.domainMap.default}"
-    domainMap:
-      prod: precise.ly
-      default: ${self:provider.stage}.codeprecisely.net
+    domain: ${file(../serverless/common.yml):domain}
+    domainMap: ${file(../serverless/common.yml):domainMap}
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf

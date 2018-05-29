@@ -4,10 +4,44 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  stage: dev
+  runtime: nodejs8.10
+  stage: ${opt:stage, env:STAGE, "dev"}
   region: us-east-1
   profile: ${opt:stage, self:provider.stage}-profile-precisely
+
+  # Store commonly used or noteworthy values here
+
+  vars: 
+    account: ${file(../serverless/common.yml):account}
+    accountFromStage: ${file(../serverless/common.yml):accountFromStage}
+    accountId: ${file(../serverless/common.yml):accountId}
+
+    auth0TenantNameMap: ${file(../serverless/common.yml):auth0TenantNameMap} 
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+
+    # default AWS config profile name (used locally)
+    defaultProfile: ${self:provider.vars.account}-profile-precisely
+
+    # customDomain / Route53 config
+    domain: ${file(../serverless/common.yml):domain}
+    domainMap: ${file(../serverless/common.yml):domainMap}
+
+    reactURLMap: ${file(../serverless/common.yml):reactURLMap} 
+    reactURL: ${file(../serverless/common.yml):reactURL}
+
+  ##
+  ## Environment for handlers
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    ACCOUNT_ID: ${self:provider.vars.accountId}
+
+    # Auth0 values - needed for verifying Auth0 tokens
+    REACT_APP_AUTH0_TENANT: ${self:provider.vars.auth0TenantName}.auth0.com # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    REACT_APP_AUTH0_CLIENT_ID: yrNpYsLHFQ4mBHsP4rqDC8LNPLaOZDS4
+
+    REACT_APP_URL: ${self:provider.vars.reactURL}
+    
 
 plugins:
   - serverless-finch

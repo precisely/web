@@ -18,7 +18,6 @@ import {ReportImpl, ReportProps, Report} from 'src/features/report/Report';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container} from 'src/features/common/ReusableComponents';
-import {store} from 'src/store';
 import {ReportData} from 'src/features/report/interfaces';
 import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 import {dummyData} from 'src/__tests__/features/report/testData';
@@ -34,8 +33,6 @@ configure({adapter: new Adapter()});
 Radium.TestMode.enable();
 
 describe('Report tests.', () => {
-
-  store.dispatch = jest.fn();
 
   describe('When the report data is loading.', () => {
     const componentTree: ShallowWrapper<ReportProps> = shallow(
