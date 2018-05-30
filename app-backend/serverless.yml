@@ -51,6 +51,7 @@ provider:
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
     geneticsAkesogenBucket: ${self:provider.stage}-precisely-genetics-akesogen
     geneticsAncestryBucket: ${self:provider.stage}-precisely-genetics-ancestry
+    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
 
     # Ingestion ECS Fargate Task
     ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
@@ -99,6 +100,7 @@ provider:
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
     S3_BUCKET_GENETICS_AKESOGEN: ${self:provider.vars.geneticsAkesogenBucket}
     S3_BUCKET_GENETICS_ANCESTRY: ${self:provider.vars.geneticsAncestryBucket}
+    S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
 
     DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
@@ -124,7 +126,7 @@ resources:
 plugins:
   # Comment out the `serverless-domain-manager` line
   # on first-time deployment of a new stage, then uncomment it and redeploy
-  - serverless-domain-manager
+  #- serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
   - serverless-dynamodb-local
@@ -214,14 +216,8 @@ functions:
   RawDataUpload:
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
-      SUBNET_ONE:
-        Ref: DefaultSubnetOne
-      SUBNET_TWO:
-        Ref: DefaultSubnetTwo
-      ECS_CLUSTER_NAME:
-        Ref: DefaultECSCluster
-      ECS_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
-      ECS_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
+      INGESTION_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
+      INGESTION_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
 
     role: 
       'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]

@@ -9,6 +9,8 @@ IngestionECSTaskDefinition:
   Properties: 
     ExecutionRoleArn: 
       Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
+    TaskRoleArn: 
+      Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
     Family: ${self:provider.vars.ingestionECSTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512
@@ -19,10 +21,13 @@ IngestionECSTaskDefinition:
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
-        Environment:
-          -
-            Name: REGION_NAME
-            Value: ${self:provider.region}
+        LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: ${self:provider.stage}-DefaultECSServiceName
+              awslogs-region: 
+                Ref: AWS::Region
+              awslogs-stream-prefix: ${self:provider.stage}-DefaultECSServiceName
     RequiresCompatibilities:
       - FARGATE
 

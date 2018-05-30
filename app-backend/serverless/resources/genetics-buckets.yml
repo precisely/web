@@ -3,6 +3,11 @@ S3BucketGeneticsVCF:
   Properties:
     BucketName: ${self:provider.vars.geneticsVCFBucket}
 
+S3BucketIngestionError:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.vars.ingestionErrorBucket}
+
 S3BucketGenetics23andMe:
   Type: AWS::S3::Bucket
   Properties:

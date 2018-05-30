@@ -79,6 +79,7 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
 
   context.callbackWaitsForEmptyEventLoop = false;
 
+  console.log('About to trigger ECS');
   try {
     const rawDataBucket = event.Records[0].s3.bucket.name;
     const rawDataFilename = event.Records[0].s3.object.key;
@@ -87,12 +88,12 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
 
     const params: AWS.ECS.Types.RunTaskRequest = {
       launchType: 'FARGATE',
-      taskDefinition: process.env.TASK_NAME,
+      taskDefinition: process.env.INGESTION_TASK_NAME,
       count: 1,
       overrides: {
         containerOverrides: [
           {
-            name: process.env.ECS_CONTAINER_NAME,
+            name: process.env.INGESTION_CONTAINER_NAME,
             environment: [
               {
                 name: 'S3_RAW_DATA_BUCKET',
@@ -107,6 +108,10 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
                 value: rawDataFilename
               },
               {
+                name: 'S3_BUCKET_ERROR',
+                value: process.env.S3_BUCKET_INGESTION_ERROR
+              },
+              {
                 name: 'USER_EMAIL',
                 value: getUserEmailFromFilename(rawDataFilename)
               }
@@ -116,9 +121,12 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
       }
     };
 
+    console.log('ECS Params:', params);
     await ecs.runTask(params).promise();
     log.info(`ECS TASK TRIGGERED FOR ${rawDataFilename}`);
+    console.log('ECS Triggered:', params);
   } catch (error) {
     log.error(`Error Occurred: ${error}`);
+    console.log(`Error Occurred: ${error}`);
   }
 }
