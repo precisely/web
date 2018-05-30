@@ -21,7 +21,7 @@ See [AWS: Output from a custom authorizer](https://docs.aws.amazon.com/apigatewa
 
 The GraphQL handler generates a context object ([`GraphQLContext`](graphql-context.ts)), which is passed as the context argument to GraphQL resolver functions. The GraphQLContext contains helpful information like `userId` and `roles` and provides a method for testing whether the current user can perform an action.
 
-Roles [RBACPlus](https://github.com/aneilbaboo/rbac-plus) to define roles and scopes (permissions).
+We use [AccessControlPlus](https://github.com/aneilbaboo/accesscontrol-plus) to define roles and scopes (permissions).
 
 Resolvers can test whether access is permitted by using the `GraphQLContext.can(scope, resource)` method, or the `@scope` decorator.
 

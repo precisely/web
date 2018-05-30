@@ -192,6 +192,10 @@ accept@2.x.x:
     boom "5.x.x"
     hoek "4.x.x"
 
+accesscontrol-plus@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/accesscontrol-plus/-/accesscontrol-plus-1.0.1.tgz#8a478fcc5a25593c26003e128d30185d41ec8392"
+
 acorn-dynamic-import@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/acorn-dynamic-import/-/acorn-dynamic-import-3.0.0.tgz#901ceee4c7faaef7e07ad2a47e890675da50a278"
@@ -5567,10 +5571,6 @@ raw-body@~2.1.7:
     bytes "2.4.0"
     iconv-lite "0.4.13"
     unpipe "1.0.0"
-
-rbac-plus@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/rbac-plus/-/rbac-plus-1.5.0.tgz#b38b7879af83504455e18302e4e68f1ebe9837e2"
 
 rc@^1.0.1, rc@^1.1.6:
   version "1.2.7"
