@@ -1,7 +1,7 @@
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from './auth0';
 import _accessControl from './accessControl';
-import { RBACPlus, IPermission } from 'rbac-plus';
+import { AccessControlPlus, IPermission } from 'accesscontrol-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
 import { IResolverObject } from 'graphql-tools';
@@ -12,7 +12,7 @@ export class GraphQLContext {
   constructor(
     public readonly event: APIGatewayEvent,
     public readonly lambdaContext: LambdaContext,
-    public readonly accessControl: RBACPlus = _accessControl) {
+    public readonly accessControl: AccessControlPlus = _accessControl) {
   }
 
   // tslint:disable-next-line

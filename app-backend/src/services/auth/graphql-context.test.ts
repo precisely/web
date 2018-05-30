@@ -2,7 +2,7 @@ import { GraphQLContext } from './graphql-context';
 import context from 'jest-plugin-context';
 import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';
 import { AuthResponseContext } from 'aws-lambda';
-import { RBACPlus, IContext } from 'rbac-plus';
+import { AccessControlPlus, IContext } from 'accesscontrol-plus';
 import { defineModel } from 'src/db/dynamo/dynogels';
 
 describe('GraphQLContext', function () {
@@ -32,13 +32,13 @@ describe('GraphQLContext', function () {
   });
 
   context('accessControl', function () {
-    const rbac = new RBACPlus();
+    const rbac = new AccessControlPlus();
     const event = makeEvent({ authorizer: { roles: 'user' }});
     const lambdaCtx = makeLambdaContext();
     const gqlContext = new GraphQLContext(event, lambdaCtx, rbac);
 
     context('can', function () {
-      it('should return the expected permissions defined in an RBACPlus instance', async function () {
+      it('should return the expected permissions defined in an AccessControlPlus instance', async function () {
         rbac.grant('user').scope('report:read').where();
 
         const reportReadPermission = await gqlContext.can('report:read');
@@ -91,7 +91,7 @@ describe('GraphQLContext', function () {
     });
 
     it('should provide a fn which resolves a permitted attribute (foo) of the root object', async function () {
-      const rbac = new RBACPlus();
+      const rbac = new AccessControlPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'user'
       }}), makeLambdaContext(),
@@ -107,7 +107,7 @@ describe('GraphQLContext', function () {
     });
 
     it('should provide a fn which rejects a disallowed attribute (bar) of the root object', async function () {
-      const rbac = new RBACPlus();
+      const rbac = new AccessControlPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'user'
       }}), makeLambdaContext(),
@@ -124,7 +124,7 @@ describe('GraphQLContext', function () {
     });
 
     it('should provide a fn which resolves to alternate properties', async function () {
-      const rbac = new RBACPlus();
+      const rbac = new AccessControlPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'user'
       }}), makeLambdaContext(),
@@ -161,7 +161,7 @@ describe('GraphQLContext', function () {
     });
 
     it('should provide a fn which resolves a permitted attribute (foo) of the root object', async function () {
-      const rbac = new RBACPlus();
+      const rbac = new AccessControlPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'user'
       }}), makeLambdaContext(),
@@ -177,7 +177,7 @@ describe('GraphQLContext', function () {
     });
 
     it('should provide a fn which rejects a disallowed attribute (bar) of the root object', async function () {
-      const rbac = new RBACPlus();
+      const rbac = new AccessControlPlus();
       const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
         roles: 'user'
       }}), makeLambdaContext(),

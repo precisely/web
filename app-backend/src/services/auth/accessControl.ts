@@ -1,9 +1,9 @@
-import {RBACPlus, Context} from 'rbac-plus';
+import {AccessControlPlus, IContext} from 'accesscontrol-plus';
 
-function reportIsPublished({resource}: Context) { return resource.get('status') === 'published'; }
-function ownedByUser({resource, user}: Context) { return user.get('id') === resource.get('userId'); }
+function reportIsPublished({resource}: IContext) { return resource.get('status') === 'published'; }
+function ownedByUser({resource, user}: IContext) { return user.get('id') === resource.get('userId'); }
 
-const accessControl = new RBACPlus();
+const accessControl = new AccessControlPlus();
 accessControl
   .grant('public')
     .scope('Report:read')

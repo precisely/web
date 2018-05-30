@@ -8,7 +8,7 @@
 
 import {Report, ReportState} from './models';
 import accessControl from 'src/common/access-control';
-import { IContext } from 'rbac-plus';
+import { IContext } from 'accesscontrol-plus';
 import { GraphQLContext } from 'src/services/auth/graphql-context';
 // import { reactToMarkdownComponents } from 'src/app-client/src/features/markdown/react-to-markdown';
 // import { VariantCallAttributes } from 'src/services/variant-call/models';

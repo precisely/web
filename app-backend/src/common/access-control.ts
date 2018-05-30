@@ -1,6 +1,6 @@
-import { RBACPlus } from 'rbac-plus';
+import { AccessControlPlus } from 'accesscontrol-plus';
 
-const accessControl = new RBACPlus();
+const accessControl = new AccessControlPlus();
 
 accessControl
   .deny('public').scope('*:*')
