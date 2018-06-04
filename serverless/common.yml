@@ -9,6 +9,8 @@ accountFromStage:
                     # This mapping exists to ensure no AWS resources are used when STAGE=offline
   default: dev
 
+# default AWS config profile name (used locally)
+defaultProfile: ${self:provider.vars.account}-profile-precisely
 
 auth0TenantNameMap: 
   default: ${self:provider.vars.account}-precisely
@@ -21,10 +23,12 @@ domain: "${
     self:provider.vars.domainMap.${self:provider.vars.account},
     self:provider.vars.domainMap.default
 }"
-domainMap:
-  prod: precise.ly
-  offline: localhost
-  default: ${self:provider.stage}.codeprecisely.net
+certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
+                    self:provider.vars.certificateMap.default}"
+certificateMap:
+  prod: "*.precise.ly"
+  default: "*.codeprecisely.net"
+
 
 reactURL: ${self:provider.vars.reactURLMap.${self:provider.vars.account}, self:provider.vars.reactURLMap.default}
 reactURLMap:

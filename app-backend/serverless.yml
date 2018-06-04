@@ -24,11 +24,8 @@ provider:
       default: 300
       devDefault: 0
 
-    certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
-                        self:provider.vars.certificateMap.default}"
-    certificateMap:
-      prod: "*.precise.ly"
-      default: "*.codeprecisely.net"
+    certificateName: "${file(../serverless/common.yml):certificateName}"
+    certificateMap: "${file(../serverless/common.yml):certificateMap}"
 
     graphQLAPIPath: "/api"
 
@@ -36,11 +33,14 @@ provider:
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
-    defaultProfile: ${self:provider.vars.account}-profile-precisely
+    defaultProfile: "${file(../serverless/common.yml):defaultProfile}"
 
     # customDomain / Route53 config
     domain: ${file(../serverless/common.yml):domain}
-    domainMap: ${file(../serverless/common.yml):domainMap}
+    domainMap:
+      prod: api.precise.ly
+      offline: localhost
+      default: ${self:provider.stage}-api.codeprecisely.net
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf

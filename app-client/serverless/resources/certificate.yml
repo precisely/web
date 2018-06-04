@@ -1,0 +1,6 @@
+ClientCertificate:
+  Type: AWS::CertificateManager::Certificate
+  Properties:
+    DomainName: ${self:provider.vars.certificateName}
+    - DomainName: ${self:provider.vars.certificateName}
+      ValidationDomain: ${self:provider.vars.certificateName}

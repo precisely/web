@@ -7,7 +7,7 @@ provider:
   runtime: nodejs8.10
   stage: ${opt:stage, env:STAGE, "dev"}
   region: us-east-1
-  profile: ${opt:stage, self:provider.stage}-profile-precisely
+  profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
 
   # Store commonly used or noteworthy values here
 
@@ -20,14 +20,22 @@ provider:
     auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
 
     # default AWS config profile name (used locally)
-    defaultProfile: ${self:provider.vars.account}-profile-precisely
+    defaultProfile: "${file(../serverless/common.yml):defaultProfile}"
 
     # customDomain / Route53 config
     domain: ${file(../serverless/common.yml):domain}
-    domainMap: ${file(../serverless/common.yml):domainMap}
+    domainMap:
+      prod: precise.ly
+      offline: localhost
+      default: ${self:provider.stage}.codeprecisely.net
+
+    certificateName: "${file(../serverless/common.yml):certificateName}"
+    certificateMap: "${file(../serverless/common.yml):certificateMap}"
 
     reactURLMap: ${file(../serverless/common.yml):reactURLMap} 
     reactURL: ${file(../serverless/common.yml):reactURL}
+    
+    distributionBucket: ${self:provider.stage}-precisely-react
 
   ##
   ## Environment for handlers
@@ -43,11 +51,17 @@ provider:
     REACT_APP_URL: ${self:provider.vars.reactURL}
     
 
+resources:
+  - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}
+
 plugins:
   - serverless-finch
   - serverless-shell
 
 custom:
   client:
-    bucketName: ${opt:stage, self:provider.stage}-precisely-01
+    bucketName: ${self:provider.vars.distributionBucket}
     distributionFolder: build
+    indexDocument: index.html
+    errorDocument: index.html
+
