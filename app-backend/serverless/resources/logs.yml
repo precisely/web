@@ -1,0 +1,4 @@
+IngestionECSLogs:
+  Type: AWS::Logs::LogGroup
+  Properties:
+    LogGroupName: /aws/ecs/${self:provider.stage}-precisely-ingestion

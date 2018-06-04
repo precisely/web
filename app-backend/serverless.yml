@@ -56,6 +56,7 @@ provider:
     # Ingestion ECS Fargate Task
     ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
     ingestionContainerName: ${self:provider.stage}-DefaultIngestionContainerName
+    ingestionClusterName: ${self:provider.stage}-DefaultECSClusterName
 
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
@@ -120,8 +121,11 @@ resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
-  - Resources: ${file(./serverless/resources/subnet.yml)}
+  - Resources: ${file(./serverless/resources/logs.yml)}
   - Resources: ${file(./serverless/resources/ecs-fargate.yml)}
+  - Resources: ${file(./serverless/resources/network/subnet.yml)}
+  - Resources: ${file(./serverless/resources/network/routes.yml)}
+  - Resources: ${file(./serverless/resources/network/gateway.yml)}
 
 plugins:
   # Comment out the `serverless-domain-manager` line
@@ -216,17 +220,16 @@ functions:
   RawDataUpload:
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
+      INGESTION_CLUSTER: ${self:provider.vars.ingestionClusterName}
       INGESTION_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
       INGESTION_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
+      SUBNET_ONE:
+        Ref: DefaultSubnetOne
+      SUBNET_TWO:
+        Ref: DefaultSubnetTwo
 
     role: 
       'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
-    vpc:
-      securityGroupIds:
-        - Ref: DefaultVPCSecurityGroup
-      subnetIds:
-        - Ref: DefaultSubnetOne
-        - Ref: DefaultSubnetTwo
     events:
       - s3:
           bucket: Genetics23andMe

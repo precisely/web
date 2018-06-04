@@ -12,7 +12,7 @@ DefaultSubnetOne:
   Type: 'AWS::EC2::Subnet'
   Properties:
     CidrBlock: '10.0.0.0/25'
-    AvailabilityZone: 'us-east-1e'
+    AvailabilityZone: ${self:provider.region}e
     MapPublicIpOnLaunch: true
     VpcId:
       Ref: DefaultVPC
@@ -24,7 +24,7 @@ DefaultSubnetTwo:
   Type: 'AWS::EC2::Subnet'
   Properties:
     CidrBlock: '10.0.0.128/25'
-    AvailabilityZone: 'us-east-1a'
+    AvailabilityZone: ${self:provider.region}a
     MapPublicIpOnLaunch: true
     VpcId:
       Ref: DefaultVPC

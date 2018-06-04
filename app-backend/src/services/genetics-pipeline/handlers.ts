@@ -79,7 +79,6 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
 
   context.callbackWaitsForEmptyEventLoop = false;
 
-  console.log('About to trigger ECS');
   try {
     const rawDataBucket = event.Records[0].s3.bucket.name;
     const rawDataFilename = event.Records[0].s3.object.key;
@@ -87,9 +86,16 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
     const ecs = new AWS.ECS();
 
     const params: AWS.ECS.Types.RunTaskRequest = {
+      cluster: process.env.INGESTION_CLUSTER,
       launchType: 'FARGATE',
       taskDefinition: process.env.INGESTION_TASK_NAME,
       count: 1,
+      networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
+        awsvpcConfiguration: {
+          subnets: [process.env.SUBNET_ONE, process.env.SUBNET_TWO],
+          assignPublicIp: 'ENABLED'
+        }
+      },
       overrides: {
         containerOverrides: [
           {
@@ -121,12 +127,9 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
       }
     };
 
-    console.log('ECS Params:', params);
     await ecs.runTask(params).promise();
     log.info(`ECS TASK TRIGGERED FOR ${rawDataFilename}`);
-    console.log('ECS Triggered:', params);
   } catch (error) {
     log.error(`Error Occurred: ${error}`);
-    console.log(`Error Occurred: ${error}`);
   }
 }

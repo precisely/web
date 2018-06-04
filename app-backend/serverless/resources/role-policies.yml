@@ -40,9 +40,7 @@ IngestionECSTaskPolicy:
         Action:
           - "s3:GetObject"
           - "s3:PutObject"
-        Resource: 
-          - Fn::GetAtt: [S3BucketGeneticsVCF, Arn]
-          - Fn::GetAtt: [S3BucketGenetics23andMe, Arn]
+        Resource: "arn:aws:s3:::*/*"
       - Effect: Allow # note that these rights are given in the default policy and are required if you want logs out of your tasks(s)
         Action:
           - logs:CreateLogGroup
@@ -68,11 +66,8 @@ RawUploadLambdaPolicy:
         Resource: "arn:aws:s3:::*/*"
       - Effect: Allow
         Action:
-          - "ecs:RunTask"
-          - "ec2:DescribeNetworkInterfaces" 
-          - "ec2:CreateNetworkInterface"
-          - "ec2:DeleteNetworkInterface"
-        Resource: "arn:aws:ecs:::*/*"
+          - '*'
+        Resource: "*"
       
 
 ...

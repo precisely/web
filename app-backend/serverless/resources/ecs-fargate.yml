@@ -2,7 +2,7 @@
 DefaultECSCluster:
   Type: "AWS::ECS::Cluster"
   Properties:
-    ClusterName: ${self:provider.stage}-DefaultECSClusterName
+    ClusterName: ${self:provider.vars.ingestionClusterName}
 
 IngestionECSTaskDefinition:
   Type: "AWS::ECS::TaskDefinition"
@@ -24,10 +24,11 @@ IngestionECSTaskDefinition:
         LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: ${self:provider.stage}-DefaultECSServiceName
+              awslogs-group: 
+                Ref: IngestionECSLogs
               awslogs-region: 
                 Ref: AWS::Region
-              awslogs-stream-prefix: ${self:provider.stage}-DefaultECSServiceName
+              awslogs-stream-prefix: ${self:provider.stage}-ecs
     RequiresCompatibilities:
       - FARGATE
 
@@ -46,4 +47,3 @@ ECSService:
         Subnets:
           - Ref: DefaultSubnetOne
           - Ref: DefaultSubnetTwo
-        AssignPublicIp: ENABLED
