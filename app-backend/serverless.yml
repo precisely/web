@@ -29,7 +29,11 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName.${self:providers.vars.account}}
+    auth0TenantName:
+      "${
+          file(../serverless/common.yml):auth0TenantName.${self:provider.vars.account},
+          file(../serverless/common.yml):auth0TenantName.default
+      }"
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
@@ -45,6 +49,14 @@ provider:
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
+    geneticsAkesogenBucket: ${self:provider.stage}-precisely-genetics-akesogen
+    geneticsAncestryBucket: ${self:provider.stage}-precisely-genetics-ancestry
+    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
+
+    # Ingestion ECS Fargate Task
+    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
+    ingestionContainerName: ${self:provider.stage}-DefaultIngestionContainerName
+    ingestionClusterName: ${self:provider.stage}-DefaultECSClusterName
 
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
@@ -87,6 +99,9 @@ provider:
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
+    S3_BUCKET_GENETICS_AKESOGEN: ${self:provider.vars.geneticsAkesogenBucket}
+    S3_BUCKET_GENETICS_ANCESTRY: ${self:provider.vars.geneticsAncestryBucket}
+    S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
 
     DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
@@ -106,11 +121,16 @@ resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
+  - Resources: ${file(./serverless/resources/logs.yml)}
+  - Resources: ${file(./serverless/resources/ecs-fargate.yml)}
+  - Resources: ${file(./serverless/resources/network/subnet.yml)}
+  - Resources: ${file(./serverless/resources/network/routes.yml)}
+  - Resources: ${file(./serverless/resources/network/gateway.yml)}
 
 plugins:
   # Comment out the `serverless-domain-manager` line
   # on first-time deployment of a new stage, then uncomment it and redeploy
-  - serverless-domain-manager
+  #- serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
   - serverless-dynamodb-local
@@ -151,6 +171,16 @@ custom:
   webpackIncludeModules: true
 
 functions:
+  # DummyCloudFormationTest:
+  #       role: PreciselyDefaultRole
+  #       handler: src/services/dummy/handlers.dummy
+  #       events:
+  #         - http:
+  #             path: '/dummy'
+  #             method: get
+  #             cors: true
+# Comment out all the functions and uncomment the dummy lambda and the S3 config above to speed up deployment
+# This is useful to test changes related cloudformation  
   APIAuthorizer:
     role: PreciselyDefaultRole
     handler: src/services/auth/handlers.apiAuthorizer
@@ -186,3 +216,21 @@ functions:
           bucket: GeneticsVCF
           event: s3:ObjectCreated:*
 
+  # Raw data uploader is triggered by new file in any of the raw data buckets
+  RawDataUpload:
+    handler: src/services/genetics-pipeline/handlers.rawDataUpload
+    environment:
+      INGESTION_CLUSTER: ${self:provider.vars.ingestionClusterName}
+      INGESTION_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
+      INGESTION_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
+      SUBNET_ONE:
+        Ref: DefaultSubnetOne
+      SUBNET_TWO:
+        Ref: DefaultSubnetTwo
+
+    role: 
+      'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
+    events:
+      - s3:
+          bucket: Genetics23andMe
+          event: s3:ObjectCreated:*
