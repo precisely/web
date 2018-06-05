@@ -15,7 +15,7 @@ CloudFrontDistribution:
           - GET
           - HEAD
         Compress: true
-        DefaultTTL: 86300
+        DefaultTTL: 86400
         ForwardedValues:
           QueryString: false
         MaxTTL: 31536000
