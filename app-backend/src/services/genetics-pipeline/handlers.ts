@@ -93,7 +93,6 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
       networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
         awsvpcConfiguration: {
           subnets: [process.env.SUBNET_ONE, process.env.SUBNET_TWO],
-          assignPublicIp: 'ENABLED'
         }
       },
       overrides: {

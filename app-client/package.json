@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "env-cmd ../config/default.env node scripts/start.js",
-    "shell": "yarn sls shell -S zsh",
+    "shell": "env-cmd ../config/default.env yarn sls shell -S zsh",
     "test": "env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
     "build:dev": "env-cmd ../config/security.env.local node scripts/build.js",
     "build:stage": "env-cmd ../config/security.env.stage node scripts/build.js",

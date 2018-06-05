@@ -53,6 +53,7 @@ provider:
 
 resources:
   - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}
+  - Resources: ${file(./serverless/resources/dns.yml)}
 
 plugins:
   - serverless-finch
