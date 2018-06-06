@@ -19,6 +19,7 @@ import {
   NavItem,
   NavLink,
 } from 'src/features/common/ReusableComponents';
+import { RouteComponentProps } from 'react-router';
 
 const logo = require('src/assets/precisely-logo.png');
 
@@ -28,7 +29,8 @@ export interface NavigationBarState {
 }
 
 @Radium
-export class NavigationBar extends React.Component {
+// tslint:disable-next-line
+export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   state = {
     isOpen: false,
     backgroundColor: 'transparent',

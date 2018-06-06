@@ -10,6 +10,7 @@ import {Component} from 'react';
 import {authLockButtonBackground} from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
 import { utils } from '../../utils';
+const { currentUser } = require('../../constants/currentUser');
 const logo = require('src/assets/logo.png');
 export class Login extends Component<RouteComponentProps<void>> {
   lock = new Auth0Lock(
@@ -32,10 +33,6 @@ export class Login extends Component<RouteComponentProps<void>> {
     }
   );
 
-  state = {
-    isLoggedIn: false
-  };
-
   // tslint:disable-next-line
   constructor(props: any) {
     super(props);
@@ -53,20 +50,17 @@ export class Login extends Component<RouteComponentProps<void>> {
       (new Date().getTime() + authResult.expiresIn * 1000).toString(),
       JSON.stringify(authResult)
     );
-    this.setState({isLoggedIn: true});
     const lastPage = utils.getLastPageBeforeLogin();
     utils.setLastPageBeforeLogin('/');
     this.props.history.push(lastPage);
   }
 
-  componentWillMount() {
-    this.setState({isLoggedIn: true});
-  }
-  
   render(): JSX.Element {
     // Avoid showing Lock when hash is parsed.
-    if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !this.state.isLoggedIn) {
-      utils.setLastPageBeforeLogin(this.props.location.state.from);
+    if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !currentUser.isAuthenticated()) {
+      if (this.props.location.state) {
+        utils.setLastPageBeforeLogin(this.props.location.state.from);
+      }
       this.lock.show();
     } 
     return null;
