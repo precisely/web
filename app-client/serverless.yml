@@ -28,7 +28,7 @@ provider:
       prod: precise.ly
       offline: localhost
       default: ${self:provider.stage}.codeprecisely.net
-
+    originId: "${self:provider.stage}-s3-origin"
     certificateName: "${file(../serverless/common.yml):certificateName}"
     certificateMap: "${file(../serverless/common.yml):certificateMap}"
 
