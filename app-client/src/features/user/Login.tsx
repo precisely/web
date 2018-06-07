@@ -52,7 +52,9 @@ export class Login extends Component<RouteComponentProps<void>> {
     );
     const lastPage = utils.getLastPageBeforeLogin();
     utils.setLastPageBeforeLogin('/');
-    this.props.history.push(lastPage);
+    if (lastPage !== '/') {
+      this.props.history.push(lastPage);
+    }
   }
 
   render(): JSX.Element {
