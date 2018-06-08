@@ -27,7 +27,7 @@ function buildServerlessResources() {
   require('ts-node').register({module: "commonjs"});
   require('tsconfig-paths').register();
   const {dynogels, tableNameWithoutStage} = require('src/db/dynamo');
-  const {capitalize, camelCase} = require('lodash');
+  const {upperFirst, camelCase} = require('lodash');
   const fs = require('fs');
 
   const DynamoDBReadPermissions = [ 'dynamodb:Query', 'dynamodb:Scan', 'dynamodb:GetItem', 'dynamodb:BatchGetItem' ];
@@ -52,7 +52,7 @@ function buildServerlessResources() {
   for (const tableName in models) {
     if (models.hasOwnProperty(tableName)) {
       const model = models[tableName];
-      const uppercaseTableName = capitalize(camelCase(tableNameWithoutStage(tableName)));
+      const uppercaseTableName = upperFirst(camelCase(tableNameWithoutStage(tableName)));
       const serverlessResourceName = `DynamoTable${uppercaseTableName}`;
       definitions[serverlessResourceName] = {
         Type: 'AWS::DynamoDB::Table',

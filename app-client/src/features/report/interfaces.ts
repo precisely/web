@@ -6,23 +6,6 @@
  * without modification, are not permitted.
  */
 
-export interface Genotype {
-  opaqueId: string;
-  sampleId?: string;
-  source?: string;
-  gene: string;
-  variantCall: string;
-  zygosity: string;
-  startBase?: string;
-  chromosomeName?: string;
-  variantType?: string;
-  quality: string;
-}
-
-export interface UserData {
-  genotypes: Genotype[];
-}
-
 export interface ReportData {
   id: string;
   title: string;
@@ -31,5 +14,4 @@ export interface ReportData {
   parsedContent: string;
   topLevel?: boolean;
   genes: string[];
-  userData: UserData;
 }

@@ -7,14 +7,14 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${opt:stage, env:STAGE, "dev"}
+  stage: ${file(../serverless/common.yml):stage} #${opt:stage, env:STAGE, "dev"}
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
   deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
 
   # Store commonly used or noteworthy values here
 
-  vars: 
+  vars:
     account: ${file(../serverless/common.yml):account}
     accountFromStage: ${file(../serverless/common.yml):accountFromStage}
     accountId: ${file(../serverless/common.yml):accountId}
@@ -47,7 +47,8 @@ provider:
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
-    genetics23andMeBucket: ${self:provider.stage}-precisely-genetics-23andme
+    userUploadBucket: ${self:provider.stage}-precisely-user-upload
+
 
     # kmsKeyArn: ${self:provider.vars.kmsKeyArns.${self:provider.vars.account}}
     # kmsKeyArns:
@@ -89,7 +90,7 @@ provider:
 
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
-    S3_BUCKET_GENETICS_23ANDME: ${self:provider.vars.genetics23andMeBucket}
+    S3_BUCKET_USER_UPLOAD: ${self:provider.vars.userUploadBucket}
 
     DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
@@ -108,11 +109,12 @@ resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
-  - Resources: ${file(./serverless/resources/genetics-buckets.yml)}
+  - Resources: ${file(./serverless/resources/s3-buckets.yml)}
 
 plugins:
-  # Comment out the `serverless-domain-manager` line
-  # on first-time deployment of a new stage, then uncomment it and redeploy
+  # You will need to temporarily comment out the `serverless-domain-manager` line
+  # on first-time deployment of a new stage
+  # See ../README.md "Developer subdomains" topic for instructions
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
