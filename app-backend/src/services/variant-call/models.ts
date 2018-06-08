@@ -14,6 +14,7 @@ export class VariantCallAttributes {
   variantId: string; // referenceName:startBaseIndex:callSetId
                      // chr1:123918556:947101386017
 
+  genomeVersion?: string;
   // this is equivalent to GA4GH callset Id - this is the id of a dataset
   // uploaded by the user, produced by Akesogen, etc.
   callSetId?: string;
@@ -39,6 +40,8 @@ export class VariantCallAttributes {
   //
   rsId?: string;
   gene?: string;
+  geneStart?: number;
+  geneEnd?: number;
   zygosity?: string;
 }
 
@@ -48,7 +51,7 @@ interface VariantCallMethods {
 }
 
 interface VariantCallStaticMethods {
-  forUser(opaqueId: string, genes?: string[]): Promise<VariantCall[]>;
+  forUser(userId: string, genes?: string[]): Promise<VariantCall[]>;
 }
 
 // model instance type
@@ -61,19 +64,23 @@ export const VariantCall = defineModel<
   >(
   'variant-call', {
     hashKey : 'userId',
-    rangeKey: 'startBaseIndex',
+    rangeKey: 'variantId',
 
     timestamps : true,
 
     schema : {
       userId: Joi.string(),
-      variantId: Joi.string().regex(/^\w+:\d+:\w+$/),
+
+      // variantId structure: {referenceName}:{startIndex}:{callSetId}:{genomeVersion}
+      variantId: Joi.string().regex(/^\w+:\d+:[^:]+:[^:]+$/),
 
       //
       // Core VCF data
       //
       // sequence name e.g., chr1
       referenceName: Joi.string(),
+      // the genome version
+      genomeVersion: Joi.string(),
       // this is equivalent to GA4GH callset Id
       callSetId: Joi.string(),
       // start index with respect to sequence - must be string for DynamoDB indexing
@@ -96,6 +103,8 @@ export const VariantCall = defineModel<
       //
       rsId: Joi.string().optional(),
       gene: Joi.string().optional(),
+      geneStart: Joi.number().optional(), // genomic coordinate for start base
+      geneEnd: Joi.number().optional(),   // genomic coordinate for end base
       zygosity: Joi.string().valid(...Zygosity).optional(), // heterozygous, homozygou,
     }
   }
