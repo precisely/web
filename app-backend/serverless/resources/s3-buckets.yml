@@ -1,3 +1,7 @@
+S3BucketUserUpload:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.vars.userUploadBucket}
 S3BucketGeneticsVCF:
   Type: AWS::S3::Bucket
   Properties:
