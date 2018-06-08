@@ -28,5 +28,5 @@ PreciselyAPIPolicy:
     Statement:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.read}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
-      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Genotype.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
 ...
