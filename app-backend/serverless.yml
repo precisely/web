@@ -7,7 +7,7 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${opt:stage, env:STAGE, "dev"}
+  stage: ${file(../serverless/common.yml):stage} #${opt:stage, env:STAGE, "dev"}
   region: ${opt:region, env:REGION, "us-east-1"}
   profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
   deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket

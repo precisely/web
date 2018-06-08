@@ -10,3 +10,4 @@ accountFromStage:
   default: dev
 
 auth0TenantName: ${self:provider.vars.account}-precisely
+stage: ${opt:stage, env:STAGE, "dev"}
