@@ -1,1 +1,1 @@
-export { GraphQLContext, scoped } from './graphql-context';
+export { GraphQLContext } from './graphql-context';
