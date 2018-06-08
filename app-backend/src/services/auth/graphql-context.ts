@@ -89,11 +89,11 @@ export class GraphQLContext {
    */
   public static dynamoAttributeResolver<T>(
     resource: string,
-    attrs: (keyof T)[] | { [key: string]: keyof T }
+    attrs: Extract<keyof T, string>[] | { [key: string]: Extract<keyof T, string> }
   ): IResolverObject {
     return this.propertyResolver(
       resource, attrs,
-      (mappedKey: keyof T) => (obj: Item<T>) => obj.get(mappedKey));
+      (mappedKey: Extract<keyof T, string>) => (obj: Item<T>) => obj.get(mappedKey));
   }
 
   /**
