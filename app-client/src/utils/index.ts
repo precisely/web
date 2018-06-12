@@ -6,6 +6,7 @@
  * without modification, are not permitted.
  */
 
+const storeLastPageBeforeLoginAt = 'lastPageBeforeLogin';
 export const utils = {
 
   isEmpty: function(object: Object) {
@@ -16,8 +17,11 @@ export const utils = {
     return process.env.NODE_ENV || '';
   },
 
-  setLastPageBeforeLogin: function(path: string) {
-    localStorage.setItem('lastPageBeforeLogin', path);
+  setLastPageBeforeLogin: function(path: string | null) {
+    if (path) {
+      localStorage.setItem(storeLastPageBeforeLoginAt, path);
+    }
+    localStorage.removeItem(storeLastPageBeforeLoginAt);
   },
   setAuthStorage: function (
       accessToken: string = '', 
@@ -30,8 +34,8 @@ export const utils = {
     localStorage.setItem('authResult', authResult);
   },
   getLastPageBeforeLogin: function() {
-    const lastPage = localStorage.getItem('lastPageBeforeLogin');
-    return lastPage ? lastPage : process.env.REACT_APP_URL;
+    const lastPage = localStorage.getItem(storeLastPageBeforeLoginAt);
+    return lastPage ? lastPage : '/';
   }
 
 };

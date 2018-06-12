@@ -51,10 +51,8 @@ export class Login extends Component<RouteComponentProps<void>> {
       JSON.stringify(authResult)
     );
     const lastPage = utils.getLastPageBeforeLogin();
-    utils.setLastPageBeforeLogin('/');
-    if (lastPage !== '/') {
-      this.props.history.push(lastPage);
-    }
+    utils.setLastPageBeforeLogin(null);
+    this.props.history.push(lastPage);
   }
 
   render(): JSX.Element {
