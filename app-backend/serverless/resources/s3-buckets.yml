@@ -12,21 +12,6 @@ S3BucketIngestionError:
   Properties:
     BucketName: ${self:provider.vars.ingestionErrorBucket}
 
-S3BucketGenetics23andMe:
-  Type: AWS::S3::Bucket
-  Properties:
-    BucketName: ${self:provider.vars.genetics23andMeBucket}
-
-S3BucketGeneticsAkesogen:
-  Type: AWS::S3::Bucket
-  Properties:
-    BucketName: ${self:provider.vars.geneticsAkesogenBucket}
-
-S3BucketGeneticsAncestry:
-  Type: AWS::S3::Bucket
-  Properties:
-    BucketName: ${self:provider.vars.geneticsAncestryBucket}
-
 VCFIngesterLambdaPermission:
   Type: AWS::Lambda::Permission
   Properties:
@@ -49,4 +34,4 @@ RawDataUploadLambdaPermission:
     Action: lambda:InvokeFunction
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:provider.vars.genetics23andMeBucket}
+    SourceArn: arn:aws:s3:::${self:provider.vars.userUploadBucket}

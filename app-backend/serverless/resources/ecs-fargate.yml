@@ -1,5 +1,5 @@
 ---
-DefaultECSCluster:
+IngestionECSCluster:
   Type: "AWS::ECS::Cluster"
   Properties:
     ClusterName: ${self:provider.vars.ingestionClusterName}
@@ -32,12 +32,12 @@ IngestionECSTaskDefinition:
     RequiresCompatibilities:
       - FARGATE
 
-ECSService:
+IngestionECSService:
   Type: "AWS::ECS::Service"
   Properties: 
     Cluster: 
-      Ref: DefaultECSCluster 
-    ServiceName: ${self:provider.stage}-DefaultECSServiceName
+      Ref: IngestionECSCluster 
+    ServiceName: ${self:provider.stage}-IngestionECSService
     TaskDefinition: 
       Ref: IngestionECSTaskDefinition
     DesiredCount: 0
