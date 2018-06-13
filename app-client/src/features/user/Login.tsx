@@ -9,16 +9,18 @@ import Auth0Lock from 'auth0-lock';
 import {Component} from 'react';
 import {authLockButtonBackground} from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
-import { utils } from '../../utils';
-const { currentUser } = require('../../constants/currentUser');
-const logo = require('src/assets/logo.png');
+import * as AuthUtils from 'src/utils/auth';
+
+const LOGO = require('src/assets/logo.png');
+const KEY_FOR_LAST_PATH_BEFORE_LOGIN = 'lastPathBeforeLogin';
+
 export class Login extends Component<RouteComponentProps<void>> {
   lock = new Auth0Lock(
     process.env.REACT_APP_AUTH0_CLIENT_ID,
     process.env.REACT_APP_AUTH0_TENANT,
     {
       theme: {
-        logo: logo,
+        logo: LOGO,
         primaryColor: authLockButtonBackground
       },
       languageDictionary: {
@@ -45,21 +47,37 @@ export class Login extends Component<RouteComponentProps<void>> {
   }
 
   onAuthentication = (authResult: AuthResult) => {
-    utils.setAuthStorage(
-      authResult.accessToken,
-      (new Date().getTime() + authResult.expiresIn * 1000).toString(),
-      JSON.stringify(authResult)
-    );
-    const lastPage = utils.getLastPageBeforeLogin();
-    utils.setLastPageBeforeLogin(null);
-    this.props.history.push(lastPage);
+    this.saveAuthenticationInfo(authResult);
+    this.redirectAfterLogin();
+  }
+
+  redirectAfterLogin() {
+    const lastPath = this.getLastPathBeforeLogin();
+    this.saveLastPath(null);
+    this.props.history.push(lastPath);
+  }
+
+  saveAuthenticationInfo (authResult: AuthResult) {
+    AuthUtils.saveToken(authResult.accessToken, authResult.expiresIn);
+  }
+
+  saveLastPath (path: string | null) {
+    if (path) {
+      localStorage.setItem(KEY_FOR_LAST_PATH_BEFORE_LOGIN, path);
+    }
+    localStorage.removeItem(KEY_FOR_LAST_PATH_BEFORE_LOGIN);
+  }
+  
+  getLastPathBeforeLogin() {
+    const lastPage = localStorage.getItem(KEY_FOR_LAST_PATH_BEFORE_LOGIN);
+    return lastPage ? lastPage : '/';
   }
 
   render(): JSX.Element {
     // Avoid showing Lock when hash is parsed.
-    if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !currentUser.isAuthenticated()) {
+    if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !AuthUtils.isAuthenticated()) {
       if (this.props.location.state) {
-        utils.setLastPageBeforeLogin(this.props.location.state.from);
+        this.saveLastPath(this.props.location.state.from);
       }
       this.lock.show();
     } 

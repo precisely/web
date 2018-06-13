@@ -6,11 +6,7 @@
  * without modification, are not permitted.
  */
 
-jest.mock('src/utils/index');
-
-import {currentUser} from 'src/constants/currentUser';
-import { utils } from '../../utils';
-
+import * as AuthUtils from 'src/utils/auth';
 const unroll = require('unroll');
 unroll.use(it);
 
@@ -24,17 +20,20 @@ describe('Testing user utility methods', () => {
   });
 
   it('should clear the accessToken after logout and redirect to home', () => {
-    currentUser.logout();
-    expect(utils.setAuthStorage).toBeCalled();
+    window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, 'xyz'); // dummy token
+    window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, new Date().getTime().toString()); 
+    AuthUtils.logout();
+    expect(window.localStorage.getItem(AuthUtils.ACCESS_TOKEN_KEY)).toBeNull();
+    expect(window.localStorage.getItem(AuthUtils.EXPIRES_IN_KEY)).toBeNull();
     expect(window.location.pathname).toBe('/');
   });
 
   unroll(
       'isAuthenticated test for #case',
       (done: () => void, testArgs: {accessToken: string, expiresAt: number, expected: string}) => {
-        window.localStorage.setItem('accessToken', testArgs.accessToken);
-        window.localStorage.setItem('expiresAt', testArgs.expiresAt.toString());
-        expect(currentUser.isAuthenticated()).toEqual(testArgs.expected);
+        window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, testArgs.accessToken);
+        window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, testArgs.expiresAt.toString());
+        expect(AuthUtils.isAuthenticated()).toEqual(testArgs.expected);
         done();
       },
       [

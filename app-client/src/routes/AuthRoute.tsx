@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
-const {currentUser} = require('../constants/currentUser');
+import * as AuthUtils from 'src/utils/auth';
 
 // tslint:disable-next-line
 const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any>, ...rest: any[]) => {
@@ -30,7 +30,7 @@ export const AuthRoute = (authProps: AuthProps) => {
     <Route 
         {...rest} 
         render={ routeProps => {
-          return currentUser.isAuthenticated() ? (
+          return AuthUtils.isAuthenticated() ? (
             renderMergedProps(authProps.component, routeProps, rest)
           ) : (
             <Redirect 

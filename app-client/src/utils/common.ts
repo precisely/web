@@ -1,5 +1,3 @@
-import { User } from '../utils/User';
-
 /*
  * Copyright (c) 2011-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -8,4 +6,10 @@ import { User } from '../utils/User';
  * without modification, are not permitted.
  */
 
-export const currentUser = new User();
+export function isEmpty(object: Object) {
+  return (!object || !Object.keys(object).length);
+}
+
+export function getEnvironment() {
+  return process.env.NODE_ENV || '';
+}

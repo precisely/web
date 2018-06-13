@@ -8,7 +8,6 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {currentUser} from 'src/constants/currentUser';
 import {CSS} from 'src/interfaces';
 import {
   Collapse,
@@ -20,8 +19,9 @@ import {
   NavLink,
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
-
-const logo = require('src/assets/precisely-logo.png');
+// import * as AuthUtils from 'src/utils/auth';
+let AuthUtils = require('src/utils/auth');
+const LOGO = require('src/assets/precisely-logo.png');
 
 export interface NavigationBarState {
   isOpen?: boolean;
@@ -41,8 +41,8 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   }
 
   handleClick = (): void => {
-    if (currentUser.isAuthenticated()) {
-      currentUser.logout();
+    if (AuthUtils.isAuthenticated()) {
+      AuthUtils.logout();
     } else {
       this.props.history.push('/login');
     }
@@ -64,7 +64,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
     return (
       <Navbar light sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
         <NavbarBrand href="/">
-          <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+          <img id="brand-logo" src={LOGO} alt="precise.ly" style={logoStyle} />
         </NavbarBrand>
         <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -74,7 +74,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
             </NavItem>
             <NavItem>
               <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
-                {currentUser.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
+                {AuthUtils.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
               </NavLink>
             </NavItem>
           </Nav>

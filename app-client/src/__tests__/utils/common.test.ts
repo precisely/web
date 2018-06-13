@@ -7,7 +7,7 @@
  */
 
 import {toast} from 'react-toastify';
-import {utils} from 'src/utils/index';
+import * as utils from 'src/utils/common';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -33,10 +33,5 @@ describe('Tests for utils/index.ts', () => {
 
     process.env.NODE_ENV = '';
     expect(utils.getEnvironment()).toEqual('');
-  });
-
-  it('should be able to get last page before login if set', () => {
-    utils.setLastPageBeforeLogin('/dummyPath');
-    expect(utils.getLastPageBeforeLogin()).toEqual('/dummyPath');
   });
 });
