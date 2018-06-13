@@ -29,11 +29,9 @@ provider:
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName:
-      "${
-          file(../serverless/common.yml):auth0TenantName.${self:provider.vars.account},
-          file(../serverless/common.yml):auth0TenantName.default
-      }"
+    auth0TenantName: "${file(../serverless/common.yml):auth0TenantName}"
+    auth0TenantNameMap: "${file(../serverless/common.yml):auth0TenantNameMap}"
+
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
@@ -211,5 +209,5 @@ functions:
       'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
     events:
       - s3:
-          bucket: Genetics23andMe
+          bucket: UserUpload
           event: s3:ObjectCreated:*

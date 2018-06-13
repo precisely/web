@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {Report, ReportState} from './models';
+import {Report, ReportState, ReportAttributes} from './models';
 import accessControl from 'src/common/access-control';
 import { IContext } from 'accesscontrol-plus';
 import { GraphQLContext } from 'src/services/auth/graphql-context';
@@ -87,7 +87,7 @@ export const resolvers = {
       return await report.updateAsync();
     }
   },
-  Report: GraphQLContext.dynamoAttributeResolver('report', [
-    'id', 'slug', 'title', 'rawContent', 'owner'
+  Report: GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', [
+    'id', 'slug', 'title', 'rawContent', 'ownerId'
   ])
 };
