@@ -28,4 +28,33 @@ PreciselyGraphQLAPIRole:
     Policies:
       - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):PreciselyAPIPolicy}
+
+IngestionECSTaskRole:
+  Type: AWS::IAM::Role 
+  Properties: 
+    RoleName: ${self:provider.stage}-IngestionECSTaskRole
+    AssumeRolePolicyDocument: 
+      <<: *DefaultAssumeRolePolicyDocument
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - ecs-tasks.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonSESFullAccess
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):IngestionECSTaskPolicy}
+
+RawUploadLambdaRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:provider.stage}-RawUploadLambdaRole
+    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):RawUploadLambdaPolicy}
+
 ...

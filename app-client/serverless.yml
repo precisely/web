@@ -4,10 +4,56 @@ frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  stage: dev
+  runtime: nodejs8.10
+  stage: ${opt:stage, env:STAGE, "dev"}
   region: us-east-1
-  profile: ${opt:stage, self:provider.stage}-profile-precisely
+  profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
+
+  # Store commonly used or noteworthy values here
+
+  vars: 
+    account: ${file(../serverless/common.yml):account}
+    accountFromStage: ${file(../serverless/common.yml):accountFromStage}
+    accountId: ${file(../serverless/common.yml):accountId}
+
+    auth0TenantNameMap: ${file(../serverless/common.yml):auth0TenantNameMap} 
+    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+
+    # default AWS config profile name (used locally)
+    defaultProfile: "${file(../serverless/common.yml):defaultProfile}"
+
+    # customDomain / Route53 config
+    domain: ${file(../serverless/common.yml):domain}
+    domainMap:
+      prod: precise.ly
+      offline: localhost
+      default: ${self:provider.stage}.codeprecisely.net
+    originId: "${self:provider.stage}-s3-origin"
+    certificateName: "${file(../serverless/common.yml):certificateName}"
+    certificateMap: "${file(../serverless/common.yml):certificateMap}"
+
+    reactURLMap: ${file(../serverless/common.yml):reactURLMap} 
+    reactURL: ${file(../serverless/common.yml):reactURL}
+    
+    distributionBucket: ${self:provider.stage}-precisely-react
+
+  ##
+  ## Environment for handlers
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    ACCOUNT_ID: ${self:provider.vars.accountId}
+
+    # Auth0 values - needed for verifying Auth0 tokens
+    REACT_APP_AUTH0_TENANT: ${self:provider.vars.auth0TenantName}.auth0.com # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    REACT_APP_AUTH0_CLIENT_ID: yrNpYsLHFQ4mBHsP4rqDC8LNPLaOZDS4
+
+    REACT_APP_URL: ${self:provider.vars.reactURL}
+    
+
+resources:
+  - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}
+  - Resources: ${file(./serverless/resources/dns.yml)}
 
 plugins:
   - serverless-finch
@@ -15,5 +61,8 @@ plugins:
 
 custom:
   client:
-    bucketName: ${opt:stage, self:provider.stage}-precisely-01
+    bucketName: ${self:provider.vars.distributionBucket}
     distributionFolder: build
+    indexDocument: index.html
+    errorDocument: index.html
+

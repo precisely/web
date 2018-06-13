@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-Present, Precise.ly, Inc.
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or
@@ -9,9 +9,8 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
-import {AuthRoute} from 'src/routes/AuthRoute';
 import {LoadingPage} from 'src/features/common/LoadingPage';
-import {currentUser} from 'src/constants/currentUser';
+import { AuthRoute } from './AuthRoute';
 
 // tslint:disable
 /* istanbul ignore next */
@@ -34,56 +33,22 @@ function LoadComponent(componentName: string, path?: string) {
 export class Routes extends React.Component {
 
   render(): JSX.Element {
+
     return (
       <Switch>
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
+        <Route
             path="/"
-            exact
             component={LoadComponent('Homepage', 'homepage/Homepage')}
+            exact
         />
         <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
+            path="/view-report"
+            component={LoadComponent('Report', 'report/Report')}
+        />
+        <Route 
             path="/login"
             exact
             component={LoadComponent('Login', 'user/Login')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/signup"
-            exact
-            component={LoadComponent('Signup', 'user/Signup')}
-        />
-        <AuthRoute
-            onEnter={currentUser.isLoggedIn}
-            redirectTo="/login"
-            path="/dashboard"
-            exact
-            component={LoadComponent('Dashboard', 'user/Dashboard')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/reset-password/:email"
-            exact
-            component={LoadComponent('ResetPassword', 'user/ResetPassword')}
-        />
-        <AuthRoute
-            onEnter={() => !currentUser.isLoggedIn()}
-            redirectTo="/dashboard"
-            path="/forgot-password"
-            exact
-            component={LoadComponent('ForgotPassword', 'user/ForgotPassword')}
-        />
-        <AuthRoute
-            onEnter={currentUser.isLoggedIn}
-            redirectTo="/login"
-            path="/view-report"
-            exact
-            component={LoadComponent('Report', 'report/Report')}
         />
         <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={LoadComponent('NotFound', 'common/NotFound')} />

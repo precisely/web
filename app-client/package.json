@@ -6,11 +6,10 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "start": "env-cmd ../config/security.env.local node scripts/start.js",
+    "start": "env-cmd ../config/default.env node scripts/start.js",
+    "shell": "env-cmd ../config/default.env yarn sls shell -S zsh",
     "test": "env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
-    "build:dev": "env-cmd ../config/security.env.local node scripts/build.js",
-    "build:stage": "env-cmd ../config/security.env.stage node scripts/build.js",
-    "build:prod": "env-cmd ../config/security.env.prod node scripts/build.js",
+    "build": "env-cmd ../config/default.env node scripts/build.js -p",
     "compile": "yarn run clean && tsc",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
@@ -53,7 +52,7 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "amazon-cognito-identity-js": "<rootDir>/__mocks__/amazon-cognito-identity-js/index.js"
+      "auth0-lock": "<rootDir>/__mocks__/auth0-lock/index.js"
     },
     "moduleFileExtensions": [
       "web.ts",
@@ -97,12 +96,15 @@
     ]
   },
   "dependencies": {
+    "@types/auth0-lock": "^11.4.3",
     "@types/bluebird": "^3.5.20",
     "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "1.1.5",
     "apollo-client": "2.2.1",
     "apollo-client-preset": "1.0.6",
+    "apollo-link-context": "^1.0.8",
     "apollo-link-http": "1.3.2",
+    "auth0-lock": "11.5.2",
     "autoprefixer": "7.1.6",
     "aws-sdk": "2.188.0",
     "axios": "0.17.1",
@@ -122,7 +124,7 @@
     "iscroll": "5.2.0",
     "iscroll-react": "1.0.3",
     "jest": "22.0.4",
-    "markdown-components": "1.2.0",
+    "markdown-components": "^2.0.0",
     "memory-streams": "0.1.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -158,6 +160,7 @@
     "tslint": "5.7.0",
     "tslint-loader": "3.5.3",
     "tslint-react": "3.2.0",
+    "types": "^0.1.1",
     "typescript": "2.6.1",
     "url-loader": "0.5.9",
     "webpack": "3.5.1",
@@ -179,6 +182,7 @@
     "@types/react-redux": "5.0.11",
     "@types/react-router-dom": "4.2.0",
     "@types/react-router-redux": "5.0.10",
+    "@types/react-test-renderer": "^16.0.1",
     "@types/react-transition-group": "2.0.6",
     "@types/reactstrap": "5.0.12",
     "@types/redux-logger": "3.0.5",

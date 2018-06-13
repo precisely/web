@@ -1,0 +1,10 @@
+DefaultInternetGateway:
+  Type: AWS::EC2::InternetGateway
+
+DefaultGatewayAttachment:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    InternetGatewayId:
+      Ref: DefaultInternetGateway
+    VpcId:
+      Ref: DefaultVPC

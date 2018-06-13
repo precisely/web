@@ -6,8 +6,10 @@
  * without modification, are not permitted.
  */
 
-function AuthenticationDetails(authenticationData) {
-  this.username = authenticationData.Username;
+export function isEmpty(object: Object) {
+  return (!object || !Object.keys(object).length);
 }
 
-module.exports = AuthenticationDetails;
+export function getEnvironment() {
+  return process.env.NODE_ENV || '';
+}

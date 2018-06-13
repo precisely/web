@@ -8,8 +8,6 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {RouteComponentProps} from 'react-router';
-import {currentUser} from 'src/constants/currentUser';
 import {CSS} from 'src/interfaces';
 import {
   Collapse,
@@ -20,8 +18,10 @@ import {
   NavItem,
   NavLink,
 } from 'src/features/common/ReusableComponents';
-
-const logo = require('src/assets/precisely-logo.png');
+import { RouteComponentProps } from 'react-router';
+// import * as AuthUtils from 'src/utils/auth';
+let AuthUtils = require('src/utils/auth');
+const LOGO = require('src/assets/precisely-logo.png');
 
 export interface NavigationBarState {
   isOpen?: boolean;
@@ -29,7 +29,8 @@ export interface NavigationBarState {
 }
 
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<{email?: string} | void>, NavigationBarState> {
+// tslint:disable-next-line
+export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   state = {
     isOpen: false,
     backgroundColor: 'transparent',
@@ -39,10 +40,9 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
     this.setState({isOpen: !this.state.isOpen});
   }
 
-  handleClick = (loggedIn: boolean): void => {
-    if (loggedIn) {
-      currentUser.logOut();
-      this.props.history.replace('/');
+  handleClick = (): void => {
+    if (AuthUtils.isAuthenticated()) {
+      AuthUtils.logout();
     } else {
       this.props.history.push('/login');
     }
@@ -57,7 +57,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
   }
 
   render() {
-    const loggedIn: boolean = currentUser.isLoggedIn();
     const {isOpen, backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;
@@ -65,7 +64,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
     return (
       <Navbar light sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
         <NavbarBrand href="/">
-          <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+          <img id="brand-logo" src={LOGO} alt="precise.ly" style={logoStyle} />
         </NavbarBrand>
         <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -74,8 +73,8 @@ export class NavigationBar extends React.Component<RouteComponentProps<{email?: 
               <NavLink href="/about-us">ABOUT US</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink style={{cursor: 'pointer'}} onClick={(): void => this.handleClick(loggedIn)}>
-                {loggedIn ? 'LOG OUT' : 'LOG IN'}
+              <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
+                {AuthUtils.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
               </NavLink>
             </NavItem>
           </Nav>
