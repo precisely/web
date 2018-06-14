@@ -6,6 +6,12 @@ S3BucketGeneticsVCF:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:provider.vars.geneticsVCFBucket}
+
+S3BucketIngestionError:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.vars.ingestionErrorBucket}
+
 VCFIngesterLambdaPermission:
   Type: AWS::Lambda::Permission
   Properties:
@@ -17,3 +23,15 @@ VCFIngesterLambdaPermission:
     SourceAccount:
       Ref: AWS::AccountId
     SourceArn: arn:aws:s3:::${self:provider.vars.geneticsVCFBucket}
+
+RawDataUploadLambdaPermission:
+  Type: AWS::Lambda::Permission
+  Properties:
+    FunctionName:
+       # serverless generates this name from `functions: UserDataUpload: ...`
+      Fn::GetAtt: [ RawDataUploadLambdaFunction, Arn ]
+    Principal: s3.amazonaws.com
+    Action: lambda:InvokeFunction
+    SourceAccount:
+      Ref: AWS::AccountId
+    SourceArn: arn:aws:s3:::${self:provider.vars.userUploadBucket}

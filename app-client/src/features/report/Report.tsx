@@ -15,7 +15,6 @@ import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/features/report/queries';
 import {ReportData} from 'src/features/report/interfaces';
-import {MarkdownComponentRenderer} from 'src/features/markdown/MarkdownComponentRenderer';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -45,7 +44,6 @@ export class ReportImpl extends React.Component<ReportProps> {
     return (
       <div>
         <h6>{report.title}</h6>
-        <MarkdownComponentRenderer parsedContent={report.parsedContent} userData={report.userData} />
       </div>
     );
   }
@@ -65,6 +63,7 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 }
 
+// tslint:disable-next-line
 export const Report = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.

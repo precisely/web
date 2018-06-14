@@ -87,8 +87,10 @@ export const resolvers = {
       return await report.updateAsync();
     }
   },
+
   Report: GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
     id: 'id',
+    ownerId: 'ownerId',
     slug: 'slug',
     title: 'title',
     content: 'content',

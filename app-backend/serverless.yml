@@ -24,30 +24,35 @@ provider:
       default: 300
       devDefault: 0
 
-    certificateName: "${self:provider.vars.certificateMap.${self:provider.stage},
-                        self:provider.vars.certificateMap.default}"
-    certificateMap:
-      prod: "*.precise.ly"
-      default: "*.codeprecisely.net"
+    certificateName: "${file(../serverless/common.yml):certificateName}"
+    certificateMap: "${file(../serverless/common.yml):certificateMap}"
 
     graphQLAPIPath: "/api"
 
-    auth0TenantName: ${file(../serverless/common.yml):auth0TenantName}
+    auth0TenantName: "${file(../serverless/common.yml):auth0TenantName}"
+    auth0TenantNameMap: "${file(../serverless/common.yml):auth0TenantNameMap}"
+
     auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
 
     # default AWS config profile name (used locally)
-    defaultProfile: ${self:provider.vars.account}-profile-precisely
+    defaultProfile: "${file(../serverless/common.yml):defaultProfile}"
 
     # customDomain / Route53 config
-    domain: "${self:provider.vars.domainMap.${self:provider.vars.account},
-                self:provider.vars.domainMap.default}"
+    domain: ${file(../serverless/common.yml):domain}
     domainMap:
-      prod: precise.ly
-      default: ${self:provider.stage}.codeprecisely.net
+      prod: api.precise.ly
+      offline: localhost
+      default: ${self:provider.stage}-api.codeprecisely.net
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     userUploadBucket: ${self:provider.stage}-precisely-user-upload
+    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
+
+    # Ingestion ECS Fargate Task
+    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
+    ingestionContainerName: ${self:provider.stage}-IngestionContainerName
+    ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
 
     logLevel: ${self:provider.vars.logLevels.${self:provider.stage},
                     self:provider.vars.logLevels.default}
@@ -83,6 +88,7 @@ provider:
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_USER_UPLOAD: ${self:provider.vars.userUploadBucket}
+    S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
 
     DOMAIN: ${self:provider.vars.domain}
     GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
@@ -102,11 +108,15 @@ resources:
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/s3-buckets.yml)}
+  - Resources: ${file(./serverless/resources/logs.yml)}
+  - Resources: ${file(./serverless/resources/ecs-fargate.yml)}
+  - Resources: ${file(./serverless/resources/network/subnet.yml)}
+  - Resources: ${file(./serverless/resources/network/routes.yml)}
+  - Resources: ${file(./serverless/resources/network/gateway.yml)}
 
 plugins:
-  # You will need to temporarily comment out the `serverless-domain-manager` line
-  # on first-time deployment of a new stage
-  # See ../README.md "Developer subdomains" topic for instructions
+  # Comment out the `serverless-domain-manager` line
+  # on first-time deployment of a new stage, then uncomment it and redeploy
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
@@ -183,3 +193,21 @@ functions:
           bucket: GeneticsVCF
           event: s3:ObjectCreated:*
 
+  # Raw data uploader is triggered by new file in any of the raw data buckets
+  RawDataUpload:
+    handler: src/services/genetics-pipeline/handlers.rawDataUpload
+    environment:
+      INGESTION_CLUSTER: ${self:provider.vars.ingestionClusterName}
+      INGESTION_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
+      INGESTION_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
+      SUBNET_ONE:
+        Ref: DefaultSubnetOne
+      SUBNET_TWO:
+        Ref: DefaultSubnetTwo
+
+    role: 
+      'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
+    events:
+      - s3:
+          bucket: UserUpload
+          event: s3:ObjectCreated:*

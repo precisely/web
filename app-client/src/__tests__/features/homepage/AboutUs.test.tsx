@@ -23,7 +23,7 @@ configure({adapter: new Adapter()});
 describe('AboutUs tests.', () => {
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>> =
-      shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
+      shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

@@ -26,7 +26,7 @@ configure({adapter: new Adapter()});
 describe('Homepage tests.', () => {
 
   const componentTree: ShallowWrapper =
-      shallow(<Homepage history={mockedHistory} match={mockedMatch()} location={mockedLocation} />);
+      shallow(<Homepage history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

@@ -1,0 +1,41 @@
+DefaultVPC:
+  Type: 'AWS::EC2::VPC'
+  Properties:
+    EnableDnsSupport: true
+    EnableDnsHostnames: true
+    CidrBlock: '10.0.0.0/24'
+    Tags:
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultCustomVPC
+
+DefaultSubnetOne:
+  Type: 'AWS::EC2::Subnet'
+  Properties:
+    CidrBlock: '10.0.0.0/25'
+    AvailabilityZone: ${self:provider.region}e
+    MapPublicIpOnLaunch: true
+    VpcId:
+      Ref: DefaultVPC
+    Tags:
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultSubnetOne
+
+DefaultSubnetTwo:
+  Type: 'AWS::EC2::Subnet'
+  Properties:
+    CidrBlock: '10.0.0.128/25'
+    AvailabilityZone: ${self:provider.region}a
+    MapPublicIpOnLaunch: true
+    VpcId:
+      Ref: DefaultVPC
+    Tags:
+      - Key: Name
+        Value: ${self:provider.stage}-DefaultSubnetTwo
+    
+DefaultVPCSecurityGroup:
+  Type: 'AWS::EC2::SecurityGroup'
+  Properties:
+    GroupName: ${self:provider.stage}-DefaultVPCSecurityGroup
+    GroupDescription: 'Default vpc security group'
+    VpcId:
+      Ref: DefaultVPC
