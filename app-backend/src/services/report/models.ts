@@ -19,9 +19,8 @@ export interface ReportAttributes {
   title?: string;
   ownerId?: string;
   state?: ReportState;
-  rawContent?: string;
+  content?: string;
   parsedContent?: string;
-  topLevel?: boolean;
   variants?: string[];
 }
 
@@ -33,13 +32,13 @@ class ReportMethods {
 //   ownerId: string,
 //   title: string,
 //   slug?: string,
-//   rawContent: string,
+//   content: string,
 //   variants: string[]
 // };
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report>;
-  // safeCreate({slug, title, rawContent, variants}: ReportCreateArgs): Promise<Report>;
+  // safeCreate({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
   saveNew(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
 }
@@ -57,9 +56,8 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     title: Joi.string().required(),
     ownerId: Joi.string().required(),
     state: Joi.string().valid('published', 'draft').default('draft'),
-    rawContent: Joi.string(),
+    content: Joi.string(),
     parsedContent: Joi.string(),
-    topLevel: Joi.boolean(),
     variants: Joi.array().items(Joi.string())
   },
 
