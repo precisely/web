@@ -10,8 +10,8 @@ export interface ReportData {
   id: string;
   title: string;
   slug: string;
-  rawContent: string;
+  content: string;
   parsedContent: string;
   topLevel?: boolean;
-  genes: string[];
+  requirements: string[];
 }

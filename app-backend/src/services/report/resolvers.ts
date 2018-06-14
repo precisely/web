@@ -24,7 +24,7 @@ function userOwnsResource({user, resource}: IContext) {
 accessControl
   .grant('user')
     .resource('report')
-      .read.onFields('*', '!rawContent').where(reportPublished)
+      .read.onFields('*', '!content', '!variants').where(reportPublished)
       .read.onFields('*').where(userOwnsResource)
       .create.where(userOwnsResource)
       .update.where(userOwnsResource);
@@ -63,7 +63,7 @@ export const resolvers = {
       const report = <Report> await context.valid('report:create',
         new Report({
           ownerId: context.userId,
-          rawContent: content,
+          content: content,
           title, variants
         })
       );
@@ -82,12 +82,18 @@ export const resolvers = {
 
       report.set({
         title: title || report.get('title'),
-        context: context || report.get('rawContent')
+        context: context || report.get('content')
       });
       return await report.updateAsync();
     }
   },
-  Report: GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', [
-    'id', 'slug', 'title', 'rawContent', 'ownerId'
-  ])
+
+  Report: GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
+    id: 'id',
+    ownerId: 'ownerId',
+    slug: 'slug',
+    title: 'title',
+    content: 'content',
+    variants: 'variants'
+  })
 };

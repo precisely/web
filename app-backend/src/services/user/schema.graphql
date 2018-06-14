@@ -1,5 +1,8 @@
 
-type User {
+type UserProfile {
   id: String,
-  name: String
+  userId: String,
+  authorId: String,
+  firstName: String,
+  lastName: String
 }
