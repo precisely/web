@@ -11,11 +11,10 @@ import {log} from 'src/common/logger';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
-  // TODO
+  // pass
 };
 
 function getUserEmailFromFilename(filename: string) {
-  // TODO extract user id from filename
   return getUserFromAuth0('dummyUserId').email;
 }
 

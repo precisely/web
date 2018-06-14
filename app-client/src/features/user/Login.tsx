@@ -40,7 +40,6 @@ export class Login extends Component<RouteComponentProps<void>> {
     super(props);
     this.lock.on('authenticated', this.onAuthentication);
     this.lock.on('authorization_error', (error: Error) => {
-      // TODO - Need to add error reporting
       // tslint:disable-next-line
       console.log('something went wrong', error.message);
     });
@@ -67,7 +66,7 @@ export class Login extends Component<RouteComponentProps<void>> {
     }
     localStorage.removeItem(KEY_FOR_LAST_PATH_BEFORE_LOGIN);
   }
-  
+
   getLastPathBeforeLogin() {
     const lastPage = localStorage.getItem(KEY_FOR_LAST_PATH_BEFORE_LOGIN);
     return lastPage ? lastPage : '/';
@@ -80,7 +79,7 @@ export class Login extends Component<RouteComponentProps<void>> {
         this.saveLastPath(this.props.location.state.from);
       }
       this.lock.show();
-    } 
+    }
     return null;
   }
 }
