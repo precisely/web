@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# If STAGE variable is not set, this script loads environment
+# provided in config/default.env
+
+APPBACKEND_DIR=$(cd `dirname $0`/.. && pwd)
+
+if [ -z "$STAGE" ]; then
+  env-cmd ../config/default.env ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+elif [ -f ../config/${STAGE}.env ]; then
+  env-cmd ../config/${STAGE}.env ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+else
+  ${APPBACKEND_DIR}/node_modules/.bin/sls $1 $2 $3 $4 $5 $6 $7 $8 $9
+fi
