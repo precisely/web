@@ -6,10 +6,10 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "start": "env-cmd ../config/default.env node scripts/start.js",
-    "shell": "env-cmd ../config/default.env yarn sls shell -S zsh",
-    "test": "env-cmd ../config/security.env.local node scripts/test.js --env=jsdom",
     "build": "env-cmd ../config/default.env node scripts/build.js -p",
+    "start": "node scripts/start.js",
+    "shell": "SLS_DEBUG=* ./scripts/sls shell -S zsh",
+    "test": "jest --env=jsdom",
     "sls": "scripts/sls",
     "compile": "yarn run clean && tsc",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
@@ -19,7 +19,6 @@
     "deploy:prod": "yarn run build:prod && serverless client deploy -s prod"
   },
   "jest": {
-    "collectCoverage": true,
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
