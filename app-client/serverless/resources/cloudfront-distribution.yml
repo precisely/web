@@ -3,7 +3,7 @@ CloudFrontDistribution:
   Properties:
     DistributionConfig:
       Aliases:
-        - ${self:provider.vars.domain}
+        - ${self:provider.common.baseDomain}
       # Adding `stage` name as a Comment so that invalidation script can detect the stage by looking at the distribution
       Comment: ${self:provider.stage}
       DefaultRootObject: 'index.html'
@@ -43,11 +43,11 @@ CloudFrontDistribution:
       ViewerCertificate:
         AcmCertificateArn: arn:aws:acm:us-east-1:416000760642:certificate/f44b4ee7-b4cb-4d32-9c19-58ca6a97b42d
         # https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-SSLSupportMethod
-        SslSupportMethod: vip 
+        SslSupportMethod: vip
       Origins:
         - Id: ${self:provider.vars.originId}
           DomainName: "${self:provider.vars.distributionBucket}.s3.amazonaws.com"
           CustomOriginConfig:
             HTTPPort: '80'
             HTTPSPort: '443'
-            OriginProtocolPolicy: match-viewer 
+            OriginProtocolPolicy: match-viewer

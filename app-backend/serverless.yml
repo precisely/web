@@ -1,31 +1,31 @@
 service:
   name: precisely
-  common: ${file(../serverless/common.js):vars}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${self:service.common.stage}
-  region: ${self:service.common.region}
-  profile: ${self:service.common.profile}
-  deploymentBucket: ${self:service.common.account}-precisely-deployment-bucket
+  stage: ${self:provider.common.stage}
+  region: ${self:provider.common.region}
+  profile: ${self:provider.common.profile}
+  deploymentBucket: ${self:provider.common.account}-precisely-deployment-bucket
 
-  # Store commonly used or noteworthy values here
+  common: ${file(../serverless/common.js):vars}
+
   vars:
-    authorizerTTL: ${env:AUTHORIZER_TTL,self:provider.vars.authorizerTTLMap.${self:service.common.account},self:provider.vars.authorizerTTLMap.default}
+    authorizerTTL: ${env:AUTHORIZER_TTL,self:provider.vars.authorizerTTLMap.${self:provider.common.account},self:provider.vars.authorizerTTLMap.default}
     authorizerTTLMap:
       dev: 0
       default: 300
 
-    nodeEnv: ${env:NODE_ENV, self:provider.vars.nodeEnvMap.${self:service.common.account}}
+    nodeEnv: ${env:NODE_ENV, self:provider.vars.nodeEnvMap.${self:provider.common.account}}
     nodeEnvMap:
       dev: development
       prod: production
       beta: production
 
-    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:provider.vars.logLevelMap.${self:service.common.account}}}
+    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:provider.vars.logLevelMap.${self:provider.common.account}}}
     logLevelMap:
       prod: INFO
       beta: INFO
@@ -47,7 +47,7 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    ACCOUNT_ID: ${self:service.common.accountId}
+    ACCOUNT_ID: ${self:provider.common.accountId}
 
     LOG_LEVEL: ${self:provider.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
@@ -65,13 +65,13 @@ provider:
     S3_BUCKET_USER_UPLOAD: ${self:provider.vars.userUploadBucket}
     S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
 
-    BASE_DOMAIN: ${self:service.common.baseDomain}
-    API_DOMAIN: ${self:service.common.apiDomain}
-    GRAPHQL_API_PATH: ${self:service.common.graphQLAPIPath}
+    BASE_DOMAIN: ${self:provider.common.baseDomain}
+    API_DOMAIN: ${self:provider.common.apiDomain}
+    GRAPHQL_API_PATH: ${self:provider.common.graphQLAPIPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
-    AUTH0_TENANT_NAME: ${self:service.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
-    AUTH0_API_IDENTIFIER: https://${self:service.common.account}-precise.ly/graphql/api
+    AUTH0_TENANT_NAME: ${self:provider.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: https://${self:provider.common.account}-precise.ly/graphql/api
 
     # Quick and dirty way to define admins for now
     # TODO: better approach
@@ -103,11 +103,11 @@ plugins:
 
 custom:
   customDomain: # domain-manager settings - for the api
-    domainName: ${self:service.common.apiDomain}
+    domainName: ${self:provider.common.apiDomain}
     #basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
-    certificateName: ${self:service.common.certificateName}
+    certificateName: ${self:provider.common.certificateName}
     endpointType: regional
   dynamodb: # dynamodb-local settings
     start:
@@ -116,7 +116,7 @@ custom:
       migrate: true
       # seed: true
   stageSettings: # serverless-api-stage plugin
-    ${self:custom.stageSettingsMap.${self:service.common.account}, self:custom.stageSettingsMap.default}
+    ${self:custom.stageSettingsMap.${self:provider.common.account}, self:custom.stageSettingsMap.default}
 
   stageSettingsMap:
     dev:
@@ -144,7 +144,7 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:service.common.graphQLAPIPath}
+          path: ${self:provider.common.graphQLAPIPath}
           method: get
           cors: true
 
@@ -153,7 +153,7 @@ functions:
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
-          path: ${self:service.common.graphQLAPIPath}
+          path: ${self:provider.common.graphQLAPIPath}
           method: post
           cors: true
           authorizer:
