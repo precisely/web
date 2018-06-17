@@ -1,5 +1,6 @@
+
 module.exports.vars = (sls)=> {
-  const opt = sls.processedInput.options;
+  const opt = sls && sls.processedInput && sls.processedInput.options ? sls.processedInput.options : {};
   const env = process.env;
 
   const stage = opt.stage || env.STAGE || 'dev';
@@ -19,7 +20,7 @@ module.exports.vars = (sls)=> {
   const reactURL = account==='offline' ? `https://${baseDomain}:3000` : `https://${baseDomain}/`;
   const graphQLAPIPath = '/graphql';
 
-  return {
+  const result = {
     account,
     accountId: '#{AWS::AccountId}',
     apiDomain,
@@ -28,7 +29,10 @@ module.exports.vars = (sls)=> {
     certificateName,
     graphQLAPIPath,
     profile,
+    reactURL,
     region,
     stage
   };
+
+  return result;
 };
