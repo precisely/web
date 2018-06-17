@@ -1,48 +1,36 @@
 service:
   name: precisely
-  # awsKmsKeyArn: ${self:provider.vars.kmsKeyArn}
+  common: ${file(../serverless/common.js):vars}
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${file(../serverless/common.yml):stage} #${opt:stage, env:STAGE, "dev"}
-  region: ${opt:region, env:REGION, "us-east-1"}
-  profile: ${opt:profile, env:PROFILE, self:provider.vars.defaultProfile}
-  deploymentBucket: ${self:provider.vars.account}-precisely-deployment-bucket
+  stage: ${self:service.common.stage}
+  region: ${self:service.common.region}
+  profile: ${self:service.common.profile}
+  deploymentBucket: ${self:service.common.account}-precisely-deployment-bucket
 
   # Store commonly used or noteworthy values here
-
   vars:
-    account: ${file(../serverless/common.yml):account}
-    accountFromStage: ${file(../serverless/common.yml):accountFromStage}
-    accountId: ${file(../serverless/common.yml):accountId}
-
-    authorizerTTL:
-      dev: ${env:AUTHORIZER_TTL, self:provider.vars.authorizerTTL.devDefault}
+    authorizerTTL: ${env:AUTHORIZER_TTL,self:provider.vars.authorizerTTLMap.${self:service.common.account},self:provider.vars.authorizerTTLMap.default}
+    authorizerTTLMap:
+      dev: 0
       default: 300
-      devDefault: 0
 
-    certificateName: "${file(../serverless/common.yml):certificateName}"
-    certificateMap: "${file(../serverless/common.yml):certificateMap}"
+    nodeEnv: ${env:NODE_ENV, self:provider.vars.nodeEnvMap.${self:service.common.account}}
+    nodeEnvMap:
+      dev: development
+      prod: production
+      beta: production
 
-    graphQLAPIPath: "/api"
-
-    auth0TenantName: "${file(../serverless/common.yml):auth0TenantName}"
-    auth0TenantNameMap: "${file(../serverless/common.yml):auth0TenantNameMap}"
-
-    auth0APIIdentifier: https://${self:provider.vars.account}-precise.ly/graphql/api
-
-    # default AWS config profile name (used locally)
-    defaultProfile: "${file(../serverless/common.yml):defaultProfile}"
-
-    # customDomain / Route53 config
-    domain: ${file(../serverless/common.yml):domain}
-    domainMap:
-      prod: api.precise.ly
-      offline: localhost
-      default: ${self:provider.stage}-api.codeprecisely.net
+    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:provider.vars.logLevelMap.${self:service.common.account}}}
+    logLevelMap:
+      prod: INFO
+      beta: INFO
+      dev: DEBUG
+      offline: DEBUG
 
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
@@ -54,25 +42,12 @@ provider:
     ingestionContainerName: ${self:provider.stage}-IngestionContainerName
     ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
 
-    logLevel: ${self:provider.vars.logLevels.${self:provider.stage},
-                    self:provider.vars.logLevels.default}
-    logLevels:
-      prod: INFO
-      default: DEBUG
-
-    nodeEnv:
-      beta: production
-      prod: production
-      default: development
-      # otherwise NODE_ENV it will be "development"
-
-
   ##
   ## Environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    ACCOUNT_ID: ${self:provider.vars.accountId}
+    ACCOUNT_ID: ${self:service.common.accountId}
 
     LOG_LEVEL: ${self:provider.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
@@ -83,19 +58,20 @@ provider:
     #   development for all other stages
     # Override by passing it as env var:
     #   NODE_ENV={production|development} yarn sls ...
-    NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv.${self:provider.stage}, self:provider.vars.nodeEnv.default }
+    NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv}
 
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
     S3_BUCKET_USER_UPLOAD: ${self:provider.vars.userUploadBucket}
     S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
 
-    DOMAIN: ${self:provider.vars.domain}
-    GRAPHQL_API_PATH: ${self:provider.vars.graphQLAPIPath}
+    BASE_DOMAIN: ${self:service.common.baseDomain}
+    API_DOMAIN: ${self:service.common.apiDomain}
+    GRAPHQL_API_PATH: ${self:service.common.graphQLAPIPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
-    AUTH0_TENANT_NAME: ${self:provider.vars.auth0TenantName} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
-    AUTH0_API_IDENTIFIER: ${self:provider.vars.auth0APIIdentifier}
+    AUTH0_TENANT_NAME: ${self:service.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: https://${self:service.common.account}-precise.ly/graphql/api
 
     # Quick and dirty way to define admins for now
     # TODO: better approach
@@ -126,12 +102,12 @@ plugins:
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
-  customDomain:
-    domainName: ${self:provider.vars.domain}
+  customDomain: # domain-manager settings - for the api
+    domainName: ${self:service.common.apiDomain}
     #basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
-    certificateName: ${self:provider.vars.certificateName}
+    certificateName: ${self:service.common.certificateName}
     endpointType: regional
   dynamodb: # dynamodb-local settings
     start:
@@ -140,7 +116,7 @@ custom:
       migrate: true
       # seed: true
   stageSettings: # serverless-api-stage plugin
-    ${self:custom.stageSettingsMap.${self:provider.vars.account}, self:custom.stageSettingsMap.default}
+    ${self:custom.stageSettingsMap.${self:service.common.account}, self:custom.stageSettingsMap.default}
 
   stageSettingsMap:
     dev:
@@ -168,7 +144,7 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:provider.vars.graphQLAPIPath}
+          path: ${self:service.common.graphQLAPIPath}
           method: get
           cors: true
 
@@ -177,13 +153,13 @@ functions:
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
-          path: ${self:provider.vars.graphQLAPIPath}
+          path: ${self:service.common.graphQLAPIPath}
           method: post
           cors: true
           authorizer:
             name: APIAuthorizer
             type: request
-            resultTtlInSeconds: ${self:provider.vars.authorizerTTL.${self:provider.vars.account},self:provider.vars.authorizerTTL.default}
+            resultTtlInSeconds: ${self:provider.vars.authorizerTTL}
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:
@@ -205,7 +181,7 @@ functions:
       SUBNET_TWO:
         Ref: DefaultSubnetTwo
 
-    role: 
+    role:
       'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
     events:
       - s3:
