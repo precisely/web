@@ -1,6 +1,7 @@
 
 module.exports.vars = (sls)=> {
-  const opt = sls && sls.processedInput && sls.processedInput.options ? sls.processedInput.options : {};
+  const optionsValid = sls && sls.processedInput && sls.processedInput.options;
+  const opt = optionsValid ? sls.processedInput.options : {};
   const env = process.env;
 
   const stage = opt.stage || env.STAGE || 'dev';
