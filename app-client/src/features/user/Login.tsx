@@ -17,7 +17,7 @@ const KEY_FOR_LAST_PATH_BEFORE_LOGIN = 'lastPathBeforeLogin';
 export class Login extends Component<RouteComponentProps<void>> {
   lock = new Auth0Lock(
     process.env.REACT_APP_AUTH0_CLIENT_ID,
-    process.env.REACT_APP_AUTH0_TENANT,
+    process.env.REACT_APP_AUTH0_DOMAIN,
     {
       theme: {
         logo: LOGO,
