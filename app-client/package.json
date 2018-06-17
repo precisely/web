@@ -7,18 +7,14 @@
   "private": true,
   "scripts": {
     "env": "../config/withenv",
-    "build": "yarn env node scripts/build.js -p",
+    "build": "rm -frd build/* && yarn env node scripts/build.js -p",
     "start": "node scripts/start.js",
     "shell": "SLS_DEBUG=* yarn sls shell -S zsh",
     "test": "jest --env=jsdom",
     "sls": "yarn env sls",
-    "compile": "yarn run clean && tsc",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
-    "deploy": "yarn build && yarn env sls client deploy",
-    "deploy:dev": "yarn run build:dev && serverless client deploy -s dev",
-    "deploy:stage": "yarn run build:stage && serverless client deploy -s stage",
-    "deploy:prod": "yarn run build:prod && serverless client deploy -s prod"
+    "deploy": "yarn build && yarn env sls client deploy"
   },
   "jest": {
     "coverageDirectory": "coverage",
