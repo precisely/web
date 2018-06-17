@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#
+# This file selects an environment and runs a command based on
+# the stage, as follows:
+#
+# IF STAGE env var is defined,
+#   use {STAGE}.env
+# ELSE
+#   use default.env
+#
+#
+
+CONFIG_DIR=$(cd `dirname $0` && pwd)
+if [ -z "${1}" ]; then
+  SCRIPT="env"
+else
+  SCRIPT="${1}"
+fi
+shift
+if [ -z "$STAGE" ]; then
+  env-cmd ../config/default.env "${SCRIPT}" "${@}"
+elif [ -f "${CONFIG_DIR}/${STAGE}.env" ]; then
+  env-cmd ../config/${STAGE}.env "${SCRIPT}" "${@}"
+else
+  echo -e "\033[93mWarning: No environment file ${STAGE}.env\033[0m"
+  "${SCRIPT}" "${@}"
+fi
