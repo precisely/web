@@ -2,31 +2,31 @@
 IngestionECSCluster:
   Type: "AWS::ECS::Cluster"
   Properties:
-    ClusterName: ${self:provider.vars.ingestionClusterName}
+    ClusterName: ${self:custom.vars.ingestionClusterName}
 
 IngestionECSTaskDefinition:
   Type: "AWS::ECS::TaskDefinition"
-  Properties: 
-    ExecutionRoleArn: 
+  Properties:
+    ExecutionRoleArn:
       Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
-    TaskRoleArn: 
+    TaskRoleArn:
       Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
-    Family: ${self:provider.vars.ingestionECSTaskDefinitionName}
+    Family: ${self:custom.vars.ingestionECSTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512
     Cpu: 256
     ContainerDefinitions:
-      - 
-        Name: ${self:provider.vars.ingestionContainerName}
+      -
+        Name: ${self:custom.vars.ingestionContainerName}
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
         LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: 
+              awslogs-group:
                 Ref: IngestionECSLogs
-              awslogs-region: 
+              awslogs-region:
                 Ref: AWS::Region
               awslogs-stream-prefix: ${self:provider.stage}-ecs
     RequiresCompatibilities:
@@ -34,11 +34,11 @@ IngestionECSTaskDefinition:
 
 IngestionECSService:
   Type: "AWS::ECS::Service"
-  Properties: 
-    Cluster: 
-      Ref: IngestionECSCluster 
+  Properties:
+    Cluster:
+      Ref: IngestionECSCluster
     ServiceName: ${self:provider.stage}-IngestionECSService
-    TaskDefinition: 
+    TaskDefinition:
       Ref: IngestionECSTaskDefinition
     DesiredCount: 0
     LaunchType: FARGATE

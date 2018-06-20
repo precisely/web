@@ -1,28 +1,28 @@
-CloudFrontDistribution:
+CloudFrontDistributionReactClient:
   Type: 'AWS::CloudFront::Distribution'
+  DependsOn: S3BucketReactClient
   Properties:
     DistributionConfig:
       Aliases:
-        - ${self:provider.common.baseDomain}
-      # Adding `stage` name as a Comment so that invalidation script can detect the stage by looking at the distribution
-      Comment: ${self:provider.stage}
+        - ${self:custom.vars.clientDomain}
+      Comment: Available at ${self:custom.vars.clientDomain}
       DefaultRootObject: 'index.html'
       CustomErrorResponses:
         - ErrorCode: 404
           ResponseCode: 200
-          ResponsePagePath: /index.html
+          ResponsePagePath: /error.html
         - ErrorCode: 403
           ResponseCode: 200
-          ResponsePagePath: /index.html
+          ResponsePagePath: /error.html
         - ErrorCode: 500
           ResponseCode: 200
-          ResponsePagePath: /index.html
+          ResponsePagePath: /error.html
         - ErrorCode: 501
           ResponseCode: 200
-          ResponsePagePath: /index.html
+          ResponsePagePath: /error.html
         - ErrorCode: 502
           ResponseCode: 200
-          ResponsePagePath: /index.html
+          ResponsePagePath: /error.html
       DefaultCacheBehavior:
         AllowedMethods:
           - GET
@@ -37,17 +37,29 @@ CloudFrontDistribution:
         MaxTTL: 31536000
         MinTTL: 0
         SmoothStreaming: false
-        TargetOriginId: ${self:provider.vars.originId}
+        TargetOriginId: ${self:custom.vars.cloudfrontOriginId}
         ViewerProtocolPolicy: 'redirect-to-https'
       Enabled: true
       ViewerCertificate:
-        AcmCertificateArn: arn:aws:acm:us-east-1:416000760642:certificate/f44b4ee7-b4cb-4d32-9c19-58ca6a97b42d
+        AcmCertificateArn: ${self:custom.common.certificateArn}
         # https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-SSLSupportMethod
-        SslSupportMethod: vip
+        SslSupportMethod: sni-only
       Origins:
-        - Id: ${self:provider.vars.originId}
-          DomainName: "${self:provider.vars.distributionBucket}.s3.amazonaws.com"
+        - Id: ${self:custom.vars.cloudfrontOriginId}
+          DomainName:
+            Fn::GetAtt: [ S3BucketReactClient, DomainName ]
           CustomOriginConfig:
             HTTPPort: '80'
             HTTPSPort: '443'
             OriginProtocolPolicy: match-viewer
+Route53RecordSetGroupReact:
+  Type: AWS::Route53::RecordSetGroup
+  Properties:
+    HostedZoneId: ${self:custom.common.rootDomainHostedZoneId}
+    RecordSets:
+      - Name: ${self:custom.vars.clientDomain}.
+        Type: A
+        AliasTarget:
+          HostedZoneId: ${self:custom.common.cloudfrontHostedZoneId}
+          DNSName:
+            Fn::GetAtt: [ CloudFrontDistributionReactClient, DomainName ]

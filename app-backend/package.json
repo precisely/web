@@ -3,10 +3,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "shell": "yarn env sls shell",
+    "shell": "yarn sls shell",
     "log": "scripts/log",
     "wsd": "scripts/wsd",
-    "deploy": "yarn env sls deploy",
+    "deploy": "yarn sls deploy",
     "test": "jest",
     "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
     "offline": "scripts/offline",

@@ -2,10 +2,10 @@
 
 #
 # This file selects an environment and runs a command based on
-# the stage, as follows:
+# the ENV variable, as follows:
 #
-# IF STAGE env var is defined,
-#   use {STAGE}.env
+# IF ENV is defined,
+#   use {ENV}.env
 # ELSE
 #   use default.env
 #
@@ -13,16 +13,17 @@
 
 CONFIG_DIR=$(cd `dirname $0` && pwd)
 if [ -z "${1}" ]; then
+  # if no command provided, withenv prints the env after loading the environment file
   SCRIPT="env"
 else
   SCRIPT="${1}"
 fi
 shift
-if [ -z "$STAGE" ]; then
-  env-cmd ../config/default.env "${SCRIPT}" "${@}"
-elif [ -f "${CONFIG_DIR}/${STAGE}.env" ]; then
-  env-cmd ../config/${STAGE}.env "${SCRIPT}" "${@}"
+if [ -f "${CONFIG_DIR}/${ENV}.env" ]; then
+  ENVFILE="${ENV}.env"
 else
-  echo -e "\033[93mWarning: No environment file ${STAGE}.env\033[0m"
-  "${SCRIPT}" "${@}"
+  ENVFILE="default.env"
 fi
+
+echo -e "\033[93mLoading ${ENVFILE} environment"
+env-cmd "../config/${ENVFILE}" "${SCRIPT}" "${@}"

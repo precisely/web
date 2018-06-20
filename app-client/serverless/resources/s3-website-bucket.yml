@@ -1,0 +1,44 @@
+S3BucketReactClient:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:custom.vars.reactS3BucketName}
+    AccessControl: PublicRead
+    WebsiteConfiguration:
+      IndexDocument: index.html
+      ErrorDocument: error.html
+  DeletionPolicy: Delete
+BucketPolicyReactClient:
+  Type: 'AWS::S3::BucketPolicy'
+  Properties:
+    PolicyDocument:
+      Id: BucketPolicyReactClient
+      Version: '2012-10-17'
+      Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: 's3:*'
+          Resource:
+            Fn::Join:
+              - ''
+              - - 'arn:aws:s3:::'
+                - Ref: S3BucketReactClient
+                - /*
+    Bucket:
+      Ref: S3BucketReactClient
+
+# For reference
+# Outputs:
+#   WebsiteURL:
+#     Value: !GetAtt
+#       - S3BucketReactClient
+#       - WebsiteURL
+#     Description: S3 bucket URL for React website
+#   S3BucketSecureURL:
+#     Value: !Join
+#       - ''
+#       - - 'https://'
+#         - !GetAtt
+#           - S3BucketReactClient
+#           - DomainName
+#     Description: Name of S3 bucket that contains React assets

@@ -1,48 +1,47 @@
-service:
-  name: precisely-client
+service: precisely-react
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${self:provider.common.stage}
-  region: ${self:provider.common.region}
-  profile: ${self:provider.common.profile}
+  stage: ${self:custom.common.stage}
+  region: ${self:custom.common.region}
+  profile: ${self:custom.common.profile}
+  deploymentBucket: ${self:custom.common.deploymentBucket}
 
-  common: ${file(../serverless/common.js):vars}
-
-  vars:
-    originId: "${self:provider.stage}-s3-origin"
-
-    distributionBucket: ${self:provider.stage}-precisely-react
-
-  ##
   ## Environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    ACCOUNT_ID: ${self:provider.common.accountId}
+    ACCOUNT_ID: ${self:custom.common.accountId}
 
     # REACT_APP_ env vars are made available to client-side React code;
     # Auth0 values - needed for verifying Auth0 tokens
-    REACT_APP_AUTH0_DOMAIN: ${self:provider.common.auth0Tenant}.auth0.com # set in Auth0: dev-precisely, beta-precisely, prod-precisely
-    REACT_APP_AUTH0_CLIENT_ID: yrNpYsLHFQ4mBHsP4rqDC8LNPLaOZDS4
+    REACT_APP_AUTH0_DOMAIN: ${self:custom.common.auth0Tenant}.auth0.com # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    REACT_APP_AUTH0_CLIENT_ID: ${self:custom.common.auth0ReactClientId}
 
-    REACT_APP_URL: ${self:provider.common.reactURL}
-
+    REACT_APP_URL: ${self:custom.common.reactURL}
 
 resources:
+  - Resources: ${file(./serverless/resources/s3-website-bucket.yml)}
   - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}
-  - Resources: ${file(./serverless/resources/dns.yml)}
+  - Resources: ${file(./serverless/resources/route53.js):Resources}
 
 plugins:
   - serverless-finch
   - serverless-shell
 
 custom:
+  common: ${file(../serverless/common.js):vars}
+
+  vars:
+    clientDomain: ${self:custom.common.baseDomain}
+    cloudfrontOriginId: "${self:provider.stage}-cloudfront"
+    reactS3BucketName: reacts3.${self:custom.vars.clientDomain}
+
   client:
-    bucketName: ${self:provider.vars.distributionBucket}
+    bucketName: ${self:custom.vars.clientDomain}
     distributionFolder: build
     indexDocument: index.html
     errorDocument: index.html
