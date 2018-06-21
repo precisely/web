@@ -10,7 +10,7 @@ import {Component} from 'react';
 import {authLockButtonBackground} from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import {getEnvVar} from '../../utils/env';
+import {getEnvVar} from 'src/utils/env';
 
 const LOGO = require('src/assets/logo.png');
 const KEY_FOR_LAST_PATH_BEFORE_LOGIN = 'lastPathBeforeLogin';
