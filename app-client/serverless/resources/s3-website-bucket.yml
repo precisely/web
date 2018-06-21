@@ -20,7 +20,7 @@ BucketPolicyReactClient:
           Principal: # '*'
             CanonicalUser:
               Fn::GetAtt: [ S3OriginAccessIdentityReactClient, S3CanonicalUserId]
-          Action: 's3:GetObject'
+          Action: s3:GetObject
           Resource:
             Fn::Join:
               - ''
