@@ -3,12 +3,12 @@ type VariantCall {
   variantId: String,
 
   callSetId: String,
-  startBaseIndex: Number,
-  endBaseIndex: Number,
+  start: Int,
+  end: Int,
   alternateBases: [String],
   referenceBases: String,
-  genotype: [Number],
-  genotypeLikelihood: [Number],
+  genotype: [Int],
+  genotypeLikelihood: [Int],
   filter: [String],
 
   rsId: String,

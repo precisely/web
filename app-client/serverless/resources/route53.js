@@ -25,10 +25,9 @@ module.exports.Resources = (sls) => {
   printKeys(sls, 'variables');
   printKeys(sls, 'config');
   printKeys(sls, 'utils');
-  printKeys(sls, 'prototype');
 
   const cloudFrontRecord = {
-    Name: `${sls.config.custom.vars.clientDomain}.`,
+    Name: `${sls.service.custom.vars.clientDomain}.`,
     Type: 'A',
     AliasTarget: {
       HostedZoneId: sls.config.custom.common.cloudfrontHostedZoneId,

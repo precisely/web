@@ -1,15 +1,14 @@
 type Report {
   id: String,
-  owner: String,
+  ownerId: String,
   title: String,
   slug: String,
   content: String,
-  parsedContent: String,
-  topLevel: Boolean,
-  requiredVariants: [String],
-  createdAt: String
-  updatedAt: String
-  userVariants: UserData,
+  requiredVariants: [String]
+  # parsedContent: String,
+  # topLevel: Boolean,
+  # createdAt: String
+  # updatedAt: String
 }
 
 extend type Query {

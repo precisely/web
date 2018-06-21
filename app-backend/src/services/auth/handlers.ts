@@ -37,7 +37,7 @@ const InvokeAPIPolicyDocument: PolicyDocument = {
     Action: 'execute-api:Invoke',
     Resource: [
       // tslint:disable-next-line
-      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/POST${process.env.GRAPHQL_API_PATH}`
+      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/POST/${process.env.GRAPHQL_API_PATH}`
     ]
   }]
 };

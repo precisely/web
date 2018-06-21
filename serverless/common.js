@@ -41,7 +41,7 @@ module.exports.vars = (sls)=> {
 
   const result = {
     account,
-    accountId: '#{AWS::AccountId}',
+    accountId: { Ref: 'AWS::AccountId' },
     apiDomain,
     auth0Tenant,
     auth0ReactClientId,
