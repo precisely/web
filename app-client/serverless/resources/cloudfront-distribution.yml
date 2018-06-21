@@ -52,14 +52,3 @@ CloudFrontDistributionReactClient:
             HTTPPort: '80'
             HTTPSPort: '443'
             OriginProtocolPolicy: match-viewer
-Route53RecordSetGroupReact:
-  Type: AWS::Route53::RecordSetGroup
-  Properties:
-    HostedZoneId: ${self:custom.common.rootDomainHostedZoneId}
-    RecordSets:
-      - Name: ${self:custom.vars.clientDomain}.
-        Type: A
-        AliasTarget:
-          HostedZoneId: ${self:custom.common.cloudfrontHostedZoneId}
-          DNSName:
-            Fn::GetAtt: [ CloudFrontDistributionReactClient, DomainName ]
