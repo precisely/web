@@ -38,7 +38,7 @@ custom:
   vars:
     clientDomain: ${self:custom.common.baseDomain}
     cloudfrontOriginId: "${self:provider.stage}-cloudfront"
-    reactS3BucketName: reacts3-${self:custom.vars.clientDomain}
+    reactS3BucketName: ${self:provider.stage}-reacts3.${self:custom.common.rootDomain}
 
   client:
     bucketName: ${self:custom.vars.reactS3BucketName}
