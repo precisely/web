@@ -187,7 +187,7 @@ functions:
         Ref: DefaultSubnetTwo
 
     role:
-      'Fn::GetAtt': ["RawUploadLambdaRole", "Arn"]
+      Fn::GetAtt: ["RawUploadLambdaRole", "Arn"]
     events:
       - s3:
           bucket: UserUpload

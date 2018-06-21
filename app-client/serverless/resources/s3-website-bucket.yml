@@ -8,7 +8,8 @@ S3BucketReactClient:
       ErrorDocument: error.html
   DeletionPolicy: Delete
 BucketPolicyReactClient:
-  Type: 'AWS::S3::BucketPolicy'
+  Type: AWS::S3::BucketPolicy
+  DependsOn: [ S3OriginAccessIdentityReactClient ]
   Properties:
     PolicyDocument:
       Id: BucketPolicyReactClient
@@ -16,8 +17,10 @@ BucketPolicyReactClient:
       Statement:
         - Sid: PublicReadForGetBucketObjects
           Effect: Allow
-          Principal: '*'
-          Action: 's3:*'
+          Principal: # '*'
+            CanonicalUser:
+              Fn::GetAtt: [ S3OriginAccessIdentityReactClient, S3CanonicalUserId]
+          Action: s3:GetObject
           Resource:
             Fn::Join:
               - ''

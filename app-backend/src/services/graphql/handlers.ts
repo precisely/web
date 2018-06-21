@@ -70,6 +70,7 @@ function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, ca
   // tslint:disable-next-line
   const callbackFilter = function (error: Error, output: any ) {
     if (output) {
+      output.headers = output.headers || {};
       Object.assign(output.headers, {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
