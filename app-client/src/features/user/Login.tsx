@@ -10,14 +10,15 @@ import {Component} from 'react';
 import {authLockButtonBackground} from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
+import {getEnvVar} from '../../utils/env';
 
 const LOGO = require('src/assets/logo.png');
 const KEY_FOR_LAST_PATH_BEFORE_LOGIN = 'lastPathBeforeLogin';
 
 export class Login extends Component<RouteComponentProps<void>> {
   lock = new Auth0Lock(
-    process.env.REACT_APP_AUTH0_CLIENT_ID,
-    process.env.REACT_APP_AUTH0_DOMAIN,
+    getEnvVar('REACT_APP_AUTH0_CLIENT_ID'),
+    getEnvVar('REACT_APP_AUTH0_DOMAIN'),
     {
       theme: {
         logo: LOGO,
