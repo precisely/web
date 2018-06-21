@@ -11,7 +11,7 @@ PreciselyDefaultPolicy:
           - logs:CreateLogStream
           - logs:PutLogEvents
         Resource:
-          - 'Fn::Join':
+          - Fn::Join:
             - ':'
             - - arn:aws:logs
               - Ref: AWS::Region
@@ -38,16 +38,16 @@ IngestionECSTaskPolicy:
     Statement:
       - Effect: Allow
         Action:
-          - "s3:GetObject"
-          - "s3:PutObject"
-        Resource: "arn:aws:s3:::*/*"
+          - s3:GetObject
+          - s3:PutObject
+        Resource: arn:aws:s3:::*/*
       - Effect: Allow # note that these rights are given in the default policy and are required if you want logs out of your tasks(s)
         Action:
           - logs:CreateLogGroup
           - logs:CreateLogStream
           - logs:PutLogEvents
         Resource:
-          - 'Fn::Join':
+          - Fn::Join:
             - ':'
             - - arn:aws:logs
               - Ref: AWS::Region
@@ -61,8 +61,8 @@ RawUploadLambdaPolicy:
     Statement:
       - Effect: Allow
         Action:
-          - "s3:GetObject"
-          - "s3:PutObject"
+          - s3:GetObject
+          - s3:PutObject
         Resource: "arn:aws:s3:::*/*"
       - Effect: Allow
         Action:
