@@ -16,8 +16,8 @@
     "eslint": "eslint src",
     "deploy": "yarn deploy:resources && yarn build && yarn deploy:code",
     "deploy:resources": "yarn env sls deploy --force",
-    "deploy:incremental": "yarn build && yarn deploy:code",
-    "deploy:code": "yarn env bash -c 'sls client deploy -s $STAGE -r $REGION'"
+    "deploy:code": "yarn build && yarn deploy:codeToS3",
+    "deploy:codeToS3": "yarn env bash -c 'sls client deploy -s $STAGE -r $REGION'"
   },
   "jest": {
     "coverageDirectory": "coverage",
