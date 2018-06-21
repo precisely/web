@@ -94,6 +94,6 @@ export const resolvers = {
     slug: 'slug',
     title: 'title',
     content: 'content',
-    variants: 'variants'
+    requiredVariants: 'variants'
   })
 };

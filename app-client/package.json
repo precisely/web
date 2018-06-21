@@ -14,7 +14,10 @@
     "sls": "yarn env sls",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
     "eslint": "eslint src",
-    "deploy": "yarn build && yarn env sls client deploy"
+    "deploy": "yarn deploy:resources && yarn build && yarn deploy:code",
+    "deploy:resources": "yarn env sls deploy --force",
+    "deploy:incremental": "yarn build && yarn deploy:code",
+    "deploy:code": "yarn env bash -c 'sls client deploy -s $STAGE -r $REGION'"
   },
   "jest": {
     "coverageDirectory": "coverage",
@@ -197,7 +200,7 @@
     "jest-localstorage-mock": "^2.2.0",
     "jest-plugin-context": "^2.7.0",
     "react-test-renderer": "16.0.0",
-    "serverless": "1.24.1",
+    "serverless": "^1.27.3",
     "serverless-finch": "1.3.0",
     "typescript-eslint-parser": "12.0.0",
     "unroll": "1.5.0"

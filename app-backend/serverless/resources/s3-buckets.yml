@@ -1,16 +1,16 @@
 S3BucketUserUpload:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:provider.vars.userUploadBucket}
+    BucketName: ${self:custom.vars.userUploadBucket}
 S3BucketGeneticsVCF:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:provider.vars.geneticsVCFBucket}
+    BucketName: ${self:custom.vars.geneticsVCFBucket}
 
 S3BucketIngestionError:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:provider.vars.ingestionErrorBucket}
+    BucketName: ${self:custom.vars.ingestionErrorBucket}
 
 VCFIngesterLambdaPermission:
   Type: AWS::Lambda::Permission
@@ -22,7 +22,7 @@ VCFIngesterLambdaPermission:
     Action: lambda:InvokeFunction
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:provider.vars.geneticsVCFBucket}
+    SourceArn: arn:aws:s3:::${self:custom.vars.geneticsVCFBucket}
 
 RawDataUploadLambdaPermission:
   Type: AWS::Lambda::Permission
@@ -34,4 +34,4 @@ RawDataUploadLambdaPermission:
     Action: lambda:InvokeFunction
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:provider.vars.userUploadBucket}
+    SourceArn: arn:aws:s3:::${self:custom.vars.userUploadBucket}

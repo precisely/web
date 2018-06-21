@@ -1,55 +1,24 @@
 service:
-  name: precisely
+  name: precisely-backend
 
 frameworkVersion: ">=1.21.0 <2.0.0"
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${self:provider.common.stage}
-  region: ${self:provider.common.region}
-  profile: ${self:provider.common.profile}
-  deploymentBucket: ${self:provider.common.account}-precisely-deployment-bucket
-
-  common: ${file(../serverless/common.js):vars}
-
-  vars:
-    authorizerTTL: ${env:AUTHORIZER_TTL,self:provider.vars.authorizerTTLMap.${self:provider.common.account},self:provider.vars.authorizerTTLMap.default}
-    authorizerTTLMap:
-      dev: 0
-      default: 300
-
-    nodeEnv: ${env:NODE_ENV, self:provider.vars.nodeEnvMap.${self:provider.common.account}}
-    nodeEnvMap:
-      dev: development
-      prod: production
-      beta: production
-
-    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:provider.vars.logLevelMap.${self:provider.common.account}}}
-    logLevelMap:
-      prod: INFO
-      beta: INFO
-      dev: DEBUG
-      offline: DEBUG
-
-    # S3 resource names
-    geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
-    userUploadBucket: ${self:provider.stage}-precisely-user-upload
-    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
-
-    # Ingestion ECS Fargate Task
-    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
-    ingestionContainerName: ${self:provider.stage}-IngestionContainerName
-    ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
+  stage: ${self:custom.common.stage}
+  region: ${self:custom.common.region}
+  profile: ${self:custom.common.profile}
+  deploymentBucket: ${self:custom.common.account}-precisely-deployment-bucket
 
   ##
   ## Environment for handlers
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    ACCOUNT_ID: ${self:provider.common.accountId}
+    ACCOUNT_ID: ${self:custom.common.accountId}
 
-    LOG_LEVEL: ${self:provider.vars.logLevel}
+    LOG_LEVEL: ${self:custom.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
     # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
     #      https://webpack.js.org/guides/production/#specify-the-environment
@@ -58,20 +27,20 @@ provider:
     #   development for all other stages
     # Override by passing it as env var:
     #   NODE_ENV={production|development} yarn sls ...
-    NODE_ENV: ${env:NODE_ENV, self:provider.vars.nodeEnv}
+    NODE_ENV: ${env:NODE_ENV, self:custom.vars.nodeEnv}
 
     # S3 buckets
-    S3_BUCKET_GENETICS_VCF: ${self:provider.vars.geneticsVCFBucket}
-    S3_BUCKET_USER_UPLOAD: ${self:provider.vars.userUploadBucket}
-    S3_BUCKET_INGESTION_ERROR: ${self:provider.vars.ingestionErrorBucket}
+    S3_BUCKET_GENETICS_VCF: ${self:custom.vars.geneticsVCFBucket}
+    S3_BUCKET_USER_UPLOAD: ${self:custom.vars.userUploadBucket}
+    S3_BUCKET_INGESTION_ERROR: ${self:custom.vars.ingestionErrorBucket}
 
-    BASE_DOMAIN: ${self:provider.common.baseDomain}
-    API_DOMAIN: ${self:provider.common.apiDomain}
-    GRAPHQL_API_PATH: ${self:provider.common.graphQLAPIPath}
+    BASE_DOMAIN: ${self:custom.common.baseDomain}
+    API_DOMAIN: ${self:custom.common.apiDomain}
+    GRAPHQL_API_PATH: ${self:custom.common.graphQLAPIPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
-    AUTH0_TENANT_NAME: ${self:provider.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
-    AUTH0_API_IDENTIFIER: https://${self:provider.common.account}-precise.ly/graphql/api
+    AUTH0_TENANT_NAME: ${self:custom.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
+    AUTH0_API_IDENTIFIER: https://${self:custom.common.account}-precise.ly/graphql/api
 
     # Quick and dirty way to define admins for now
     # TODO: better approach
@@ -91,8 +60,13 @@ resources:
   - Resources: ${file(./serverless/resources/network/gateway.yml)}
 
 plugins:
-  # Comment out the `serverless-domain-manager` line
-  # on first-time deployment of a new stage, then uncomment it and redeploy
+  # You'll need to comment out the severless-domain-manager plugin on the first deploy:
+  # 1. yarn sls create_domain
+  # 2. comment out the serverless-domain-manager plugin
+  # 3. yarn deploy
+  # 4. uncomment the plugin
+  # 5. yarn deploy
+  # This is likely related to this issue: https://github.com/serverless/serverless/issues/4029#issuecomment-319984929
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
@@ -102,12 +76,43 @@ plugins:
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
+  common: ${file(../serverless/common.js):vars}
+
+  vars:
+    authorizerTTL: ${env:AUTHORIZER_TTL,self:custom.vars.authorizerTTLMap.${self:custom.common.account},self:custom.vars.authorizerTTLMap.default}
+    authorizerTTLMap:
+      dev: 0
+      default: 300
+
+    nodeEnv: ${env:NODE_ENV, self:custom.vars.nodeEnvMap.${self:custom.common.account}}
+    nodeEnvMap:
+      dev: development
+      prod: production
+      beta: production
+
+    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:custom.vars.logLevelMap.${self:custom.common.account}}}
+    logLevelMap:
+      prod: INFO
+      beta: INFO
+      dev: DEBUG
+      offline: DEBUG
+
+    # S3 resource names
+    geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
+    userUploadBucket: ${self:provider.stage}-precisely-user-upload
+    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
+
+    # Ingestion ECS Fargate Task
+    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
+    ingestionContainerName: ${self:provider.stage}-IngestionContainerName
+    ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
+
   customDomain: # domain-manager settings - for the api
-    domainName: ${self:provider.common.apiDomain}
-    #basePath: ''
+    domainName: ${self:custom.common.apiDomain}
+    basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
-    certificateName: ${self:provider.common.certificateName}
+    certificateName: ${self:custom.common.certificateName}
     endpointType: regional
   dynamodb: # dynamodb-local settings
     start:
@@ -116,7 +121,7 @@ custom:
       migrate: true
       # seed: true
   stageSettings: # serverless-api-stage plugin
-    ${self:custom.stageSettingsMap.${self:provider.common.account}, self:custom.stageSettingsMap.default}
+    ${self:custom.stageSettingsMap.${self:custom.common.account}, self:custom.stageSettingsMap.default}
 
   stageSettingsMap:
     dev:
@@ -144,7 +149,7 @@ functions:
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
-          path: ${self:provider.common.graphQLAPIPath}
+          path: ${self:custom.common.graphQLAPIPath}
           method: get
           cors: true
 
@@ -153,13 +158,13 @@ functions:
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
-          path: ${self:provider.common.graphQLAPIPath}
+          path: ${self:custom.common.graphQLAPIPath}
           method: post
           cors: true
           authorizer:
             name: APIAuthorizer
             type: request
-            resultTtlInSeconds: ${self:provider.vars.authorizerTTL}
+            resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
   # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
   VCFIngester:
@@ -173,9 +178,9 @@ functions:
   RawDataUpload:
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
-      INGESTION_CLUSTER: ${self:provider.vars.ingestionClusterName}
-      INGESTION_TASK_NAME: ${self:provider.vars.ingestionECSTaskDefinitionName}
-      INGESTION_CONTAINER_NAME: ${self:provider.vars.ingestionContainerName}
+      INGESTION_CLUSTER: ${self:custom.vars.ingestionClusterName}
+      INGESTION_TASK_NAME: ${self:custom.vars.ingestionECSTaskDefinitionName}
+      INGESTION_CONTAINER_NAME: ${self:custom.vars.ingestionContainerName}
       SUBNET_ONE:
         Ref: DefaultSubnetOne
       SUBNET_TWO:

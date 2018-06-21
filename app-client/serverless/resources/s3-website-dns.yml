@@ -1,0 +1,11 @@
+Route53RecordSetGroupReactS3Website:
+  Type: AWS::Route53::RecordSetGroup
+  Properties:
+    HostedZoneId: ${self:custom.common.rootDomainHostedZoneId}
+    RecordSets:
+      - Name: ${self:custom.vars.reactS3BucketName}.
+        Type: A
+        AliasTarget:
+          HostedZoneId: ${self:custom.common.s3HostedZoneId}
+          # Note: that it is NOT {reactS3BucketName}.s3-website-{region}.amazonaws.com
+          DNSName: s3-website-${self:provider.region}.amazonaws.com
