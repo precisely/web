@@ -1,6 +1,6 @@
 CloudFrontDistributionReactClient:
-  Type: 'AWS::CloudFront::Distribution'
-  DependsOn: S3BucketReactClient
+  Type: AWS::CloudFront::Distribution
+  DependsOn: [ S3BucketReactClient, S3OriginAccessIdentityReactClient]
   Properties:
     DistributionConfig:
       Aliases:
@@ -46,9 +46,17 @@ CloudFrontDistributionReactClient:
         SslSupportMethod: sni-only
       Origins:
         - Id: ${self:custom.vars.cloudfrontOriginId}
+          S3OriginConfig:
+            OriginAccessIdentity:
+              Fn::Join:
+                - ''
+                - - origin-access-identity/cloudfront/
+                  - Ref: S3OriginAccessIdentityReactClient
           DomainName:
             Fn::GetAtt: [ S3BucketReactClient, DomainName ]
-          CustomOriginConfig:
-            HTTPPort: '80'
-            HTTPSPort: '443'
-            OriginProtocolPolicy: match-viewer
+
+S3OriginAccessIdentityReactClient:
+  Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+  Properties:
+    CloudFrontOriginAccessIdentityConfig:
+      Comment: Used to provide access to React S3 bucket from CloudFront
