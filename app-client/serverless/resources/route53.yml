@@ -4,12 +4,14 @@ Route53RecordSetGroupReactS3Website:
   Properties:
     HostedZoneId: ${self:custom.common.rootDomainHostedZoneId}
     RecordSets:
+      # CloudFront (precise.ly, aneil.codeprecisely.net, etc.)
       - Name: ${self:custom.vars.clientDomain}.
         Type: A
         AliasTarget:
           HostedZoneId: ${self:custom.common.cloudfrontHostedZoneId}
           DNSName:
             Fn::GetAtt: [ CloudFrontDistributionReactClient, DomainName ]
+      # For developer convenience: DNS entry for S3 bucket (reacts3-.precise.ly, reacts3-aneil.codeprecisely.net)
       - Name: ${self:custom.vars.reactS3BucketName}.
         Type: A
         AliasTarget:
