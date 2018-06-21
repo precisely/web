@@ -11,7 +11,7 @@ module.exports.vars = (sls)=> {
     throw new Error(`AWS region must be provided as an environment variable REGION or argument to serverless`);
   }
   // Corresponds to an AWS account (dev, beta, prod)
-  const account = /^beta|prod|offine$/.test(stage) ? stage : 'dev';
+  const account = /^beta|prod|offline$/.test(stage) ? stage : 'dev';
   const defaultProfile = `${account}-profile-precisely`;
   const profile = opt.profile || env.PROFILE || defaultProfile;
   const auth0Tenant = account==='offline' ? 'dev-precisely' : `${account}-precisely`;
