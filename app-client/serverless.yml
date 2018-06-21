@@ -41,7 +41,7 @@ custom:
     reactS3BucketName: reacts3-${self:custom.vars.clientDomain}
 
   client:
-    bucketName: ${self:custom.vars.clientDomain}
+    bucketName: ${self:custom.vars.reactS3BucketName}
     distributionFolder: build
     indexDocument: index.html
     errorDocument: index.html
