@@ -8,6 +8,10 @@ const isOffline = process.env.IS_OFFLINE === 'true';
 // Use DynamoDB local if in offline mode
 if (isOffline) {
   dynogels.AWS.config.update({
+    credentials: new dynogels.AWS.Credentials({
+      accessKeyId: 'dummy',
+      secretAccessKey: 'dummy'
+    }),
     region: 'localhost',
     endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
   }, true);
