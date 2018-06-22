@@ -43,7 +43,7 @@ provider:
 
     # Quick and dirty way to define admins for now
     # TODO: better approach
-    ADMIN_EMAILS: "aneil@precise.ly,vishesh@causecode.com"
+    ADMIN_EMAILS: "aneil@precise.ly,vetoshev@gmail.com"
 
     DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
 
