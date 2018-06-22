@@ -23,9 +23,10 @@
  *   }
  * }
  */
+require('ts-node').register({module: "commonjs"});
+require('tsconfig-paths').register();
+
 function buildServerlessResources() {
-  require('ts-node').register({module: "commonjs"});
-  require('tsconfig-paths').register();
   const {dynogels, tableNameWithoutStage} = require('src/db/dynamo');
   const {upperFirst, camelCase} = require('lodash');
   const fs = require('fs');
