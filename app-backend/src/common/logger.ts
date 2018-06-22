@@ -16,12 +16,9 @@ const WinstonCloudWatch = require('@aneilbaboo/winston-cloudwatch');
 export const LOG_DATA_SEP = '\t|\t';
 
 type FormatInfo = { timestamp: number, level: number | string, message: string };
-
-const shouldLogToCloudWatchAggregate = !(process.env.STAGE === 'prod' || process.env.STAGE === 'offline');
+const shouldLogToCloudWatchAggregate = process.env.STAGE !== 'prod' && !process.env.IS_OFFLINE;
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase();
 const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
-  new winston.transports.Console()
-] : [
   new winston.transports.Console(),
 
   // Adds Cloudwatch logging at
@@ -31,6 +28,8 @@ const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
     logGroupName: `/precisely/web/${process.env.STAGE}`,
     logStreamName: 'aggregated-log'
   })
+] : [
+  new winston.transports.Console()
 ];
 
 function makeFormatter(colorize: boolean, requestContext: APIGatewayEventRequestContext) {
@@ -71,7 +70,7 @@ export interface Logger {
 }
 
 export function makeLogger(requestContext?: APIGatewayEventRequestContext): Logger {
-  const shouldColorize = process.env.STAGE === 'offline';
+  const shouldColorize = !!process.env.IS_OFFLINE;
   const logger = winston.createLogger({
     transports: LOG_TRANSPORTS,
     level: LOG_LEVEL,

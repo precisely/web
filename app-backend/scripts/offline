@@ -11,4 +11,4 @@ check_process() {
   [ `pgrep -f $1` ] && return 1 || return 0
 }
 
-STAGE=offline yarn sls offline start
+IS_OFFLINE=true yarn sls offline start

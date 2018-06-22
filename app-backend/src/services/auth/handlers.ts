@@ -46,7 +46,7 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
   const log = makeLogger(event.requestContext);
   log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
-  const auth: Auth0AuthenticationResult = (process.env.STAGE === 'offline' ?
+  const auth: Auth0AuthenticationResult = (process.env.IS_OFFLINE ?
     offlineAuthentication(event) :
     await authenticate(event, log)
   );

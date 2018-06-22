@@ -11,21 +11,22 @@ module.exports.vars = (sls)=> {
     throw new Error(`AWS region must be provided as an environment variable REGION or argument to serverless`);
   }
   // Corresponds to an AWS account (dev, beta, prod)
-  const account = /^beta|prod|offline$/.test(stage) ? stage : 'dev';
+  const account = /^beta|prod$/.test(stage) ? stage : 'dev';
   const defaultProfile = `${account}-profile-precisely`;
   const profile = opt.profile || env.PROFILE || defaultProfile;
-  const auth0Tenant = account==='offline' ? 'dev-precisely' : `${account}-precisely`;
+  const auth0Tenant = process.env.IS_OFFLINE ? 'dev-precisely' : `${account}-precisely`;
   const auth0ReactClientId = getAuth0ReactClientId(account);
-  const rootDomain = account==='prod' ? 'precise.ly'
-                   : account==='offline' ? 'localhost'
-                   : `codeprecisely.net`;
+  const rootDomain = process.env.IS_OFFLINE ? 'localhost'
+                   : account==='prod' ? 'precise.ly'
+                   : account==='beta' ? 'precisionhealth.site'
+                   : 'codeprecisely.net';
   const baseDomain = account==='dev' ? `${stage}.${rootDomain}` : rootDomain;
-  const apiDomain = account==='offline' ? 'localhost'
+  const apiDomain = process.env.IS_OFFLINE ? 'localhost'
                   : account==='dev' ? `api-${baseDomain}` // e.g., api-aneil.codeprecisely.net
                   : `api.${basedomain}`; //  e.g., api.precise.ly or api.precisionhealth.site
   const certificateName = `*.${rootDomain}`;
   const certificateArn = getCertificateArn(certificateName);
-  const reactURL = account==='offline' ? `https://${baseDomain}:3000` : `https://${baseDomain}/`;
+  const reactURL = process.env.IS_OFFLINE ? 'https://localhost:3000' : `https://${baseDomain}/`;
   const graphQLAPIPath = 'graphql';
 
   // manually provisioned bucket avoids stack removal issue:
@@ -95,6 +96,7 @@ function getS3HostedZoneId(region) {
 function getRootDomainHostedZoneId(rootDomain) {
   switch(rootDomain) {
     case 'codeprecisely.net': return 'Z1TVBJKYIAVO8C';
+    case 'localhost': return 'dummy-localhost-hosted-zoneId';
     default: throw new Error(`HostedZoneId for ${rootDomain} not yet set in ${__filename}`);
 
   }
@@ -109,15 +111,19 @@ function getAuth0ReactClientId(account) {
   switch (account) {
     case 'prod': return 'Hv6ObVE8fAxZfADFpaI75B2TCngXuwgz';
     case 'beta': return 'MU1uYoV04NCFFyXBoiJhDm3zYnbNYppw';
-    case 'offline':
     case 'dev': return 'yrNpYsLHFQ4mBHsP4rqDC8LNPLaOZDS4';
-    default: throw new Error(`No auth0 client id for account "${account}"`);
+    default:
+      if (process.env.IS_OFFLINE) {
+        return getAuth0ReactClientId('dev');
+      }
+      throw new Error(`No auth0 client id for account "${account}"`);
   }
 }
 
 function getCertificateArn(certificateName) {
   switch(certificateName) {
     case '*.codeprecisely.net': return 'arn:aws:acm:us-east-1:416000760642:certificate/f44b4ee7-b4cb-4d32-9c19-58ca6a97b42d';
+    case '*.localhost': return 'dummy-localhost-certificate-arn';
     default: throw new Error(`Certificate ARN for ${certificateName} must be set in ${__filename}`);
   }
 }

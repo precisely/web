@@ -4,8 +4,8 @@ import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
 
-// Detect special 'offline' stage, use DynamoDB local
-if (process.env.STAGE === 'offline') {
+// Use DynamoDB local if in offline mode
+if (process.env.IS_OFFLINE) {
   dynogels.AWS.config.update({
     region: 'localhost',
     endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
