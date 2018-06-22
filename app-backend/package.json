@@ -9,7 +9,7 @@
     "deploy": "yarn sls deploy",
     "test": "jest",
     "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
-    "offline": "NODE_OPTIONS=--max-old-space-size=10192 scripts/offline",
+    "offline": "scripts/offline",
     "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",
     "env": "../config/withenv",
     "sls": "yarn env sls",
