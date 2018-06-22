@@ -19,7 +19,6 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {Basepage} from 'src/features/common/Basepage';
 import * as Bluebird from 'bluebird';
-import * as AWS from 'aws-sdk';
 
 initReactFastclick();
 
@@ -48,9 +47,6 @@ Bluebird.config({
   longStackTraces: true,
   warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
 });
-
-AWS.config.setPromisesDependency(Bluebird);
-AWS.config.region = process.env.REACT_APP_AWS_CLIENT_REGION;
 
 ReactDOM.render(
   <ApolloProvider client={client}>
