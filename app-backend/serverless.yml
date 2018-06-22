@@ -34,8 +34,7 @@ provider:
     S3_BUCKET_USER_UPLOAD: ${self:custom.vars.userUploadBucket}
     S3_BUCKET_INGESTION_ERROR: ${self:custom.vars.ingestionErrorBucket}
 
-    BASE_DOMAIN: ${self:custom.common.baseDomain}
-    API_DOMAIN: ${self:custom.common.apiDomain}
+    BASE_DOMAIN: ${self:custom.common.baseDomain} # the root domain, adjusted for developer environments
     GRAPHQL_API_PATH: ${self:custom.common.graphQLAPIPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
@@ -114,12 +113,17 @@ custom:
     createRoute53Record: true
     certificateName: ${self:custom.common.certificateName}
     endpointType: regional
+
   dynamodb: # dynamodb-local settings
     start:
-      port: 8000
+      port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       inMemory: true
       migrate: true
       # seed: true
+
+  serverless-offline:
+    port: ${self:custom.common.offlineAPIPort}
+
   stageSettings: # serverless-api-stage plugin
     ${self:custom.stageSettingsMap.${self:custom.common.account}, self:custom.stageSettingsMap.default}
 

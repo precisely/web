@@ -8,7 +8,7 @@
   "scripts": {
     "env": "../config/withenv",
     "build": "rm -frd build/* && yarn env node scripts/build.js -p",
-    "start": "node scripts/start.js",
+    "start": "yarn env node scripts/start.js",
     "shell": "SLS_DEBUG=* yarn sls shell -S zsh",
     "test": "jest --env=jsdom",
     "sls": "yarn env sls",

@@ -20,13 +20,18 @@ module.exports.vars = (sls)=> {
                    : account==='prod' ? 'precise.ly'
                    : account==='beta' ? 'precisionhealth.site'
                    : 'codeprecisely.net';
+
+  // baseDomain = the root domain, taking into account the developer's environment (if any)
   const baseDomain = account==='dev' ? `${stage}.${rootDomain}` : rootDomain;
   const apiDomain = process.env.IS_OFFLINE ? 'localhost'
                   : account==='dev' ? `api-${baseDomain}` // e.g., api-aneil.codeprecisely.net
                   : `api.${basedomain}`; //  e.g., api.precise.ly or api.precisionhealth.site
+
+  const offlineAPIPort = process.env.OFFLINE_API_PORT || 3001;
+  const apiHost = process.env.IS_OFFLINE ? `${apiDomain}:${offlineAPIPort}` : apiDomain;
+
   const certificateName = `*.${rootDomain}`;
   const certificateArn = getCertificateArn(certificateName);
-  const reactURL = process.env.IS_OFFLINE ? 'https://localhost:3000' : `https://${baseDomain}/`;
   const graphQLAPIPath = 'graphql';
 
   // manually provisioned bucket avoids stack removal issue:
@@ -44,6 +49,7 @@ module.exports.vars = (sls)=> {
     account,
     accountId: { Ref: 'AWS::AccountId' },
     apiDomain,
+    apiHost,
     auth0Tenant,
     auth0ReactClientId,
     baseDomain,
@@ -52,8 +58,8 @@ module.exports.vars = (sls)=> {
     cloudfrontHostedZoneId,
     deploymentBucket,
     graphQLAPIPath,
+    offlineAPIPort,
     profile,
-    reactURL,
     region,
     rootDomain,
     rootDomainHostedZoneId,
