@@ -60,6 +60,7 @@ module.exports.vars = (sls)=> {
     deploymentBucket,
     graphQLAPIPath,
     offlineAPIPort,
+    isOffline,
     profile,
     region,
     rootDomain,

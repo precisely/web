@@ -4,7 +4,7 @@ import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
 
-const isOffline = process.env.ENV === 'offline';
+const isOffline = process.env.IS_OFFLINE === 'true';
 // Use DynamoDB local if in offline mode
 if (isOffline) {
   dynogels.AWS.config.update({

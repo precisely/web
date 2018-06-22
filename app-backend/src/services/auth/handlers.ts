@@ -7,7 +7,7 @@ import {
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';
 
-const isOffline = process.env.ENV === 'offline';
+const isOffline = process.env.IS_OFFLINE === 'true';
 
 export const apiAuthorizer: CustomAuthorizerHandler = (
   event: CustomAuthorizerEvent,
