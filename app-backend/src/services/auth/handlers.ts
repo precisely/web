@@ -7,6 +7,8 @@ import {
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';
 
+const isOffline = process.env.ENV === 'offline';
+
 export const apiAuthorizer: CustomAuthorizerHandler = (
   event: CustomAuthorizerEvent,
   context: Context,
@@ -46,7 +48,7 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
   const log = makeLogger(event.requestContext);
   log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
-  const auth: Auth0AuthenticationResult = (process.env.IS_OFFLINE ?
+  const auth: Auth0AuthenticationResult = (isOffline ?
     offlineAuthentication(event) :
     await authenticate(event, log)
   );

@@ -3,6 +3,7 @@ module.exports.vars = (sls)=> {
   const optionsValid = sls && sls.processedInput && sls.processedInput.options;
   const opt = optionsValid ? sls.processedInput.options : {};
   const env = process.env;
+  const isOffline = env.ENV === 'offline';
 
   const stage = opt.stage || env.STAGE || 'dev';
   const region = opt.region || env.REGION;
@@ -14,21 +15,21 @@ module.exports.vars = (sls)=> {
   const account = /^beta|prod$/.test(stage) ? stage : 'dev';
   const defaultProfile = `${account}-profile-precisely`;
   const profile = opt.profile || env.PROFILE || defaultProfile;
-  const auth0Tenant = process.env.IS_OFFLINE ? 'dev-precisely' : `${account}-precisely`;
+  const auth0Tenant = isOffline ? 'dev-precisely' : `${account}-precisely`;
   const auth0ReactClientId = getAuth0ReactClientId(account);
-  const rootDomain = process.env.IS_OFFLINE ? 'localhost'
+  const rootDomain = isOffline ? 'localhost'
                    : account==='prod' ? 'precise.ly'
                    : account==='beta' ? 'precisionhealth.site'
                    : 'codeprecisely.net';
 
   // baseDomain = the root domain, taking into account the developer's environment (if any)
   const baseDomain = account==='dev' ? `${stage}.${rootDomain}` : rootDomain;
-  const apiDomain = process.env.IS_OFFLINE ? 'localhost'
+  const apiDomain = isOffline ? 'localhost'
                   : account==='dev' ? `api-${baseDomain}` // e.g., api-aneil.codeprecisely.net
                   : `api.${basedomain}`; //  e.g., api.precise.ly or api.precisionhealth.site
 
-  const offlineAPIPort = process.env.OFFLINE_API_PORT || 3001;
-  const apiHost = process.env.IS_OFFLINE ? `${apiDomain}:${offlineAPIPort}` : apiDomain;
+  const offlineAPIPort = env.OFFLINE_API_PORT || 3001;
+  const apiHost = isOffline ? `${apiDomain}:${offlineAPIPort}` : apiDomain;
 
   const certificateName = `*.${rootDomain}`;
   const certificateArn = getCertificateArn(certificateName);
@@ -119,7 +120,7 @@ function getAuth0ReactClientId(account) {
     case 'beta': return 'MU1uYoV04NCFFyXBoiJhDm3zYnbNYppw';
     case 'dev': return 'yrNpYsLHFQ4mBHsP4rqDC8LNPLaOZDS4';
     default:
-      if (process.env.IS_OFFLINE) {
+      if (isOffline) {
         return getAuth0ReactClientId('dev');
       }
       throw new Error(`No auth0 client id for account "${account}"`);
