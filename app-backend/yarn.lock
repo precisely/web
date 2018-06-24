@@ -1388,10 +1388,6 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-class.extend@0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/class.extend/-/class.extend-0.9.2.tgz#e1cbda3697cb31d3cdab1c001d269075c9031f78"
-
 cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
@@ -2033,17 +2029,9 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv-expand@^4.0.1:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-4.2.0.tgz#def1f1ca5d6059d24a766e587942c21106ce1275"
-
 dotenv@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-0.4.0.tgz#f6fb351363c2d92207245c737802c9ab5ae1495a"
-
-dotenv@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
 dottie@^2.0.0:
   version "2.0.0"
@@ -4608,10 +4596,6 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4.17.2:
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
-
 lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
@@ -6142,14 +6126,6 @@ serverless-domain-manager@^2.3.6:
     aws-sdk "^2.177.0"
     chalk "^2.0.1"
 
-serverless-dotenv-plugin@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/serverless-dotenv-plugin/-/serverless-dotenv-plugin-1.0.2.tgz#1470951d8408905ee7035eac2e658789e971b5fe"
-  dependencies:
-    chalk "^2.1.0"
-    dotenv "^4.0.0"
-    dotenv-expand "^4.0.1"
-
 serverless-dynamodb-client@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/serverless-dynamodb-client/-/serverless-dynamodb-client-0.0.2.tgz#41a0200e1da74f50372cc4eeeca0a8aa9da82daa"
@@ -6164,13 +6140,6 @@ serverless-dynamodb-local@^0.2.28:
     bluebird "^3.4.6"
     dynamodb-localhost "^0.0.5"
     lodash "^4.17.0"
-
-serverless-enable-api-logs@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/serverless-enable-api-logs/-/serverless-enable-api-logs-2.0.0.tgz#8028fd679df6ad8b6f25ba785edb644b6d40a78d"
-  dependencies:
-    class.extend "0.9.2"
-    lodash "4.17.2"
 
 serverless-offline@^3.25.4:
   version "3.25.4"
@@ -6195,12 +6164,6 @@ serverless-plugin-scripts@^1.0.2:
 serverless-pseudo-parameters@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/serverless-pseudo-parameters/-/serverless-pseudo-parameters-1.6.0.tgz#0a2532e56f04f95f6d0c17490de42c4c498c65f6"
-
-"serverless-secrets@https://github.com/aneilbaboo/serverless-secrets.git#aneil/fix-process.env._HANDLER":
-  version "3.0.0-beta.11"
-  resolved "https://github.com/aneilbaboo/serverless-secrets.git#ab7d5dc3864d16c8c50c9264b9ed890594b9d0ee"
-  dependencies:
-    lodash "^4.17.4"
 
 serverless-shell@^0.4.1:
   version "0.4.1"
