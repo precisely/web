@@ -64,14 +64,19 @@ yarn offline
 - Local Dynamodb ([http://localhost:8000/shell](http://localhost:8000/shell))
 
 
-#### Start Frontend Client
-
+#### Frontend Client
 ```shell
 cd app-client
-yarn client
 ```
 
-- React App ([http://localhost:3000](http://localhost:3000))
+Point client at a specific backend by setting ENV:
+```shell
+yarn start # use the default.env backend
+ENV=offline yarn start # use local API
+ENV=prod yarn start # use the prod API
+```
+
+The website will be available at ([http://localhost:3000](http://localhost:3000)). The port can be customize by setting the `FRONTEND_PORT` environment variable.
 
 ### Deploying to AWS Developer Account
 
