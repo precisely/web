@@ -3,6 +3,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "console": "yarn sls console",
     "deploy": "yarn sls deploy",
     "env": "../config/withenv",
     "eslint": "eslint src",
@@ -15,7 +16,6 @@
     "ts-node": "IS_OFFLINE=true ts-node -r tsconfig-paths/register",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "wsd": "scripts/wsd"
-  },
   },
   "jest": {
     "coverageDirectory": "coverage",
@@ -114,7 +114,7 @@
     "serverless-webpack": "4.1.0",
     "ts-jest": "22.0.1",
     "ts-loader": "^4.1.0",
-    "tsconfig-paths": "^3.2.0",
+    "tsconfig-paths": "^3.4.0",
     "tsconfig-paths-webpack-plugin": "^3.0.3",
     "tslint": "5.7.0",
     "typescript": "^2.8.1",

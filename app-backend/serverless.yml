@@ -74,6 +74,7 @@ plugins:
   - serverless-dynamodb-local
   - serverless-shell
   - serverless-pseudo-parameters
+  - serverless-plugin-scripts
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
@@ -122,6 +123,10 @@ custom:
       inMemory: true
       migrate: true
       # seed: true
+
+  scripts:
+    commands:
+      console: ts-node -r tsconfig-paths/register
 
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}
