@@ -55,6 +55,8 @@ declare module "@aneilbaboo/dynogels-promisified" {
 
   export type LifeCycleAction = "create" | "update" | "destroy";
 
+  export type ListenerNextFunction = (err: Error | null, data: any) => void;
+
   export interface Model<Attributes = { any: any }, Methods = {} > {
     new (attrs: Attributes): Item<Attributes, Methods>;
 
@@ -159,10 +161,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
     ): void;
     before(
       action: LifeCycleAction,
-      listener: (
-        data: any,
-        next: (err: Error | null, data: any) => void
-      ) => void
+      listener: (data: any, next: ListenerNextFunction) => void
     ): void;
     config(config: ModelConfig): { name: string };
 
