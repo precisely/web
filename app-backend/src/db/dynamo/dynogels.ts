@@ -4,8 +4,6 @@ import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
 
-export {ListenerNextFunction} from '@aneilbaboo/dynogels-promisified';
-
 const isOffline = !!process.env.IS_OFFLINE;
 // Use DynamoDB local if in offline mode
 if (isOffline) {
