@@ -6,18 +6,18 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "env": "../config/withenv",
     "build": "rm -frd build/* && yarn env node scripts/build.js -p",
-    "start": "yarn env node scripts/start.js",
-    "shell": "SLS_DEBUG=* yarn sls shell -S zsh",
-    "test": "jest --env=jsdom",
-    "sls": "yarn env sls",
-    "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src",
     "deploy": "yarn deploy:resources && yarn build && yarn deploy:code",
     "deploy:resources": "yarn env sls deploy --force",
     "deploy:code": "yarn build && yarn deploy:codeToS3",
-    "deploy:codeToS3": "yarn env bash -c 'sls client deploy -s $STAGE -r $REGION'"
+    "deploy:codeToS3": "yarn env bash -c 'sls client deploy -s $STAGE -r $REGION'",
+    "env": "../config/withenv",
+    "eslint": "eslint src",
+    "shell": "SLS_DEBUG=* yarn sls shell -S zsh",
+    "sls": "yarn env sls",
+    "start": "yarn env node scripts/start.js",
+    "test": "jest --env=jsdom",
+    "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'"
   },
   "jest": {
     "coverageDirectory": "coverage",

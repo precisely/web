@@ -3,18 +3,19 @@
   "description": "",
   "private": true,
   "scripts": {
-    "shell": "yarn sls shell",
-    "log": "scripts/log",
-    "wsd": "scripts/wsd",
     "deploy": "yarn sls deploy",
+    "env": "../config/withenv",
+    "eslint": "eslint src",
+    "log": "scripts/log",
+    "offline": "scripts/offline",
+    "shell": "yarn sls shell",
+    "sls": "yarn env sls",
     "test": "jest",
     "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
-    "offline": "scripts/offline",
-    "ts-node": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register",
-    "env": "../config/withenv",
-    "sls": "yarn env sls",
+    "ts-node": "IS_OFFLINE=true ts-node -r tsconfig-paths/register",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "eslint": "eslint src"
+    "wsd": "scripts/wsd"
+  },
   },
   "jest": {
     "coverageDirectory": "coverage",
