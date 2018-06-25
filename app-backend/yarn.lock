@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@aneilbaboo/dynamodb-localhost@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/dynamodb-localhost/-/dynamodb-localhost-0.0.7.tgz#8793db920c2b6f90bdb10da520f585057cc5599c"
+  dependencies:
+    mkdirp "^0.5.0"
+    progress "^1.1.8"
+    rmdir "^1.2.0"
+    tar "^2.0.0"
+
 "@aneilbaboo/dynogels-promisified@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@aneilbaboo/dynogels-promisified/-/dynogels-promisified-1.0.6.tgz#892f50b28c81de34970c3b0b3fcd394d5f0d9532"
@@ -17,6 +26,15 @@
     joi "11.3.4"
     lodash "4.17.4"
     uuid "3.1.0"
+
+"@aneilbaboo/serverless-dynamodb-local@^0.2.33":
+  version "0.2.33"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.33.tgz#399f8361dd4f79943cbc5f50f10e700e4a87f0c1"
+  dependencies:
+    "@aneilbaboo/dynamodb-localhost" "^0.0.7"
+    aws-sdk "^2.7.0"
+    bluebird "^3.4.6"
+    lodash "^4.17.0"
 
 "@aneilbaboo/winston-cloudwatch@^1.13.0":
   version "1.13.1"
@@ -2065,15 +2083,6 @@ duplexify@^3.4.2, duplexify@^3.5.3:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
-
-dynamodb-localhost@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/dynamodb-localhost/-/dynamodb-localhost-0.0.5.tgz#2dfcd5c0ac83e534327f5d5da5dada8d31310755"
-  dependencies:
-    mkdirp "^0.5.0"
-    progress "^1.1.8"
-    rmdir "^1.2.0"
-    tar "^2.0.0"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"
@@ -6125,21 +6134,6 @@ serverless-domain-manager@^2.3.6:
   dependencies:
     aws-sdk "^2.177.0"
     chalk "^2.0.1"
-
-serverless-dynamodb-client@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/serverless-dynamodb-client/-/serverless-dynamodb-client-0.0.2.tgz#41a0200e1da74f50372cc4eeeca0a8aa9da82daa"
-  dependencies:
-    aws-sdk "^2.3.19"
-
-serverless-dynamodb-local@^0.2.28:
-  version "0.2.28"
-  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.28.tgz#5dc6a164872edd31d89cd2d975bae0f4a2e21b30"
-  dependencies:
-    aws-sdk "^2.7.0"
-    bluebird "^3.4.6"
-    dynamodb-localhost "^0.0.5"
-    lodash "^4.17.0"
 
 serverless-offline@^3.25.4:
   version "3.25.4"

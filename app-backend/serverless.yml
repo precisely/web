@@ -71,7 +71,7 @@ plugins:
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
-  - serverless-dynamodb-local
+  - "@aneilbaboo/serverless-dynamodb-local"
   - serverless-shell
   - serverless-pseudo-parameters
   - serverless-plugin-scripts
