@@ -29,7 +29,6 @@ resources:
 
 plugins:
   - serverless-finch
-  - serverless-shell
   - serverless-plugin-scripts
 
 custom:
@@ -48,4 +47,5 @@ custom:
 
   scripts:
     commands:
+      console: ts-node -r tsconfig-paths/register
       static: node scripts/start.js
