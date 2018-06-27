@@ -1,6 +1,6 @@
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
-import { Auth0AuthenticationResult } from './auth0';
-import _accessControl from './accessControl';
+import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
+import _accessControl from 'src/services/auth/accessControl';
 import { AccessControlPlus, IPermission } from 'accesscontrol-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';

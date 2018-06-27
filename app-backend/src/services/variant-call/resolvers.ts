@@ -7,7 +7,7 @@
 */
 
 import {VariantCallAttributes} from './models';
-import {GraphQLContext} from 'src/services/auth/graphql-context';
+import {GraphQLContext} from 'src/services/graphql';
 
 export const resolvers = {
   VariantCall: {
