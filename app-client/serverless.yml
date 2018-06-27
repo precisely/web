@@ -29,7 +29,7 @@ resources:
 
 plugins:
   - serverless-finch
-  - serverless-shell
+  - serverless-plugin-scripts
 
 custom:
   common: ${file(../serverless/common.js):vars}
@@ -45,3 +45,7 @@ custom:
     indexDocument: index.html
     errorDocument: index.html
 
+  scripts:
+    commands:
+      console: ts-node -r tsconfig-paths/register
+      static: node scripts/start.js

@@ -672,7 +672,7 @@ aws-sdk@2.188.0:
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
 
-aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.3.19, aws-sdk@^2.7.0:
+aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.7.0:
   version "2.224.1"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.224.1.tgz#82fe93e10b3e818f315c35ce8667cdc8db94a0b3"
   dependencies:
@@ -6151,20 +6151,13 @@ serverless-offline@^3.25.4:
     uuid "^3.2.1"
     velocityjs "^0.9.3"
 
-serverless-plugin-scripts@^1.0.2:
+"serverless-plugin-scripts@https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz":
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/serverless-plugin-scripts/-/serverless-plugin-scripts-1.0.2.tgz#21808c3cfd0a1a84e48c0660b0f6f370b5665486"
+  resolved "https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz#9c9bdbe623463564dd0ce696068cfd0b42a766c5"
 
 serverless-pseudo-parameters@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/serverless-pseudo-parameters/-/serverless-pseudo-parameters-1.6.0.tgz#0a2532e56f04f95f6d0c17490de42c4c498c65f6"
-
-serverless-shell@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/serverless-shell/-/serverless-shell-0.4.1.tgz#47b10a9bfb32e3d4127e4b46fbf042b099160bb7"
-  dependencies:
-    bluebird "^3.5.0"
-    lodash "^4.17.4"
 
 serverless-webpack@4.1.0:
   version "4.1.0"

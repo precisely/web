@@ -72,7 +72,6 @@ plugins:
   - serverless-webpack
   - serverless-api-stage
   - "@aneilbaboo/serverless-dynamodb-local"
-  - serverless-shell
   - serverless-pseudo-parameters
   - serverless-plugin-scripts
   - serverless-offline # serverless-offline must be last in the list
