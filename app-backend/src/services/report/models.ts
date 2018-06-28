@@ -7,8 +7,10 @@
 */
 
 import * as Joi from 'joi';
-import {defineModel, Item, types} from 'src/db/dynamo/dynogels';
+import {defineModel, Item, types, ListenerNextFunction} from 'src/db/dynamo/dynogels';
 import slugify from 'slugify';
+import {PreciselyParser} from './parser';
+
 const {uuid} = types;
 
 export type ReportState = 'published' | 'draft';
@@ -38,8 +40,8 @@ class ReportMethods {
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report>;
-  // safeCreate({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
-  saveNew(report: Report): Promise<Report>;
+  // safeSave({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
+  safeSave(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
 }
 
@@ -76,22 +78,10 @@ Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
   return result && result.Items[0];
 };
 
-Report.saveNew = async function saveNew(report: Report): Promise<Report> {
-  let slug = report.get('slug');
-  if (slug && Report.findBySlug(slug)) {
-    throw new Error(`Cannot create report with slug "${slug}" - Report already exists`);
-  } else {
-    slug = await Report.findUniqueSlug(report.get('title'));
-    report.set({ slug });
-  }
-  return report.saveAsync();
-};
-
 Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {
   let index = 1;
   let baseSlug = slugify(s);
   let slug = baseSlug;
-
   while (true) {
     let existingReport = await Report.findBySlug(slug);
     if (!existingReport) {
@@ -103,5 +93,33 @@ Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string
 
 //
 // INSTANCE METHODS
-//
+// Add them like so:
 // Report.prototype.foo = function foo() {}
+
+//
+// Report Hooks
+//
+async function setReportSlug(attrs: ReportAttributes, next: ListenerNextFunction) {
+  const title = attrs.title;
+  if (!title) {
+    return next(new Error('Attempt to create report without title'));
+  }
+  const slugSeed = attrs.slug || attrs.title;
+  const slug = await Report.findUniqueSlug(slugSeed);
+  console.log("SLUG FOuND: ", slug);
+  next(null, {...attrs, slug});
+}
+
+async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFunction) {
+  const rawContent = attrs.content;
+  try {
+    const parsedContent = PreciselyParser.parse(rawContent);
+    next(null, {...attrs, parsedContent});
+  } catch (e) {
+    next(e);
+  }
+}
+
+Report.before('create', setReportSlug);
+Report.before('create', parseReportContent);
+Report.before('update', parseReportContent);

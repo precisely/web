@@ -67,7 +67,7 @@ export const resolvers = {
           title, variants
         })
       );
-      return await Report.saveNew(report);
+      return await report.updateAsync();
     },
     async updateReport(
       _: {},

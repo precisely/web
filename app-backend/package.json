@@ -1,5 +1,5 @@
 {
-  "name": "precisely-web",
+  "name": "precisely-web-backend",
   "description": "",
   "private": true,
   "scripts": {
@@ -11,9 +11,9 @@
     "log": "scripts/log",
     "offline": "NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
     "sls": "yarn env sls",
-    "test": "jest",
+    "test:offline": "ENV=test-offline yarn sls test",
+    "test:unit": "jest --testPathPattern '.*\\.unit\\.test\\.(js|ts)x?'",
     "testcov": "STAGE=test jest --no-cache --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/**/*.graphql",
-    "ts-node": "IS_OFFLINE=true ts-node -r tsconfig-paths/register",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "wsd": "scripts/wsd"
   },
@@ -74,9 +74,9 @@
     "jwks-rsa-promisified": "^1.0.2",
     "lodash.camelcase": "^4.3.0",
     "logform": "1.5.0",
+    "markdown-it": "^8.4.1",
     "sequelize": "4.35.2",
-    "slugify": "^1.2.9",
-    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git",
+    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#b82674575ceb287f437568e8c9c6b95188149a57",
     "winston": "^3.0.0"
   },
   "devDependencies": {

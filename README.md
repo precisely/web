@@ -179,7 +179,7 @@ How serverless environment variables are determined:
 
 `ENV` - determines which environment file is selected by `config/withenv`. Any package.json script which invokes serverless calls `withenv` first.
 
-`IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client built with this flag set, the transpiled code will point at the local backend.
+`IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client at your local backend, build it with this flag set.
 
 ### AWS Accounts
 

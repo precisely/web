@@ -3,7 +3,8 @@ import {Model, ModelConfiguration} from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
-import {isOffline} from 'src/common/environment';
+import {isOffline, inServerlessProcess} from 'src/common/environment';
+export {ListenerNextFunction} from '@aneilbaboo/dynogels-promisified';
 
 // Use DynamoDB local if in offline mode
 if (isOffline) {
@@ -16,7 +17,13 @@ if (isOffline) {
     endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
   }, true);
 
-  log.info('Using offline dynamodb at %s', process.env.DYNAMODB_LOCAL_ENDPOINT);
+  if (!inServerlessProcess) {
+    log.info(`Using offline dynamodb at ${process.env.DYNAMODB_LOCAL_ENDPOINT}`);
+  }
+} else {
+  if (!inServerlessProcess) {
+    log.info(`Using AWS cloud hosted DynamoDB`);
+  }
 }
 
 export function stageTableName(tableName: string): string {

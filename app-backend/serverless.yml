@@ -124,6 +124,7 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
+      test: jest
 
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}
