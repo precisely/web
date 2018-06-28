@@ -1,3 +1,6 @@
+// tslint:disable:no-any
+// tslint:disable:no-empty
+
 import { GraphQLContext } from './graphql-context';
 import context from 'jest-plugin-context';
 import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';

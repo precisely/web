@@ -1,3 +1,6 @@
+// tslint:disable:no-any
+// tslint:disable:forin
+
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
 import _accessControl from 'src/services/auth/accessControl';

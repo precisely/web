@@ -1,10 +1,12 @@
 /*
-* Copyright (c) 2011-Present, Precise.ly, Inc.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
+
+// tslint:disable:no-any
 
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 
