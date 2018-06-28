@@ -6,8 +6,7 @@ import {
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';
-
-const isOffline = !!process.env.IS_OFFLINE;
+import {isOffline} from 'src/common/environment';
 
 export const apiAuthorizer: CustomAuthorizerHandler = (
   event: CustomAuthorizerEvent,

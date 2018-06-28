@@ -18,8 +18,6 @@ provider:
     REGION: ${self:provider.region}
     ACCOUNT_ID: ${self:custom.common.accountId}
 
-    IS_OFFLINE: ${self:custom.common.isOffline}
-
     LOG_LEVEL: ${self:custom.vars.logLevel}
     # NODE_ENV should only be "production" OR "development"
     # See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production

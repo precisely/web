@@ -54,10 +54,13 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 
 #### Start Backend Server
 
+If you want to run the backend locally:
+
 ```shell
 cd app-backend
 yarn offline
 ```
+This command automatically starts (and stops) DynamoDB local.
 
 - By default, GraphQL API endpoint is at ([http://localhost:3001/graphql](http://localhost:3001/graphql))
   - GET (GraphQL Playground GUI) and POST (GraphQL API)
@@ -65,18 +68,14 @@ yarn offline
 
 
 #### Frontend Client
+
 ```shell
 cd app-client
+yarn start:offline # points at local backend
+yarn start # points at default.env backend
+ENV=prod yarn start # points at prod backend
 ```
-
-Point client at a specific backend by setting ENV:
-```shell
-yarn start # use the default.env backend
-ENV=offline yarn start # use local API
-ENV=prod yarn start # use the prod API
-```
-
-The website will be available at ([http://localhost:3000](http://localhost:3000)). The port can be customize by setting the `FRONTEND_PORT` environment variable.
+This starts a static web server at ([http://localhost:3000](http://localhost:3000)). The port can be customize by setting  `FRONTEND_PORT` environment variable.  The domain can be customized by setting `FRONTEND_HOST` (not recommended).
 
 ### Deploying to AWS Developer Account
 
@@ -148,6 +147,21 @@ yarn deploy
 ```
 
 ## Background
+
+### Configuration Values
+
+How serverless environment variables are determined:
+
+* Serverless wrapper scripts in package.json call `withenv sls {command}` (e.g., `yarn deploy`, `yarn sls`, etc)
+* `withenv` loads `{ENV}.env`; if `ENV` is not set, `default.env` is used
+* Serverless loads `serverless/config.js`, which sets common variables used by both frontend and backend: domain name, Auth0 ids, GraphQL API endpoint, etc.
+* The serverless.yml file generates environment variables available to transpilation, execution and scripting environments. In practical terms, the `environment:` section variables are available to webpack, lambda handlers and EC2/ECS, and to `serverless-plugin-scripts` scripts.
+
+#### Key Environment Variables
+
+`ENV` - determines which environment file is selected by `config/withenv`. Any package.json script which invokes serverless calls `withenv` first.
+
+`IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client built with this flag set, the transpiled code will point at the local backend.
 
 ### AWS Accounts
 

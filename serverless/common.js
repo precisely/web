@@ -3,7 +3,7 @@ module.exports.vars = (sls)=> {
   const optionsValid = sls && sls.processedInput && sls.processedInput.options;
   const opt = optionsValid ? sls.processedInput.options : {};
   const env = process.env;
-  const isOffline = env.ENV === 'offline' ? 'true' : ''; // '' tests as false
+  const isOffline = env.IS_OFFLINE || env.ENV === 'offline' ? 'true' : ''; // '' tests as false
 
   const stage = opt.stage || env.STAGE || 'dev';
   const region = opt.region || env.REGION;

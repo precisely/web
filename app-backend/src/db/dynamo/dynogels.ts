@@ -3,8 +3,8 @@ import {Model, ModelConfiguration} from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
+import {isOffline} from 'src/common/environment';
 
-const isOffline = !!process.env.IS_OFFLINE;
 // Use DynamoDB local if in offline mode
 if (isOffline) {
   dynogels.AWS.config.update({
@@ -15,6 +15,8 @@ if (isOffline) {
     region: 'localhost',
     endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
   }, true);
+
+  log.info('Using offline dynamodb at %s', process.env.DYNAMODB_LOCAL_ENDPOINT);
 }
 
 export function stageTableName(tableName: string): string {
