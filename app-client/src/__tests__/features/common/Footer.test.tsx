@@ -27,7 +27,7 @@ describe('Footer tests.', () => {
   ) => {
     expect(componentTree.find(args.element).length).toBe(args.count);
     done();
-  }, [ // tslint:disable-next-line
+  }, [
     ['elementName', 'element', 'count'],
     ['div', 'div', 3],
     ['Col', Col, 6],

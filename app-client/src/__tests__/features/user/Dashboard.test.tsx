@@ -38,7 +38,7 @@ describe('Dashboard tests.', () => {
   ) => {
     expect(componentTree.find(args.element).length).toBe(args.count);
     done();
-  }, [ // tslint:disable-next-line
+  }, [
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
     ['h1', 'h1', 1],

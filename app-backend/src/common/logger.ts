@@ -8,7 +8,6 @@ import {APIGatewayEventRequestContext} from 'aws-lambda';
  * without modification, are not permitted.
  */
 
-/* istanbul ignore next */
 const winston = require('winston');
 const { format } = winston;
 const WinstonCloudWatch = require('@aneilbaboo/winston-cloudwatch');

@@ -100,7 +100,7 @@ describe('GraphQLContext', function () {
       rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar');
       const resolver = GraphQLContext.propertyResolver('mymodel', ['foo', 'bar']);
 
-      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = { foo: 'foo value', bar: 'bar value' };
       const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
       return expect(fooResult).resolves.toBe('foo value');
@@ -116,7 +116,7 @@ describe('GraphQLContext', function () {
 
       const resolver = GraphQLContext.propertyResolver('mymodel', ['foo', 'bar']);
 
-      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = { foo: 'foo value', bar: 'bar value' };
 
       const barResult = (<ResolverFn> resolver.bar)(mymodel, null, gqlContext);
@@ -136,7 +136,7 @@ describe('GraphQLContext', function () {
         bar: 'internalBar'
       });
 
-      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = { internalFoo: 'foo value', internalBar: 'bar value' };
       const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
       return expect(fooResult).resolves.toBe('foo value');
@@ -170,7 +170,7 @@ describe('GraphQLContext', function () {
       rbac.grant('user').scope('mymodel:read').onFields('foo', '!bar');
       const resolver = GraphQLContext.dynamoAttributeResolver<MyModelAttributes>('mymodel', ['foo', 'bar']);
 
-      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = new MyModel({ foo: 'foo value', bar: 'bar value' });
       const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
       return expect(fooResult).resolves.toBe('foo value');
@@ -186,7 +186,7 @@ describe('GraphQLContext', function () {
 
       const resolver = GraphQLContext.dynamoAttributeResolver<MyModelAttributes>('mymodel', ['foo', 'bar']);
 
-      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>; // tslint:disable-line
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = new MyModel({ foo: 'foo value', bar: 'bar value' });
 
       const barResult = (<ResolverFn> resolver.bar)(mymodel, null, gqlContext);
@@ -260,11 +260,9 @@ function makeLambdaContext(): LambdaContext {
     // Functions
     getRemainingTimeInMillis(): number { return 0; },
 
-    // tslint:disable
     done(error?: Error, result?: any): void { },
     fail(error: Error | string): void {},
     succeed(messageOrObject: any): void {},
     // succeed(message: string, object: any): void {}
-    // tslint:enable
   };
 }

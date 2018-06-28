@@ -42,7 +42,7 @@ export interface ReportUpdateArgs extends ReportCreateArgs {
 
 export const resolvers = {
   Query: {
-    async reports(_: {}, { state }: { state?: ReportState }, context: GraphQLContext) { // tslint:disable-line
+    async reports(_: {}, { state }: { state?: ReportState }, context: GraphQLContext) {
       let query = Report.scan();
       if (state) {
         query.where('state').equals(state);

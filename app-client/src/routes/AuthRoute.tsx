@@ -10,7 +10,6 @@ import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import * as AuthUtils from 'src/utils/auth';
 
-// tslint:disable-next-line
 const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any>, ...rest: any[]) => {
   const finalProps = Object.assign({}, ...rest);
   const MergedComponent = component;
@@ -18,7 +17,6 @@ const renderMergedProps = (component:  React.ComponentClass<any> | React.Statele
 };
 
 interface AuthProps {
-  // tslint:disable-next-line
   component: React.ComponentClass<any> | React.StatelessComponent<any>;
   exact?: boolean;
   path: string;

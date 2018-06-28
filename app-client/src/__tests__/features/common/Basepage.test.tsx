@@ -28,7 +28,7 @@ describe('Basepage tests.', () => {
   ) => {
     expect(componentTree.find(args.element).length).toBe(args.count);
     done();
-  }, [ // tslint:disable-next-line
+  }, [
     ['elementName', 'element', 'count'],
     ['Footer', Footer, 1],
     ['Routes', Routes, 1],

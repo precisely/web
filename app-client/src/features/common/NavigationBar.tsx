@@ -29,7 +29,6 @@ export interface NavigationBarState {
 }
 
 @Radium
-// tslint:disable-next-line
 export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   state = {
     isOpen: false,

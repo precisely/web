@@ -12,8 +12,6 @@ import {Route, Switch} from 'react-router-dom';
 import {LoadingPage} from 'src/features/common/LoadingPage';
 import { AuthRoute } from './AuthRoute';
 
-// tslint:disable
-/* istanbul ignore next */
 function LoadComponent(componentName: string, path?: string) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),
@@ -27,9 +25,7 @@ function LoadComponent(componentName: string, path?: string) {
     }
   });
 };
-// tslint:enable
 
-/* istanbul ignore next */
 export class Routes extends React.Component {
 
   render(): JSX.Element {
