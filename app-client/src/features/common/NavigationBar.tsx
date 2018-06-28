@@ -20,7 +20,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 // import * as AuthUtils from 'src/utils/auth';
-let AuthUtils = require('src/utils/auth');
+const AuthUtils = require('src/utils/auth');
 const LOGO = require('src/assets/precisely-logo.png');
 
 export interface NavigationBarState {

@@ -24,7 +24,7 @@ function LoadComponent(componentName: string, path?: string) {
       return <LoadingPage />;
     }
   });
-};
+}
 
 export class Routes extends React.Component {
 
@@ -41,7 +41,7 @@ export class Routes extends React.Component {
             path="/view-report"
             component={LoadComponent('Report', 'report/Report')}
         />
-        <Route 
+        <Route
             path="/login"
             exact
             component={LoadComponent('Login', 'user/Login')}

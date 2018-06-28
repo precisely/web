@@ -20,8 +20,8 @@ function removeAuthToken() {
 }
 
 export function isAuthenticated() {
-  let expiresAt = Number(localStorage.getItem(EXPIRES_IN_KEY));
-  let accessToken: string = localStorage.getItem(ACCESS_TOKEN_KEY);
+  const expiresAt = Number(localStorage.getItem(EXPIRES_IN_KEY));
+  const accessToken: string = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   if (accessToken && accessToken.length > 0 && expiresAt > 0 && expiresAt > new Date().getTime()) {
     return accessToken;

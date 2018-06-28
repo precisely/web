@@ -25,13 +25,13 @@ interface AuthProps {
 export const AuthRoute = (authProps: AuthProps) => {
   const {component, ...rest} = authProps;
   return (
-    <Route 
-        {...rest} 
+    <Route
+        {...rest}
         render={ routeProps => {
           return AuthUtils.isAuthenticated() ? (
             renderMergedProps(authProps.component, routeProps, rest)
           ) : (
-            <Redirect 
+            <Redirect
               to={{
                 pathname: '/login',
                 state: { from: routeProps.location.pathname }
