@@ -14,8 +14,8 @@ import {Route, Switch} from 'react-router-dom';
 import {LoadingPage} from 'src/features/common/LoadingPage';
 import { AuthRoute } from './AuthRoute';
 
-// tslint:disable-next-line:function-name
-function LoadComponent(componentName: string, path?: string) {
+
+function makeLoadable(componentName: string, path?: string) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),
     render(loaded: any, props: any) {
@@ -29,29 +29,33 @@ function LoadComponent(componentName: string, path?: string) {
   });
 }
 
+
 export class Routes extends React.Component {
 
   render(): JSX.Element {
-
     return (
       <Switch>
         <Route
             path="/"
-            component={LoadComponent('Homepage', 'homepage/Homepage')}
+            component={makeLoadable('Homepage', 'homepage/Homepage')}
             exact
         />
         <AuthRoute
             path="/view-report"
-            component={LoadComponent('Report', 'report/Report')}
+            component={makeLoadable('Report', 'report/Report')}
         />
         <Route
             path="/login"
             exact
-            component={LoadComponent('Login', 'user/Login')}
+            component={makeLoadable('Login', 'user/Login')}
         />
-        <Route path="/about-us" exact component={LoadComponent('AboutUs', 'homepage/AboutUs')} />
-        <Route path="*" component={LoadComponent('NotFound', 'common/NotFound')} />
+        <Route path="/login2"
+               exact={true}
+               component={makeLoadable('Login2', 'user/Login2')} />
+        <Route path="/about-us" exact component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
+        <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
       </Switch>
     );
   }
+
 }

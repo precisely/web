@@ -27,6 +27,7 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 
   renderReports = (): JSX.Element | string => {
+    /*
     const {error, loading, report} = this.props.data;
 
     if (loading) {
@@ -44,6 +45,12 @@ export class ReportImpl extends React.Component<ReportProps> {
     return (
       <div>
         <h6>{report.title}</h6>
+      </div>
+    );
+    */
+    return (
+      <div>
+        your report here
       </div>
     );
   }

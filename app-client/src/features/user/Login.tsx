@@ -1,21 +1,17 @@
-/*
- * Copyright (c) 2011-Present, Precise.ly, Inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or
- * without modification, are not permitted.
- */
 import Auth0Lock from 'auth0-lock';
-import {Component} from 'react';
-import {authLockButtonBackground} from 'src/constants/styleGuide';
+import * as React from 'react';
+import { authLockButtonBackground } from 'src/constants/styleGuide';
 import { RouteComponentProps} from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import {getEnvVar} from 'src/utils/env';
+import { getEnvVar } from 'src/utils/env';
+
 
 const LOGO = require('src/assets/logo.png');
 const KEY_FOR_LAST_PATH_BEFORE_LOGIN = 'lastPathBeforeLogin';
 
-export class Login extends Component<RouteComponentProps<void>> {
+
+export class Login extends React.Component<RouteComponentProps<void>> {
+
   lock = new Auth0Lock(
     getEnvVar('REACT_APP_AUTH0_CLIENT_ID'),
     getEnvVar('REACT_APP_AUTH0_DOMAIN'),
@@ -40,7 +36,8 @@ export class Login extends Component<RouteComponentProps<void>> {
     super(props);
     this.lock.on('authenticated', this.onAuthentication);
     this.lock.on('authorization_error', (error: Error) => {
-      console.log('something went wrong', error.message);
+      // FIXME: Happens with 3rd-party cookies blocked. Need to investigate.
+      console.log('something went wrong:', error['errorDescription']);
     });
   }
 
@@ -56,6 +53,7 @@ export class Login extends Component<RouteComponentProps<void>> {
   }
 
   saveAuthenticationInfo (authResult: AuthResult) {
+    localStorage.setItem('name', authResult.idTokenPayload['name']);
     AuthUtils.saveToken(authResult.accessToken, authResult.expiresIn);
   }
 
@@ -72,6 +70,7 @@ export class Login extends Component<RouteComponentProps<void>> {
   }
 
   render(): JSX.Element {
+    /*
     // Avoid showing Lock when hash is parsed.
     if (!(/access_token|id_token|error/.test(this.props.location.hash)) && !AuthUtils.isAuthenticated()) {
       if (this.props.location.state) {
@@ -80,5 +79,22 @@ export class Login extends Component<RouteComponentProps<void>> {
       this.lock.show();
     }
     return null;
+     */
+
+    if (AuthUtils.isAuthenticated()) {
+      return (
+        <div>
+          you're authenticated, hi {localStorage.getItem('name')}
+        </div>
+      );
+    }
+
+    /* this.lock.show();*/
+    return (
+      <div>
+        not authenticated
+      </div>
+    );
+
   }
 }

@@ -74,6 +74,9 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
             <NavItem className="pr-4">
               <NavLink href="/about-us">ABOUT US</NavLink>
             </NavItem>
+            <NavItem className="pr-4">
+              <NavLink href="/view-report">VIEW REPORT</NavLink>
+            </NavItem>
             <NavItem>
               <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
                 {AuthUtils.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
