@@ -3,7 +3,9 @@ module.exports.vars = (sls)=> {
   const optionsValid = sls && sls.processedInput && sls.processedInput.options;
   const opt = optionsValid ? sls.processedInput.options : {};
   const env = process.env;
-  const isOffline = env.ENV === 'offline' ? 'true' : ''; // '' tests as false
+  const isOffline = !/^(no|0|false|)$/i.test(env.IS_OFFLINE || '');
+
+  sls.cli.consoleLog('Serverless: Generating offline settings');
 
   const stage = opt.stage || env.STAGE || 'dev';
   const region = opt.region || env.REGION;

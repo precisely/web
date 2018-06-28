@@ -1,5 +1,6 @@
 import {isArray} from 'util';
 import {APIGatewayEventRequestContext} from 'aws-lambda';
+import {isOffline} from 'src/common/environment';
 /*
  * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -16,7 +17,6 @@ const WinstonCloudWatch = require('@aneilbaboo/winston-cloudwatch');
 export const LOG_DATA_SEP = '\t|\t';
 
 type FormatInfo = { timestamp: number, level: number | string, message: string };
-const isOffline = !!process.env.IS_OFFLINE;
 const shouldLogToCloudWatchAggregate = process.env.STAGE !== 'prod' && !isOffline;
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase();
 const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
