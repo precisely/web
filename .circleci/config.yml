@@ -85,10 +85,10 @@ workflows:
             - build-frontend
             - build-backend
 
-            - report-codeclimate:
-                requires:
-                    - build-frontend
-                    - build-backend
+            # - report-codeclimate:
+            #     requires:
+            #         - build-frontend
+            #         - build-backend
 
             # run this job only when dev branch is build
             - beta-deploy-backend:
