@@ -6,10 +6,8 @@
  * without modification, are not permitted.
  */
 
-/* istanbul ignore next */
 import gql from 'graphql-tag';
 
-/* istanbul ignore next */
 export const GetReport = gql`
   query Report($slug: String!) {
     report(slug: $slug) {

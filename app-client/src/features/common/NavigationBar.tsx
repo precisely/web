@@ -6,6 +6,9 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+// tslint:disable:jsx-no-lambda
+
 import * as React from 'react';
 import * as Radium from 'radium';
 import {CSS} from 'src/interfaces';
@@ -20,7 +23,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 // import * as AuthUtils from 'src/utils/auth';
-let AuthUtils = require('src/utils/auth');
+const AuthUtils = require('src/utils/auth');
 const LOGO = require('src/assets/precisely-logo.png');
 
 export interface NavigationBarState {
@@ -29,7 +32,6 @@ export interface NavigationBarState {
 }
 
 @Radium
-// tslint:disable-next-line
 export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   state = {
     isOpen: false,

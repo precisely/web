@@ -1,10 +1,12 @@
 /*
-* Copyright (c) 2011-Present, Precise.ly, Inc.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+ * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
+
+// tslint:disable:no-any
 
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 
@@ -49,7 +51,6 @@ const PlaygroundHTMLTitle = (process.env.STAGE !== 'prod' ?
 );
 
 export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
-  // tslint:disable-next-line
   const handler = lambdaPlayground({
     endpoint: process.env.GRAPHQL_API_PATH,
     htmlTitle: PlaygroundHTMLTitle
@@ -58,7 +59,6 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 };
 
 // export const graphiqlHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
-//   // tslint:disable-next-line
 //   const handler = graphiqlLambda({ endpointURL: process.env.GRAPHQL_API_PATH });
 
 //   withCORS(handler, event, context, callback);
@@ -67,7 +67,6 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
   const log = makeLogger(event.requestContext);
   log.debug('APIGateway event: %j, context: %j', event, context);
-  // tslint:disable-next-line
   const callbackFilter = function (error: Error, output: any ) {
     if (output) {
       output.headers = output.headers || {};

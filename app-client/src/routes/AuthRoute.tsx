@@ -6,11 +6,12 @@
 * without modification, are not permitted.
 */
 
+// tslint:disable
+
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import * as AuthUtils from 'src/utils/auth';
 
-// tslint:disable-next-line
 const renderMergedProps = (component:  React.ComponentClass<any> | React.StatelessComponent<any>, ...rest: any[]) => {
   const finalProps = Object.assign({}, ...rest);
   const MergedComponent = component;
@@ -18,7 +19,6 @@ const renderMergedProps = (component:  React.ComponentClass<any> | React.Statele
 };
 
 interface AuthProps {
-  // tslint:disable-next-line
   component: React.ComponentClass<any> | React.StatelessComponent<any>;
   exact?: boolean;
   path: string;
@@ -27,13 +27,13 @@ interface AuthProps {
 export const AuthRoute = (authProps: AuthProps) => {
   const {component, ...rest} = authProps;
   return (
-    <Route 
-        {...rest} 
+    <Route
+        {...rest}
         render={ routeProps => {
           return AuthUtils.isAuthenticated() ? (
             renderMergedProps(authProps.component, routeProps, rest)
           ) : (
-            <Redirect 
+            <Redirect
               to={{
                 pathname: '/login',
                 state: { from: routeProps.location.pathname }

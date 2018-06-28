@@ -21,7 +21,7 @@ describe('Testing user utility methods', () => {
 
   it('should clear the accessToken after logout and redirect to home', () => {
     window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, 'xyz'); // dummy token
-    window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, new Date().getTime().toString()); 
+    window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, new Date().getTime().toString());
     AuthUtils.logout();
     expect(window.localStorage.getItem(AuthUtils.ACCESS_TOKEN_KEY)).toBeNull();
     expect(window.localStorage.getItem(AuthUtils.EXPIRES_IN_KEY)).toBeNull();
@@ -29,21 +29,21 @@ describe('Testing user utility methods', () => {
   });
 
   unroll(
-      'isAuthenticated test for #case',
-      (done: () => void, testArgs: {accessToken: string, expiresAt: number, expected: string}) => {
-        window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, testArgs.accessToken);
-        window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, testArgs.expiresAt.toString());
-        expect(AuthUtils.isAuthenticated()).toEqual(testArgs.expected);
-        done();
-      },
-      [
-        ['case', 'accessToken', 'expiresAt', 'expected'], // Different combinations for the two
-        ['localStorage is empty', '', '', false],
-        ['no accessToken and expiresAt equals to now', '', new Date().getTime(), false],
-        ['no accessToken and expiresAt greater than now', '', new Date().getTime() + 60000, false],
-        ['accessToken present but no expiresAt', 'xyz', '', false],
-        ['accessToken present and expiresAt equal to now', 'xyz', new Date().getTime(), false],
-        ['accessToken present and expiresAt greater than now', 'xyz', new Date().getTime() + 60000, 'xyz'],
-      ]
+    'isAuthenticated test for #case',
+    (done: () => void, testArgs: {accessToken: string, expiresAt: number, expected: string}) => {
+      window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, testArgs.accessToken);
+      window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, testArgs.expiresAt.toString());
+      expect(AuthUtils.isAuthenticated()).toEqual(testArgs.expected);
+      done();
+    },
+    [
+      ['case', 'accessToken', 'expiresAt', 'expected'], // Different combinations for the two
+      ['localStorage is empty', '', '', false],
+      ['no accessToken and expiresAt equals to now', '', new Date().getTime(), false],
+      ['no accessToken and expiresAt greater than now', '', new Date().getTime() + 60000, false],
+      ['accessToken present but no expiresAt', 'xyz', '', false],
+      ['accessToken present and expiresAt equal to now', 'xyz', new Date().getTime(), false],
+      ['accessToken present and expiresAt greater than now', 'xyz', new Date().getTime() + 60000, 'xyz'],
+    ]
   );
 });

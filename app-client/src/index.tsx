@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import initReactFastclick from 'react-fastclick';

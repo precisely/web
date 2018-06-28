@@ -1,3 +1,6 @@
+// tslint:disable:no-any
+// tslint:disable:forin
+
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
 import _accessControl from 'src/services/auth/accessControl';
@@ -15,7 +18,6 @@ export class GraphQLContext {
     public readonly accessControl: AccessControlPlus = _accessControl) {
   }
 
-  // tslint:disable-next-line
   async can<M>(scope: string, resource?: M): Promise<IPermission> {
     const context = {
       event: this.event,
@@ -123,12 +125,12 @@ export class GraphQLContext {
     accessGenerator?: PropertyAccessorGenerator
   ): IResolverObject {
     let resolver: IResolverObject = {};
-    accessGenerator = accessGenerator || ((key: string) => ((obj: any) => obj[key])); // tslint:disable-line
+    accessGenerator = accessGenerator || ((key: string) => ((obj: any) => obj[key]));
     const normMap: NormalizedPropertyMap = normalizePropertyMap(props, accessGenerator);
     for (const prop in normMap) {
       const scope = `${resource}:read:${prop}`;
       const accessor = normMap[prop];
-      resolver[<string> prop] = async (obj: any, {}: {}, context: GraphQLContext) => { // tslint:disable-line
+      resolver[<string> prop] = async (obj: any, {}: {}, context: GraphQLContext) => {
         return await context.valid(scope, obj) && accessor(obj);
       };
     }
@@ -136,7 +138,7 @@ export class GraphQLContext {
   }
 }
 
-type PropertyAccessor = (obj: any) => any; // tslint:disable-line
+type PropertyAccessor = (obj: any) => any;
 type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
 type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
 type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
@@ -145,7 +147,7 @@ export function normalizePropertyMap(
   inMap: PropertyMapArg,
   accessGenerator?: PropertyAccessorGenerator): NormalizedPropertyMap {
   if (isArray(inMap)) {
-    return fromPairs(zip(inMap, inMap.map(accessGenerator))); // tslint:disable-line
+    return fromPairs(zip(inMap, inMap.map(accessGenerator)));
   } else {
     return mapValues(inMap, (value: PropertyAccessor | string) => {
       return isString(value) ? accessGenerator(value) : value;

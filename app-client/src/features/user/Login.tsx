@@ -36,12 +36,10 @@ export class Login extends Component<RouteComponentProps<void>> {
     }
   );
 
-  // tslint:disable-next-line
   constructor(props: any) {
     super(props);
     this.lock.on('authenticated', this.onAuthentication);
     this.lock.on('authorization_error', (error: Error) => {
-      // tslint:disable-next-line
       console.log('something went wrong', error.message);
     });
   }

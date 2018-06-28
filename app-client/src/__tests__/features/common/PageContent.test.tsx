@@ -29,7 +29,7 @@ describe('SignupLoginContainer tests.', () => {
   ) => {
     expect(componentTree.find(args.element).length).toBe(args.count);
     done();
-  }, [ // tslint:disable-next-line
+  }, [
     ['elementName', 'element', 'count'],
     ['Row', Row, 1],
     ['Col', Col, 1],

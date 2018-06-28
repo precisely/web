@@ -63,7 +63,6 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 }
 
-// tslint:disable-next-line
 export const Report = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.

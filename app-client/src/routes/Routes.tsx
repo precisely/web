@@ -6,14 +6,15 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
 import {LoadingPage} from 'src/features/common/LoadingPage';
 import { AuthRoute } from './AuthRoute';
 
-// tslint:disable
-/* istanbul ignore next */
+// tslint:disable-next-line:function-name
 function LoadComponent(componentName: string, path?: string) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),
@@ -26,10 +27,8 @@ function LoadComponent(componentName: string, path?: string) {
       return <LoadingPage />;
     }
   });
-};
-// tslint:enable
+}
 
-/* istanbul ignore next */
 export class Routes extends React.Component {
 
   render(): JSX.Element {
@@ -45,7 +44,7 @@ export class Routes extends React.Component {
             path="/view-report"
             component={LoadComponent('Report', 'report/Report')}
         />
-        <Route 
+        <Route
             path="/login"
             exact
             component={LoadComponent('Login', 'user/Login')}
