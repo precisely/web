@@ -44,12 +44,6 @@ plugins:
           count_threshold: 5
   fixme:
     enabled: true
-  eslint:
-    enabled: true
-    channel: "eslint-4"
-  tslint:
-    enabled: true
-    config: tslint.json
   nodesecurity:
     enabled: true
 exclude_patterns:

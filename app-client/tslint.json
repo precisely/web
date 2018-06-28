@@ -1,3 +1,16 @@
 {
-  "extends": "../tslint.json"
+  "extends": [
+    "tslint-react",
+    "tslint-config-airbnb"
+  ],
+  "rules": {
+    "align": [true, "parameters", "statements", "members", "elements"],
+    "console": null,
+    "import-name": null,
+    "max-line-length": 150,
+    "no-boolean-literal-compare": null,
+    "object-curly-spacing": null,
+    "trailing-comma": "never",
+    "variable-name": [true, "check-format", "allow-pascal-case", "ban-keywords"]
+  }
 }
