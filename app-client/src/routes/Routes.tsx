@@ -6,12 +6,15 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
 import {LoadingPage} from 'src/features/common/LoadingPage';
 import { AuthRoute } from './AuthRoute';
 
+// tslint:disable-next-line:function-name
 function LoadComponent(componentName: string, path?: string) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),

@@ -6,6 +6,9 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+// tslint:disable:jsx-no-lambda
+
 import * as React from 'react';
 import * as Radium from 'radium';
 import {CSS} from 'src/interfaces';

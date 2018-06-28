@@ -6,6 +6,8 @@
 * without modification, are not permitted.
 */
 
+// tslint:disable
+
 import * as React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import * as AuthUtils from 'src/utils/auth';

@@ -6,6 +6,8 @@
  * without modification, are not permitted.
  */
 
+// tslint:disable:jsx-boolean-value
+
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
