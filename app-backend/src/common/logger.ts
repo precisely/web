@@ -47,7 +47,8 @@ function makeFormatter(colorize: boolean, requestContext: APIGatewayEventRequest
       (info: FormatInfo) => `${info.timestamp} ${info.level}: ${info.message}${LOG_DATA_SEP}`)
     );
   }
-  return format.combine.apply(format, plugins);
+
+  return format.combine(... plugins);
 }
 
 type LogMethodBaseArguments = string | number | object;

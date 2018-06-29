@@ -76,7 +76,7 @@
     "logform": "1.5.0",
     "sequelize": "4.35.2",
     "slugify": "^1.2.9",
-    "winston": "3.0.0-rc2"
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "@types/bluebird": "3.5.20",
