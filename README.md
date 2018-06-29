@@ -55,7 +55,7 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 #### Running backend tests locally
 
 ```shell
-yarn dynamodb:start
+yarn dynamodb:test:offline
 # in a new terminal window:
 yarn test:offline
 # of with a watch:

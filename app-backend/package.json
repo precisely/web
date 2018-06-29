@@ -5,7 +5,8 @@
   "scripts": {
     "console": "yarn sls console",
     "deploy": "yarn sls deploy",
-    "dynamodb:start": "yarn sls dynamodb start",
+    "dynamodb": "yarn sls dynamodb start",
+    "dynamodb:test:offline": "ENV=test-offline yarn sls dynamodb start",
     "env": "../config/withenv",
     "eslint": "eslint src",
     "log": "scripts/log",
