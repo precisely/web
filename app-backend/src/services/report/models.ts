@@ -59,8 +59,8 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     ownerId: Joi.string().required(),
     state: Joi.string().valid('published', 'draft').default('draft'),
     content: Joi.string(),
-    parsedContent: Joi.string(),
-    variants: Joi.array().items(Joi.string())
+    parsedContent: Joi.array().items(Joi.object()).allow(null),
+    variants: Joi.array().items(Joi.string()).allow(null)
   },
 
   indexes: [{
@@ -80,7 +80,7 @@ Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
 
 Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {
   let index = 1;
-  let baseSlug = slugify(s);
+  let baseSlug = slugify(s).toLowerCase();
   let slug = baseSlug;
   while (true) {
     let existingReport = await Report.findBySlug(slug);
@@ -106,7 +106,6 @@ async function setReportSlug(attrs: ReportAttributes, next: ListenerNextFunction
   }
   const slugSeed = attrs.slug || attrs.title;
   const slug = await Report.findUniqueSlug(slugSeed);
-  console.log("SLUG FOuND: ", slug);
   next(null, {...attrs, slug});
 }
 
@@ -114,7 +113,7 @@ async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFun
   const rawContent = attrs.content;
   try {
     const parsedContent = PreciselyParser.parse(rawContent);
-    next(null, {...attrs, parsedContent});
+    next(null, {...attrs, parsedContent: JSON.stringify(parsedContent)});
   } catch (e) {
     next(e);
   }
