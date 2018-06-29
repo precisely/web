@@ -98,13 +98,20 @@ sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_a
 There are a small number of one-time actions that need to be taken when configuring an AWS account for deployment:
 
 1. Create a Public Hosted Zone using AWS Route53
-Point the DNS registrar at the name servers provided by the hosted zone
+Point the DNS registrar at the name servers provided by the hosted zone.
+Copy the hostedZoneId and add an entry for the rootHostedZoneId in `serverless/common.js`
 
 2. Create a wildcard certificate using AWS Certificate Manager
 If you site is "precisionhealth.site", create a cerificate for "*.precisionhealth.site", and verify it.
+Copy the arn of the certificate and add an entry for it in `serverless/common.js`
 
 3. Create a deployment bucket
 It should be named "{accountName}-precisely-deployment-bucket"
+
+4. Setup Auth0
+We set up one Auth0 tenant per AWS account. You'll need to create one application representing the React client and one API, representing the GraphQL API. See one of the other tenants for details.
+
+Copy the React app client id and create an entry in `serverless/common.js`.
 
 #### Set up your subdomain and resources
 
