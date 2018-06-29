@@ -52,6 +52,16 @@ yarn install
 
 We use [serverless-offline](https://github.com/dherault/serverless-offline) and[dynamodb-local](https://github.com/99xt/serverless-dynamodb-local) to run a subset of the functionality in a local developer environment.
 
+#### Running backend tests locally
+
+```shell
+yarn dynamodb:start
+# in a new terminal window:
+yarn test:offline
+# of with a watch:
+yarn test:offline:watch
+```
+
 #### Start Backend Server
 
 If you want to run the backend locally:
