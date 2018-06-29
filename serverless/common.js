@@ -106,6 +106,8 @@ function getS3HostedZoneId(region) {
 function getRootDomainHostedZoneId(rootDomain) {
   switch(rootDomain) {
     case 'codeprecisely.net': return 'Z1TVBJKYIAVO8C';
+    case 'precisionhealth.site': return 'Z1059EDY99U5GK';
+    case 'precise.ly': return 'Z1FM1IS2FI7HE3';
     case 'localhost': return 'dummy-localhost-hosted-zoneId';
     default: throw new Error(`HostedZoneId for ${rootDomain} not yet set in ${__filename}`);
 
