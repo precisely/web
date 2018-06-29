@@ -28,7 +28,7 @@ module.exports.vars = (sls)=> {
   const baseDomain = account==='dev' ? `${stage}.${rootDomain}` : rootDomain;
   const apiDomain = isOffline ? 'localhost'
                   : account==='dev' ? `api-${baseDomain}` // e.g., api-aneil.codeprecisely.net
-                  : `api.${basedomain}`; //  e.g., api.precise.ly or api.precisionhealth.site
+                  : `api.${baseDomain}`; //  e.g., api.precise.ly or api.precisionhealth.site
 
   const offlineAPIPort = env.OFFLINE_API_PORT || 3001;
   const apiHost = isOffline ? `${apiDomain}:${offlineAPIPort}` : apiDomain;
