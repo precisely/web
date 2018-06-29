@@ -143,33 +143,26 @@ jobs:
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
 
-
     beta-deploy-frontend:
         <<: *frontend_defaults
-
         steps:
             - *checkout
-
             - *restore_frontend_cache
-
             - run:
                 name: Set AWS Profile (frontend)
                 command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} yarn deploy
+                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
 
     beta-deploy-backend:
         <<: *backend_defaults
-
         steps:
             - *checkout
-
             - *restore_backend_cache
-
             - run:
                 name: Set AWS Profile (backend)
                 command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} yarn deploy
+                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
