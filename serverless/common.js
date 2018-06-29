@@ -1,5 +1,5 @@
-
 module.exports.vars = (sls)=> {
+  process.env.IN_SERVERLESS_PROCESS = 'true';
   const optionsValid = sls && sls.processedInput && sls.processedInput.options;
   const opt = optionsValid ? sls.processedInput.options : {};
   const env = process.env;
