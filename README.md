@@ -94,6 +94,17 @@ You'll need your developer access key and secret. Ask Aneil.
 ```shell
 sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_access_key> --secret <your_aws_secret_key>
 ```
+#### Configure the AWS Account
+There are a small number of one-time actions that need to be taken when configuring an AWS account for deployment:
+
+1. Create a Public Hosted Zone using AWS Route53
+Point the DNS registrar at the name servers provided by the hosted zone
+
+2. Create a wildcard certificate using AWS Certificate Manager
+If you site is "precisionhealth.site", create a cerificate for "*.precisionhealth.site", and verify it.
+
+3. Create a deployment bucket
+It should be named "{accountName}-precisely-deployment-bucket"
 
 #### Set up your subdomain and resources
 
