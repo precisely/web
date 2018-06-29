@@ -76,7 +76,7 @@ ALIASES:
             name: Save Coverage Report in S3
             command: |
                 cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --add-prefix ${PWD##*/}
-                AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
+                AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
 
 workflows:
     version: 2
@@ -139,7 +139,7 @@ jobs:
             - run:
                 name: Reporting CodeClimate results
                 command: |
-                    AWS_REGION=us-east-1 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
+                    AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
 
@@ -153,11 +153,11 @@ jobs:
             - *restore_frontend_cache
 
             - run:
-                name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                name: Set AWS Profile (frontend)
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying frontend on Staging
-                command: yarn deploy:stage
+                command: STAGE=beta REGION=${AWS_REGION} yarn deploy
 
     beta-deploy-backend:
         <<: *backend_defaults
@@ -168,8 +168,8 @@ jobs:
             - *restore_backend_cache
 
             - run:
-                name: Set AWS Profile
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
+                name: Set AWS Profile (backend)
+                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
             - run:
                 name: Deploying backend on Staging
-                command: yarn deploy:stage
+                command: STAGE=beta REGION=${AWS_REGION} yarn deploy
