@@ -134,7 +134,7 @@ jobs:
 
     report-codeclimate:
         <<: *defaults
-        work_directory: ~/repo
+        working_directory: ~/repo
         steps:
             - run:
                 name: Reporting CodeClimate results
