@@ -53,8 +53,7 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$"
     ],
     "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "auth0-lock": "<rootDir>/__mocks__/auth0-lock/index.js"
+      "^react-native$": "react-native-web"
     },
     "moduleFileExtensions": [
       "web.ts",
@@ -98,7 +97,7 @@
     ]
   },
   "dependencies": {
-    "@types/auth0-lock": "^11.4.3",
+    "@types/auth0-js": "^8.11.2",
     "@types/bluebird": "^3.5.20",
     "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "1.1.5",
@@ -106,7 +105,7 @@
     "apollo-client-preset": "1.0.6",
     "apollo-link-context": "^1.0.8",
     "apollo-link-http": "1.3.2",
-    "auth0-lock": "11.5.2",
+    "auth0-js": "^9.6.1",
     "autoprefixer": "7.1.6",
     "aws-sdk": "2.188.0",
     "axios": "0.17.1",
