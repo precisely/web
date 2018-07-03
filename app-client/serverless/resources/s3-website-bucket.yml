@@ -5,7 +5,7 @@ S3BucketReactClient:
     AccessControl: PublicRead
     WebsiteConfiguration:
       IndexDocument: index.html
-      ErrorDocument: error.html
+      ErrorDocument: index.html
   DeletionPolicy: Delete
 BucketPolicyReactClient:
   Type: AWS::S3::BucketPolicy

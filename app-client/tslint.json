@@ -5,10 +5,14 @@
   ],
   "rules": {
     "align": [true, "parameters", "statements", "members", "elements"],
+    "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
     "console": null,
     "import-name": null,
+    "jsx-alignment": null,
     "max-line-length": 150,
     "no-boolean-literal-compare": null,
+    "no-consecutive-blank-lines": [true, 2],
+    "no-unused": true,
     "object-curly-spacing": null,
     "trailing-comma": "never",
     "variable-name": [true, "check-format", "allow-pascal-case", "ban-keywords"]

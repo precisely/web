@@ -15,6 +15,7 @@ import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/features/report/queries';
 import {ReportData} from 'src/features/report/interfaces';
+import * as AuthUtils from 'src/utils/auth';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -27,6 +28,7 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 
   renderReports = (): JSX.Element | string => {
+    /*
     const {error, loading, report} = this.props.data;
 
     if (loading) {
@@ -44,6 +46,12 @@ export class ReportImpl extends React.Component<ReportProps> {
     return (
       <div>
         <h6>{report.title}</h6>
+      </div>
+    );
+    */
+    return (
+      <div>
+        your report here, {AuthUtils.getUserName()}
       </div>
     );
   }
