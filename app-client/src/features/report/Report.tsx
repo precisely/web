@@ -15,6 +15,7 @@ import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 import {GetReport} from 'src/features/report/queries';
 import {ReportData} from 'src/features/report/interfaces';
+import * as AuthUtils from 'src/utils/auth';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -50,7 +51,7 @@ export class ReportImpl extends React.Component<ReportProps> {
     */
     return (
       <div>
-        your report here
+        your report here, {AuthUtils.getUserName()}
       </div>
     );
   }
