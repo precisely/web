@@ -1,14 +1,10 @@
-import * as React from 'react';
-// import { authLockButtonBackground } from 'src/constants/styleGuide';
-import { Redirect, RouteComponentProps} from 'react-router';
-import * as AuthUtils from 'src/utils/auth';
-import { getEnvVar } from 'src/utils/env';
 import * as Auth0 from 'auth0-js';
+import * as AuthUtils from 'src/utils/auth';
+import * as React from 'react';
 import * as _ from 'lodash';
+import { Redirect, RouteComponentProps} from 'react-router';
+import { getEnvVar } from 'src/utils/env';
 
-
-/* const LOGO = require('src/assets/logo.png');
- * */
 
 const LS_AUTH_LOGIN_REDIRECT = 'auth-login-redirect';
 
@@ -84,28 +80,5 @@ export class Login extends React.Component<RouteComponentProps<void>> {
     return null;
 
   }
-
-
-  /*
-     lock = new Auth0Lock(
-     getEnvVar('REACT_APP_AUTH0_CLIENT_ID'),
-     getEnvVar('REACT_APP_AUTH0_DOMAIN'),
-     {
-     theme: {
-     logo: LOGO,
-     primaryColor: authLockButtonBackground
-     },
-     languageDictionary: {
-     title: 'Precise.ly'
-     },
-     auth: {
-     responseType: 'token id_token',
-     params: {
-     scope: 'openid profile'
-     }
-     }
-     }
-     );
-     }*/
 
 }

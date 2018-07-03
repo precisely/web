@@ -3,6 +3,7 @@ import * as Auth0 from 'auth0-js';
 
 
 export const LS_AUTH_ACCESS_TOKEN = 'auth-access-token';
+export const LS_AUTH_ID_TOKEN = 'auth-id-token';
 export const LS_AUTH_EXPIRES_IN = 'auth-token-expires-at';
 export const LS_AUTH_USER = 'auth-user';
 
@@ -33,6 +34,7 @@ export function isAuthenticated() {
 export function saveAuthentication(authResult: Auth0.Auth0DecodedHash, user: object) {
   const expiresIn = (new Date().getTime() + authResult.expiresIn * 1000).toString();
   localStorage.setItem(LS_AUTH_ACCESS_TOKEN, authResult.accessToken);
+  localStorage.setItem(LS_AUTH_ID_TOKEN, authResult.idToken);
   localStorage.setItem(LS_AUTH_EXPIRES_IN, expiresIn);
   localStorage.setItem(LS_AUTH_USER, JSON.stringify(user));
 }
@@ -41,6 +43,7 @@ export function saveAuthentication(authResult: Auth0.Auth0DecodedHash, user: obj
 export function removeAuthentication() {
   const keys = [
     LS_AUTH_ACCESS_TOKEN,
+    LS_AUTH_ID_TOKEN,
     LS_AUTH_EXPIRES_IN,
     LS_AUTH_USER
   ];
