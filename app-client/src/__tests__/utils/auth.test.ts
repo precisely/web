@@ -20,19 +20,19 @@ describe('Testing user utility methods', () => {
   });
 
   it('should clear the accessToken after logout and redirect to home', () => {
-    window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, 'xyz'); // dummy token
-    window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, new Date().getTime().toString());
+    window.localStorage.setItem(AuthUtils.LS_AUTH_ACCESS_TOKEN, 'xyz'); // dummy token
+    window.localStorage.setItem(AuthUtils.LS_AUTH_EXPIRES_IN, new Date().getTime().toString());
     AuthUtils.logout();
-    expect(window.localStorage.getItem(AuthUtils.ACCESS_TOKEN_KEY)).toBeNull();
-    expect(window.localStorage.getItem(AuthUtils.EXPIRES_IN_KEY)).toBeNull();
+    expect(window.localStorage.getItem(AuthUtils.LS_AUTH_ACCESS_TOKEN)).toBeNull();
+    expect(window.localStorage.getItem(AuthUtils.LS_AUTH_EXPIRES_IN)).toBeNull();
     expect(window.location.pathname).toBe('/');
   });
 
   unroll(
     'isAuthenticated test for #case',
     (done: () => void, testArgs: {accessToken: string, expiresAt: number, expected: string}) => {
-      window.localStorage.setItem(AuthUtils.ACCESS_TOKEN_KEY, testArgs.accessToken);
-      window.localStorage.setItem(AuthUtils.EXPIRES_IN_KEY, testArgs.expiresAt.toString());
+      window.localStorage.setItem(AuthUtils.LS_AUTH_ACCESS_TOKEN, testArgs.accessToken);
+      window.localStorage.setItem(AuthUtils.LS_AUTH_EXPIRES_IN, testArgs.expiresAt.toString());
       expect(AuthUtils.isAuthenticated()).toEqual(testArgs.expected);
       done();
     },
@@ -47,3 +47,4 @@ describe('Testing user utility methods', () => {
     ]
   );
 });
+

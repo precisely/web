@@ -6,9 +6,6 @@
  * without modification, are not permitted.
  */
 
-// tslint:disable:jsx-boolean-value
-// tslint:disable:jsx-no-lambda
-
 import * as React from 'react';
 import * as Radium from 'radium';
 import {CSS} from 'src/interfaces';
@@ -22,8 +19,8 @@ import {
   NavLink,
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
-// import * as AuthUtils from 'src/utils/auth';
-const AuthUtils = require('src/utils/auth');
+import * as AuthUtils from 'src/utils/auth';
+
 const LOGO = require('src/assets/precisely-logo.png');
 
 export interface NavigationBarState {
@@ -33,6 +30,7 @@ export interface NavigationBarState {
 
 @Radium
 export class NavigationBar extends React.Component<RouteComponentProps<any>> {
+
   state = {
     isOpen: false,
     backgroundColor: 'transparent',
@@ -40,14 +38,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
 
   toggle = (): void => {
     this.setState({isOpen: !this.state.isOpen});
-  }
-
-  handleClick = (): void => {
-    if (AuthUtils.isAuthenticated()) {
-      AuthUtils.logout();
-    } else {
-      this.props.history.push('/login');
-    }
   }
 
   componentDidMount(): void {
@@ -58,35 +48,54 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
     this.setState({backgroundColor: window.scrollY > 50 ? 'white' : 'transparent'});
   }
 
+  renderLoginStatus() {
+    const props = this.props;
+    function helper() {
+      return AuthUtils.isAuthenticated() ? 'log out' : 'log in';
+    }
+    function clickHandler(): void {
+      if (AuthUtils.isAuthenticated()) {
+        AuthUtils.logout();
+      }
+      else {
+        props.history.push('/login');
+      }
+    }
+    return (
+      <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={clickHandler}>
+        {helper()}
+      </NavLink>
+    );
+  }
+
   render() {
     const {isOpen, backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;
 
     return (
-      <Navbar light sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
+      <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
         <NavbarBrand href="/">
           <img id="brand-logo" src={LOGO} alt="precise.ly" style={logoStyle} />
         </NavbarBrand>
         <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="ml-auto" navbar>
+        <Collapse isOpen={isOpen} navbar={true}>
+          <Nav className="ml-auto" navbar={true}>
             <NavItem className="pr-4">
-              <NavLink href="/about-us">ABOUT US</NavLink>
+              <NavLink href="/about-us">about us</NavLink>
             </NavItem>
             <NavItem className="pr-4">
-              <NavLink href="/view-report">VIEW REPORT</NavLink>
+              <NavLink href="/view-report">report</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={(): void => this.handleClick()}>
-                {AuthUtils.isAuthenticated() ? 'LOG OUT' : 'LOG IN'}
-              </NavLink>
+              {this.renderLoginStatus()}
             </NavItem>
-          </Nav>
+      </Nav>
         </Collapse>
       </Navbar>
     );
   }
+
 }
 
 const logoStyle: CSS = {
@@ -99,4 +108,5 @@ const navBar: CSS = {
   '@media screen and (min-width: 992px)': {
     padding: '8px 245px',
   },
+  textTransform: 'uppercase'
 };

@@ -44,14 +44,9 @@ export class Routes extends React.Component {
             path="/view-report"
             component={makeLoadable('Report', 'report/Report')}
         />
-        <Route
-            path="/login"
-            exact
-            component={makeLoadable('Login', 'user/Login')}
-        />
-        <Route path="/login2"
+        <Route path="/login"
                exact={true}
-               component={makeLoadable('Login2', 'user/Login2')} />
+               component={makeLoadable('Login', 'user/Login')} />
         <Route path="/about-us" exact component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
       </Switch>
