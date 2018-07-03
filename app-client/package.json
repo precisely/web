@@ -97,7 +97,6 @@
     ]
   },
   "dependencies": {
-    "@types/auth0-js": "^8.11.2",
     "@types/bluebird": "^3.5.20",
     "amazon-cognito-identity-js": "1.31.0",
     "apollo-cache-inmemory": "1.1.5",
@@ -125,6 +124,7 @@
     "iscroll": "5.2.0",
     "iscroll-react": "1.0.3",
     "jest": "22.0.4",
+    "lodash": "^4.17.10",
     "markdown-components": "^2.0.0",
     "memory-streams": "0.1.3",
     "object-assign": "4.1.1",
@@ -170,10 +170,12 @@
     "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
+    "@types/auth0-js": "^8.11.2",
     "@types/enzyme": "3.1.1",
     "@types/enzyme-adapter-react-16": "1.0.0",
     "@types/graphql": "0.12.3",
     "@types/jest": "22.0.1",
+    "@types/lodash": "^4.14.110",
     "@types/node": "8.0.46",
     "@types/radium": "0.18.23",
     "@types/react": "16.0.35",
