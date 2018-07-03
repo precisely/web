@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Redirect, RouteComponentProps} from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
 import { getEnvVar } from 'src/utils/env';
-import * as auth0 from 'auth0-js';
+import * as Auth0 from 'auth0-js';
 import * as _ from 'lodash';
 
 
@@ -12,13 +12,13 @@ import * as _ from 'lodash';
 
 const LS_AUTH_LOGIN_REDIRECT = 'auth-login-redirect';
 
+
 export class Login extends React.Component<RouteComponentProps<void>> {
 
-  webAuth = new auth0.WebAuth({
+  webAuth = new Auth0.WebAuth({
     domain: 'dev-precisely.auth0.com',
     clientID: getEnvVar('REACT_APP_AUTH0_CLIENT_ID'),
-    // FIXME
-    redirectUri:  'http://localhost:3000/login', // `${getEnvVar('REACT_APP_AUTH0_DOMAIN')}/login`,
+    redirectUri: `${window.location.protocol}//${window.location.host}/login`,
     audience: 'https://dev-precisely.auth0.com/userinfo',
     responseType: 'token id_token',
     scope: 'openid profile'
