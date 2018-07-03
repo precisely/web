@@ -38,6 +38,11 @@ custom:
     clientDomain: ${self:custom.common.baseDomain}
     cloudfrontOriginId: "${self:provider.stage}-cloudfront"
     reactS3BucketName: ${self:provider.stage}-reacts3.${self:custom.common.rootDomain}
+    cloudfrontDefaultTTL: ${self:custom.vars.cloudfrontTTLMap.${self:custom.common.account}, self:custom.vars.cloudfrontTTLMap.default}
+    cloudfrontTTLMap:
+      dev: 60
+      beta: 300
+      default: 86400
 
   client:
     bucketName: ${self:custom.vars.reactS3BucketName}

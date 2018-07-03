@@ -31,7 +31,7 @@ CloudFrontDistributionReactClient:
           - GET
           - HEAD
         Compress: true
-        DefaultTTL: 86400
+        DefaultTTL: ${self:custom.vars.cloudfrontDefaultTTL}
         ForwardedValues:
           QueryString: false
         MaxTTL: 31536000
