@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { Redirect, RouteComponentProps} from 'react-router';
 import { getEnvVar } from 'src/utils/env';
+import { toast } from 'react-toastify';
 
 
 const LS_AUTH_LOGIN_REDIRECT = 'auth-login-redirect';
@@ -52,14 +53,12 @@ export class Login extends React.Component<RouteComponentProps<void>> {
         {hash: this.props.location.hash},
         (err, authResult) => {
           if (err) {
-            // FIXME: Error handling.
-            console.log(JSON.stringify(err, null, 2));
+            toast.error('Error: ' + JSON.stringify(err, null, 2), { autoClose: false });
           }
           if (authResult && authResult.accessToken) {
             webAuth.client.userInfo(authResult.accessToken, (err, user) => {
               if (err) {
-                // FIXME: Error handling.
-                console.log(JSON.stringify(err, null, 2));
+                toast.error('Error: ' + JSON.stringify(err, null, 2), { autoClose: false });
               }
               AuthUtils.saveAuthentication(authResult, user);
               const loginRedirect = this.readLoginRedirect();
