@@ -6,7 +6,7 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "build": "rm -frd build/* && yarn env node scripts/build.js -p",
+    "build": "rm -frd build/* && yarn sls build",
     "console": "yarn sls console",
     "deploy": "yarn deploy:resources && yarn build && yarn deploy:code",
     "deploy:resources": "yarn env sls deploy --force",

@@ -49,3 +49,4 @@ custom:
     commands:
       console: ts-node -r tsconfig-paths/register
       static: node scripts/start.js
+      build: node scripts/build.js -p
