@@ -11,7 +11,6 @@
 import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 
 import {graphqlLambda} from 'apollo-server-lambda';
-// import {graphiqlLambda} from 'apollo-server-lambda';
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
