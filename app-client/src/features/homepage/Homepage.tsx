@@ -6,8 +6,6 @@
  * without modification, are not permitted.
  */
 
-// tslint:disable:jsx-boolean-value
-
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
@@ -111,7 +109,7 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
         <NavigationBar {...this.props}/>
         <ParallaxProvider>
           <div style={containerStyle}>
-            <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate>
+            <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
               <div style={imageStyle}/>
             </Parallax>
             <div style={parallaxChildren}>
