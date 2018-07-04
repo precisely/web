@@ -21,10 +21,14 @@ describe('Testing user utility methods', () => {
 
   it('should clear the accessToken after logout and redirect to home', () => {
     window.localStorage.setItem(AuthUtils.LS_AUTH_ACCESS_TOKEN, 'xyz'); // dummy token
+    window.localStorage.setItem(AuthUtils.LS_AUTH_ID_TOKEN, 'abc123');
     window.localStorage.setItem(AuthUtils.LS_AUTH_EXPIRES_IN, new Date().getTime().toString());
+    window.localStorage.setItem(AuthUtils.LS_AUTH_USER, {'name': 'alice@example.com'}.toString());
     AuthUtils.logout();
     expect(window.localStorage.getItem(AuthUtils.LS_AUTH_ACCESS_TOKEN)).toBeNull();
+    expect(window.localStorage.getItem(AuthUtils.LS_AUTH_ID_TOKEN)).toBeNull();
     expect(window.localStorage.getItem(AuthUtils.LS_AUTH_EXPIRES_IN)).toBeNull();
+    expect(window.localStorage.getItem(AuthUtils.LS_AUTH_USER)).toBeNull();
     expect(window.location.pathname).toBe('/');
   });
 
