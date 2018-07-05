@@ -64,7 +64,7 @@ describe('basic login component behavior', () => {
     expect(spyParseHash).toHaveBeenCalled();
   });
 
-  it('makes no Auth0 calls when there is a logged-in uiser', () => {
+  it('makes no Auth0 calls when there is a logged-in user', () => {
     AuthUtils.saveAuthentication({expiresIn: 60, accessToken: 'one', idToken: 'two'}, {});
     Enzyme.render(
       <MemoryRouter>
