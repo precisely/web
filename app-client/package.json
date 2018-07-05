@@ -18,6 +18,7 @@
     "start": "yarn sls static",
     "start:offline": "IS_OFFINE=true yarn sls static",
     "test": "jest --env=jsdom",
+    "test:debug": "node --inspect-brk ./node_modules/.bin/jest --env=jsdom --runInBand",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'"
   },
   "jest": {
