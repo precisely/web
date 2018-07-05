@@ -3,6 +3,7 @@
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -235,6 +236,9 @@ module.exports = {
     ],
   },
   plugins: [
+    // Copy in the Precise.ly logo file so it can be referenced without a
+    // cache-buster hash:
+    new CopyWebpackPlugin([{from: 'src/assets/precisely-logo.png', to: 'static/media'}]),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
