@@ -49,7 +49,12 @@ describe('basic login component behavior', () => {
     expect(spyParseHash).not.toHaveBeenCalled();
   });
 
-  it('interprets the Auth0 hash URL call into the callback', () => {
+  it('interprets the hash Auth0 adds to the callback URL after an authentication attempt', () => {
+    // After an authentication attempt, Auth0 calls back to the application,
+    // this time with a hash added to the parameter, e.g.,
+    // /login#access_token=<long token string>. The Auth0 API provides a method,
+    // parseHash, for interpreting this hash, and we're supposed to call it
+    // after an authentication attempt to determine user credentials.
     Enzyme.render(
       <MemoryRouter>
         <Login location={{hash: '#access_token'}} />
