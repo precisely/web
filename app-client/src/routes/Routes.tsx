@@ -1,18 +1,8 @@
-/*
- * Copyright (c) 2011-Present, Precise.ly, Inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or
- * without modification, are not permitted.
- */
-
-// tslint:disable:jsx-boolean-value
-
 import * as React from 'react';
 import Loadable from 'react-loadable';
-import {Route, Switch} from 'react-router-dom';
-import {LoadingPage} from 'src/features/common/LoadingPage';
 import { AuthRoute } from './AuthRoute';
+import { LoadingPage } from 'src/features/common/LoadingPage';
+import { Route, Switch } from 'react-router-dom';
 
 
 function makeLoadable(componentName: string, path?: string) {
@@ -33,24 +23,21 @@ function makeLoadable(componentName: string, path?: string) {
 export class Routes extends React.Component {
 
   render(): JSX.Element {
+
     return (
       <Switch>
-        <Route
-            path="/"
-            component={makeLoadable('Homepage', 'homepage/Homepage')}
-            exact
-        />
-        <AuthRoute
-            path="/view-report"
-            component={makeLoadable('Report', 'report/Report')}
-        />
-        <Route path="/login"
-               exact={true}
+        <AuthRoute path="/report" exact={true}
+                   component={makeLoadable('Report', 'report/Report')} />
+        <Route path="/" exact={true}
+               component={makeLoadable('Homepage', 'homepage/Homepage')} />
+        <Route path="/login" exact={true}
                component={makeLoadable('Login', 'user/Login')} />
-        <Route path="/about-us" exact component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
+        <Route path="/about-us" exact={true}
+               component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
         <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
       </Switch>
     );
+
   }
 
 }
