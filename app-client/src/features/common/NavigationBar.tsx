@@ -85,7 +85,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
               <NavLink href="/about-us">about us</NavLink>
             </NavItem>
             <NavItem className="pr-4">
-              <NavLink href="/view-report">report</NavLink>
+              <NavLink href="/report">report</NavLink>
             </NavItem>
             <NavItem>
               {this.renderLoginStatus()}
