@@ -107,7 +107,7 @@ custom:
     ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
 
   customDomain: # domain-manager settings - for the api
-    domainName: ${self:custom.common.apiDomain}
+    #domainName: ${self:custom.common.apiDomain}
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true

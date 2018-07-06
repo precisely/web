@@ -10,19 +10,19 @@ CloudFrontDistributionReactClient:
       CustomErrorResponses:
         - ErrorCode: 404
           ResponseCode: 200
-          ResponsePagePath: /error.html
+          ResponsePagePath: /index.html
         - ErrorCode: 403
           ResponseCode: 200
-          ResponsePagePath: /error.html
+          ResponsePagePath: /index.html
         - ErrorCode: 500
           ResponseCode: 200
-          ResponsePagePath: /error.html
+          ResponsePagePath: /index.html
         - ErrorCode: 501
           ResponseCode: 200
-          ResponsePagePath: /error.html
+          ResponsePagePath: /index.html
         - ErrorCode: 502
           ResponseCode: 200
-          ResponsePagePath: /error.html
+          ResponsePagePath: /index.html
       DefaultCacheBehavior:
         AllowedMethods:
           - GET
