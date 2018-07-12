@@ -118,5 +118,8 @@
     "webpack-graphql-loader": "0.1.0",
     "webpack-node-externals": "1.6.0",
     "websequencediagrams": "^0.1.1"
+  },
+  "resolutions": {
+    "eslint-scope": "3.7.1"
   }
 }
