@@ -10,7 +10,8 @@
       "request": "launch",
       "env": {
         "IS_OFFLINE": "true",
-        "STAGE": "test"
+        "STAGE": "test",
+        "DYNAMODB_LOCAL_ENDPOINT": "localhost:8000"
       },
       "program": "${workspaceFolder}/app-backend/node_modules/jest/bin/jest",
       "args": [
