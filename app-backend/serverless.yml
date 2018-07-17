@@ -124,8 +124,8 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
-      test: jest
-      "test:watch": jest --watch
+      test: jest -t "$TEST"
+      test:watch: jest --watch -t "$TEST"
       env: env
 
   serverless-offline:

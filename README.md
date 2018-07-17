@@ -165,6 +165,26 @@ Copy the React app client id and create an entry in `serverless/common.js`.
 
 After you do this, you can make changes and simple call `yarn deploy`.
 
+##### Running backend tests
+
+```shell
+# in one terminal window 
+yarn dynamodb:test:offline
+# in your main terminal window
+yarn test:offline # runs all tests
+
+TEST='Name of test' yarn test:offline # runs a specific test
+```
+
+Note: to use the integrated test and debugging tools in VSCode, open the workspace file instead of the web directory.
+
+##### DynamoDB Admin local
+Provides an easy to use GUI.
+See https://github.com/aaronshaf/dynamodb-admin
+```
+npm install -g dynamodb-admin
+```
+
 #### Frontend
 
 Just one step:
