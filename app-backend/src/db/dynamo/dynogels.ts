@@ -1,36 +1,51 @@
-export * from '@aneilbaboo/dynogels-promisified';
+import * as https from 'https';
+
 import {Model, ModelConfiguration} from '@aneilbaboo/dynogels-promisified';
 import * as dynogels from '@aneilbaboo/dynogels-promisified';
+
 import {extend} from 'src/common/utils';
 import {log} from 'src/common/logger';
 import {isOffline, inServerlessProcess} from 'src/common/environment';
-export {ListenerNextFunction} from '@aneilbaboo/dynogels-promisified';
+
+export {Model, ModelConfiguration, ListenerNextFunction} from '@aneilbaboo/dynogels-promisified';
+export * from '@aneilbaboo/dynogels-promisified';
 
 // Use DynamoDB local if in offline mode
-if (isOffline) {
+if (!process.env.STAGE || isOffline) {
+  const dynamoEndpoint = process.env.DYNAMODB_LOCAL_ENDPOINT || 'http://localhost:8000';
   dynogels.AWS.config.update({
     credentials: new dynogels.AWS.Credentials({
       accessKeyId: 'dummy',
       secretAccessKey: 'dummy'
     }),
-    region: 'localhost',
-    endpoint: process.env.DYNAMODB_LOCAL_ENDPOINT
+    region: 'us-east-1',
+    endpoint: dynamoEndpoint
   }, true);
 
   if (!inServerlessProcess) {
-    log.info(`Using offline dynamodb at ${process.env.DYNAMODB_LOCAL_ENDPOINT}`);
+    log.info(`Using offline dynamodb at ${dynamoEndpoint}`);
   }
 } else {
   if (!inServerlessProcess) {
     log.info(`Using AWS cloud hosted DynamoDB`);
+    // To improve the efficiency of DynamoDB requests
+    dynogels.AWS.config.update({
+      httpOptions: {
+        agent: new https.Agent({
+          rejectUnauthorized: true,
+          keepAlive: true
+        })
+      }
+    });
   }
 }
 
+let stage: string;
 export function stageTableName(tableName: string): string {
-  let stage = process.env.STAGE;
+  stage = stage || process.env.STAGE;
   if (!stage) {
-    log.warn('STAGE environment variable not set');
-    stage = 'nostage';
+    log.warn('STAGE environment variable not set, using STAGE=test');
+    stage = 'test';
   }
   return `${stage}-${tableName}`;
 }
