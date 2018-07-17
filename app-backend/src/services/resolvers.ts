@@ -7,8 +7,8 @@
 */
 
 import {IResolvers} from 'graphql-tools/dist/Interfaces';
-import {resolvers as variantCallResolvers} from './variant-call';
-import {resolvers as reportResolvers} from './report';
+import {resolvers as variantCallResolvers} from 'src/services/variant-call';
+import {resolvers as reportResolvers} from 'src/services/report';
 import {merge} from 'lodash';
 import * as GraphQLJSON from 'graphql-type-json';
 

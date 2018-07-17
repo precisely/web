@@ -6,28 +6,33 @@
 * without modification, are not permitted.
 */
 
+import { ExecResult } from 'dynogels';
 import * as Joi from 'joi';
-import {defineModel, Item} from 'src/db/dynamo/dynogels';
+
+import {defineModel, Item, ListenerNextFunction} from 'src/db/dynamo/dynogels';
+import { JoiStart, JoiRefVersion, JoiRefName, AllowedRefVersion } from 'src/common/variant-constraints';
+
+import {RefIndex, VariantCallIndexes} from './types';
 
 export class VariantCallAttributes {
-  userId: string;
-  variantId: string; // referenceName:startBaseIndex:callSetId
-                     // chr1:123918556:947101386017
+  userId?: string;
+  variantId?: string; // unique value determined from other parameters
+                      // see computeAttributes
 
-  genomeVersion?: string;
+  refVersion?: string;
   // this is equivalent to GA4GH callset Id - this is the id of a dataset
   // uploaded by the user, produced by Akesogen, etc.
   callSetId?: string;
   // sequence name e.g., chr1
-  referenceName?: string;
+  refName?: string;
   // start index with respect to sequence - must be string for DynamoDB indexing
-  startBaseIndex?: string;
+  start?: number;
   // end index of variant
-  endBaseIndex?: string;
+  end?: number;
   // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
-  alternateBases?: string[];
+  altBases?: string[];
   // sequence being replaced e.g., "A"
-  referenceBases?: string;
+  refBases?: string;
   // array of 1-based indexes into alternateBases
   genotype?: number[];
   // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
@@ -46,12 +51,13 @@ export class VariantCallAttributes {
 }
 
 interface VariantCallMethods {
-  start: number;
-  end: number;
 }
 
 interface VariantCallStaticMethods {
-  forUser(userId: string, genes?: string[]): Promise<VariantCall[]>;
+  forUser(
+    userId: string,
+    variantIndexes: VariantCallIndexes
+  ): Promise<VariantCall[]>;
 }
 
 // model instance type
@@ -71,26 +77,25 @@ export const VariantCall = defineModel<
     schema : {
       userId: Joi.string(),
 
-      // variantId structure: {referenceName}:{startIndex}:{callSetId}:{genomeVersion}
-      variantId: Joi.string().regex(/^\w+:\d+:[^:]+:[^:]+$/),
+      variantId: Joi.string().required(),
 
       //
       // Core VCF data
       //
-      // sequence name e.g., chr1
-      referenceName: Joi.string(),
-      // the genome version
-      genomeVersion: Joi.string(),
+      // sequence name e.g., chr1...chr22, chrX, chrY, MT
+      refName: JoiRefName,
+      // the genome version - only GRCh37 for now
+      refVersion: JoiRefVersion,
       // this is equivalent to GA4GH callset Id
-      callSetId: Joi.string(),
+      callSetId: Joi.string().required().regex(/\w+/, 'callSetId pattern'),
       // start index with respect to sequence - must be string for DynamoDB indexing
-      startBaseIndex: Joi.string(),
+      start: JoiStart,
       // end index of variant
-      endBaseIndex: Joi.string(),
+      end: Joi.number().greater(Joi.ref('start')),
       // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
-      alternateBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]+)|<NON_REF>/)).min(1),
+      altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]+)|<NON_REF>/, 'altbases pattern')).min(1),
       // sequence being replaced e.g., "A"
-      referenceBases: Joi.string().uppercase().regex(/[ATGC]+/),
+      refBases: Joi.string().uppercase().regex(/[ATGC]+/, 'reference bases pattern'),
       // array of 1-based indexes into alternateBases
       genotype: Joi.array().items(Joi.number()),
       // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
@@ -101,35 +106,86 @@ export const VariantCall = defineModel<
       //
       // Annotations
       //
-      rsId: Joi.string().optional(),
+      rsId: Joi.string().optional().regex(/rs\d+/),
       gene: Joi.string().optional(),
       geneStart: Joi.number().optional(), // genomic coordinate for start base
       geneEnd: Joi.number().optional(),   // genomic coordinate for end base
       zygosity: Joi.string().valid(...Zygosity).optional(), // heterozygous, homozygou,
-    }
+
+      //
+      // Index support
+      //
+      grch37Start: Joi.string().regex(/[\w\d]+:.*/) // chr{n}:{1-based-genomic-index}
+    },
+    indexes: [
+      {
+        name: 'userGRCh37StartIndex',
+        type: 'local',
+        hashKey: 'userId',
+        rangeKey: 'grch37Start'
+      },
+      {
+        name: 'userRSIdIndex',
+        type: 'local',
+        hashKey: 'userId',
+        rangeKey: 'rsId'
+      }
+    ]
   }
 );
+
+/**
+ * Computes / updates dependent attributes
+ * @param variantCall
+ * @param next
+ */
+function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
+  let {refName, refVersion, start, end, callSetId } = variantCall;
+  const rsId = variantCall.rsId || '';
+  refVersion = refVersion || AllowedRefVersion;
+  const variantId = `${refName}:${refVersion}:${start}:${end}:${rsId}:${callSetId}`;
+
+  if (refVersion !== AllowedRefVersion) {
+    next(new Error(`Invalid refVersion: ${refVersion}`));
+  } else {
+    next(null, {variantId, ...variantCall});
+  }
+}
+
+VariantCall.before('create', computeAttributes);
+VariantCall.before('update', computeAttributes);
 
 //
 // STATIC METHOD DEFINITIONS
 //
-VariantCall.forUser = async function forUser(userId: string, start?: string[]): Promise<VariantCall[]> {
-  let query = await VariantCall.query(userId);
-  if (start && start.length > 0) {
-    query = query.where('startBaseIndex').in(start);
+VariantCall.forUser = async function forUser(
+  userId: string,
+  { refIndexes, rsIds }: VariantCallIndexes
+): Promise<VariantCall[]> {
+  // tslint:disable no-any
+  const queries: Promise<ExecResult<any>>[] = [];
+  if (refIndexes) {
+    refIndexes.forEach((index: RefIndex) => {
+      const { refName, refVersion, start} = index;
+      if (refName && refVersion && start) {
+        const variantIdStart = `${refName}:${refVersion}:${start}`;
+        queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
+      } else {
+        throw new Error(`Invalid index for Variant: ${index}`);
+      }
+    });
   }
-  const result = await query.execAsync();
+  if (rsIds) {
+    rsIds.forEach(rsId => {
+      queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
+    });
+  }
 
-  return result && result.Items;
+  const execResults = await Promise.all(queries);
+  return execResults.map(er => er && er.Count && <VariantCall> er.Items[0]);
 };
 
 //
 // INSTANCE METHOD DEFINITIONS
 //
-VariantCall.prototype.start = function () {
-  return parseInt(this.get('startBaseIndex'), 10);
-};
-
-VariantCall.prototype.end = function () {
-  return parseInt(this.get('endBaseIndex'), 10);
-};
+// VariantCall.prototype.foo = function foo() {}
