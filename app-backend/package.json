@@ -82,7 +82,7 @@
     "logform": "1.5.0",
     "markdown-it": "^8.4.1",
     "sequelize": "4.35.2",
-    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs#1.1.6",
+    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs#1.1.7",
     "slugify": "^1.3.0",
     "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#1.1.3",
     "winston": "^3.0.0"
