@@ -1,5 +1,5 @@
 export type RefIndex = {refName: string, refVersion: string, start: number};
 export type VariantCallIndexes = {
-  refIndexes: RefIndex[] 
+  refIndexes: RefIndex[],
   rsIds: string[]
 };
