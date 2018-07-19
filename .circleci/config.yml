@@ -61,9 +61,14 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: |
-                yarn sls dynamodb install 
-                yarn dynamodb:test:offline &
+            command: yarn sls dynamodb install
+    
+    run_dynamodb: &run_dynamodb
+        run:
+            name: Running DynamoDB
+            command: yarn dynamodb:test:offline
+            background: true
+            sleep: 5
 
     run_tests: &run_tests
         run:
@@ -130,6 +135,8 @@ jobs:
             - *restore_backend_cache
             - *yarn_install
             - *install_dynamodb
+            - *run_dynamodb
+            - run: sleep 5
             - *save_backend_cache
             - *run_tests
             - *upload_coverage_report
