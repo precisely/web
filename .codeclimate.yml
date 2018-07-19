@@ -62,4 +62,5 @@ exclude_patterns:
   - "script/"
   - "**/spec/"
   - "**/test/"
+  - "**/*.test.*"
   - "**/__tests__/"

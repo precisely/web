@@ -15,16 +15,28 @@ export const JoiRefIndex = Joi.object({
   start: JoiStart
 });
 
+function isValidGenomeVersionNumber(v: string | number): v is number {
+  return isNumber(v) && v === 10;
+}
+
+function isValidGenomeVersionString(v: string | number): v is string {
+  return isString(v) && /hg19|GRCh37/i.test(v);
+}
+
 export function normalizeGenomeVersion(v: string | number | null | undefined | void) {
-  if (!v || (isNumber(v) && v === 10) || (isString(v) && /hg19|GRCh37/i.test(v))) {
+  if (!v || isValidGenomeVersionNumber(v) || isValidGenomeVersionString(v)) {
     return AllowedRefVersion;
   } else {
     throw new Error(`Invalid genome version ${v}`);
   }
 }
 
+function isValidHumanChromosomeNumber(chrom: string | number): chrom is number {
+  return isNumber(chrom) && chrom > 0 && chrom < 25;
+}
+
 function normalizeChromosomeName(chrom: string | number) {
-  if (isNumber(chrom) && chrom > 0 && chrom < 25) {
+  if (isValidHumanChromosomeNumber(chrom)) {
     if (chrom < 23) {
       return `chr${chrom}`;
     } else if (chrom === 23) {

@@ -60,9 +60,9 @@ export function addVariantCallsToContext(variantCalls: VariantCall[], context: C
   context.rsIds = variantCalls.map(vc => vc.get('rsId')).filter(vc => vc);
 }
 
-export function variantCallToSVNGenotype(variantCall: VariantCall): Variant {
-  const {refName, start, refBases, altBases, genotype} = variantCall.get();
-  const cisAlleles = genotype.map(g => {
+function alleleFromGenotypeFn(variantCall: VariantCall) {
+  const {start, refBases, altBases} = variantCall.get();
+  return (g: number) => {
     if (g === 0) {
       return `[${start}=]`;
     } else if (isNumber(g)) {
@@ -72,7 +72,13 @@ export function variantCallToSVNGenotype(variantCall: VariantCall): Variant {
       }
     }
     throw new Error(`Unable process variant call genotype ${g} in ${variantCall.get()}`);
-  }).filter(o => o);
+  };
+}
+
+export function variantCallToSVNGenotype(variantCall: VariantCall): Variant {
+  const {refName, genotype} = variantCall.get();
+  const toAllele = alleleFromGenotypeFn(variantCall);
+  const cisAlleles = genotype.map(toAllele).filter(o => o);
   const svnVariant = `${refName}:g.${cisAlleles.join(';')}`;
   return parse(svnVariant);
 }
