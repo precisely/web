@@ -126,6 +126,7 @@ custom:
       console: ts-node -r tsconfig-paths/register
       test: jest -t "$TEST"
       test:watch: jest --watch -t "$TEST"
+      test:coverage: jest --coverage
       env: env
 
   serverless-offline:

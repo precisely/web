@@ -74,7 +74,7 @@ ALIASES:
         run:
             name: Run Tests
             command: |
-                yarn test:offline --coverage
+                yarn test:offline:coverage
                 yarn tslint
                 yarn eslint
 
