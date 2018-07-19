@@ -69,7 +69,7 @@ plugins:
   - serverless-domain-manager
   - serverless-webpack
   - serverless-api-stage
-  - "@aneilbaboo/serverless-dynamodb-local"
+  - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
   - serverless-pseudo-parameters
   - serverless-plugin-scripts
   - serverless-offline # serverless-offline must be last in the list
@@ -124,6 +124,10 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
+      test: jest -t "$TEST"
+      test:watch: jest --watch -t "$TEST"
+      test:coverage: jest --coverage
+      env: env
 
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}

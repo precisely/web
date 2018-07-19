@@ -52,6 +52,16 @@ yarn install
 
 We use [serverless-offline](https://github.com/dherault/serverless-offline) and[dynamodb-local](https://github.com/99xt/serverless-dynamodb-local) to run a subset of the functionality in a local developer environment.
 
+#### Running backend tests locally
+
+```shell
+yarn dynamodb:test:offline
+# in a new terminal window:
+yarn test:offline
+# of with a watch:
+yarn test:offline:watch
+```
+
 #### Start Backend Server
 
 If you want to run the backend locally:
@@ -155,6 +165,26 @@ Copy the React app client id and create an entry in `serverless/common.js`.
 
 After you do this, you can make changes and simple call `yarn deploy`.
 
+##### Running backend tests
+
+```shell
+# in one terminal window 
+yarn dynamodb:test:offline
+# in your main terminal window
+yarn test:offline # runs all tests
+
+TEST='Name of test' yarn test:offline # runs a specific test
+```
+
+Note: to use the integrated test and debugging tools in VSCode, open the workspace file instead of the web directory.
+
+##### DynamoDB Admin local
+Provides an easy to use GUI.
+See https://github.com/aaronshaf/dynamodb-admin
+```
+npm install -g dynamodb-admin
+```
+
 #### Frontend
 
 Just one step:
@@ -179,7 +209,7 @@ How serverless environment variables are determined:
 
 `ENV` - determines which environment file is selected by `config/withenv`. Any package.json script which invokes serverless calls `withenv` first.
 
-`IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client built with this flag set, the transpiled code will point at the local backend.
+`IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client at your local backend, build it with this flag set.
 
 ### AWS Accounts
 

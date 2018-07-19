@@ -1,5 +1,5 @@
 {
-  "name": "precisely-web",
+  "name": "precisely-web-client",
   "description": "",
   "main": "webpack.config.js",
   "author": "Precise.ly, Inc",

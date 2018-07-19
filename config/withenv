@@ -10,7 +10,7 @@
 #   use default.env
 #
 #
-
+set -a
 CONFIG_DIR=$(cd `dirname $0` && pwd)
 if [ -z "${1}" ]; then
   # if no command provided, withenv prints the env after loading the environment file
@@ -26,4 +26,5 @@ else
 fi
 
 echo -e "\033[93mLoading ${ENVFILE} environment"
-env-cmd "../config/${ENVFILE}" "${SCRIPT}" "${@}"
+source "${CONFIG_DIR}/${ENVFILE}"
+"${SCRIPT}" "${@}"

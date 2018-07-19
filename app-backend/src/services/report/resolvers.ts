@@ -5,13 +5,16 @@
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
+import { IResolvers } from 'graphql-tools';
+import {ReducedElement} from 'smart-report';
+
+import { IContext } from 'accesscontrol-plus';
+
+import accessControl from 'src/common/access-control';
+import { GraphQLContext } from 'src/services/graphql';
 
 import {Report, ReportState, ReportAttributes} from './models';
-import accessControl from 'src/common/access-control';
-import { IContext } from 'accesscontrol-plus';
-import { GraphQLContext } from 'src/services/graphql';
-// import { reactToMarkdownComponents } from 'src/app-client/src/features/markdown/react-to-markdown';
-// import { VariantCallAttributes } from 'src/services/variant-call/models';
+import {Personalizer} from './services/personalizer';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
@@ -40,9 +43,9 @@ export interface ReportUpdateArgs extends ReportCreateArgs {
   id: string;
 }
 
-export const resolvers = {
+export const resolvers: IResolvers = {
   Query: {
-    async reports(_: {}, { state }: { state?: ReportState }, context: GraphQLContext) {
+    async reports(_: Report, { state }: { state?: ReportState }, context: GraphQLContext) {
       let query = Report.scan();
       if (state) {
         query.where('state').equals(state);
@@ -58,7 +61,7 @@ export const resolvers = {
   },
   Mutation: {
     async createReport(
-      _: {}, {title, content, variants}: ReportCreateArgs, context: GraphQLContext
+      _: Report, {title, content, variants}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
@@ -67,10 +70,10 @@ export const resolvers = {
           title, variants
         })
       );
-      return await Report.saveNew(report);
+      return await report.updateAsync();
     },
     async updateReport(
-      _: {},
+      _: Report,
       {id, title, content}: ReportUpdateArgs,
       context: GraphQLContext
     ) {
@@ -82,18 +85,30 @@ export const resolvers = {
 
       report.set({
         title: title || report.get('title'),
-        context: context || report.get('content')
+        content: content || report.get('content')
       });
       return await report.updateAsync();
     }
   },
 
-  Report: GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
-    id: 'id',
-    ownerId: 'ownerId',
-    slug: 'slug',
-    title: 'title',
-    content: 'content',
-    requiredVariants: 'variants'
-  })
+  Report: {
+    ...GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
+      id: 'id',
+      ownerId: 'ownerId',
+      slug: 'slug',
+      title: 'title',
+      content: 'content',
+      requiredVariants: 'variants'
+    }), ...{
+      personalization(
+        report: Report, { userId }: { userId: string }, context: GraphQLContext
+      ): Promise<ReducedElement[]> {
+        if (!userId) {
+          userId = context.userId;
+        }
+        const personalizer = new Personalizer(report, userId);
+        return personalizer.personalize();
+      }
+    }
+  }
 };

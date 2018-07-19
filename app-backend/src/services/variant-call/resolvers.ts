@@ -6,15 +6,14 @@
 * without modification, are not permitted.
 */
 
-import {VariantCallAttributes} from './models';
 import {GraphQLContext} from 'src/services/graphql';
+import {VariantCallAttributes} from './models';
 
 export const resolvers = {
   VariantCall: {
     ... GraphQLContext.dynamoAttributeResolver<VariantCallAttributes>('variant-call', [
-      'callSetId', 'alternateBases', 'referenceBases', 'genotype',
-      'genotypeLikelihood', 'filter', 'rsId', 'gene', 'zygosity'
-    ]),
-    ... GraphQLContext.propertyResolver('variant-call', [ 'start', 'end'])
+      'callSetId', 'altBases', 'refBases', 'genotype', 'start', 'end', 'genotype',
+      'genotypeLikelihood', 'filter', 'rsId', 'gene', 'zygosity', 'refVersion', 'geneStart', 'geneEnd'
+    ])
   }
 };

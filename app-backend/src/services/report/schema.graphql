@@ -4,11 +4,10 @@ type Report {
   title: String,
   slug: String,
   content: String,
-  requiredVariants: [String]
-  # parsedContent: String,
-  # topLevel: Boolean,
-  # createdAt: String
-  # updatedAt: String
+  requiredVariants: [String],
+  personalization(userId: string): JSON,
+  createdAt: String,
+  updatedAt: String
 }
 
 extend type Query {
