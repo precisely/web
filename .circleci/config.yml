@@ -56,7 +56,7 @@ ALIASES:
     yarn_install: &yarn_install
         run:
             name: Installing Dependencies
-            command: yarn install
+            command: yarn install --network-concurrency 1
 
     install_dynamodb: &install_dynamodb
         run:
