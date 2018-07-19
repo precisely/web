@@ -32,26 +32,26 @@ ALIASES:
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
             keys:
-                - v1-dependencies-frontend-{{ checksum "package.json" }}
-                - v1-dependencies-frontend
+                - '{{ .Environment.CACHE_KEY }}-dependencies-frontend-{{ checksum "package.json" }}'
+                - '{{ .Environment.CACHE_KEY }}-dependencies-frontend'
 
     save_frontend_cache: &save_frontend_cache
         save_cache:
             paths:
                 - node_modules
-            key: v1-dependencies-frontend-{{ checksum "package.json" }}
+            key: '{{ .Environment.CACHE_KEY }}-dependencies-frontend-{{ checksum "package.json" }}'
 
     restore_backend_cache: &restore_backend_cache
         restore_cache:
             keys:
-                - v1-dependencies-backend-{{ checksum "package.json" }}
-                - v1-dependencies-backend
+                - '{{ .Environment.CACHE_KEY }}-dependencies-backend-{{ checksum "package.json" }}'
+                - '{{ .Environment.CACHE_KEY }}-dependencies-backend'
 
     save_backend_cache: &save_backend_cache
         save_cache:
             paths:
                 - node_modules
-            key: v1-dependencies-backend-{{ checksum "package.json" }}
+            key: '{{ .Environment.CACHE_KEY }}-dependencies-backend-{{ checksum "package.json" }}'
 
     yarn_install: &yarn_install
         run:
