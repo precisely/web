@@ -143,6 +143,31 @@ describe('GraphQLContext', function () {
       const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
       return expect(fooResult).resolves.toBe('foo value');
     });
+
+    it('should accept function for property resolver which takes context', async function () {
+      const rbac = new AccessControlPlus();
+      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
+        roles: 'user',
+        principalId: 'bob'
+      }}), makeLambdaContext(),
+      rbac);
+
+      rbac.grant('user').scope('mymodel:read').onFields('foo').where(({user, resolverArgs}: any) => {
+        return user.id === args.requestedUserId;
+      });
+      const resolver = GraphQLContext.propertyResolver('mymodel', {
+        foo(obj: any) { 
+          return obj.internalFoo; 
+        }
+      });
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
+      const mymodel = { internalFoo: 'foo value', internalBar: 'bar value' };
+      const args = { requestedUserId: 'bob' };
+
+      const fooResult = await (<ResolverFn> resolver.foo)(mymodel, args, gqlContext);
+      expect(fooResult).toBe('foo value');
+    });
   });
 
   context('dynamoAttributeResolver', function () {
@@ -196,4 +221,3 @@ describe('GraphQLContext', function () {
     });
   });
 });
-
