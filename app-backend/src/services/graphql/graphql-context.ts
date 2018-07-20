@@ -3,12 +3,14 @@
 
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
-import _accessControl from 'src/services/auth/accessControl';
+import _accessControl from 'src/services/auth/access-control';
 import { AccessControlPlus, IPermission } from 'accesscontrol-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
 import { IResolverObject } from 'graphql-tools';
 import { isArray, isString } from 'util';
+
+export {_accessControl as accessControl};
 
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
@@ -143,6 +145,7 @@ type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
 type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
 type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
 import {fromPairs, zip, mapValues} from 'lodash';
+
 export function normalizePropertyMap(
   inMap: PropertyMapArg,
   accessGenerator?: PropertyAccessorGenerator): NormalizedPropertyMap {
