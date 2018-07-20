@@ -11,7 +11,7 @@ export {Model, ModelConfiguration, ListenerNextFunction} from '@aneilbaboo/dynog
 export * from '@aneilbaboo/dynogels-promisified';
 
 // Use DynamoDB local if in offline mode
-if (!process.env.STAGE || isOffline) {
+if (isOffline) {
   const dynamoEndpoint = process.env.DYNAMODB_LOCAL_ENDPOINT || 'http://localhost:8000';
   dynogels.AWS.config.update({
     credentials: new dynogels.AWS.Credentials({
