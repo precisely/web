@@ -10,11 +10,12 @@ import {ReducedElement} from 'smart-report';
 
 import { IContext } from 'accesscontrol-plus';
 
-import accessControl from 'src/common/access-control';
-import { GraphQLContext } from 'src/services/graphql';
+import { GraphQLContext, accessControl } from 'src/services/graphql';
 
 import {Report, ReportState, ReportAttributes} from './models';
 import {Personalizer} from './services/personalizer';
+import { access } from 'fs';
+import { isContext } from 'vm';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
@@ -24,53 +25,59 @@ function userOwnsResource({user, resource}: IContext) {
   return user.id === resource.get('ownerId');
 }
 
+function userIdArgumentIsUser({user, args}: IContext) {
+  return args.userId === user.id;
+}
+
+// tslint:disable no-unused-expression
 accessControl
   .grant('user')
     .resource('report')
-      .read.onFields('*', '!content', '!variants').where(reportPublished)
-      .read.onFields('*').where(userOwnsResource)
-      .create.where(userOwnsResource)
+      .read.onFields('*', '!content', '!variantCallIndexes', '!personalization').where(reportPublished)
+      .read.onFields('personalization').where(userIdArgumentIsUser)
+  .grant('author')
+    .resource('report')
+      .read.onFields('*').where(userOwnsResource)      
+      .create
       .update.where(userOwnsResource);
+// tslint:enable no-unused-expressions
 
 export interface ReportCreateArgs {
   title: string;
-  slug: string;
   content: string;
-  variants: string[];
 }
 
-export interface ReportUpdateArgs extends ReportCreateArgs {
+export interface ReportUpdateArgs extends Partial<ReportCreateArgs> {
   id: string;
 }
 
-export const resolvers: IResolvers = {
+export const resolvers = {
   Query: {
-    async reports(_: Report, { state }: { state?: ReportState }, context: GraphQLContext) {
-      let query = Report.scan();
-      if (state) {
-        query.where('state').equals(state);
-      }
-      const result = await query.execAsync();
-
-      return await context.valid('report:read', result && result.Items);
+    async reports(_: Report, { state, ownerId }: { state?: ReportState, ownerId?: string }, context: GraphQLContext) {
+      const reports = await Report.listReports({ state });
+      return await context.valid('report:read', reports);
     },
-    async report(_: {}, {slug}: {slug: string}, context: GraphQLContext) {
-      const report = await Report.findBySlug(slug);
-      return await context.valid('report:read', report);
+    async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {
+      let report;
+      if (id) {
+        report = await Report.getAsync(id);
+      } else if (slug) {
+        report = await Report.findBySlug(slug);
+      }
+      return report && await context.valid('report:read', report);
     }
   },
   Mutation: {
     async createReport(
-      _: Report, {title, content, variants}: ReportCreateArgs, context: GraphQLContext
+      _: Report, {title, content}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
           ownerId: context.userId,
-          content: content,
-          title, variants
+          content, title
         })
       );
-      return await report.updateAsync();
+      return await report.saveAsync();
     },
     async updateReport(
       _: Report,
@@ -82,7 +89,6 @@ export const resolvers: IResolvers = {
         await Report.getAsync(id)
       );
       // process raw content here
-
       report.set({
         title: title || report.get('title'),
         content: content || report.get('content')
@@ -93,22 +99,25 @@ export const resolvers: IResolvers = {
 
   Report: {
     ...GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
+      // structured as { graphQLField: dynamoDBAttribute, ... }
       id: 'id',
       ownerId: 'ownerId',
       slug: 'slug',
       title: 'title',
       content: 'content',
-      requiredVariants: 'variants'
-    }), ...{
+      variantCallIndexes: 'variantCallIndexes'
+    }), 
+    ...GraphQLContext.propertyResolver('report', {
       personalization(
-        report: Report, { userId }: { userId: string }, context: GraphQLContext
+        report: Report, { userId }: IContext, context: GraphQLContext
       ): Promise<ReducedElement[]> {
-        if (!userId) {
-          userId = context.userId;
-        }
+        userId = userId || context.userId;
         const personalizer = new Personalizer(report, userId);
         return personalizer.personalize();
       }
-    }
+    })
   }
 };
+
+// check the exported resolver object matches the IResolvers type:
+export const checkIResolverType: IResolvers = resolvers;

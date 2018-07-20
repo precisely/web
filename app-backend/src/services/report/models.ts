@@ -44,6 +44,7 @@ interface ReportStaticMethods {
   // safeSave({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
   safeSave(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
+  listReports({ state, ownerId }: { state?: ReportState, ownerId?: string }): Promise<Report[]>;
 }
 
 export interface Report extends Item<ReportAttributes, ReportMethods> {}
@@ -122,6 +123,23 @@ Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string
     }
     slug = `${baseSlug}-${++index}`;
   }
+};
+
+Report.listReports = async function ({ state, ownerId}: { state?: ReportState, ownerId?: string }): Promise<Report[]> {
+  let query = Report.scan();
+
+  // TODO: make this more efficient using indexes
+  if (state) {
+    query.filter('state').equals(state);
+  } 
+  
+  if (ownerId) {
+    query.filter('ownerId').equals(ownerId);
+  }
+
+  const result = await query.execAsync();
+
+  return result && result.Items;
 };
 
 //
