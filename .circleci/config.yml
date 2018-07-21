@@ -70,6 +70,11 @@ ALIASES:
             background: true
             sleep: 5
 
+    build_webpack: &build_webpack
+        run:
+            name: Building with Webpack
+            command: yarn build
+
     run_backend_tests: &run_backend_tests
         run:
             name: Run Backend Tests
@@ -147,6 +152,7 @@ jobs:
             - run: sleep 5
             - *save_backend_cache
             - *run_backend_tests
+            - *build_webpack
             - *upload_coverage_report
 
     report-codeclimate:

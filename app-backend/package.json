@@ -3,6 +3,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "build": "yarn sls webpack",
     "console": "yarn sls console",
     "deploy": "yarn sls deploy",
     "dynamodb": "yarn sls dynamodb start",
