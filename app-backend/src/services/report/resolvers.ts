@@ -14,8 +14,6 @@ import { GraphQLContext, accessControl } from 'src/services/graphql';
 
 import {Report, ReportState, ReportAttributes} from './models';
 import {Personalizer} from './services/personalizer';
-import { access } from 'fs';
-import { isContext } from 'vm';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
