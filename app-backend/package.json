@@ -103,9 +103,9 @@
     "@types/sequelize": "4.27.4",
     "body-parser": "1.15.2",
     "cors": "2.8.4",
-    "eslint": "4.17.0",
+    "eslint": "^5.2.0",
     "graphql-import": "^0.6.0",
-    "jest": "^22.4.4",
+    "jest": "^23.4.1",
     "jest-in-case": "^1.0.2",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
@@ -122,13 +122,10 @@
     "tsconfig-paths-webpack-plugin": "^3.0.3",
     "tslint": "5.7.0",
     "typescript": "^2.8.1",
-    "webpack": "^4.5.0",
+    "webpack": "^4.16.1",
     "webpack-cli": "^3.0.8",
     "webpack-graphql-loader": "0.1.0",
     "webpack-node-externals": "1.6.0",
     "websequencediagrams": "^0.1.1"
-  },
-  "resolutions": {
-    "eslint-scope": "3.7.1"
   }
 }
