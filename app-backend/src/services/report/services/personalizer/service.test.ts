@@ -1,6 +1,5 @@
 import {Report} from 'src/services/report/models';
-import {addVariants} from 'src/services/variant-call/test-helpers';
-import {destroyFixtures, addFixtures} from 'src/common/fixtures';
+import {destroyFixtures} from 'src/common/fixtures';
 
 import {Personalizer} from './service';
 import { addReportPersonalizationFixtures } from 'src/services/report/services/personalizer/fixtures';

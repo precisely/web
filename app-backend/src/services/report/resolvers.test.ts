@@ -1,7 +1,7 @@
 // tslint:disable no-any
 import { IFieldResolver } from 'graphql-tools';
 
-import { destroyFixtures, rememberFixtures, addFixtures } from 'src/common/fixtures';
+import { destroyFixtures, rememberFixtures } from 'src/common/fixtures';
 
 import { Report } from './models';
 import {resolvers} from './resolvers';

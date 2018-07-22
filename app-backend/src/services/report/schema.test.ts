@@ -2,10 +2,7 @@
 import { graphql } from 'graphql';
 import {
   makeExecutableSchema,
-  addMockFunctionsToSchema,
-  IResolvers,
-  mockServer,
-  MockList
+  addMockFunctionsToSchema
 } from 'graphql-tools';
 const cases = require('jest-in-case');
 import { Report } from './models';
