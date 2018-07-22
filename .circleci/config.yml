@@ -12,12 +12,6 @@ ALIASES:
               environment:
                 STAGE: test
 
-        dependencies:
-            cache_directories:
-                - app-backend/node_modules
-                - app-backend/.dynamodb
-                - app-client/node_modules
-            
     checkout: &checkout
         checkout:
             path: ~/repo
@@ -52,6 +46,7 @@ ALIASES:
         save_cache:
             paths:
                 - node_modules
+                - .dynamodb
             key: '{{ .Environment.CACHE_KEY }}-dependencies-backend-{{ checksum "package.json" }}'
 
     yarn_install: &yarn_install
