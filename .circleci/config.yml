@@ -12,11 +12,12 @@ ALIASES:
               environment:
                 STAGE: test
 
-            # Specify service dependencies here if necessary
-            # CircleCI maintains a library of pre-built images
-            # documented at https://circleci.com/docs/2.0/circleci-images/
-            # - image: circleci/mongo:3.4.4
-
+        dependencies:
+            cache_directories:
+                - app-backend/node_modules
+                - app-backend/.dynamodb
+                - app-client/node_modules
+            
     checkout: &checkout
         checkout:
             path: ~/repo
