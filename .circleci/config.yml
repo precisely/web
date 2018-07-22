@@ -62,19 +62,19 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: yarn sls dynamodb install
+            command: ENV=test-offline yarn sls dynamodb install
     
     run_dynamodb: &run_dynamodb
         run:
             name: Running DynamoDB
-            command: yarn dynamodb:test:offline
+            command: ENV=test-offline yarn dynamodb:test:offline
             background: true
             sleep: 5
 
     build_webpack: &build_webpack
         run:
             name: Building with Webpack
-            command: yarn build
+            command: ENV=test-offline yarn build
 
     run_backend_tests: &run_backend_tests
         run:
