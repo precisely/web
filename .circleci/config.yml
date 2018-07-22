@@ -81,7 +81,6 @@ ALIASES:
             command: |
                 yarn test:offline:coverage
                 yarn tslint
-                yarn eslint
 
     run_frontend_tests: &run_frontend_tests
         run:
