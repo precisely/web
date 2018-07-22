@@ -148,7 +148,9 @@ custom:
         CachingEnabled: true
         CacheTtlInSeconds: 3600
 
-  webpackIncludeModules: true
+  webpack:
+    includeModules: true # auto-pack Node modules
+    packager: 'yarn'     # Packager that will be used to package your external modules
 
 functions:
   APIAuthorizer:
