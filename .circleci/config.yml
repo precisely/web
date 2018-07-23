@@ -64,7 +64,6 @@ ALIASES:
             name: Running DynamoDB
             command: ENV=test-offline yarn dynamodb:test:offline
             background: true
-            sleep: 5
 
     build_webpack: &build_webpack
         run:
@@ -148,7 +147,7 @@ jobs:
             - *yarn_install
             - *install_dynamodb
             - *run_dynamodb
-            - run: sleep 5
+            - run: ./scripts/wait-for-dynamodb-local.sh
             - *save_backend_cache
             - *run_backend_tests
             - *build_webpack
