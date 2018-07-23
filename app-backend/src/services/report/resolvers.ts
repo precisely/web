@@ -51,7 +51,11 @@ export interface ReportUpdateArgs extends Partial<ReportCreateArgs> {
 
 export const resolvers = {
   Query: {
-    async reports(_: Report, { state, ownerId }: { state?: ReportState, ownerId?: string }, context: GraphQLContext) {
+    async reports(
+      _: null | undefined, 
+      { state, ownerId }: { state?: ReportState, ownerId?: string }, 
+      context: GraphQLContext
+    ) {
       const reports = await Report.listReports({ state });
       return await context.valid('report:read', reports);
     },
@@ -67,7 +71,7 @@ export const resolvers = {
   },
   Mutation: {
     async createReport(
-      _: Report, {title, content}: ReportCreateArgs, context: GraphQLContext
+      _: null | undefined, {title, content}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
@@ -78,7 +82,7 @@ export const resolvers = {
       return await report.saveAsync();
     },
     async updateReport(
-      _: Report,
+      _: null | undefined,
       {id, title, content}: ReportUpdateArgs,
       context: GraphQLContext
     ) {

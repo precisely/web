@@ -11,6 +11,10 @@ function getToken(event: CustomAuthorizerEvent): string {
     throw new Error(`Expected event.type parameter to have value REQUEST`);
   }
 
+  if (!event.headers || !event.headers.Authorization) {
+    throw new Error('Missing Authorization header');
+  }
+
   const tokenString: string = event.headers.Authorization;
 
   var match = tokenString.match(/^Bearer (.*)$/i);
@@ -28,13 +32,13 @@ export interface Auth0AuthenticationResult {
 
 export async function authenticate(event: CustomAuthorizerEvent, log: Logger): Promise<Auth0AuthenticationResult> {
   try {
-    const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS && process.env.ADMIN_EMAILS.split(',');
+    const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : [];
     const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
     const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
     const AUTH0_JWKS_URI = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
     const AUTH0_ISSUER = `https://${AUTH0_DOMAIN}/`;
     const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
-    const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE, 10) || 10;
+    const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE || '10', 10) || 10;
 
     const token: string = getToken(event);
     const client = JwksRsa({
@@ -49,7 +53,7 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     const key = await client.getSigningKeyAsync(kid);
     log.silly('auth0.authenticate decodedJWT=%j signingKey %j', decodedJwt, key);
 
-    const signingKey = key.publicKey || key.rsaPublicKey;
+    const signingKey = key.publicKey || key.rsaPublicKey || '';
     const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
       token, signingKey,
       {

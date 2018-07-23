@@ -9,6 +9,7 @@ import {
 import { GraphQLContext } from './graphql-context';
 
 export function makeContext({ userId, roles }: {userId?: string, roles?: string[]}): GraphQLContext {
+  roles = roles || [];
   return new GraphQLContext(makeEvent({ authorizer: {
     principalId: userId,
     roles: roles.join(',')

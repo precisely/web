@@ -32,7 +32,7 @@ const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
   new winston.transports.Console()
 ];
 
-function makeFormatter(colorize: boolean, requestContext: APIGatewayEventRequestContext) {
+function makeFormatter(colorize: boolean, requestContext?: APIGatewayEventRequestContext) {
   const plugins = [ format.timestamp(), format.splat() ];
   if (colorize) {
     plugins.push(format.colorize());

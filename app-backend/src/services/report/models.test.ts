@@ -5,6 +5,7 @@ import {AllowedRefVersion} from 'src/common/variant-constraints';
 
 import {Report, calculateReportRequirements} from './models';
 import { PreciselyParser } from './parser';
+import { VariantCallIndexes } from 'src/services/variant-call/types';
 
 describe('Report model', function () {
   describe('findUniqueSlug', function () {
@@ -53,7 +54,7 @@ describe('Report model', function () {
 
     it('should contain a parsed form of the markdown content', () => {
       expect(savedReport.get('parsedContent')).toBeDefined();
-      expect(JSON.parse(savedReport.get('parsedContent'))).toEqual([
+      expect(JSON.parse(<string> savedReport.get('parsedContent'))).toEqual([
         { blocks: [ '<h1>This is a title</h1>'], type: 'text', reduced: false }
       ]);
     });
@@ -82,7 +83,7 @@ describe('Report model', function () {
 
       const variantCallIndexes = report.get('variantCallIndexes');
       expect(variantCallIndexes).toBeDefined();
-      expect(variantCallIndexes.refIndexes).toEqual([
+      expect((<VariantCallIndexes> variantCallIndexes).refIndexes).toEqual([
         { refName: 'chr1', start: 10, refVersion: AllowedRefVersion },
         { refName: 'chr2', start: 20, refVersion: AllowedRefVersion }
       ]);

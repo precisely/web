@@ -7,6 +7,7 @@ import _accessControl from 'src/services/auth/access-control';
 import { AccessControlPlus, IPermission, IContext } from 'accesscontrol-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
+import { get as dig } from 'lodash';
 import { IResolverObject } from 'graphql-tools';
 import { isArray, isString } from 'util';
 
@@ -88,7 +89,8 @@ export class GraphQLContext {
    * Shortcut for accessing the currently active user
    */
   get userId(): string {
-    return this.event.requestContext.authorizer.principalId; // the auth0 userId "auth0|a6b34ff91"
+    
+    return dig(this, 'event.requestContext.authorizer.principalId'); // the auth0 userId "auth0|a6b34ff91"
   }
 
   /**
@@ -160,7 +162,7 @@ import {fromPairs, zip, mapValues} from 'lodash';
 
 export function normalizePropertyMap(
   inMap: PropertyMapArg,
-  accessGenerator?: PropertyAccessorGenerator): NormalizedPropertyMap {
+  accessGenerator: PropertyAccessorGenerator): NormalizedPropertyMap {
   if (isArray(inMap)) {
     return fromPairs(zip(inMap, inMap.map(accessGenerator)));
   } else {

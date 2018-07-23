@@ -9,6 +9,7 @@ import { addReportPersonalizationFixtures } from './services/personalizer/fixtur
 import { makeContext } from 'src/services/graphql/test-helpers';
 import { TypedError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';
+import { isString } from 'util';
 
 describe('Report resolver', function () {
   
@@ -51,8 +52,9 @@ describe('Report resolver', function () {
       rememberFixtures(report);
 
       const context = makeContext({ userId: 'bob', roles: ['author']});
+      expect(isString(report.get('id'))).toBeTruthy();
       const updatedReport = await resolvers.Mutation.updateReport(
-        null, { id: report.get('id'), content: 'updated content'},
+        null, { id: <string> report.get('id'), content: 'updated content'},
         context
       );
       expect(updatedReport.get('id')).toEqual(report.get('id'));
@@ -69,8 +71,9 @@ describe('Report resolver', function () {
 
       // author sally tries to update bob's report
       const context = makeContext({ userId: 'sally', roles: ['author']});
+      expect(isString(report.get('id'))).toBeTruthy();
       const promise = resolvers.Mutation.updateReport(
-        null, { id: report.get('id'), content: 'updated content'},
+        null, { id: <string> report.get('id'), content: 'updated content'},
         context
       );
       await expect(promise).rejects.toBeInstanceOf(TypedError);
@@ -91,7 +94,7 @@ describe('Report resolver', function () {
     it('should provide a personalized tree representing the report for the current user', async function () {
       const context = makeContext({ userId: 'user-hom10c', roles: ['user']});
       const personalizationResolver = <IFieldResolver<Report, GraphQLContext>> resolvers.Report.personalization;
-      const result = await personalizationResolver(report, { userId: 'user-hom10c' }, context, null);
+      const result = await personalizationResolver(report, { userId: 'user-hom10c' }, context, <any> null );
       expect(result).toEqual([
         { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
           selfClosing: false, children: [
@@ -107,7 +110,7 @@ describe('Report resolver', function () {
       // bob is trying to get personalization for user-hom10c
       const context = makeContext({ userId: 'bob', roles: ['user']});
       const personalizationResolver = <IFieldResolver<Report, GraphQLContext>> resolvers.Report.personalization;
-      const promise = personalizationResolver(report, { userId: 'user-hom10c' }, context, null);
+      const promise = personalizationResolver(report, { userId: 'user-hom10c' }, context, <any> null);
       await expect(promise).rejects.toBeInstanceOf(TypedError);
       await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
       await expect(promise).rejects.toHaveProperty('message', 'report:read:personalization');
