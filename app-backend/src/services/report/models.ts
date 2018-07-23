@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import {isNumber} from 'util';
+import { isNumber, isString } from 'util';
 
 import * as Joi from 'joi';
 import slugify from 'slugify';
@@ -14,7 +14,7 @@ import slugify from 'slugify';
 import {Variant as SVNVariant} from 'seqvarnomjs';
 import {Context, Reducer, ReducibleElement} from 'smart-report';
 
-import {defineModel, Item, types, ListenerNextFunction} from 'src/db/dynamo/dynogels';
+import {defineModel, Item, types, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {JoiRSId, JoiRefIndex, normalizeReferenceName} from 'src/common/variant-constraints';
 import {RefIndex, VariantCallIndexes} from 'src/services/variant-call/types';
 
@@ -36,18 +36,17 @@ export interface ReportAttributes {
 }
 
 // Instance methods
-class ReportMethods {
-}
+class ReportMethods { }
 
 interface ReportStaticMethods {
-  findBySlug(slug: string): Promise<Report>;
+  findBySlug(slug: string): Promise<Report | null>;
   // safeSave({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
   safeSave(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
   listReports({ state, ownerId }: { state?: ReportState, ownerId?: string }): Promise<Report[]>;
 }
 
-export interface Report extends Item<ReportAttributes, ReportMethods> {}
+export interface Report extends ModelInstance<ReportAttributes, ReportMethods> {}
 
 export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticMethods>('report', {
   hashKey: 'id',
@@ -80,10 +79,10 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
 //
 // STATIC METHODS
 //
-Report.findBySlug = async function findBySlug(slug: string): Promise<Report> {
+Report.findBySlug = async function findBySlug(slug: string): Promise<Report | null> {
   slug = slug.toLowerCase();
   const result = await Report.query(slug).usingIndex('slugIndex').execAsync();
-  return result && result.Count > 0 && result.Items[0];
+  return (result && result.Count > 0) ? result.Items[0] : null;
 };
 
 Report.findUniqueSlug = async function findUniqueSlug(s: string): Promise<string> {
@@ -150,7 +149,7 @@ Report.listReports = async function ({ state, ownerId}: { state?: ReportState, o
  * For manually forcing a requirements update.
  */
 Report.prototype.updateRequirements = async function updateReportRequirements() {
-  const parsedContent: ReducibleElement[] = JSON.parse(this.get('parsedContent'));
+  const parsedContent: ReducibleElement[] = JSON.parse(this.getValid('parsedContent'));
   const {variantCallIndexes} = calculateReportRequirements(parsedContent);
   this.set({variantCallIndexes});
   this.saveAsync();
@@ -195,16 +194,16 @@ function refIndexEquals(ri1: RefIndex, ri2: RefIndex): boolean {
     ri1.refVersion === ri2.refVersion
   );
 }
+
 //
 // Report Hooks
 //
-
 async function setReportSlug(attrs: ReportAttributes, next: ListenerNextFunction) {
   const title = attrs.title;
   if (!title) {
     return next(new Error('Attempt to create report without title'));
   }
-  const slugSeed = attrs.slug || attrs.title;
+  const slugSeed = attrs.slug || title;
   const slug = await Report.findUniqueSlug(slugSeed);
   
   next(null, {...attrs, slug});
@@ -212,6 +211,9 @@ async function setReportSlug(attrs: ReportAttributes, next: ListenerNextFunction
 
 async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFunction) {
   const rawContent = attrs.content;
+  if (!rawContent) {
+    return next(new Error('Report contains no content'));
+  }
   const parsedContent = PreciselyParser.parse(rawContent);
   const requirements = calculateReportRequirements(parsedContent);
   next(null, {

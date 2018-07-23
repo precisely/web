@@ -62,10 +62,10 @@ export function addVariantCallsToContext(variantCalls: VariantCall[], context: C
 
 function alleleFromGenotypeFn(variantCall: VariantCall) {
   const {start, refBases, altBases} = variantCall.get();
-  return (g: number) => {
+  return (g: number): string => {
     if (g === 0) {
       return `[${start}=]`;
-    } else if (isNumber(g)) {
+    } else if (isNumber(g) && altBases) {
       const altBase = altBases[g - 1];
       if (altBase && altBase !== '<NO_REF>') {
         return `[${start}${refBases}>${altBase}]`;
@@ -76,9 +76,10 @@ function alleleFromGenotypeFn(variantCall: VariantCall) {
 }
 
 export function variantCallToSVNGenotype(variantCall: VariantCall): Variant {
-  const {refName, genotype} = variantCall.get();
   const toAllele = alleleFromGenotypeFn(variantCall);
-  const cisAlleles = genotype.map(toAllele).filter(o => o);
+  
+  const cisAlleles = variantCall.getValid('genotype').map(toAllele).filter(o => o);
+  const refName = variantCall.get('refName');
   const svnVariant = `${refName}:g.${cisAlleles.join(';')}`;
   return parse(svnVariant);
 }
