@@ -9,6 +9,7 @@
 import * as AWS from 'aws-sdk';
 import {log} from 'src/common/logger';
 import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
+import { getEnvVar } from 'src/common/environment';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context, callback: Callback) => {
   // pass
@@ -33,13 +34,13 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
     const ecs = new AWS.ECS();
 
     const params: AWS.ECS.Types.RunTaskRequest = {
-      cluster: process.env.INGESTION_CLUSTER,
+      cluster: getEnvVar('INGESTION_CLUSTER'),
       launchType: 'FARGATE',
-      taskDefinition: process.env.INGESTION_TASK_NAME,
+      taskDefinition: getEnvVar('INGESTION_TASK_NAME'),
       count: 1,
       networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
         awsvpcConfiguration: {
-          subnets: [process.env.SUBNET_ONE, process.env.SUBNET_TWO],
+          subnets: [getEnvVar('SUBNET_ONE'), getEnvVar('SUBNET_TWO')],
         }
       },
       overrides: {
@@ -53,7 +54,7 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
               },
               {
                 name: 'S3_BUCKET_GENETICS_VCF',
-                value: process.env.S3_BUCKET_GENETICS_VCF
+                value: getEnvVar('S3_BUCKET_GENETICS_VCF')
               },
               {
                 name: 'GENOTYPE_RAW_FILENAME',
@@ -61,7 +62,7 @@ export async function rawDataUpload(event: S3CreateEvent, context: Context, call
               },
               {
                 name: 'S3_BUCKET_ERROR',
-                value: process.env.S3_BUCKET_INGESTION_ERROR
+                value: getEnvVar('S3_BUCKET_INGESTION_ERROR')
               },
               {
                 name: 'USER_EMAIL',
