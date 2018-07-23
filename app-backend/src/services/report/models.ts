@@ -6,7 +6,7 @@
 * without modification, are not permitted.
 */
 
-import { isNumber, isString } from 'util';
+import { isNumber } from 'util';
 
 import * as Joi from 'joi';
 import slugify from 'slugify';
@@ -14,7 +14,7 @@ import slugify from 'slugify';
 import {Variant as SVNVariant} from 'seqvarnomjs';
 import {Context, Reducer, ReducibleElement} from 'smart-report';
 
-import {defineModel, Item, types, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
+import {defineModel, types, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {JoiRSId, JoiRefIndex, normalizeReferenceName} from 'src/common/variant-constraints';
 import {RefIndex, VariantCallIndexes} from 'src/services/variant-call/types';
 
