@@ -69,7 +69,11 @@ ALIASES:
     build_webpack: &build_webpack
         run:
             name: Building with Webpack
-            command: ENV=test-offline yarn build
+            command: |
+                set +e
+                ENV=test-offline yarn build
+                set -e
+                ENV=test-offline yarn build
 
     run_backend_tests: &run_backend_tests
         run:
