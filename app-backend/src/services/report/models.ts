@@ -175,10 +175,13 @@ export function calculateReportRequirements(parsedContent: ReducibleElement[]
   // convert the SVNVariants to RefIndex, which will be used to query for VariantCalls for each user:
   const resultRefIndexes: RefIndex[] = [];
   // add unique refIndexes
-  for (const svnVariant of Object.values(variantPatterns)) {
-    for (const refIndex of svnVariantToRefIndexes(<SVNVariant> svnVariant)) {
-      if (resultRefIndexes.findIndex(rri => refIndexEquals(rri, refIndex)) === -1) {
-        resultRefIndexes.push(refIndex);
+  for (const svnVariantName in variantPatterns) {
+    if (variantPatterns.hasOwnProperty(svnVariantName)) {
+      const svnVariant = variantPatterns[svnVariantName];
+      for (const refIndex of svnVariantToRefIndexes(<SVNVariant> svnVariant)) {
+        if (resultRefIndexes.findIndex(rri => refIndexEquals(rri, refIndex)) === -1) {
+          resultRefIndexes.push(refIndex);
+        }
       }
     }
   }
