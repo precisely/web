@@ -1,6 +1,8 @@
+// tslint:disable no-any
 import { Report } from '../../models';
 import { addVariants } from 'src/services/variant-call/test-helpers';
 import { addFixtures } from 'src/common/fixtures';
+import { VariantCall } from 'src/services/variant-call';
 
 //
 // This file provides generates users with variants 
@@ -13,21 +15,22 @@ import { addFixtures } from 'src/common/fixtures';
 //    user-cmpnd10
 
 export async function addReportPersonalizationFixtures() {
-  const variants = await addVariants(
+  const variantData = [
     { userId: 'user-wt10', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [0, 0],
-      callSetId: 'userwt-23andme' },
+    callSetId: 'userwt-23andme' },
     { userId: 'user-het10t', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [0, 1],
-      callSetId: 'userhet10t-23andme' },
+    callSetId: 'userhet10t-23andme' },
     { userId: 'user-het10c', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [0, 2],
-      callSetId: 'userhet10c-23andme' },            
+    callSetId: 'userhet10c-23andme' },            
     { userId: 'user-hom10t', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [1, 1],
-      callSetId: 'userhom-23andme' },
+    callSetId: 'userhom-23andme' },
     { userId: 'user-hom10c', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [2, 2],
-      callSetId: 'userhomc-23andme' },
+    callSetId: 'userhomc-23andme' },
     // compound heterozygote:
     { userId: 'user-cmpnd10', refName: 'chr1', start: 10, refBases: 'A', altBases: [ 'T', 'C'], genotype: [1, 2],
-      callSetId: 'usercmpd-23andme' }
-  );
+    callSetId: 'usercmpd-23andme' }
+  ];
+  const variants = await addVariants(...variantData);
   const report = new Report({
     ownerId: 'author',
     content: `<AnalysisBox>
@@ -53,5 +56,18 @@ export async function addReportPersonalizationFixtures() {
     title: 'variant-test'
   });
   await addFixtures(report);
+  
+  const promises = [
+    ...<Promise<any>[]> variants.map(vc => {
+      return <Promise<any>> VariantCall.getAsync(
+        vc.get('userId'), 
+        vc.get('variantId'),
+        { ConsistentRead: true});
+    }),
+    <Promise<any>> Report.getAsync(report.get('id'), {ConsistentRead: true})
+  ];  
+
+  await Promise.all(promises); 
+
   return  {report, variants};
 }

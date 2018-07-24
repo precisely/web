@@ -8,7 +8,7 @@ ALIASES:
     defaults: &defaults
         docker:
             # specify the version you desire here
-            - image: aneilbaboo/node:8.10
+            - image: aneilbaboo/precisely-circleci-node-2018-07-24
               environment:
                 STAGE: test
 
@@ -68,11 +68,10 @@ ALIASES:
     build_webpack: &build_webpack
         run:
             name: Building with Webpack
-            command: exit 1
-                # set +e
-                # ENV=test-offline yarn build
-                # set -e
-                # ENV=test-offline yarn build
+            # XXX: Nasty hack - in some environments (i.e., in Docker containers) yarn build fails
+            #      on first attempt and succeeds on the second run
+            #      The first run will attempt to build the app-client module for some reason
+            command: ENV=test-offline yarn build || ENV=test-offline yarn build
 
     run_backend_tests: &run_backend_tests
         run:
