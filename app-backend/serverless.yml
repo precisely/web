@@ -89,7 +89,7 @@ custom:
       prod: production
       beta: production
 
-    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:custom.vars.logLevelMap.${self:custom.common.account}}}
+    logLevel: ${env:LOG_LEVEL, self:custom.vars.logLevelMap.${self:custom.common.account}}
     logLevelMap:
       prod: INFO
       beta: INFO
