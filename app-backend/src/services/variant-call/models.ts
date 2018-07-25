@@ -140,9 +140,10 @@ export const VariantCall = defineModel<
  * @param next
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
-  let {refName, refVersion, start, end, callSetId } = variantCall;
+  const {refName, start, callSetId } = variantCall;
   const rsId = variantCall.rsId || '';
-  refVersion = refVersion || AllowedRefVersion;
+  const end = variantCall.end || '';  
+  const refVersion = variantCall.refVersion || AllowedRefVersion;
   const variantId = `${refName}:${refVersion}:${start}:${end}:${rsId}:${callSetId}`;
 
   if (refVersion !== AllowedRefVersion) {
