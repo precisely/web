@@ -217,7 +217,12 @@ async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFun
   if (!rawContent) {
     return next(new Error('Report contains no content'));
   }
-  const parsedContent = PreciselyParser.parse(rawContent);
+  let parsedContent: ReducibleElement[] | null = null;
+  try {
+    parsedContent = PreciselyParser.parse(rawContent);
+  } catch (e) {
+    return next(e);
+  }
   const requirements = calculateReportRequirements(parsedContent);
   next(null, {
     ...attrs, 
@@ -244,4 +249,4 @@ function svnVariantToRefIndexes(svnVariant: SVNVariant): RefIndex[] {
 
 Report.before('create', setReportSlug);
 Report.before('create', parseReportContent);
-// Report.before('update', parseReportContent);
+Report.before('update', parseReportContent);
