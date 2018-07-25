@@ -5,6 +5,7 @@ import {AllowedRefVersion} from 'src/common/variant-constraints';
 
 import {Report, calculateReportRequirements} from './models';
 import { PreciselyParser } from './parser';
+import { VariantCallIndexes } from 'src/services/variant-call/types';
 
 describe('Report model', function () {
   describe('findUniqueSlug', function () {
@@ -53,7 +54,7 @@ describe('Report model', function () {
 
     it('should contain a parsed form of the markdown content', () => {
       expect(savedReport.get('parsedContent')).toBeDefined();
-      expect(JSON.parse(savedReport.get('parsedContent'))).toEqual([
+      expect(JSON.parse(<string> savedReport.get('parsedContent'))).toEqual([
         { blocks: [ '<h1>This is a title</h1>'], type: 'text', reduced: false }
       ]);
     });
@@ -62,6 +63,32 @@ describe('Report model', function () {
       savedReport.set({title: 'foo'});
       const updatedReport = await savedReport.saveAsync();
       expect(updatedReport.get('slug')).toMatch(/^hello-this-is-a-new-report/);
+    });
+
+    it('should update the parsedContent when updating an existing report', async () => {
+      savedReport.set({content: '# This is an UPDATED title'});
+      const updatedReport = await savedReport.saveAsync();
+      
+      expect(JSON.parse(updatedReport.getValid('parsedContent'))).toEqual([
+        { blocks: [ '<h1>This is an UPDATED title</h1>'], type: 'text', reduced: false }
+      ]);
+    });
+  });
+
+  describe('saving content containing errors', function () {
+    afterEach(destroyFixtures);
+
+    it('should return an error', async function () {
+      const report = new Report({
+        title: 'Report with error',
+        content: 'First Line OK\n12345{<}This is text after the error',
+        ownerId: 'user123'
+      });
+
+      const savePromise = report.saveAsync();
+      await expect(savePromise).rejects.toBeInstanceOf(Error);
+      await expect(savePromise).rejects.toHaveProperty('location.lineNumber', 2);
+      await expect(savePromise).rejects.toHaveProperty('location.columnNumber', 7);
     });
   });
 
@@ -82,7 +109,7 @@ describe('Report model', function () {
 
       const variantCallIndexes = report.get('variantCallIndexes');
       expect(variantCallIndexes).toBeDefined();
-      expect(variantCallIndexes.refIndexes).toEqual([
+      expect((<VariantCallIndexes> variantCallIndexes).refIndexes).toEqual([
         { refName: 'chr1', start: 10, refVersion: AllowedRefVersion },
         { refName: 'chr2', start: 20, refVersion: AllowedRefVersion }
       ]);

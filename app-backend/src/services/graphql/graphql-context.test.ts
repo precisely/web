@@ -1,12 +1,11 @@
 // tslint:disable:no-any
 // tslint:disable:no-empty
 
-import { GraphQLContext } from './graphql-context';
 import context from 'jest-plugin-context';
-import { APIGatewayEvent, APIGatewayEventRequestContext, Context as LambdaContext} from 'aws-lambda';
-import { AuthResponseContext } from 'aws-lambda';
 import { AccessControlPlus, IContext } from 'accesscontrol-plus';
 import { defineModel } from 'src/db/dynamo/dynogels';
+import { GraphQLContext } from './graphql-context';
+import { makeEvent, makeLambdaContext } from './test-helpers';
 
 describe('GraphQLContext', function () {
   context('roles', function () {
@@ -144,6 +143,31 @@ describe('GraphQLContext', function () {
       const fooResult = (<ResolverFn> resolver.foo)(mymodel, null, gqlContext);
       return expect(fooResult).resolves.toBe('foo value');
     });
+
+    it('should accept function for property resolver which takes context', async function () {
+      const rbac = new AccessControlPlus();
+      const gqlContext = new GraphQLContext(makeEvent({ authorizer: {
+        roles: 'user',
+        principalId: 'bob'
+      }}), makeLambdaContext(),
+      rbac);
+
+      rbac.grant('user').scope('mymodel:read').onFields('foo').where(({user, resolverArgs}: any) => {
+        return user.id === args.requestedUserId;
+      });
+      const resolver = GraphQLContext.propertyResolver('mymodel', {
+        foo(obj: any) { 
+          return obj.internalFoo; 
+        }
+      });
+
+      type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
+      const mymodel = { internalFoo: 'foo value', internalBar: 'bar value' };
+      const args = { requestedUserId: 'bob' };
+
+      const fooResult = await (<ResolverFn> resolver.foo)(mymodel, args, gqlContext);
+      expect(fooResult).toBe('foo value');
+    });
   });
 
   context('dynamoAttributeResolver', function () {
@@ -197,75 +221,3 @@ describe('GraphQLContext', function () {
     });
   });
 });
-
-function makeEvent({
-  authorizer = { principalId: '', roles: ''},
-  headers = { Authorization: 'Bearer abcd' }
-}: {
-  authorizer?: AuthResponseContext,
-  headers?: { [name: string]: string }
-}): APIGatewayEvent {
-  const requestContext: APIGatewayEventRequestContext = {
-    accountId: '1234',
-    apiId: 'asdf',
-    authorizer: authorizer,
-    httpMethod: 'POST',
-    identity: {
-      accessKey: '',
-      accountId: '',
-      apiKey: '',
-      apiKeyId: '',
-      caller: '',
-      cognitoAuthenticationProvider: '',
-      cognitoAuthenticationType: '',
-      cognitoIdentityId: '',
-      cognitoIdentityPoolId: '',
-      sourceIp: '',
-      user: '',
-      userAgent: '',
-      userArn: ''
-    },
-    stage: '',
-    requestId: 'req123',
-    requestTimeEpoch: 123123123,
-    resourceId: 'resource123',
-    resourcePath: '/api',
-
-  };
-  const event: APIGatewayEvent = {
-    body: 'the body',
-    headers,
-    httpMethod: 'POST',
-    isBase64Encoded: false,
-    path: '/api',
-    stageVariables: {},
-    pathParameters: null,
-    queryStringParameters: null,
-    requestContext: requestContext,
-    resource: '/api'
-  };
-  return event;
-}
-
-function makeLambdaContext(): LambdaContext {
-  return {
-    callbackWaitsForEmptyEventLoop: false,
-    functionName: '',
-    functionVersion: '',
-    invokedFunctionArn: '',
-    memoryLimitInMB: 100,
-    awsRequestId: '',
-    logGroupName: '',
-    logStreamName: '',
-    // identity?: CognitoIdentity;
-    // clientContext?: ClientContext;
-
-    // Functions
-    getRemainingTimeInMillis(): number { return 0; },
-
-    done(error?: Error, result?: any): void { },
-    fail(error: Error | string): void {},
-    succeed(messageOrObject: any): void {},
-    // succeed(message: string, object: any): void {}
-  };
-}

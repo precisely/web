@@ -5,14 +5,20 @@ type Report {
   slug: String,
   content: String,
   requiredVariants: [String],
-  personalization(userId: string): JSON,
+  personalization(userId: String): JSON,
   createdAt: String,
   updatedAt: String
 }
 
+enum ReportState {
+  published
+  pending
+  draft
+}
+
 extend type Query {
-  reports: [Report],
-  report(slug: String!): Report,
+  reports(ownerId: String, state: ReportState): [Report],
+  report(slug: String, id: String): Report,
 }
 
 extend type Mutation {

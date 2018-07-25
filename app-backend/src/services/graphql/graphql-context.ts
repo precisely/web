@@ -3,12 +3,15 @@
 
 import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
-import _accessControl from 'src/services/auth/accessControl';
-import { AccessControlPlus, IPermission } from 'accesscontrol-plus';
+import _accessControl from 'src/services/auth/access-control';
+import { AccessControlPlus, IPermission, IContext } from 'accesscontrol-plus';
 import { TypedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
+import { get as dig } from 'lodash';
 import { IResolverObject } from 'graphql-tools';
 import { isArray, isString } from 'util';
+
+export {_accessControl as accessControl};
 
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
@@ -17,13 +20,20 @@ export class GraphQLContext {
     public readonly lambdaContext: LambdaContext,
     public readonly accessControl: AccessControlPlus = _accessControl) {
   }
-
-  async can<M>(scope: string, resource?: M): Promise<IPermission> {
+  
+  /**
+   * Always returns a Permission representing whether the resource can be accessed
+   * 
+   * @param scope 
+   * @param resource 
+   */
+  async can<M>(scope: string, resource?: M, args: IContext = {}): Promise<IPermission> {
     const context = {
       event: this.event,
       user: {
         id: this.userId,
         roles: this.roles },
+      args,
       resource: resource
     };
 
@@ -36,23 +46,26 @@ export class GraphQLContext {
    *
    * @template M
    * @param {string} scope
-   * @param {(M | (M[]))} res
+   * @param {(M | (M[]))} res - resource or resources
    * @returns {(Promise<M | (M | Error)[]>)}
    * @memberof GraphQLContext
    */
-  async valid<M>(scope: string, res: M[] | M, fields?: string[]): Promise<M | (Error | M)[] > {
+  async valid<M>(
+    scope: string, 
+    res: M[] | M, 
+    args: IContext = {}
+  ): Promise<M | (Error | M)[] > {
     if (isArray(res)) {
       const resources = res;
       const validResources = await Promise.all(resources.map(async resource => {
-        const permission = await this.can(scope, resource);
+        const permission = await this.can(scope, resource, args);
         return  permission.granted ? resource : new TypedError(scope, 'accessDenied');
       }));
       return validResources;
     } else {
-      const resource = res;
-      const permission = await this.can(scope, resource);
+      const permission = await this.can(scope, res, args);
       if (permission.granted) {
-        return resource;
+        return res;
       }
     }
     throw new TypedError(scope, 'accessDenied');
@@ -76,7 +89,8 @@ export class GraphQLContext {
    * Shortcut for accessing the currently active user
    */
   get userId(): string {
-    return this.event.requestContext.authorizer.principalId; // the auth0 userId "auth0|a6b34ff91"
+    
+    return dig(this, 'event.requestContext.authorizer.principalId'); // the auth0 userId "auth0|a6b34ff91"
   }
 
   /**
@@ -130,22 +144,25 @@ export class GraphQLContext {
     for (const prop in normMap) {
       const scope = `${resource}:read:${prop}`;
       const accessor = normMap[prop];
-      resolver[<string> prop] = async (obj: any, {}: {}, context: GraphQLContext) => {
-        return await context.valid(scope, obj) && accessor(obj);
+      resolver[<string> prop] = async (obj: any, args: IContext, context: GraphQLContext) => {
+        if (await context.valid(scope, obj, args)) {
+          return await accessor(obj, args);
+        }
       };
     }
     return resolver;
   }
 }
 
-type PropertyAccessor = (obj: any) => any;
+type PropertyAccessor = (obj: any, args?: IContext, context?: GraphQLContext) => any;
 type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
 type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
 type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
 import {fromPairs, zip, mapValues} from 'lodash';
+
 export function normalizePropertyMap(
   inMap: PropertyMapArg,
-  accessGenerator?: PropertyAccessorGenerator): NormalizedPropertyMap {
+  accessGenerator: PropertyAccessorGenerator): NormalizedPropertyMap {
   if (isArray(inMap)) {
     return fromPairs(zip(inMap, inMap.map(accessGenerator)));
   } else {

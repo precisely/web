@@ -13,7 +13,8 @@ module.exports = {
     new webpack.ContextReplacementPlugin(
             /sequelize(\\|\/)/,
             path.resolve(__dirname, '../src')
-    )
+    ),
+    new webpack.IgnorePlugin(/^ometa-core$/)
   ],
   resolve: {
     extensions: [
@@ -34,7 +35,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
-        options: {configFile: 'tsconfig.build.json'}
+        options: {configFile: 'tsconfig.json'}
       },
       {
         test: /\.(graphql|gql)$/,

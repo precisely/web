@@ -384,6 +384,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
     returnConsumedCapacity(): Scan<Attributes, Methods>;
     segments(segment: any, totalSegments: number): Scan<Attributes, Methods>;
     where(keyName: string): ScanWhereChain<Attributes, Methods>;
+    filter(keyName: string): ScanWhereChain<Attributes, Methods>;
     filterExpression(expression: any): Scan<Attributes, Methods>;
     expressionAttributeNames(data: any): Scan<Attributes, Methods>;
     expressionAttributeValues(data: any): Scan<Attributes, Methods>;

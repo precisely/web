@@ -89,7 +89,7 @@ custom:
       prod: production
       beta: production
 
-    logLevel: "DEBUG" #${env:LOG_LEVEL, ${self:custom.vars.logLevelMap.${self:custom.common.account}}}
+    logLevel: ${env:LOG_LEVEL, self:custom.vars.logLevelMap.${self:custom.common.account}}
     logLevelMap:
       prod: INFO
       beta: INFO
@@ -148,7 +148,9 @@ custom:
         CachingEnabled: true
         CacheTtlInSeconds: 3600
 
-  webpackIncludeModules: true
+  webpack:
+    includeModules: true # auto-pack Node modules
+    packager: 'yarn'     # Packager that will be used to package your external modules
 
 functions:
   APIAuthorizer:

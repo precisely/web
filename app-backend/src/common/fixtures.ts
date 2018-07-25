@@ -27,4 +27,5 @@ export function rememberFixtures(...fixtures: AnyItem[]) {
  */
 export async function destroyFixtures() {
   await Promise.all(rememberedFixtures.map((f: any) => f.destroyAsync()));
+  rememberedFixtures = [];
 }

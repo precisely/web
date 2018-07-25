@@ -9,7 +9,7 @@
 import { ExecResult } from 'dynogels';
 import * as Joi from 'joi';
 
-import {defineModel, Item, ListenerNextFunction} from 'src/db/dynamo/dynogels';
+import {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import { JoiStart, JoiRefVersion, JoiRefName, AllowedRefVersion } from 'src/common/variant-constraints';
 
 import {RefIndex, VariantCallIndexes} from './types';
@@ -61,7 +61,7 @@ interface VariantCallStaticMethods {
 }
 
 // model instance type
-export type VariantCall = Item<VariantCallAttributes, VariantCallMethods>;
+export type VariantCall = ModelInstance<VariantCallAttributes, VariantCallMethods>;
 
 export const Zygosity = [ 'heterozygous', 'homozygous', 'wildtype', 'haploid' ];
 export const VariantFilter = [ 'IMP', 'FAIL', 'BOOST' ];
@@ -140,9 +140,10 @@ export const VariantCall = defineModel<
  * @param next
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
-  let {refName, refVersion, start, end, callSetId } = variantCall;
+  const {refName, start, callSetId } = variantCall;
   const rsId = variantCall.rsId || '';
-  refVersion = refVersion || AllowedRefVersion;
+  const end = variantCall.end || '';  
+  const refVersion = variantCall.refVersion || AllowedRefVersion;
   const variantId = `${refName}:${refVersion}:${start}:${end}:${rsId}:${callSetId}`;
 
   if (refVersion !== AllowedRefVersion) {
@@ -162,8 +163,8 @@ VariantCall.forUser = async function forUser(
   userId: string,
   { refIndexes, rsIds }: VariantCallIndexes
 ): Promise<VariantCall[]> {
-  // tslint:disable no-any
-  const queries: Promise<ExecResult<any>>[] = [];
+  
+  const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
   if (refIndexes) {
     refIndexes.forEach((index: RefIndex) => {
       const { refName, refVersion, start} = index;
@@ -182,7 +183,9 @@ VariantCall.forUser = async function forUser(
   }
 
   const execResults = await Promise.all(queries);
-  return execResults.map(er => er && er.Count && <VariantCall> er.Items[0]);
+  return <VariantCall[]> (execResults.map( 
+    er => (er && er.Count) ? <VariantCall> er.Items[0] : null
+  ).filter(x => !!x));
 };
 
 //

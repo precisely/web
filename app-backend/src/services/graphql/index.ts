@@ -1,1 +1,1 @@
-export {GraphQLContext} from './graphql-context';
+export {GraphQLContext, accessControl} from './graphql-context';

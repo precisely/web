@@ -6,6 +6,7 @@
     "target": "es5",
     "lib": ["es2017"],
     "sourceMap": true,
+    "strictNullChecks": true,
     "allowJs": true,
     "moduleResolution": "node",
     "rootDir": ".",
@@ -30,7 +31,6 @@
     "scripts",
     "acceptance-tests",
     "webpack",
-    "jest",
-    "src/setupTests.ts"
+    "jest"
   ]
 }
