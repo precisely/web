@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or
