@@ -67,6 +67,7 @@
     "aws-lambda": "^0.1.2",
     "aws-sdk": "2.188.0",
     "babel-polyfill": "6.26.0",
+    "batch-promises": "^0.0.3",
     "bluebird": "3.5.1",
     "graphql": "0.13.2",
     "graphql-playground-middleware-lambda": "1.4.3",

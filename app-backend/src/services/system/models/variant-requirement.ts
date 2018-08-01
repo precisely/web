@@ -14,12 +14,20 @@ import { isNumber } from 'util';
 import {defineModel, ListenerNextFunction, ModelInstance } from 'src/db/dynamo/dynogels';
 import { JoiStart, JoiRefVersion, JoiRefName, AllowedRefVersion } from 'src/common/variant-constraints';
 
+export enum SystemVariantRequirementStatus {
+  new = 'new',
+  pending = 'pending',
+  ready = 'ready',
+  error = 'error'
+}
+
 export class SystemVariantRequirementAttributes {
   id?: string;
   refVersion?: string;
   refName?: string;
   start?: number;
-  status?: 'new' | 'pending' | 'ready';
+  status?: keyof typeof SystemVariantRequirementStatus;
+  errorLog?: string;
   end?: number;
 }
 
@@ -46,7 +54,7 @@ export class SystemVariantRequirementStaticMethods {
     return {...attrs, end: normalizedEnd, refVersion: normalizedRefVersion };
   }
 
-  makeIndex(attrs: VariantIndexValues): string {
+  makeId(attrs: VariantIndexValues): string {
     const {refName, refVersion, start, end } = this.normalizeAttributes(attrs);
     return `refIndex:${refName}:${refVersion}:${start}:${end}`;
   }
@@ -63,27 +71,39 @@ export const SystemVariantRequirement = defineModel<
   >(
   'system-variant-requirement', {
     hashKey: 'id',
-    rangeKey: 'status',
 
     timestamps : true,
 
     schema : {
+      static: Joi.string().allow('current').default('current'),
+
       id: Joi.string(),
 
-      status: Joi.string().allow(['new', 'pending', 'ready']).default('new'),
+      status: Joi.string()
+              .allow(Object.keys(SystemVariantRequirementStatus))
+              .default(SystemVariantRequirementStatus.new),
 
       //
       // Core VCF data
       //
       // sequence name e.g., chr1...chr22, chrX, chrY, MT
-      refName: JoiRefName,
+      refName: JoiRefName.required(),
       // the genome version - only GRCh37 for now
-      refVersion: JoiRefVersion,
+      refVersion: JoiRefVersion.required(),
       // start index with respect to sequence - must be string for DynamoDB indexing
-      start: JoiStart,
+      start: JoiStart.required(),
       // end index of variant
-      end: Joi.number().greater(Joi.ref('start')),
-    }
+      end: Joi.number().greater(Joi.ref('start')).required(),
+    },
+
+    indexes: [
+      { 
+        name: 'statusIndex',
+        type: 'global',
+        hashKey: 'status',
+        rangeKey: 'id'
+      }
+    ]
   },
   SystemVariantRequirementStaticMethods
 );
@@ -94,12 +114,30 @@ export const SystemVariantRequirement = defineModel<
 function computeAttributes(attrs: SystemVariantRequirementAttributes, next: ListenerNextFunction) {
   try {
     const normalizedAttrs = SystemVariantRequirement.normalizeAttributes(attrs);
-    const index = SystemVariantRequirement.makeIndex(attrs);
+    const index = SystemVariantRequirement.makeId(attrs);
     next(null, {...normalizedAttrs, id: index });
   } catch (e) {
     next(e);
   }
 }
 
+function checkAttributes(attrs: SystemVariantRequirementAttributes, next: ListenerNextFunction) {
+  try {
+    if (attrs.refName || attrs.start) {
+      const normalizedAttrs = SystemVariantRequirement.normalizeAttributes(attrs);
+      const expectedId = SystemVariantRequirement.makeId(normalizedAttrs);
+      if (attrs.id && attrs.id !== expectedId) {
+        next(new Error('Attempt to update index attributes of a SystemVariantRequirement'));
+      } else {
+        next(null, {...attrs, ...normalizedAttrs});
+      }
+    } else {
+      next(null, attrs);
+    }
+  } catch (e) {
+    next(e);
+  }
+}
+
 SystemVariantRequirement.before('create', computeAttributes);
-SystemVariantRequirement.before('update', computeAttributes);
+SystemVariantRequirement.before('update', checkAttributes);

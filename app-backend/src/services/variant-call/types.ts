@@ -6,6 +6,7 @@
 * without modification, are not permitted.
 */
 export type RefIndex = {refName: string, refVersion: string, start: number};
+export type RefIndexArg = {refName: string, refVersion?: string, start: number};
 export type VariantCallIndexes = {
   refIndexes: RefIndex[],
   rsIds: string[]
