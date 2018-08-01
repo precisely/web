@@ -124,9 +124,9 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
-      test: jest -t "$TEST"
-      test:watch: jest --watch -t "$TEST"
-      test:coverage: jest --coverage
+      test: jest -t "$TEST" --runInBand
+      test:watch: jest --watch -t "$TEST" --runInBand
+      test:coverage: jest --coverage --runInBand
       env: env
 
   serverless-offline:
