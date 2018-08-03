@@ -20,7 +20,7 @@ export const apiAuthorizer: CustomAuthorizerHandler = (
   context: Context,
   callback: CustomAuthorizerCallback
 ): void => {
-  const log = makeLogger(event.requestContext);
+  const log = makeLogger(context.awsRequestId);
   makeUserPolicy(event, context)
   .then(result => {
     callback(null, result);
@@ -50,7 +50,7 @@ const InvokeAPIPolicyDocument: PolicyDocument = {
 };
 
 async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): Promise<CustomAuthorizerResult> {
-  const log = makeLogger(event.requestContext);
+  const log = makeLogger(context.awsRequestId);
   log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
   const auth: Auth0AuthenticationResult = (isOffline ?
