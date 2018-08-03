@@ -6,42 +6,35 @@ import {
 import { Report } from 'src/services/report';
 import { RefIndex, RefIndexArg } from 'src/services/variant-call/types';
 import { dynamoDBDefaultBatchSize } from 'src/common/environment';
+import { batchCreate, batchUpdate } from 'src/db/dynamo';
 
-export type UpdateRequirementStatusResult = (RefIndexArg & { error?: string, status?: string });
+export type BatchItem<T> = { data: T, error?: string };
 
 export class SystemService {
   /**
    * Read all reports and add any new variant requirements to the SystemVariantRequirement table
+   * Returns a list of attributes representing SystemVariantRequirement objects
    */
-  static async addNewRequirementsFromReports() {
+  static async addNewVariantRequirementsFromReports() {
     const refIndexes = await SystemService.collectVariantRefIndexes();
-    const variantRequirements = await SystemService.addVariantRequirements(refIndexes);
-    return variantRequirements.map(vr => vr.get());
+    return await SystemService.addVariantRequirements(refIndexes);
   }
 
-  static async updateRequirementStatuses(
-    indexesToStatuses: [RefIndexArg, SystemVariantRequirementStatus][]
-  ): Promise<UpdateRequirementStatusResult[]> {
-    const result: UpdateRequirementStatusResult[] = [];
-    await batchPromises(
-      dynamoDBDefaultBatchSize, 
-      indexesToStatuses,
-      async ([refIndex, status]) => {
-        const id = SystemVariantRequirement.makeId(refIndex);
-        try {
-          const svr = await SystemVariantRequirement.updateAsync({ id, status }, {
-            ConditionExpression: 'attribute_exists(id)'
-          });
-          result.push({...refIndex, status});
-        } catch (e) {
-          result.push({...refIndex, error: e.toString()});
-        }
-      }
-    );
-    return result;
+  static async updateVariantRequirementStatuses(
+    attrList: SystemVariantRequirementAttributes[]
+  ): Promise<{ variantRequirements: BatchItem<SystemVariantRequirementAttributes>[]}> {
+    const normalizedAttrs = attrList.map(attrs => {
+      const result = { ...attrs, id: SystemVariantRequirement.makeId(attrs) };
+      return result;
+    });
+    return {
+      variantRequirements: await batchUpdate(SystemVariantRequirement, normalizedAttrs, {
+        ConditionExpression: 'attribute_exists(id)'
+      })
+    };
   }
 
-  static async getRequirements(
+  static async getVariantRequirements(
     status: SystemVariantRequirementStatus = SystemVariantRequirementStatus.new
   ): Promise<SystemVariantRequirementAttributes[]> {
     const result = await SystemVariantRequirement.query(status).usingIndex('statusIndex').execAsync();
@@ -54,10 +47,12 @@ export class SystemService {
 
   static async addVariantRequirements(
     requirements: SystemVariantRequirementAttributes[]
-  ): Promise<SystemVariantRequirement[]> {
+  ): Promise<BatchItem<SystemVariantRequirementAttributes>[]> {
     // const indexes = requirements.map(SystemVariantRequirement.makeId);
     // const svReqs = await SystemVariantRequirement.getItemsAsync(indexes.map(index => ({ id: index })));
-    return <any> await SystemVariantRequirement.createAsync(requirements); // tslint:disable-line no-any
+    return await batchCreate(SystemVariantRequirement, requirements, {
+      ConditionExpression: 'attribute_not_exists(id)'
+    });
   }
 
   static async collectVariantRefIndexes(): Promise<RefIndex[]> {

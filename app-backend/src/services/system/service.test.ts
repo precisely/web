@@ -104,6 +104,19 @@ describe('SystemService', function () {
         start: 40
       }].sort(refIndexSorter));
     });
+
+    it('should correctly return refindexes for 3 reports', async function () {
+      await addFixtures(
+        reportFixture(['chr1:g.[10=];[10=]']),
+        reportFixture(['chr1:g.[10=];[10=]', 'chr2:g.[20=];[20=]', 'chr3:g.[30=];[30=]']),
+        reportFixture(['chr4:g.[40=];[40=]', 'chr5:g.[50=];[50=]', 'chr6:g.[60=];[60=]'])
+      );
+
+      const {Count: reportCount} = await Report.scan().execAsync();
+      expect(reportCount).toEqual(3);
+      const refIndexes = await SystemService.collectVariantRefIndexes();
+      expect(refIndexes).toHaveLength(6);
+    });
   });
 
   describe('addNewRequirementsFromReports', function () {
@@ -112,25 +125,43 @@ describe('SystemService', function () {
         reportFixture(['chr1:g.[10=];[10=]', 'chr2:g.[20=];[20A>T]']),
         reportFixture(['chr3:g.[30=];[30=]', 'chr4:g.[40T>C];[40A>T]'])
       );
-      await SystemService.addNewRequirementsFromReports();
+      await SystemService.addNewVariantRequirementsFromReports();
       const svrs = await SystemVariantRequirement.scan().execAsync();
       expect(svrs.Count).toEqual(4);
       rememberFixtures(...svrs.Items);
+    });
+
+    it('should create SystemVariantRequirement entries based on redundant variants', async function () {
+      await addFixtures(
+        reportFixture(['chr1:g.[10=];[10=]']),
+        reportFixture(['chr1:g.[10=];[10=]', 'chr2:g.[20=];[20=]', 'chr3:g.[30=];[30=]']),
+        reportFixture(['chr4:g.[40=];[40=]', 'chr5:g.[50=];[50=]', 'chr6:g.[60=];[60=]'])
+      );
+
+      const {Count: reportCount} = await Report.scan().execAsync();
+      expect(reportCount).toEqual(3);
+      await SystemService.addNewVariantRequirementsFromReports();
+      const {Items: svrs, Count: svrCount} = await SystemVariantRequirement.scan().execAsync();
+      expect(svrCount).toEqual(6);
+      rememberFixtures(...svrs);
     });
   });
   
   describe('updateRequirementStatuses', function () {
     it('should update only the indicated svr statuses', async function () {
+      const initialSVRs = await SystemVariantRequirement.scan().execAsync();
+      expect(initialSVRs.Count).toEqual(0);
+
       await addFixtures(new SystemVariantRequirement({
         refName: 'chr1', start: 10
-      }), new SystemVariantRequirement({
+      }), new SystemVariantRequirement({ 
         refName: 'chr2', start: 20
       }), new SystemVariantRequirement({
         refName: 'chr3', start: 30
       }));
-      await SystemService.updateRequirementStatuses([
-        [{refName: 'chr1', start: 10}, SystemVariantRequirementStatus.pending],
-        [{refName: 'chr3', start: 30}, SystemVariantRequirementStatus.error]
+      await SystemService.updateVariantRequirementStatuses([
+        {refName: 'chr1', start: 10, status: SystemVariantRequirementStatus.pending},
+        {refName: 'chr3', start: 30, status: SystemVariantRequirementStatus.error }
       ]);
 
       const svrs = await SystemVariantRequirement.scan().execAsync();
@@ -147,71 +178,58 @@ describe('SystemService', function () {
       expect(svrs.Count).toEqual(0);
 
       await addFixtures(new SystemVariantRequirement({refName: 'chr2', start: 20}));
-      const result = await SystemService.updateRequirementStatuses([
-        [{refName: 'chr1', start: 10}, SystemVariantRequirementStatus.pending],
-        [{refName: 'chr2', start: 20}, SystemVariantRequirementStatus.ready],
-        [{refName: 'chr3', start: 30}, SystemVariantRequirementStatus.error]
+      const result = await SystemService.updateVariantRequirementStatuses([
+        {refName: 'chr1', start: 10, status: SystemVariantRequirementStatus.pending },
+        {refName: 'chr2', start: 20, status: SystemVariantRequirementStatus.ready },
+        {refName: 'chr3', start: 30, status: SystemVariantRequirementStatus.error }
       ]);
 
       const svrsAfter = await SystemVariantRequirement.scan().execAsync();
       expect(svrsAfter.Count).toEqual(1);
-      expect(result).toHaveLength(3);
-      expect(result.sort(refIndexSorter)).toMatchObject([
-        { refName: 'chr1', start: 10, error: expect.stringMatching(/.*/) },
-        { refName: 'chr2', start: 20, status: 'ready' },
-        { refName: 'chr3', start: 30, error: expect.stringMatching(/.*/) },
-      ].sort(<any> refIndexSorter));
+      expect(result.variantRequirements).toHaveLength(3);
+      expect(result.variantRequirements).toMatchObject([
+        { data: { refName: 'chr1', start: 10 }, error: expect.stringMatching(/.*/) },
+        { data: { refName: 'chr2', start: 20, status: 'ready' }},
+        { data: { refName: 'chr3', start: 30 }, error: expect.stringMatching(/.*/) },
+      ]);
     });
   });
 
-  describe('updateRequirementStatuses', function () {
-    it('should update only the indicated svr statuses', async function () {
-      await addFixtures(new SystemVariantRequirement({
-        refName: 'chr1', start: 10
-      }), new SystemVariantRequirement({
-        refName: 'chr2', start: 20
-      }), new SystemVariantRequirement({
-        refName: 'chr3', start: 30
-      }));
-      await SystemService.updateRequirementStatuses([
-        [{refName: 'chr1', start: 10}, SystemVariantRequirementStatus.pending],
-        [{refName: 'chr3', start: 30}, SystemVariantRequirementStatus.error]
+  describe('getRequirements', function () {
+    beforeEach(async function () {
+      await addFixtures(
+        reportFixture(['chr1:g.[10=];[10=]']),
+        reportFixture(['chr1:g.[10=];[10=]', 'chr2:g.[20=];[20=]', 'chr3:g.[30=];[30=]']),
+        reportFixture(['chr4:g.[40=];[40=]', 'chr5:g.[50=];[50=]', 'chr6:g.[60=];[60=]'])
+      );
+      await SystemService.addNewVariantRequirementsFromReports();
+      const {Items: svrs} = await SystemVariantRequirement.scan().execAsync();
+      rememberFixtures(...svrs);
+    });
+
+    it('should collect new requirements by default', async function () {
+      const newRequirements = await SystemService.getVariantRequirements();
+      expect(newRequirements).toHaveLength(6);
+    });
+
+    it('should detect updated requirements', async function () {
+      await SystemService.updateVariantRequirementStatuses([
+        { refName: 'chr1', start: 10, status: SystemVariantRequirementStatus.pending },
+        { refName: 'chr2', start: 20, status: SystemVariantRequirementStatus.pending },
+        { refName: 'chr3', start: 30, status: SystemVariantRequirementStatus.ready },
+        { refName: 'chr4', start: 40, status: SystemVariantRequirementStatus.ready },
+        { refName: 'chr5', start: 50, status: SystemVariantRequirementStatus.error },
       ]);
+      const newReqs = await SystemService.getVariantRequirements(SystemVariantRequirementStatus.new);
+      const pending = await SystemService.getVariantRequirements(SystemVariantRequirementStatus.pending);
+      const ready = await SystemService.getVariantRequirements(SystemVariantRequirementStatus.ready);
+      const error = await SystemService.getVariantRequirements(SystemVariantRequirementStatus.error);
 
-      const svrs = await SystemVariantRequirement.scan().execAsync();
-      expect(svrs.Count).toEqual(3);
-      expect(svrs.Items.map(svr => svr.get()).sort(refIndexSorter)).toMatchObject([
-        { refName: 'chr1', start: 10, status: 'pending' },
-        { refName: 'chr2', start: 20, status: 'new' },
-        { refName: 'chr3', start: 30, status: 'error' }
-      ].sort(<any> refIndexSorter));
+      expect(newReqs).toHaveLength(1);
+      expect(pending).toHaveLength(2);
+      expect(ready).toHaveLength(2);
+      expect(error).toHaveLength(1);
     });
 
-    it('should return errors if the variant requirements do not already exist', async function () {
-      const svrs = await SystemVariantRequirement.scan().execAsync();
-      expect(svrs.Count).toEqual(0);
-
-      await addFixtures(new SystemVariantRequirement({refName: 'chr2', start: 20}));
-      const result = await SystemService.updateRequirementStatuses([
-        [{refName: 'chr1', start: 10}, SystemVariantRequirementStatus.pending],
-        [{refName: 'chr2', start: 20}, SystemVariantRequirementStatus.ready],
-        [{refName: 'chr3', start: 30}, SystemVariantRequirementStatus.error]
-      ]);
-
-      const svrsAfter = await SystemVariantRequirement.scan().execAsync();
-      expect(svrsAfter.Count).toEqual(1);
-      expect(result).toHaveLength(3);
-      expect(result.sort(refIndexSorter)).toMatchObject([
-        { refName: 'chr1', start: 10, error: expect.stringMatching(/.*/) },
-        { refName: 'chr2', start: 20, status: 'ready' },
-        { refName: 'chr3', start: 30, error: expect.stringMatching(/.*/) },
-      ].sort(<any> refIndexSorter));
-    });
-  });
-
-  describe('Sunny day tests', function () {
-    it('should preserve SystemVariantRequirement status', async function () {
-      //
-    });
   });
 });
