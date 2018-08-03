@@ -57,7 +57,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
 
   export type ListenerNextFunction = (err: Error | null, data?: any) => void;
 
-  export interface Model<Attributes = { any: any }, Methods = {} > {
+  export interface Model<Attributes = { [key: string]: any }, Methods = {} > {
     new (attrs: Attributes): Item<Attributes, Methods>;
 
     get(
