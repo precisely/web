@@ -192,7 +192,6 @@ functions:
         Ref: DefaultSubnetOne
       SUBNET_TWO:
         Ref: DefaultSubnetTwo
-
     events:
       - s3:
           bucket: UserUpload
@@ -209,4 +208,7 @@ functions:
   SysGetVariantRequirements:
     role: SystemRole
     handler: src/services/system/handlers.getVariantRequirements
-    
+
+  VariantCallBatchCreate:
+    role: SystemRole
+    handler: src/services/variant-call/handlers.batchCreate
