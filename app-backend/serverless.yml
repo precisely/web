@@ -212,3 +212,4 @@ functions:
   VariantCallBatchCreate:
     role: SystemRole
     handler: src/services/variant-call/handlers.batchCreate
+    
