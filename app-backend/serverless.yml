@@ -154,12 +154,12 @@ custom:
 
 functions:
   APIAuthorizer:
-    role: PreciselyDefaultRole
+    role: DefaultRole
     handler: src/services/auth/handlers.apiAuthorizer
     cors: true
 
   GraphQLPlayground:
-    role: PreciselyDefaultRole
+    role: DefaultRole
     handler: src/services/graphql/handlers.playgroundHandler
     events:
       - http:
@@ -168,7 +168,7 @@ functions:
           cors: true
 
   GraphQLAPI:
-    role: PreciselyGraphQLAPIRole
+    role: GraphQLAPIRole
     handler: src/services/graphql/handlers.apiHandler
     events:
       - http:
@@ -180,16 +180,9 @@ functions:
             type: request
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
-  # VCF ingester is triggered by new file in S3_BUCKET_GENETICS_VCF
-  VCFIngester:
-    handler: src/services/genetics-pipeline/handlers.vcfIngester
-    events:
-      - s3:
-          bucket: GeneticsVCF
-          event: s3:ObjectCreated:*
-
   # Raw data uploader is triggered by new file in any of the raw data buckets
   RawDataUpload:
+    role: SystemRole
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
       INGESTION_CLUSTER: ${self:custom.vars.ingestionClusterName}
@@ -200,18 +193,20 @@ functions:
       SUBNET_TWO:
         Ref: DefaultSubnetTwo
 
-    role:
-      Fn::GetAtt: ["RawUploadLambdaRole", "Arn"]
     events:
       - s3:
           bucket: UserUpload
           event: s3:ObjectCreated:*
 
   SysAddNewVariantRequirementsFromReports:
+    role: SystemRole
     handler: src/services/system/handlers.addNewVariantRequirementsFromReports
-
+      
   SysUpdateVariantRequirementStatuses:
+    role: SystemRole
     handler: src/services/system/handlers.updateVariantRequirementStatuses
-
+    
   SysGetVariantRequirements:
+    role: SystemRole
     handler: src/services/system/handlers.getVariantRequirements
+    

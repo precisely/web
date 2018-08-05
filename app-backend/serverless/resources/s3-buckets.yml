@@ -2,6 +2,7 @@ S3BucketUserUpload:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:custom.vars.userUploadBucket}
+    
 S3BucketGeneticsVCF:
   Type: AWS::S3::Bucket
   Properties:
@@ -11,18 +12,6 @@ S3BucketIngestionError:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:custom.vars.ingestionErrorBucket}
-
-VCFIngesterLambdaPermission:
-  Type: AWS::Lambda::Permission
-  Properties:
-    FunctionName:
-       # serverless generates this name from `functions: VCFIngester: ...`
-      Fn::GetAtt: [ VCFIngesterLambdaFunction, Arn ]
-    Principal: s3.amazonaws.com
-    Action: lambda:InvokeFunction
-    SourceAccount:
-      Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:custom.vars.geneticsVCFBucket}
 
 RawDataUploadLambdaPermission:
   Type: AWS::Lambda::Permission
