@@ -1,6 +1,11 @@
-//
-// The Personalizer takes a report and
-//
+/*
+* Copyright (c) 2017-Present, Precise.ly, Inc.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or
+* without modification, are not permitted.
+*/
+
 import {Report} from 'src/services/report/models';
 import {VariantCall} from 'src/services/variant-call/models';
 import {Reducer, ReducibleElement, ReducedElement, Context} from 'smart-report/lib';

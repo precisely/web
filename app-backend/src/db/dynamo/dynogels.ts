@@ -73,13 +73,15 @@ export type ModelInstance<A, M> = Item<A, M & ExtraMethods<A>>;
 
 export function defineModel<Attributes, InstanceMethods = {}, StaticMethods = {}>(
   tableName: string,
-  config: ModelConfiguration
+  config: ModelConfiguration,
+  staticMethods?: new() => StaticMethods
 ):
   Model<Attributes, InstanceMethods & ExtraMethods<Attributes>> & StaticMethods {
   const fullName = stageTableName(tableName);
   const baseModel = dynogels.define<Attributes, InstanceMethods & ExtraMethods<Attributes>>(fullName, config);
   extend(baseModel.prototype, extraMethods);
-  return extend(baseModel, <StaticMethods> {});
+  return extend(baseModel, 
+    staticMethods ? (<any> staticMethods).prototype : <StaticMethods> {}); // tslint:disable-line no-any
 }
 
 export default dynogels;

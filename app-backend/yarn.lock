@@ -1061,6 +1061,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
+batch-promises@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/batch-promises/-/batch-promises-0.0.3.tgz#04b850fe6847c7aff05f3cca41045932430b1c32"
+
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz#a4301d389b6a43f9b67ff3ca11a3f6637e360e9e"
@@ -6629,9 +6633,9 @@ smart-buffer@^1.0.13:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-1.1.15.tgz#7f114b5b65fab3e2a35aa775bb12f0d1c649bf16"
 
-"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.1.5":
-  version "1.1.5"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#0238d4c11b6274d3355e8455b691a46042caef78"
+"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.1.6":
+  version "1.1.6"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#546f2d31316b8c30ce09767d35cde9f14ee48005"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"

@@ -1,5 +1,5 @@
 ---
-PreciselyDefaultRole:
+DefaultRole:
   Type: AWS::IAM::Role
   Properties:
     RoleName: ${self:provider.stage}-PreciselyDefaultRole
@@ -18,21 +18,51 @@ PreciselyDefaultRole:
       - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Policies:
-      - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
-PreciselyGraphQLAPIRole:
+      - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+
+GraphQLAPIRole:
   Type: AWS::IAM::Role
   Properties:
     RoleName: ${self:provider.stage}-PreciselyGraphQLAPIRole
     AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
     ManagedPolicyArns: *DefaultManagedPolicyArns
     Policies:
-      - ${file(./serverless/resources/role-policies.yml):PreciselyDefaultPolicy}
-      - ${file(./serverless/resources/role-policies.yml):PreciselyAPIPolicy}
+      - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+      - ${file(./serverless/resources/role-policies.yml):APIPolicy}
 
+SystemRole: 
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:provider.stage}-PreciselySystemRole
+    AssumeRolePolicyDocument: &SystemAssumeRolePolicyDocument
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              # APIGateway NOT allowed
+              - lambda.amazonaws.com
+              - ecs.amazonaws.com
+              - ec2.amazonaws.com
+              - ecs-tasks.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns: 
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess 
+      - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+      - arn:aws:iam::aws:policy/AmazonSNSFullAccess 
+      - arn:aws:iam::aws:policy/AmazonSESFullAccess
+  
+    Policies:  
+      - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+        
 IngestionECSTaskRole:
   Type: AWS::IAM::Role 
   Properties: 
-    RoleName: ${self:provider.stage}-IngestionECSTaskRole
+    RoleName: ${self:provider.stage}-PreciselyIngestionECSTaskRole
     AssumeRolePolicyDocument: 
       <<: *DefaultAssumeRolePolicyDocument
       Statement:
@@ -47,14 +77,13 @@ IngestionECSTaskRole:
     Policies:
       - ${file(./serverless/resources/role-policies.yml):IngestionECSTaskPolicy}
 
-RawUploadLambdaRole:
+UserUploadLambdaRole:
   Type: AWS::IAM::Role
   Properties:
-    RoleName: ${self:provider.stage}-RawUploadLambdaRole
+    RoleName: ${self:provider.stage}-PreciselyUserUploadRole
     AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
     ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
     Policies:
-      - ${file(./serverless/resources/role-policies.yml):RawUploadLambdaPolicy}
-
+      - ${file(./serverless/resources/role-policies.yml):UserUploadPolicy}
 ...

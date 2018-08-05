@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-Present, Precise.ly, Inc.
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or
@@ -20,7 +20,7 @@ import {makeLogger} from 'src/common/logger';
 import { GraphQLContext } from './graphql-context';
 
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
-  const log = makeLogger(event.requestContext);
+  const log = makeLogger(context.awsRequestId);
   const PreciselySchema = makeExecutableSchema({
     typeDefs: preciselyTypeDefs,
     resolvers,
@@ -64,7 +64,7 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 // };
 
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
-  const log = makeLogger(event.requestContext);
+  const log = makeLogger(context.awsRequestId);
   log.debug('APIGateway event: %j, context: %j', event, context);
   const callbackFilter = function (error: Error, output: any ) {
     if (output) {

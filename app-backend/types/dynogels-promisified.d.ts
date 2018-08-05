@@ -57,7 +57,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
 
   export type ListenerNextFunction = (err: Error | null, data?: any) => void;
 
-  export interface Model<Attributes = { any: any }, Methods = {} > {
+  export interface Model<Attributes = { [key: string]: any }, Methods = {} > {
     new (attrs: Attributes): Item<Attributes, Methods>;
 
     get(
@@ -174,10 +174,10 @@ declare module "@aneilbaboo/dynogels-promisified" {
     getAsync(hashKey: any): Promise<Item<Attributes, Methods>>;
     getAsync(hashKey: any, rangeKey: any): Promise<Item<Attributes, Methods>>;
     createAsync(
-      item: Attributes,
+      item: Attributes | Attributes[],
       options: CreateItemOptions
     ): Promise<Item<Attributes, Methods>>;
-    createAsync(item: Attributes): Promise<Item<Attributes, Methods>>;
+    createAsync(item: Attributes | Attributes[]): Promise<Item<Attributes, Methods>>;
     updateAsync(
       item: Attributes,
       options: UpdateItemOptions

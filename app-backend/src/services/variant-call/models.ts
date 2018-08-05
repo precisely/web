@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2011-Present, Precise.ly, Inc.
+* Copyright (c) 2017-Present, Precise.ly, Inc.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or
@@ -47,7 +47,7 @@ export class VariantCallAttributes {
   gene?: string;
   geneStart?: number;
   geneEnd?: number;
-  zygosity?: string;
+  zygosity?: keyof typeof Zygosity;
 }
 
 interface VariantCallMethods {
@@ -63,7 +63,13 @@ interface VariantCallStaticMethods {
 // model instance type
 export type VariantCall = ModelInstance<VariantCallAttributes, VariantCallMethods>;
 
-export const Zygosity = [ 'heterozygous', 'homozygous', 'wildtype', 'haploid' ];
+export enum Zygosity {
+  heterozygous = 'heterozygous',
+  homozygous = 'homozygous', 
+  wildtype = 'wildtype', 
+  haploid = 'haploid'
+}
+
 export const VariantFilter = [ 'IMP', 'FAIL', 'BOOST' ];
 export const VariantCall = defineModel<
   VariantCallAttributes, VariantCallMethods, VariantCallStaticMethods
@@ -110,7 +116,7 @@ export const VariantCall = defineModel<
       gene: Joi.string().optional(),
       geneStart: Joi.number().optional(), // genomic coordinate for start base
       geneEnd: Joi.number().optional(),   // genomic coordinate for end base
-      zygosity: Joi.string().valid(...Zygosity).optional(), // heterozygous, homozygou,
+      zygosity: Joi.string().valid(...Object.values(Zygosity)).optional(), // heterozygous, homozygou,
 
       //
       // Index support
@@ -140,16 +146,38 @@ export const VariantCall = defineModel<
  * @param next
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
-  const {refName, start, callSetId } = variantCall;
+  const {refName, start, callSetId, genotype } = variantCall;
   const rsId = variantCall.rsId || '';
   const end = variantCall.end || '';  
   const refVersion = variantCall.refVersion || AllowedRefVersion;
   const variantId = `${refName}:${refVersion}:${start}:${end}:${rsId}:${callSetId}`;
+  if (!genotype) {
+    throw new Error(`Invalid VariantCall parameters - no genotype`);
+  }
+  const zygosity = zygosityFromGenotype(genotype);
 
   if (refVersion !== AllowedRefVersion) {
     next(new Error(`Invalid refVersion: ${refVersion}`));
   } else {
-    next(null, {variantId, ...variantCall});
+    next(null, {...variantCall, variantId, zygosity});
+  }
+}
+
+function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined {
+  if (!genotype) {
+    return;
+  }
+
+  genotype.sort();
+
+  if (genotype === [0, 0]) {
+    return Zygosity.wildtype;
+  } else if (genotype.length === 1) {
+    return Zygosity.haploid;
+  } else if (genotype.every(g => g === genotype[0])) {
+    return Zygosity.homozygous;
+  } else {
+    return Zygosity.heterozygous;
   }
 }
 

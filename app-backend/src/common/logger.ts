@@ -32,13 +32,12 @@ const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
   new winston.transports.Console()
 ];
 
-function makeFormatter(colorize: boolean, requestContext?: APIGatewayEventRequestContext) {
+function makeFormatter(colorize: boolean, requestId?: string) {
   const plugins = [ format.timestamp(), format.splat() ];
   if (colorize) {
     plugins.push(format.colorize());
   }
-  if (requestContext) {
-    const requestId = requestContext && requestContext.requestId;
+  if (requestId) {
     plugins.push(format.printf(
       (info: FormatInfo) => `${info.timestamp} ${info.level}: ${info.message} [${requestId}]${LOG_DATA_SEP}`)
     );
@@ -70,12 +69,12 @@ export interface Logger {
   shouldLog(level: number | string): boolean;
 }
 
-export function makeLogger(requestContext?: APIGatewayEventRequestContext): Logger {
+export function makeLogger(requestId?: string): Logger {
   const shouldColorize = isOffline;
   const logger = winston.createLogger({
     transports: LOG_TRANSPORTS,
     level: LOG_LEVEL,
-    format: makeFormatter(shouldColorize, requestContext)
+    format: makeFormatter(shouldColorize, requestId)
   });
 
   logger.levelValue = function levelValue(level: number | string) {
