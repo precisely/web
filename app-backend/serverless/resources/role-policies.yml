@@ -27,6 +27,18 @@ APIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
 
+PreciselyDataManagerPolicy:
+  PolicyName: ${self:provider.stage}-PreciselyDataManagerPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.SystemVariantRequirement.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.SystemVariantRequirement.write}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.write}
+
 IngestionECSTaskPolicy:
   PolicyName: ${self:provider.stage}-PreciselyIngestionECSTaskPolicy
   PolicyDocument:
