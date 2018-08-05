@@ -12,12 +12,8 @@ import {makeLogger} from 'src/common/logger';
 import { VariantCallService } from './service';
 import { VariantCallAttributes } from './models';
 
-export const batchCreate: Handler = (
-  event: VariantCallAttributes[], context: Context, callback: Callback
-) => {
+export const batchCreate: Handler = async (event: VariantCallAttributes[], context: Context) => {
   const log = makeLogger(context.awsRequestId);
   log.info('VariantCallBatchCreate EVENT: %j\t\tCONTEXT: %j', event, context);
-  VariantCallService.addVariantCalls(event)
-    .then(result => callback(null, result))
-    .catch(error => callback(error));
+  return await VariantCallService.addVariantCalls(event);
 };

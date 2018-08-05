@@ -6,7 +6,7 @@ export const RSIdRegex = /rs\d+/i;
 export const SVNAccessionRegex = /NC(\d+)\.(d+)/;
 
 export const JoiRefVersion = Joi.string().default(AllowedRefVersion).allow(AllowedRefVersion);
-export const JoiRefName = Joi.string().required().regex(RefNameRegex);
+export const JoiRefName = Joi.string().required().regex(RefNameRegex).description('expecting chr1-chr22|chrX|chrY|MT');
 export const JoiStart = Joi.number().required().greater(0);
 export const JoiRSId = Joi.string().regex(RSIdRegex);
 export const JoiRefIndex = Joi.object({
