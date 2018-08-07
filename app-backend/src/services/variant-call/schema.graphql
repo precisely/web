@@ -1,8 +1,10 @@
+
 type VariantCall {
   userId: String,
   variantId: String,
 
-  callSetId: String,
+  sampleId: String,
+  sampleType: String,
   start: Int,
   end: Int,
   alternateBases: [String],

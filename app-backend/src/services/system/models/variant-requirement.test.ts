@@ -32,7 +32,7 @@ describe('SystemVariantRequirement', function () {
 
     beforeEach(async function () {
       const svr = new SystemVariantRequirement({
-        refName: 'chr2', start: 90, end: 95, refVersion: 'GRCh38'
+        refName: 'chr2', start: 90, end: 95, refVersion: 'GRCh37'
       });
       savedSVR = await svr.saveAsync();
       rememberFixtures(savedSVR);
@@ -42,11 +42,11 @@ describe('SystemVariantRequirement', function () {
       expect(savedSVR.getValid('refName')).toEqual('chr2');
       expect(savedSVR.getValid('start')).toEqual(90);
       expect(savedSVR.getValid('end')).toEqual(95);
-      expect(savedSVR.getValid('refVersion')).toEqual('GRCh38');
+      expect(savedSVR.getValid('refVersion')).toEqual('GRCh37');
     });
     
     it('should set the id correctly', function () {
-      expect(savedSVR.getValid('id')).toEqual('refIndex:chr2:GRCh38:90:95');
+      expect(savedSVR.getValid('id')).toEqual('refIndex:chr2:GRCh37:90:95');
     });
   });
   it('should fail to save if refName is not provided', async function () {

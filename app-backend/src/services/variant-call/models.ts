@@ -19,12 +19,16 @@ export class VariantCallAttributes {
   variantId?: string; // unique value determined from other parameters
                       // see computeAttributes
 
+  // 23andme, etc:
+  sampleType?: string;
+  // file hash or sample identifier
+  sampleId?: string;
+
+  // VCF genome version number, if provided
   refVersion?: string;
-  // this is equivalent to GA4GH callset Id - this is the id of a dataset
-  // uploaded by the user, produced by Akesogen, etc.
-  callSetId?: string;
   // sequence name e.g., chr1
   refName?: string;
+
   // start index with respect to sequence - must be string for DynamoDB indexing
   start?: number;
   // end index of variant
@@ -50,14 +54,37 @@ export class VariantCallAttributes {
   zygosity?: keyof typeof Zygosity;
 }
 
-interface VariantCallMethods {
+class VariantCallMethods {
 }
 
-interface VariantCallStaticMethods {
-  forUser(
+class VariantCallStaticMethods {
+  async forUser(
     userId: string,
-    variantIndexes: VariantCallIndexes
-  ): Promise<VariantCall[]>;
+    { refIndexes, rsIds }: VariantCallIndexes
+  ): Promise<VariantCall[]> {
+    const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
+    if (refIndexes) {
+      refIndexes.forEach((index: RefIndex) => {
+        const { refName, refVersion, start} = index;
+        if (refName && refVersion && start) {
+          const variantIdStart = `${refName}:${refVersion}:${start}`;
+          queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
+        } else {
+          throw new Error(`Invalid index for Variant: ${index}`);
+        }
+      });
+    }
+    if (rsIds) {
+      rsIds.forEach(rsId => {
+        queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
+      });
+    }
+
+    const execResults = await Promise.all(queries);
+    return <VariantCall[]> (execResults.map( 
+      er => (er && er.Count) ? <VariantCall> er.Items[0] : null
+    ).filter(x => !!x));
+  }
 }
 
 // model instance type
@@ -73,7 +100,7 @@ export enum Zygosity {
 export const VariantFilter = [ 'IMP', 'FAIL', 'BOOST' ];
 export const VariantCall = defineModel<
   VariantCallAttributes, VariantCallMethods, VariantCallStaticMethods
-  >(
+>(
   'variant-call', {
     hashKey : 'userId',
     rangeKey: 'variantId',
@@ -92,8 +119,12 @@ export const VariantCall = defineModel<
       refName: JoiRefName,
       // the genome version - only GRCh37 for now
       refVersion: JoiRefVersion,
-      // this is equivalent to GA4GH callset Id
-      callSetId: Joi.string().required().regex(/\w+/, 'callSetId pattern'),
+      
+      // 23andme, ancestry, etc
+      sampleType: Joi.string().allow('23andme'),
+      // unique identifier of the measurement (e.g., 23andme file hash, akesogen id)
+      sampleId: Joi.string().required(),
+
       // start index with respect to sequence - must be string for DynamoDB indexing
       start: JoiStart,
       // end index of variant
@@ -137,7 +168,8 @@ export const VariantCall = defineModel<
         rangeKey: 'rsId'
       }
     ]
-  }
+  },
+  VariantCallStaticMethods
 );
 
 /**
