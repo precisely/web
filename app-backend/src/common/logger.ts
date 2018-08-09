@@ -1,5 +1,4 @@
 import {isArray} from 'util';
-import {APIGatewayEventRequestContext} from 'aws-lambda';
 import {isOffline} from 'src/common/environment';
 /*
  * Copyright (c) 2017-Present, Precise.ly, Inc.
