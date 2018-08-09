@@ -57,9 +57,9 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 ```shell
 yarn dynamodb:test:offline
 # in a new terminal window:
-yarn test:offline
-# of with a watch:
-yarn test:offline:watch
+yarn test
+# with --watch flag:
+yarn test --watch
 ```
 
 #### Start Backend Server
@@ -171,9 +171,9 @@ After you do this, you can make changes and simple call `yarn deploy`.
 # in one terminal window 
 yarn dynamodb:test:offline
 # in your main terminal window
-yarn test:offline # runs all tests
-
-TEST='Name of test' yarn test:offline # runs a specific test
+yarn test # runs all tests
+yarn test --coverage # make coverage report
+yarn test -t 'pattern matching specific test'
 ```
 
 Note: to use the integrated test and debugging tools in VSCode, open the workspace file instead of the web directory.
