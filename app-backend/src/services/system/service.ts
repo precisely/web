@@ -4,9 +4,8 @@ import {
   SystemVariantRequirement, SystemVariantRequirementAttributes, SystemVariantRequirementStatus 
 } from './models/variant-requirement';
 import { Report } from 'src/services/report';
-import { RefIndex, RefIndexArg } from 'src/services/variant-call/types';
-import { dynamoDBDefaultBatchSize } from 'src/common/environment';
 import { batchCreate, batchUpdate } from 'src/db/dynamo';
+import { VariantIndex } from 'src/common/variant-tools';
 
 export type BatchItem<T> = { data: T, error?: string };
 
@@ -16,7 +15,7 @@ export class SystemService {
    * Returns a list of attributes representing SystemVariantRequirement objects
    */
   static async addNewVariantRequirementsFromReports() {
-    const refIndexes = await SystemService.collectVariantRefIndexes();
+    const refIndexes = await SystemService.collectVariantIndexes();
     return await SystemService.addVariantRequirements(refIndexes);
   }
 
@@ -55,17 +54,20 @@ export class SystemService {
     });
   }
 
-  static async collectVariantRefIndexes(): Promise<RefIndex[]> {
+  /**
+   * Gets a de-duped set of variant indexes from all reports in the system
+   */
+  static async collectVariantIndexes(): Promise<VariantIndex[]> {
     const reports = await Report.listReports({});
-    const refIndexes: { [key: string]: RefIndex } = {};
+    const variantIndexes: { [key: string]: VariantIndex } = {};
     for (const report of reports) {
-      const indexes = report.get('variantCallIndexes');
-      if (indexes && indexes.refIndexes) {
-        for (const refIndex of indexes.refIndexes) {
-          refIndexes[SystemVariantRequirement.makeId(refIndex)] = refIndex;
+      const indexes = report.get('variantIndexes');
+      if (indexes) {
+        for (const variantIndex of indexes) {
+          variantIndexes[SystemVariantRequirement.makeId(variantIndex)] = variantIndex;
         }
       }
     }
-    return Object.values(refIndexes);
+    return Object.values(variantIndexes);
   }
 }

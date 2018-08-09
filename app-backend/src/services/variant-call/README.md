@@ -6,18 +6,31 @@ Stores variant call entries for each user of the system.
 
 ### VariantCallBatchCreate
 
-**Payload**: Array of VariantCallAttributes. It must include `userId`, `refName`, `start`, `altBases`, `refBases`,`callSetId`,`genotype`, and ideally also `genotypeLikelihood` and `filter`
+**Payload**: Array of VariantCallAttributes. It must include `userId`, `refName`, `refVersion`, `start`, `altBases`, `refBases`,`sampleType`, `sampleId`, `genotype`, and ideally also `genotypeLikelihood` and `filter`.
+
+Note: currently, refVersion should only be `37p13`.
+
 ```js
 [
-  { refName: 'chr1',  start: 10, altBases: ['A', 'T'], refBases: 'C', callSetId: '23andme-b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0,1] },
-  ...
+  // valid input:
+  { refName: 'chr1',  refVersion: '37p13', start: 10, altBases: ['A', 'T'], refBases: 'C', sampleType: '23andme',
+    sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1] },
+  // invalid input:
+  { refName: 'chr2',  refVersion: 'invalid-ref-version', start: 20, altBases: ['G'], refBases: 'T', sampleType: '23andme',
+    sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1] },
 ]
 ```
 **Returns**: Array of data and optional error JSON objects, where data is the created object or the creation parameters which failed.
 
 ```js
 [
-  { data: { refName: 'chr1',  start: 10, altBases: ['A', 'T'], refBases: 'C', callSetId: '23andme-b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0,1], createdAt: '...', updatedAt: '...', id: '...', }},
-  { data: { ... }, error: 'Error:...' }
+  // valid input response:
+  { data: { variantId: 'chr1.37p13:37p13:10:23andme:b4ccfd7a87a:11', 
+            refName: 'chr1',  refVersion: '37p13', start: 10, altBases: ['A', 'T'], refBases: 'C',  sampleType: '23andme',
+            sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1], createdAt: '...', updatedAt: '...', id: '...', }},
+  // invalid input response:
+  { data: { refName: 'chr2',  refVersion: 'invalid-ref-version', start: 20, altBases: ['G'], refBases: 'T', sampleType: '23andme',
+            sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1] },
+  , error: 'Error: invalid refVersion' } // or similar error message
 ]
 ```

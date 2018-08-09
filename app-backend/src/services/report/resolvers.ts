@@ -107,7 +107,7 @@ export const resolvers = {
       slug: 'slug',
       title: 'title',
       content: 'content',
-      variantCallIndexes: 'variantCallIndexes'
+      variantCallIndexes: 'variantIndexes'
     }), 
     ...GraphQLContext.propertyResolver('report', {
       personalization(

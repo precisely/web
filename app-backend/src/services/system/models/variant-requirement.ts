@@ -12,7 +12,8 @@ import * as Joi from 'joi';
 import { isNumber } from 'util';
 
 import {defineModel, ListenerNextFunction, ModelInstance } from 'src/db/dynamo/dynogels';
-import { JoiStart, JoiRefVersion, JoiRefName, AllowedRefVersion } from 'src/common/variant-constraints';
+import { JoiStart, JoiRefVersion, JoiRefName, VariantIndex, refToNCBIAccession } from 'src/common/variant-tools';
+import { ensureProps } from 'src/common/type-tools';
 
 export enum SystemVariantRequirementStatus {
   new = 'new',
@@ -23,40 +24,22 @@ export enum SystemVariantRequirementStatus {
 
 export class SystemVariantRequirementAttributes {
   id?: string;
+  accession?: string;
   refVersion?: string;
   refName?: string;
   start?: number;
   status?: keyof typeof SystemVariantRequirementStatus;
   errorLog?: string;
-  end?: number;
 }
 
 export class SystemVariantRequirementMethods {
 
 }
 
-interface VariantIndexValues {
-  refName?: string;
-  start?: number;
-  end?: number;
-  refVersion?: string;
-}
 export class SystemVariantRequirementStaticMethods {
-  normalizeAttributes(attrs: VariantIndexValues): VariantIndexValues {
-    const {refName, start, end, refVersion } = attrs;
-    const normalizedRefVersion = refVersion || AllowedRefVersion;
-    
-    if (!refName || !isNumber(start)) {
-      throw new Error(`Invalid start index ${start}`);
-    }
-
-    const normalizedEnd = end ? end : start + 1;
-    return {...attrs, end: normalizedEnd, refVersion: normalizedRefVersion };
-  }
-
-  makeId(attrs: VariantIndexValues): string {
-    const {refName, refVersion, start, end } = this.normalizeAttributes(attrs);
-    return `refIndex:${refName}:${refVersion}:${start}:${end}`;
+  makeId(attrs: Partial<VariantIndex>): string {
+    const {refName, refVersion, start} = ensureProps(attrs, 'refName', 'refVersion', 'start');
+    return `refIndex:${refName}:${refVersion}:${start}`;
   }
 }
 
@@ -92,8 +75,6 @@ export const SystemVariantRequirement = defineModel<
       refVersion: JoiRefVersion.required(),
       // start index with respect to sequence - must be string for DynamoDB indexing
       start: JoiStart.required(),
-      // end index of variant
-      end: Joi.number().greater(Joi.ref('start')).required(),
     },
 
     indexes: [
@@ -113,9 +94,11 @@ export const SystemVariantRequirement = defineModel<
  */
 function computeAttributes(attrs: SystemVariantRequirementAttributes, next: ListenerNextFunction) {
   try {
-    const normalizedAttrs = SystemVariantRequirement.normalizeAttributes(attrs);
-    const index = SystemVariantRequirement.makeId(attrs);
-    next(null, {...normalizedAttrs, id: index });
+    const {refName, refVersion, start } = ensureProps(attrs, 'refName', 'refVersion', 'start');
+    const index = SystemVariantRequirement.makeId({refName, refVersion, start});
+    // debugger;
+    // const accession = refToNCBIAccession(refName, refVersion);
+    next(null, {...attrs, id: index });
   } catch (e) {
     next(e);
   }
@@ -123,13 +106,12 @@ function computeAttributes(attrs: SystemVariantRequirementAttributes, next: List
 
 function checkAttributes(attrs: SystemVariantRequirementAttributes, next: ListenerNextFunction) {
   try {
-    if (attrs.refName || attrs.start) {
-      const normalizedAttrs = SystemVariantRequirement.normalizeAttributes(attrs);
-      const expectedId = SystemVariantRequirement.makeId(normalizedAttrs);
-      if (attrs.id && attrs.id !== expectedId) {
+    if (attrs.refName || attrs.start || attrs.refVersion) {
+      const expectedId = SystemVariantRequirement.makeId(<VariantIndex> attrs);
+      if (attrs.id !== expectedId) {
         next(new Error('Attempt to update index attributes of a SystemVariantRequirement'));
       } else {
-        next(null, {...attrs, ...normalizedAttrs});
+        next(null, {...attrs});
       }
     } else {
       next(null, attrs);

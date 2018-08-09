@@ -12,7 +12,7 @@ import {VariantCallAttributes} from './models';
 export const resolvers = {
   VariantCall: {
     ... GraphQLContext.dynamoAttributeResolver<VariantCallAttributes>('variant-call', [
-      'callSetId', 'altBases', 'refBases', 'genotype', 'start', 'end', 'genotype',
+      'sampleType', 'sampleId', 'altBases', 'refBases', 'genotype', 'start', 'end', 'genotype',
       'genotypeLikelihood', 'filter', 'rsId', 'gene', 'zygosity', 'refVersion', 'geneStart', 'geneEnd'
     ])
   }

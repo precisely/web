@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2017-Present, Precise.ly, Inc.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ */
 import { isArray } from 'util';
 
-import {rememberFixtures, destroyFixtures} from 'src/common/fixtures';
-import {AllowedRefVersion} from 'src/common/variant-constraints';
+import {rememberFixtures, destroyFixtures, resetAllTables} from 'src/common/fixtures';
 
 import {Report, calculateReportRequirements} from './models';
 import { PreciselyParser } from './parser';
-import { VariantCallIndexes } from 'src/services/variant-call/types';
 
 describe('Report model', function () {
+  beforeAll(resetAllTables);
+
   describe('findUniqueSlug', function () {
     afterEach(destroyFixtures);
 
@@ -106,19 +106,19 @@ describe('Report model', function () {
       const report = new Report({
         title: 'Report with variant function',
         content: `<AnalysisBox>
-                    <Analysis case={ variant("chr1:g.[10A>T];[10=]") }/>
-                    <Analysis case={ variant("chr2:g.[20A>T];[20=]") }/>
+                    <Analysis case={ variant("chr1.37p13:g.[10A>T];[10=]") }/>
+                    <Analysis case={ variant("chr2.37p13:g.[20A>T];[20=]") }/>
                   </AnalysisBox>`,
         ownerId: 'user123'
       });
       const savedReport = await report.saveAsync();
       rememberFixtures(savedReport);
 
-      const variantCallIndexes = report.get('variantCallIndexes');
-      expect(variantCallIndexes).toBeDefined();
-      expect((<VariantCallIndexes> variantCallIndexes).refIndexes).toEqual([
-        { refName: 'chr1', start: 10, refVersion: AllowedRefVersion },
-        { refName: 'chr2', start: 20, refVersion: AllowedRefVersion }
+      const variantIndexes = report.get('variantIndexes');
+      expect(variantIndexes).toBeDefined();
+      expect(variantIndexes).toEqual([
+        { refName: 'chr1', refVersion: '37p13', start: 10 },
+        { refName: 'chr2', refVersion: '37p13', start: 20 }
       ]);
     });
   });
@@ -127,16 +127,16 @@ describe('Report model', function () {
       it('should collect variants in the __svnVariantRequirements key of the context', function () {
         const parsedContent = PreciselyParser.parse(
           `<AnalysisBox>
-            <Analysis case={ variant("chr1:g.[10A>T];[10=]") }/>
-            <Analysis case={ variant("chr2:g.[20A>T];[20=]") }/>
+            <Analysis case={ variant("chr1.37p13:g.[10A>T];[10=]") }/>
+            <Analysis case={ variant("chr2.37p13:g.[20A>T];[20=]") }/>
           </AnalysisBox>`);
-        const {variantCallIndexes} = calculateReportRequirements(parsedContent);
-        expect(variantCallIndexes).toBeDefined();
-        expect(isArray(variantCallIndexes.refIndexes)).toBeTruthy();
-        expect(variantCallIndexes.refIndexes).toHaveLength(2);
-        expect(variantCallIndexes.refIndexes).toEqual([
-          { refName: 'chr1', start: 10, refVersion: AllowedRefVersion },
-          { refName: 'chr2', start: 20, refVersion: AllowedRefVersion }
+        const {variantIndexes} = calculateReportRequirements(parsedContent);
+        expect(variantIndexes).toBeDefined();
+        expect(isArray(variantIndexes)).toBeTruthy();
+        expect(variantIndexes).toHaveLength(2);
+        expect(variantIndexes).toEqual([
+          { refName: 'chr1', refVersion: '37p13', start: 10 },
+          { refName: 'chr2', refVersion: '37p13', start: 20 }
         ]);
       });
     });

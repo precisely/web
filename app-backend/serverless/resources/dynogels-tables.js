@@ -29,7 +29,6 @@ require('tsconfig-paths').register();
 function buildServerlessResources() {
   const {dynogels, tableNameWithoutStage} = require('src/db/dynamo');
   const {upperFirst, camelCase} = require('lodash');
-  const fs = require('fs');
 
   const DynamoDBReadPermissions = [ 'dynamodb:Query', 'dynamodb:Scan', 'dynamodb:GetItem', 'dynamodb:BatchGetItem' ];
   const DynamoDBWritePermissions = [ 'dynamodb:PutItem', 'dynamodb:BatchPutItem' ];

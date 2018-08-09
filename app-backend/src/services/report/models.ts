@@ -14,13 +14,12 @@ import slugify from 'slugify';
 import {Variant as SVNVariant} from 'seqvarnomjs';
 import {Context, Reducer, ReducibleElement} from 'smart-report';
 
-import {defineModel, types, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
-import {JoiRSId, JoiRefIndex, normalizeReferenceName} from 'src/common/variant-constraints';
-import {RefIndex, VariantCallIndexes} from 'src/services/variant-call/types';
+import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
+import {VariantIndex, JoiVariantIndex, normalizeReferenceName} from 'src/common/variant-tools';
 
 import {PreciselyParser} from './parser';
 import {variant} from './services/personalizer/reducers/functions';
-const {uuid} = types;
+const { uuid } = dynogels.types;
 
 export type ReportState = 'published' | 'draft';
 
@@ -32,7 +31,7 @@ export interface ReportAttributes {
   state?: ReportState;
   content?: string;
   parsedContent?: string;
-  variantCallIndexes?: VariantCallIndexes;
+  variantIndexes?: VariantIndex[];
 }
 
 // Instance methods
@@ -63,10 +62,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     parsedContent: Joi.array().items(Joi.object()).allow(null),
 
     // variant calls needed by this report
-    variantCallIndexes: Joi.object({
-      refIndexes: Joi.array().items(JoiRefIndex).default([]), // variant calls described as refName:start index
-      rsIds: Joi.array().items(JoiRSId).default([]) // or using rsIds
-    })
+    variantIndexes: Joi.array().items(JoiVariantIndex).default([]), // variant calls described as refName:start index
   },
 
   indexes: [{
@@ -150,8 +146,8 @@ Report.listReports = async function ({ state, ownerId}: { state?: ReportState, o
  */
 Report.prototype.updateRequirements = async function updateReportRequirements() {
   const parsedContent: ReducibleElement[] = JSON.parse(this.getValid('parsedContent'));
-  const {variantCallIndexes} = calculateReportRequirements(parsedContent);
-  this.set({variantCallIndexes});
+  const {variantIndexes} = calculateReportRequirements(parsedContent);
+  this.set({variantIndexes});
   this.saveAsync();
   return this;
 };
@@ -162,7 +158,7 @@ Report.prototype.updateRequirements = async function updateReportRequirements() 
  * @param parsedContent 
  */
 export function calculateReportRequirements(parsedContent: ReducibleElement[]
-): { variantCallIndexes: VariantCallIndexes } {
+): { variantIndexes: VariantIndex[] } {
   const context: Context = {};
   const reducer = new Reducer({ 
     functions: { variant },   // every mention of variant will be evaluated
@@ -173,24 +169,24 @@ export function calculateReportRequirements(parsedContent: ReducibleElement[]
   const variantPatterns = context.__reportSVNVariantPatterns || {};
   const rsIds = Object.keys(context.__reportRSIds || {});
   // convert the SVNVariants to RefIndex, which will be used to query for VariantCalls for each user:
-  const resultRefIndexes: RefIndex[] = [];
+  const variantIndexes: VariantIndex[] = [];
   // add unique refIndexes
   for (const svnVariantName in variantPatterns) {
     if (variantPatterns.hasOwnProperty(svnVariantName)) {
       const svnVariant = variantPatterns[svnVariantName];
-      for (const refIndex of svnVariantToRefIndexes(<SVNVariant> svnVariant)) {
-        if (resultRefIndexes.findIndex(rri => refIndexEquals(rri, refIndex)) === -1) {
-          resultRefIndexes.push(refIndex);
+      for (const refIndex of svnVariantToVariantIndexes(<SVNVariant> svnVariant)) {
+        if (variantIndexes.findIndex(rri => refIndexEquals(rri, refIndex)) === -1) {
+          variantIndexes.push(refIndex);
         }
       }
     }
   }
     
-  const result = { variantCallIndexes: { refIndexes: resultRefIndexes, rsIds }};
+  const result = { variantIndexes: variantIndexes };
   return result;
 }
 
-function refIndexEquals(ri1: RefIndex, ri2: RefIndex): boolean {
+function refIndexEquals(ri1: VariantIndex, ri2: VariantIndex): boolean {
   return (
     ri1.refName === ri2.refName && 
     ri1.start === ri2.start &&
@@ -241,7 +237,7 @@ function positionsFromSVNVariant(svnVariant: SVNVariant): number[] {
   });
 }
 
-function svnVariantToRefIndexes(svnVariant: SVNVariant): RefIndex[] {
+function svnVariantToVariantIndexes(svnVariant: SVNVariant): VariantIndex[] {
   const [refName, refVersion] = normalizeReferenceName(svnVariant.ac);
   const positions = positionsFromSVNVariant(svnVariant);
   return positions.map(pos => ({ refName, refVersion, start: pos }));

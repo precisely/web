@@ -24,7 +24,7 @@ export class Personalizer {
   async personalize(): Promise<ReducedElement[]> {
     const parsedContent: ReducibleElement[] = JSON.parse(this.report.getValid('parsedContent')); 
     const context: Context = {};
-    const variantIndexes = this.report.getValid('variantCallIndexes');
+    const variantIndexes = this.report.getValid('variantIndexes');
     const variantCalls = await VariantCall.forUser(this.userId, variantIndexes);
     addVariantCallsToContext(variantCalls, context);
 

@@ -1,29 +1,25 @@
 import { SystemVariantRequirement, SystemVariantRequirementAttributes } from './variant-requirement';
-import { rememberFixtures, destroyFixtures } from 'src/common/fixtures';
-import { AllowedRefVersion } from 'src/common/variant-constraints';
+import { rememberFixtures, destroyFixtures, resetAllTables } from 'src/common/fixtures';
+import { AllowedRefVersion } from 'src/common/variant-tools';
 const cases = require('jest-in-case');
 
 describe('SystemVariantRequirement', function () {
+  beforeAll(resetAllTables);
+
   afterEach(destroyFixtures);
   describe('when saving without providing end and refVersion', async function () {
     let savedSVR: SystemVariantRequirement;
 
     beforeEach(async function () {
       const svr = new SystemVariantRequirement({
-        refName: 'chr1', start: 10
+        refName: 'chr1', refVersion: '37p13', start: 10
       });
       savedSVR = await svr.saveAsync();
       rememberFixtures(savedSVR);
     });
 
-    it('should add default values for end and refVersion on save', function () {
-      
-      expect(savedSVR.getValid('end')).toEqual(11);
-      expect(savedSVR.getValid('refVersion')).toEqual(AllowedRefVersion);
-    });
-    
-    it('should set the id correctly', function () {
-      expect(savedSVR.getValid('id')).toEqual('refIndex:chr1:GRCh37:10:11');
+    it('should set the id correctly', async function () {
+      expect(savedSVR.getValid('id')).toEqual('refIndex:chr1:37p13:10');
     });
   });
 
@@ -32,7 +28,7 @@ describe('SystemVariantRequirement', function () {
 
     beforeEach(async function () {
       const svr = new SystemVariantRequirement({
-        refName: 'chr2', start: 90, end: 95, refVersion: 'GRCh38'
+        refName: 'chr2', start: 90, refVersion: '37p13'
       });
       savedSVR = await svr.saveAsync();
       rememberFixtures(savedSVR);
@@ -41,12 +37,11 @@ describe('SystemVariantRequirement', function () {
     it('should keep the provided values after save', function () {
       expect(savedSVR.getValid('refName')).toEqual('chr2');
       expect(savedSVR.getValid('start')).toEqual(90);
-      expect(savedSVR.getValid('end')).toEqual(95);
-      expect(savedSVR.getValid('refVersion')).toEqual('GRCh38');
+      expect(savedSVR.getValid('refVersion')).toEqual('37p13');
     });
     
     it('should set the id correctly', function () {
-      expect(savedSVR.getValid('id')).toEqual('refIndex:chr2:GRCh38:90:95');
+      expect(savedSVR.getValid('id')).toEqual('refIndex:chr2:37p13:90');
     });
   });
   it('should fail to save if refName is not provided', async function () {
