@@ -7,7 +7,7 @@
     "console": "yarn sls console",
     "deploy": "yarn sls deploy",
     "dynamodb": "yarn sls dynamodb start",
-    "dynamodb:test:offline": "env=test-offline yarn sls dynamodb start",
+    "dynamodb:test:offline": "ENV=test-offline yarn sls dynamodb start",
     "dynamodb:admin": "dynamodb-admin",
     "env": "../config/withenv",
     "log": "scripts/log",
