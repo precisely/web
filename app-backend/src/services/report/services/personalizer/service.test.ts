@@ -23,7 +23,7 @@ describe('Personalizer', function () {
 
       afterAll(destroyFixtures);
 
-      it.only('should personalize the content for a wildtype user', async function() {
+      it('should personalize the content for a wil$dtype user', async function() {
         const personalizer = new Personalizer(report, 'user-wt10');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
