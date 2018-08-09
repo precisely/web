@@ -14,14 +14,14 @@ describe('PreciselyParser', function () {
   
   it('should parse tags with interpolation blocks', function () {
     const elements = PreciselyParser.parse(
-      '<AnalysisBox><Analysis case={ variant("chr1:10A>T") }></Analysis></AnalysisBox>'
+      '<AnalysisBox><Analysis case={ variant("chr1.37p13:10A>T") }></Analysis></AnalysisBox>'
     );
     expect(elements).toBeInstanceOf(Array);
   });
 
   it('should raise tags with interpolation blocks', function () {
     const elements = PreciselyParser.parse(
-      '<AnalysisBox><Analysis case={ variant("chr1:10A>T") }></Analysis></AnalysisBox>'
+      '<AnalysisBox><Analysis case={ variant("chr1.37p13:10A>T") }></Analysis></AnalysisBox>'
     );
     expect(elements).toBeInstanceOf(Array);
   });

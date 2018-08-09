@@ -9,10 +9,11 @@
 import { ExecResult } from 'dynogels';
 import * as Joi from 'joi';
 
+import { ensureProps } from 'src/common/type-tools';
 import {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
-import { JoiStart, JoiRefVersion, JoiRefName, AllowedRefVersion } from 'src/common/variant-constraints';
-
-import {RefIndex, VariantCallIndexes} from './types';
+import { 
+  JoiStart, JoiRefVersion, JoiRefName, JoiNCBIAccession, refToNCBIAccession, VariantIndex
+} from 'src/common/variant-tools';
 
 export class VariantCallAttributes {
   userId?: string;
@@ -60,25 +61,13 @@ class VariantCallMethods {
 class VariantCallStaticMethods {
   async forUser(
     userId: string,
-    { refIndexes, rsIds }: VariantCallIndexes
+    variantIndexes: VariantIndex[]
   ): Promise<VariantCall[]> {
     const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
-    if (refIndexes) {
-      refIndexes.forEach((index: RefIndex) => {
-        const { refName, refVersion, start} = index;
-        if (refName && refVersion && start) {
-          const variantIdStart = `${refName}:${refVersion}:${start}`;
-          queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
-        } else {
-          throw new Error(`Invalid index for Variant: ${index}`);
-        }
-      });
-    }
-    if (rsIds) {
-      rsIds.forEach(rsId => {
-        queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
-      });
-    }
+    variantIndexes.forEach((index: VariantIndex) => {
+      const partialId = makePartialVariantId(index);
+      queries.push(VariantCall.query(userId).where('variantId').beginsWith(partialId).execAsync());
+    });
 
     const execResults = await Promise.all(queries);
     return <VariantCall[]> (execResults.map( 
@@ -115,6 +104,8 @@ export const VariantCall = defineModel<
       //
       // Core VCF data
       //
+      // NCBI accession
+      accession: JoiNCBIAccession,
       // sequence name e.g., chr1...chr22, chrX, chrY, MT
       refName: JoiRefName,
       // the genome version - only GRCh37 for now
@@ -126,7 +117,7 @@ export const VariantCall = defineModel<
       sampleId: Joi.string().required(),
 
       // start index with respect to sequence - must be string for DynamoDB indexing
-      start: JoiStart,
+      start: JoiStart.required(),
       // end index of variant
       end: Joi.number().greater(Joi.ref('start')),
       // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
@@ -178,21 +169,29 @@ export const VariantCall = defineModel<
  * @param next
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
-  const {refName, start, callSetId, genotype } = variantCall;
-  const rsId = variantCall.rsId || '';
-  const end = variantCall.end || '';  
-  const refVersion = variantCall.refVersion || AllowedRefVersion;
-  const variantId = `${refName}:${refVersion}:${start}:${end}:${rsId}:${callSetId}`;
-  if (!genotype) {
-    throw new Error(`Invalid VariantCall parameters - no genotype`);
+  try {
+    const {refName, refVersion, start, sampleType, sampleId, genotype, refBases } = ensureProps(
+      variantCall, 'start', 'genotype', 'sampleType', 'sampleId', 'genotype', 'refName', 'refBases', 'refVersion'
+    );
+    const end = start + refBases.length;  
+    const accession = refToNCBIAccession(refName, refVersion);
+    
+    const variantId = makeVariantId(refName, refVersion, start, end, sampleType, sampleId);
+    const zygosity = zygosityFromGenotype(genotype);
+    next(null, {...variantCall, variantId, zygosity, accession });
+  } catch (e) {
+    next(e);
   }
-  const zygosity = zygosityFromGenotype(genotype);
+}
 
-  if (refVersion !== AllowedRefVersion) {
-    next(new Error(`Invalid refVersion: ${refVersion}`));
-  } else {
-    next(null, {...variantCall, variantId, zygosity});
-  }
+function makeVariantId(
+  refName: string, refVersion: string, start: number, end: number, sampleType: string, sampleId: string
+) {
+  return `${refName}:${refVersion}:${start}:${sampleType}:${sampleId}:${end}`;
+}
+
+function makePartialVariantId({refVersion, refName, start}: VariantIndex) {
+  return `${refName}:${refVersion}:${start}`;
 }
 
 function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined {
@@ -219,34 +218,34 @@ VariantCall.before('update', computeAttributes);
 //
 // STATIC METHOD DEFINITIONS
 //
-VariantCall.forUser = async function forUser(
-  userId: string,
-  { refIndexes, rsIds }: VariantCallIndexes
-): Promise<VariantCall[]> {
+// VariantCall.forUser = async function forUser(
+//   userId: string,
+//   { refIndexes, rsIds }: VariantCallIndexes
+// ): Promise<VariantCall[]> {
   
-  const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
-  if (refIndexes) {
-    refIndexes.forEach((index: RefIndex) => {
-      const { refName, refVersion, start} = index;
-      if (refName && refVersion && start) {
-        const variantIdStart = `${refName}:${refVersion}:${start}`;
-        queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
-      } else {
-        throw new Error(`Invalid index for Variant: ${index}`);
-      }
-    });
-  }
-  if (rsIds) {
-    rsIds.forEach(rsId => {
-      queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
-    });
-  }
+//   const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
+//   if (refIndexes) {
+//     refIndexes.forEach((index: RefIndex) => {
+//       const { refName, refVersion, start} = index;
+//       if (refName && refVersion && start) {
+//         const variantIdStart = `${refName}:${refVersion}:${start}`;
+//         queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
+//       } else {
+//         throw new Error(`Invalid index for Variant: ${index}`);
+//       }
+//     });
+//   }
+//   if (rsIds) {
+//     rsIds.forEach(rsId => {
+//       queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
+//     });
+//   }
 
-  const execResults = await Promise.all(queries);
-  return <VariantCall[]> (execResults.map( 
-    er => (er && er.Count) ? <VariantCall> er.Items[0] : null
-  ).filter(x => !!x));
-};
+//   const execResults = await Promise.all(queries);
+//   return <VariantCall[]> (execResults.map( 
+//     er => (er && er.Count) ? <VariantCall> er.Items[0] : null
+//   ).filter(x => !!x));
+// };
 
 //
 // INSTANCE METHOD DEFINITIONS
