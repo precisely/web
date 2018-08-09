@@ -13,7 +13,7 @@
     "log": "scripts/log",
     "offline": "NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
     "sls": "yarn env sls",
-    "test": "ENV=test-offline yarn jest --runInBand",
+    "test": "ENV=test-offline yarn env jest --runInBand",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "wsd": "scripts/wsd"
   },
