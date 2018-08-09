@@ -25,7 +25,7 @@ Note: currently, refVersion should only be `37p13`.
 ```js
 [
   // valid input response:
-  { data: { variantId: 'chr1.37p13:37p13:10:23andme:b4ccfd7a87a:11', 
+  { data: { variantId: 'chr1:37p13:10:23andme:b4ccfd7a87a:11', 
             refName: 'chr1',  refVersion: '37p13', start: 10, altBases: ['A', 'T'], refBases: 'C',  sampleType: '23andme',
             sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1], createdAt: '...', updatedAt: '...', id: '...', }},
   // invalid input response:
