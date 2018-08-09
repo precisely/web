@@ -1,4 +1,6 @@
-import { refToNCBIAccession, ncbiAccessionToRef, normalizeNCBIAccession, normalizeReferenceName } from 'src/common/variant-tools';
+import { 
+  refToNCBIAccession, ncbiAccessionToRef, normalizeNCBIAccession, normalizeReferenceName 
+} from 'src/common/variant-tools';
 
 describe('variant-tools', function () {
   describe('refToNCBIAccession', function () {
