@@ -8,6 +8,7 @@
 		}
 	],
 	"settings": {
+		"jest.pathToJest": ".vscode/jest",
 		"search.exclude": {
 			"**/node_modules": true,
 			"**/bower_components": true,
