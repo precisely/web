@@ -25,10 +25,24 @@ export function makeContext({ userId, roles }: {userId?: string, roles?: string[
 
 export function makeEvent({
   authorizer = { principalId: '', roles: ''},
-  headers = { Authorization: 'Bearer abcd' }
+  headers = { Authorization: 'Bearer abcd' },
+  body = '',
+  path = '/graphql',
+  requestId = 'req-id-123',
+  httpMethod = 'POST',
+  resourcePath = '/graphql',
+  resourceId = 'resource-id-123',
+  resource = '/graphql'
 }: {
   authorizer?: AuthResponseContext,
-  headers?: { [name: string]: string }
+  headers?: { [name: string]: string },
+  body?: string,
+  resourcePath?: string,
+  requestId?: string,
+  path?: string,
+  resource?: string,
+  httpMethod?: string,
+  resourceId?: string
 }): APIGatewayEvent {
   const requestContext: APIGatewayEventRequestContext = {
     accountId: '1234',
@@ -51,23 +65,23 @@ export function makeEvent({
       userArn: ''
     },
     stage: '',
-    requestId: 'req123',
+    requestId,
     requestTimeEpoch: 123123123,
-    resourceId: 'resource123',
-    resourcePath: '/api',
+    resourceId,
+    resourcePath,
 
   };
   const event: APIGatewayEvent = {
-    body: 'the body',
+    body,
     headers,
-    httpMethod: 'POST',
+    httpMethod,
+    path,
+    resource,
     isBase64Encoded: false,
-    path: '/api',
     stageVariables: {},
     pathParameters: null,
     queryStringParameters: null,
     requestContext: requestContext,
-    resource: '/api'
   };
   return event;
 }

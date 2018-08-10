@@ -67,7 +67,7 @@ export const playgroundHandler: Handler = function (event: APIGatewayEvent, cont
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
   const log = makeLogger(context.awsRequestId);
   log.debug('APIGateway event: %j, context: %j', event, context);
-  const callbackFilter = function (error: Error, output: any ) {
+  const callbackFilter = function (error: Error, output?: any ) {
     if (output) {
       output.headers = output.headers || {};
       Object.assign(output.headers, {
@@ -79,5 +79,9 @@ function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, ca
     callback(error, output);
   };
 
-  handler(event, context, callbackFilter);
+  try {
+    return handler(event, context, callbackFilter);
+  } catch (e) {
+    return callbackFilter(e);
+  }
 }

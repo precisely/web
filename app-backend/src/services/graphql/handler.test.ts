@@ -25,11 +25,36 @@ describe('graphql handlers', function () {
       expect(typeof apiHandler).toBe('function');
     });
 
-    it('should call the graphqlLambda function', (done) => {
+    it('should callback with an error result if the query is empty', (done) => {
       apiHandler(
-        makeEvent({ authorizer: { principalId: 'userId', roles: 'user' }}),
+        makeEvent({ authorizer: { principalId: 'userId', roles: 'user' }, body: '{ "query": "" }'}),
         makeLambdaContext({ awsRequestId: 'request-id'}),
         (error, result) => {
+          expect(error).toBeFalsy();
+          expect(result).toBeDefined();
+          let parsedResult;
+          expect(() => parsedResult = JSON.parse(result.body)).not.toThrow();
+          expect(parsedResult).toMatchObject({
+            errors: [{ message: /.*EOF.*/}]
+          });
+          done();
+        }
+      );
+    });
+
+    it('should callback with a valid result when provided a query ', (done) => {
+      apiHandler(
+        makeEvent({ authorizer: { principalId: 'userId', roles: 'user' }, 
+                    body: '{ "query": "{ __schema { types { name } } }" }'}),
+        makeLambdaContext({ awsRequestId: 'request-id'}),
+        (error, result) => {
+          expect(error).toBeFalsy();
+          expect(result).toBeDefined();
+          let parsedResult = JSON.parse(result.body);
+          expect(parsedResult.errors).toBeUndefined();
+          expect(parsedResult.data).toBeDefined();
+          expect(parsedResult.data.__schema).toBeDefined();
+          expect(parsedResult.data.__schema.types).toBeDefined();
           done();
         }
       );
