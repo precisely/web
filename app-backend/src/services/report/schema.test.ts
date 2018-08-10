@@ -1,3 +1,4 @@
+// tslint:disable no-any
 /*
 * Copyright (c) 2017-Present, Precise.ly, Inc.
 * All rights reserved.
@@ -6,7 +7,7 @@
 * without modification, are not permitted.
 */
 // tslint:disable no-any
-import { graphql } from 'graphql';
+import { graphql, GraphQLSchema } from 'graphql';
 import {
   makeExecutableSchema,
   addMockFunctionsToSchema
@@ -14,22 +15,27 @@ import {
 const cases = require('jest-in-case');
 import { Report } from './models';
 
-const typeDefs = require('src/services/schema.graphql');
+import typeDefs from 'src/services/schema';
     
 // mocked schema tests according to https://www.apollographql.com/docs/graphql-tools/mocking.html
 describe('Report schema', function () {
-  const mockSchema = makeExecutableSchema({ typeDefs });
   
-  // Here we specify the return payloads of mocked types
-  addMockFunctionsToSchema({
-    schema: mockSchema,
-    mocks: {
-      Int: () => 1,
-      Float: () => 2.2,
-      String: () => 'str',
-      Report: () => new Report({}),
-      JSON: () => [{type: 'JSON'}]
-    }
+  let mockSchema: GraphQLSchema;
+  
+  beforeEach(() => {
+    mockSchema = makeExecutableSchema({ typeDefs });
+  
+    // Here we specify the return payloads of mocked types
+    addMockFunctionsToSchema({
+      schema: mockSchema,
+      mocks: {
+        Int: () => 1,
+        Float: () => 2.2,
+        String: () => 'str',
+        Report: () => new Report({}),
+        JSON: () => [{type: 'JSON'}]
+      }
+    });
   });
 
   cases('should allow querying for reports', async (query: string) => {

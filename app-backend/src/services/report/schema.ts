@@ -1,3 +1,6 @@
+import gql from 'graphql-tag';
+
+export default [gql`
 type Report {
   id: String,
   ownerId: String,
@@ -24,4 +27,4 @@ extend type Query {
 extend type Mutation {
   createReport(slug: String!, title: String!, content: String!, genes: [String]): Report,
   updateReport(slug: String!, title: String!, content: String!, genes: [String]): Report,
-}
+}`];

@@ -31,7 +31,7 @@ function userIdArgumentIsUser({user, args}: IContext) {
 accessControl
   .grant('user')
     .resource('report')
-      .read.onFields('*', '!content', '!variantCallIndexes', '!personalization').where(reportPublished)
+      .read.onFields('*', '!content', '!variantIndexes', '!personalization').where(reportPublished)
       .read.onFields('personalization').where(userIdArgumentIsUser)
   .grant('author')
     .resource('report')
@@ -106,8 +106,8 @@ export const resolvers = {
       ownerId: 'ownerId',
       slug: 'slug',
       title: 'title',
-      content: 'content',
-      variantCallIndexes: 'variantIndexes'
+      content: 'content'
+      // variantIndexes: 'variantIndexes'
     }), 
     ...GraphQLContext.propertyResolver('report', {
       personalization(
