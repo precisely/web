@@ -1,8 +1,0 @@
-
-type UserProfile {
-  id: String,
-  userId: String,
-  authorId: String,
-  firstName: String,
-  lastName: String
-}
