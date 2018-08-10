@@ -9,7 +9,6 @@
 // SystemVariantRequirements represents the variant calls that
 // need to be pulled from 
 import * as Joi from 'joi';
-import { isNumber } from 'util';
 
 import {defineModel, ListenerNextFunction, ModelInstance } from 'src/db/dynamo/dynogels';
 import { JoiStart, JoiRefVersion, JoiRefName, VariantIndex, refToNCBIAccession } from 'src/common/variant-tools';
