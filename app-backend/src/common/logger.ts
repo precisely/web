@@ -6,7 +6,7 @@
  * without modification, are not permitted.
  */
 
- import {isArray} from 'util';
+import {isArray} from 'util';
 import {isOffline} from 'src/common/environment';
 
 const winston = require('winston');
