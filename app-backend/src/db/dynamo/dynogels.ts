@@ -23,11 +23,12 @@ if (isOffline) {
   }, true);
 
   if (!inServerlessProcess) {
-    log.info(`Using offline dynamodb at ${dynamoEndpoint}`);
+    // log at silly level if ENV=test-offline
+    log[process.env.ENV === 'test-offline' ? 'silly' : 'info'](`Using offline dynamodb at ${dynamoEndpoint}`);
   }
 } else {
   if (!inServerlessProcess) {
-    log.info(`Using AWS cloud hosted DynamoDB`);
+    log.silly(`Using AWS cloud hosted DynamoDB`);
     // To improve the efficiency of DynamoDB requests
     dynogels.AWS.config.update({
       httpOptions: {
@@ -44,7 +45,7 @@ let stage: string | undefined;
 export function stageTableName(tableName: string): string {
   stage = stage || process.env.STAGE;
   if (!stage) {
-    log.warn('STAGE environment variable not set, using STAGE=test');
+    log.silly('STAGE environment variable not set, using STAGE=test');
     stage = 'test';
   }
   return `${stage}-${tableName}`;

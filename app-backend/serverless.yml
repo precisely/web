@@ -124,11 +124,9 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
-      test: jest -t "$TEST" --runInBand
-      test:watch: jest --watch -t "$TEST" --runInBand
-      test:coverage: jest --coverage --runInBand
       env: env
-
+      test: jest -t "$TEST" --runInBand
+      test:coverage: jest -t "$TEST" --runInBand --coverage
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}
 
