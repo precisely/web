@@ -102,7 +102,7 @@ describe('Report model', function () {
   describe('saving content containing variants', function () {
     afterEach(destroyFixtures);
 
-    it('should have variantCallIndexes set correctly', async function () {
+    it('should have variantIndexes set correctly', async function () {
       const report = new Report({
         title: 'Report with variant function',
         content: `<AnalysisBox>
