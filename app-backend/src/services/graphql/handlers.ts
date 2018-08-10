@@ -14,10 +14,10 @@ import {graphqlLambda} from 'apollo-server-lambda';
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
 
-import preciselyTypeDefs from 'src/services/schema.graphql';
 import {resolvers} from 'src/services/resolvers';
-import {makeLogger} from 'src/common/logger';
+import { makeLogger, Logger } from 'src/common/logger';
 import { GraphQLContext } from './graphql-context';
+import preciselyTypeDefs from 'src/services/schema';
 
 export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
   const log = makeLogger(context.awsRequestId);
@@ -44,15 +44,16 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
   });
 };
 
-const PlaygroundHTMLTitle = (process.env.STAGE !== 'prod' ?
-`${process.env.STAGE}:Precise.ly GraphQL Playground`
-: `Precise.ly GraphQL Playground`
-);
+export function playgroundTitle(stage?: string) {
+  return stage !== 'prod' 
+    ? `${stage}:Precise.ly GraphQL Playground`
+    : `Precise.ly GraphQL Playground`;
+} 
 
 export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
   const handler = lambdaPlayground({
     endpoint: process.env.GRAPHQL_API_PATH,
-    htmlTitle: PlaygroundHTMLTitle
+    htmlTitle: playgroundTitle(process.env.STAGE)
   });
   withCORS(handler, event, context, callback);
 };

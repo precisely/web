@@ -14,7 +14,7 @@ import {
 const cases = require('jest-in-case');
 import { Report } from './models';
 
-const typeDefs = require('src/services/schema.graphql');
+const typeDefs = require('src/services/schema');
     
 // mocked schema tests according to https://www.apollographql.com/docs/graphql-tools/mocking.html
 describe('Report schema', function () {

@@ -1,8 +1,0 @@
-#import "./variant-call/schema.graphql"
-#import "./report/schema.graphql"
-
-type Query
-
-type Mutation
-
-scalar JSON

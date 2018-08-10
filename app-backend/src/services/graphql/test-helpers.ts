@@ -72,14 +72,15 @@ export function makeEvent({
   return event;
 }
 
-export function makeLambdaContext(): LambdaContext {
+export function makeLambdaContext(args: Partial<LambdaContext> = {}): LambdaContext {
   return {
+    functionName: '', 
+    awsRequestId: '',
     callbackWaitsForEmptyEventLoop: false,
-    functionName: '',
+
     functionVersion: '',
     invokedFunctionArn: '',
     memoryLimitInMB: 100,
-    awsRequestId: '',
     logGroupName: '',
     logStreamName: '',
     // identity?: CognitoIdentity;
@@ -92,5 +93,6 @@ export function makeLambdaContext(): LambdaContext {
     fail(error: Error | string): void {},
     succeed(messageOrObject: any): void {},
     // succeed(message: string, object: any): void {}
+    ...args
   };
 }
