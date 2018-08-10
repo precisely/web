@@ -13,7 +13,7 @@ import { CustomAuthorizerEvent } from 'aws-lambda';
 import { Logger } from 'src/common/logger';
 
 // extract and return the Bearer Token from the Lambda event parameters
-function getToken(event: CustomAuthorizerEvent): string {
+export function getToken(event: CustomAuthorizerEvent): string {
   if (!event.type || event.type !== 'REQUEST') {
     throw new Error(`Expected event.type parameter to have value REQUEST`);
   }

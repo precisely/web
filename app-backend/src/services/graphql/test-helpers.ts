@@ -26,6 +26,7 @@ export function makeContext({ userId, roles }: {userId?: string, roles?: string[
 export function makeEvent({
   authorizer = { principalId: '', roles: ''},
   headers = { Authorization: 'Bearer abcd' },
+  type = 'REQUEST',
   body = '',
   path = '/graphql',
   requestId = 'req-id-123',
