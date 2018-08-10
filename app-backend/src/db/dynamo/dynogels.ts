@@ -23,7 +23,8 @@ if (isOffline) {
   }, true);
 
   if (!inServerlessProcess) {
-    log.silly(`Using offline dynamodb at ${dynamoEndpoint}`);
+    // log at silly level if ENV=test-offline
+    log[process.env.ENV === 'test-offline' ? 'silly' : 'info'](`Using offline dynamodb at ${dynamoEndpoint}`);
   }
 } else {
   if (!inServerlessProcess) {
