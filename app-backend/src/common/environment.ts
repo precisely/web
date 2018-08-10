@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ * @Author: Aneil Mallavarapu 
+ * @Date: 2018-08-10 09:51:54 
+ * @Last Modified by:   Aneil Mallavarapu 
+ * @Last Modified time: 2018-08-10 09:51:54 
+ */
 
 // yes, this is duplicative of what is in common.js, but I am paranoid
 export const isOffline = !process.env.STAGE || !/^(no|0|false|)$/i.test(process.env.IS_OFFLINE || '');

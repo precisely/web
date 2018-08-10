@@ -1,17 +1,21 @@
 /*
-* Copyright (c) 2017-Present, Precise.ly, Inc.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ * @Author: Aneil Mallavarapu 
+ * @Date: 2018-08-10 09:49:49 
+ * @Last Modified by:   Aneil Mallavarapu 
+ * @Last Modified time: 2018-08-10 09:49:49 
+ */
 
 // SystemVariantRequirements represents the variant calls that
 // need to be pulled from 
 import * as Joi from 'joi';
 
 import {defineModel, ListenerNextFunction, ModelInstance } from 'src/db/dynamo/dynogels';
-import { JoiStart, JoiRefVersion, JoiRefName, VariantIndex, refToNCBIAccession } from 'src/common/variant-tools';
+import { JoiStart, JoiRefVersion, JoiRefName, VariantIndex } from 'src/common/variant-tools';
 import { ensureProps } from 'src/common/type-tools';
 
 export enum SystemVariantRequirementStatus {

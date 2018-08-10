@@ -1,5 +1,3 @@
-import {isArray} from 'util';
-import {isOffline} from 'src/common/environment';
 /*
  * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -7,6 +5,9 @@ import {isOffline} from 'src/common/environment';
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  */
+
+ import {isArray} from 'util';
+import {isOffline} from 'src/common/environment';
 
 const winston = require('winston');
 const { format } = winston;
