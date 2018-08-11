@@ -120,6 +120,14 @@ describe('SystemService', function () {
   });
 
   describe('addNewRequirementsFromReports', function () {
+    it('should create no variants if there are no reports', async function () {
+      const {Count: reportCount} = await Report.scan().execAsync();
+      expect(reportCount).toEqual(0);
+      await SystemService.addNewVariantRequirementsFromReports();
+      const svrs = await SystemVariantRequirement.scan().execAsync();
+      expect(svrs.Count).toEqual(0);
+    });
+    
     it('should create SystemVariantRequirement entries based on variants mentioned in reports', async function () {
       await addFixtures(
         reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]']),
