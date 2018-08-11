@@ -16,39 +16,33 @@ import {makeLogger} from 'src/common/logger';
 import { SystemService } from './service';
 import { SystemVariantRequirementAttributes, SystemVariantRequirementStatus } from './models';
 
-export const addNewVariantRequirementsFromReports: Handler = (
-  event: any, context: Context, callback: Callback
+export const addNewVariantRequirementsFromReports: Handler = async (
+  event: any, context: Context
 ) => {
   const log = makeLogger(context.awsRequestId);
   log.info('system.addNewRequirementFromReport EVENT: %j\t\tCONTEXT: %j', event, context);
 
-  SystemService.addNewVariantRequirementsFromReports()
-    .then(result => callback(null, result))
-    .catch(error => callback(error));
+  return await SystemService.addNewVariantRequirementsFromReports(log);
 };
 
-export const updateVariantRequirementStatuses: Handler = (
-  event: SystemVariantRequirementAttributes[], context: Context, callback: Callback
+export const updateVariantRequirementStatuses: Handler = async (
+  event: SystemVariantRequirementAttributes[], context: Context
 ) => {
   const log = makeLogger(context.awsRequestId);
   log.info('system.updateVariantRequirementStatuses EVENT: %j\t\tCONTEXT: %j', event, context);
   if (!isArray(event)) {
-    callback(new Error(
+    throw new Error(
       `Lambda method updateVariantRequirementStatuses must be invoked with array, but received ${event}`
-    ));
+    );
   } else {
-    SystemService.updateVariantRequirementStatuses(event)
-      .then(result => callback(null, result))
-      .catch(error => callback(error));
+    return await SystemService.updateVariantRequirementStatuses(event, log);
   }
 };
 
-export const getVariantRequirements: Handler = (
-  event: SystemVariantRequirementStatus, context: Context, callback: Callback
+export const getVariantRequirements: Handler = async (
+  event: SystemVariantRequirementStatus, context: Context
 ) => {
   const log = makeLogger(context.awsRequestId);
   log.info('system.getVariantRequirements EVENT: %j\t\tCONTEXT: %j', event, context);
-  SystemService.getVariantRequirements(event)
-    .then(result => callback(null, result))
-    .catch(error => callback(error));
+  return await SystemService.getVariantRequirements(event, log);
 };

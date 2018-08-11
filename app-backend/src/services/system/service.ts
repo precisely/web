@@ -6,6 +6,7 @@ import {
 import { Report } from 'src/services/report';
 import { batchCreate, batchUpdate } from 'src/db/dynamo';
 import { VariantIndex } from 'src/common/variant-tools';
+import { log, Logger } from 'src/common/logger';
 
 export type BatchItem<T> = { data: T, error?: string };
 
@@ -14,13 +15,19 @@ export class SystemService {
    * Read all reports and add any new variant requirements to the SystemVariantRequirement table
    * Returns a list of attributes representing SystemVariantRequirement objects
    */
-  static async addNewVariantRequirementsFromReports() {
-    const refIndexes = await SystemService.collectVariantIndexes();
-    return await SystemService.addVariantRequirements(refIndexes);
+  static async addNewVariantRequirementsFromReports(logger: Logger = log) {
+    logger.debug('SystemService.addNewVariantRequirementsFromReports collectVariantIndexes');
+    const variantIndexes = await SystemService.collectVariantIndexes();
+    logger.debug('SystemService.addNewVariantRequirementsFromReports collected %d variantIndexes: %j', 
+      variantIndexes.length, variantIndexes);
+    const result =  await SystemService.addVariantRequirements(variantIndexes);
+    logger.debug('SystemService.addNewVariantRequirementsFromReports added %d SystemVariantRequirements: %j', result);
+    return result;
   }
 
   static async updateVariantRequirementStatuses(
-    attrList: SystemVariantRequirementAttributes[]
+    attrList: SystemVariantRequirementAttributes[],
+    logger: Logger = log
   ): Promise<{ variantRequirements: BatchItem<SystemVariantRequirementAttributes>[]}> {
     const normalizedAttrs = attrList.map(attrs => {
       const result = { ...attrs, id: SystemVariantRequirement.makeId(attrs) };
@@ -34,7 +41,8 @@ export class SystemService {
   }
 
   static async getVariantRequirements(
-    status: SystemVariantRequirementStatus = SystemVariantRequirementStatus.new
+    status: SystemVariantRequirementStatus = SystemVariantRequirementStatus.new,
+    logger: Logger = log
   ): Promise<SystemVariantRequirementAttributes[]> {
     const result = await SystemVariantRequirement.query(status).usingIndex('statusIndex').execAsync();
     return result ? result.Items.map(r => r.get()) : [];
