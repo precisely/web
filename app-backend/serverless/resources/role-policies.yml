@@ -39,8 +39,8 @@ PreciselyDataManagerPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.write}
 
-IngestionECSTaskPolicy:
-  PolicyName: ${self:provider.stage}-PreciselyIngestionECSTaskPolicy
+BioinformaticsECSTaskPolicy:
+  PolicyName: ${self:provider.stage}-PreciselyBioinformaticsECSTaskPolicy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:

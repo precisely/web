@@ -1,23 +1,23 @@
 ---
-IngestionECSCluster:
-  Type: "AWS::ECS::Cluster"
+BioinformaticsECSCluster:
+  Type: AWS::ECS::Cluster
   Properties:
-    ClusterName: ${self:custom.vars.ingestionClusterName}
+    ClusterName: ${self:custom.vars.bioinformaticsClusterName}
 
-IngestionECSTaskDefinition:
-  Type: "AWS::ECS::TaskDefinition"
+BioinformaticsECSTaskDefinition:
+  Type: AWS::ECS::TaskDefinition
   Properties:
     ExecutionRoleArn:
-      Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
+      Fn::GetAtt: [SystemRole, Arn]
     TaskRoleArn:
-      Fn::GetAtt: [IngestionECSTaskRole, 'Arn']
-    Family: ${self:custom.vars.ingestionECSTaskDefinitionName}
+      Fn::GetAtt: [SystemRole, Arn]
+    Family: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
     NetworkMode: awsvpc
     Memory: 512
     Cpu: 256
     ContainerDefinitions:
       -
-        Name: ${self:custom.vars.ingestionContainerName}
+        Name: ${self:custom.vars.bioinformaticsContainerName}
         Memory: 512
         Cpu: 256
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
@@ -25,25 +25,24 @@ IngestionECSTaskDefinition:
             LogDriver: awslogs
             Options:
               awslogs-group:
-                Ref: IngestionECSLogs
+                Ref: BioinformaticsECSLogs
               awslogs-region:
                 Ref: AWS::Region
               awslogs-stream-prefix: ${self:provider.stage}-ecs
     RequiresCompatibilities:
       - FARGATE
 
-IngestionECSService:
-  Type: "AWS::ECS::Service"
+BioinformaticsECSService:
+  Type: AWS::ECS::Service
   Properties:
     Cluster:
-      Ref: IngestionECSCluster
-    ServiceName: ${self:provider.stage}-IngestionECSService
+      Ref: BioinformaticsECSCluster
+    ServiceName: ${self:provider.stage}-BioinformaticsECSService
     TaskDefinition:
-      Ref: IngestionECSTaskDefinition
+      Ref: BioinformaticsECSTaskDefinition
     DesiredCount: 0
     LaunchType: FARGATE
     NetworkConfiguration:
       AwsvpcConfiguration:
         Subnets:
-          - Ref: DefaultSubnetOne
-          - Ref: DefaultSubnetTwo
+          - ${self:custom.vars.fullSubnetId}
