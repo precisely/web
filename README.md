@@ -143,6 +143,14 @@ For subsequent deployments use:
 yarn deploy
 ```
 
+To delete a deployment, use:
+
+```shell
+yarn deploy:delete # remove all resources, including 
+```
+
+If you do this, you must `yarn:deploy:new` to use the stage again.
+
 ##### Running backend tests
 
 ```shell
