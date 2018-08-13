@@ -15,20 +15,14 @@ import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';
 import {isOffline} from 'src/common/environment';
 
-export const apiAuthorizer: CustomAuthorizerHandler = (
-  event: CustomAuthorizerEvent,
-  context: Context,
-  callback: CustomAuthorizerCallback
-): void => {
+export const apiAuthorizer: CustomAuthorizerHandler = async (event: CustomAuthorizerEvent, context: Context) => {
   const log = makeLogger(context.awsRequestId);
-  makeUserPolicy(event, context)
-  .then(result => {
-    callback(null, result);
-  })
-  .catch(err => {
-    log.info('apiAuthorizer: %s', err);
-    callback(err);
-  });
+  try {
+    return await makeUserPolicy(event, context);
+  } catch (e) {
+    log.info('apiAuthorizer: %s', e);
+    throw e;
+  }
 };
 
 function offlineAuthentication(event: CustomAuthorizerEvent): Auth0AuthenticationResult {
