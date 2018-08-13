@@ -198,16 +198,19 @@ functions:
   SysAddNewVariantRequirementsFromReports:
     role: SystemRole
     handler: src/services/system/handlers.addNewVariantRequirementsFromReports
+    timeout: 120
       
   SysUpdateVariantRequirementStatuses:
     role: SystemRole
     handler: src/services/system/handlers.updateVariantRequirementStatuses
+    timeout: 120
     
   SysGetVariantRequirements:
     role: SystemRole
     handler: src/services/system/handlers.getVariantRequirements
+    timeout: 120
 
   VariantCallBatchCreate:
     role: SystemRole
     handler: src/services/variant-call/handlers.batchCreate
-    
+    timeout: 120
