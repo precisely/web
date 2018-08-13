@@ -123,47 +123,25 @@ We set up one Auth0 tenant per AWS account. You'll need to create one applicatio
 
 Copy the React app client id and create an entry in `serverless/common.js`.
 
-#### Set up your subdomain and resources
+#### Set up your stage
 
 ##### Backend
 
 1. Set `STAGE`, and other variables in `config/default.env`, as per the instructions in that folder (see [`README.md`](config/README.md) and [`config/default.env.sample`](config/default.env.sample))
 
-2. Create the subdomain domain:
+2. Run first time deployment script
   ```shell
   cd app-backend
-  yarn sls create_domain
+  yarn sls deploy:new # only needed when you first create a stage
   ```
 
-3. Temporarily comment out the serverless-domain-manager plugin in `app-backend/serverless.yml`:
+You should be able to access the API at `https://{stage}.codeprecisely.net/graphql`
 
-  ```yaml
-  plugins:
-    # - serverless-domain-manager
-    - ...
-  ```
+For subsequent deployments use:
 
-  This is necessary because of [an incompatibility](https://github.com/leftclickben/serverless-api-stage/issues/12 ) beween serverless-domain-manager and the APIGateway logging plugin, serverless-api-stage during initial deployment.
-
-4. Do you first deployment:
-    ```shell
-    yarn deploy
-    ```
-
-5. Uncomment the line from (3) and redeploy
-  ```yaml
-    # app-backend/serverless.yml
-    plugins:
-      # - serverless-domain-manager
-      - ...
-  ```
-  ```shell
-  yarn deploy
-  ```
-
-  You should be able to access the API at `https://{stage}.codeprecisely.net/graphql`
-
-After you do this, you can make changes and simple call `yarn deploy`.
+```shell
+yarn deploy
+```
 
 ##### Running backend tests
 

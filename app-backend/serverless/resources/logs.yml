@@ -1,4 +1,4 @@
-IngestionECSLogs:
+BioinformaticsECSLogs:
   Type: AWS::Logs::LogGroup
   Properties:
-    LogGroupName: /aws/ecs/${self:provider.stage}-precisely-ingestion
+    LogGroupName: /aws/ecs/${self:provider.stage}-precisely-bioinformatics

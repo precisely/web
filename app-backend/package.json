@@ -5,6 +5,8 @@
   "scripts": {
     "build": "yarn sls webpack",
     "console": "yarn sls console",
+    "deploy:new": "yarn sls create_domain && yarn deploy && tput setaf 6 && echo \"New domains may take up to 40 minutes to be initialized.\n\" && tput setaf sgr0",
+    "deploy:delete": "scripts/guard-prod && yarn sls remove && yarn sls delete_domain",
     "deploy": "yarn sls deploy",
     "dynamodb": "yarn sls dynamodb start",
     "dynamodb:test:offline": "ENV=test-offline yarn sls dynamodb start",
@@ -110,6 +112,7 @@
     "serverless-api-stage": "^1.3.0",
     "serverless-domain-manager": "^2.3.6",
     "serverless-offline": "^3.25.4",
+    "serverless-plugin-bind-deployment-id": "^1.0.1",
     "serverless-plugin-scripts": "https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz",
     "serverless-pseudo-parameters": "^1.6.0",
     "serverless-webpack": "^5.2.0",

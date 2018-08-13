@@ -8,10 +8,10 @@ S3BucketGeneticsVCF:
   Properties:
     BucketName: ${self:custom.vars.geneticsVCFBucket}
 
-S3BucketIngestionError:
+S3BucketBioinformaticsError:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:custom.vars.ingestionErrorBucket}
+    BucketName: ${self:custom.vars.bioinformaticsErrorBucket}
 
 RawDataUploadLambdaPermission:
   Type: AWS::Lambda::Permission

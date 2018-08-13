@@ -32,7 +32,7 @@ provider:
     # S3 buckets
     S3_BUCKET_GENETICS_VCF: ${self:custom.vars.geneticsVCFBucket}
     S3_BUCKET_USER_UPLOAD: ${self:custom.vars.userUploadBucket}
-    S3_BUCKET_INGESTION_ERROR: ${self:custom.vars.ingestionErrorBucket}
+    S3_BUCKET_INGESTION_ERROR: ${self:custom.vars.bioinformaticsErrorBucket}
 
     BASE_DOMAIN: ${self:custom.common.baseDomain} # the root domain, adjusted for developer environments
     GRAPHQL_API_PATH: ${self:custom.common.graphQLAPIPath}
@@ -53,24 +53,14 @@ resources:
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/s3-buckets.yml)}
   - Resources: ${file(./serverless/resources/logs.yml)}
-  - Resources: ${file(./serverless/resources/ecs-fargate.yml)}
-  - Resources: ${file(./serverless/resources/network/subnet.yml)}
-  - Resources: ${file(./serverless/resources/network/routes.yml)}
-  - Resources: ${file(./serverless/resources/network/gateway.yml)}
-
+  - Resources: ${file(./serverless/resources/bioinformatics-ecs.yml)}
+  - Resources: ${file(./serverless/resources/apigateway-stage.yml)}
+  
 plugins:
-  # You'll need to comment out the severless-domain-manager plugin on the first deploy:
-  # 1. yarn sls create_domain
-  # 2. comment out the serverless-domain-manager plugin
-  # 3. yarn deploy
-  # 4. uncomment the plugin
-  # 5. yarn deploy
-  # This is likely related to this issue: https://github.com/serverless/serverless/issues/4029#issuecomment-319984929
   - serverless-domain-manager
+  - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
-  - serverless-api-stage
   - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
-  - serverless-pseudo-parameters
   - serverless-plugin-scripts
   - serverless-offline # serverless-offline must be last in the list
 
@@ -82,6 +72,12 @@ custom:
     authorizerTTLMap:
       dev: 0
       default: 300
+
+    fullSubnetId: ${self:custom.vars.fullSubnetIdMap.${self:custom.common.account}}
+    fullSubnetIdMap: 
+      dev: subnet-0c24e47887ea829f2
+      stage: not-yet-provisioned-see-serverless-yml # TODO: manually generate PreciselyDefaultVPC and FullSubnet-PreciselyDefaultVPC
+      prod: not-yet-provisioned-see-serverless-yml  #       ditto for prod
 
     nodeEnv: ${env:NODE_ENV, self:custom.vars.nodeEnvMap.${self:custom.common.account}}
     nodeEnvMap:
@@ -99,12 +95,12 @@ custom:
     # S3 resource names
     geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
     userUploadBucket: ${self:provider.stage}-precisely-user-upload
-    ingestionErrorBucket: ${self:provider.stage}-precisely-ingestion-error
+    bioinformaticsErrorBucket: ${self:provider.stage}-precisely-bioinformatics-error
 
-    # Ingestion ECS Fargate Task
-    ingestionECSTaskDefinitionName: ${self:provider.stage}-IngestionECSTaskDefinition
-    ingestionContainerName: ${self:provider.stage}-IngestionContainerName
-    ingestionClusterName: ${self:provider.stage}-IngestionECSClusterName
+    # Bioinformatics ECS Fargate Task
+    bioinformaticsECSTaskDefinitionName: ${self:provider.stage}-BioinformaticsECSTaskDefinition
+    bioinformaticsContainerName: ${self:provider.stage}-BioinformaticsContainerName
+    bioinformaticsClusterName: ${self:provider.stage}-BioinformaticsECSClusterName
 
   customDomain: # domain-manager settings - for the api
     domainName: ${self:custom.common.apiDomain}
@@ -183,13 +179,10 @@ functions:
     role: SystemRole
     handler: src/services/genetics-pipeline/handlers.rawDataUpload
     environment:
-      INGESTION_CLUSTER: ${self:custom.vars.ingestionClusterName}
-      INGESTION_TASK_NAME: ${self:custom.vars.ingestionECSTaskDefinitionName}
-      INGESTION_CONTAINER_NAME: ${self:custom.vars.ingestionContainerName}
-      SUBNET_ONE:
-        Ref: DefaultSubnetOne
-      SUBNET_TWO:
-        Ref: DefaultSubnetTwo
+      INGESTION_CLUSTER: ${self:custom.vars.bioinformaticsClusterName}
+      INGESTION_TASK_NAME: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
+      INGESTION_CONTAINER_NAME: ${self:custom.vars.bioinformaticsContainerName}
+      FULL_SUBNET: FullSubnet-PreciselyDefaultVPC # manually created
     events:
       - s3:
           bucket: UserUpload

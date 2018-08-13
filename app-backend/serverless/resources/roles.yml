@@ -59,10 +59,10 @@ SystemRole:
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
         
-IngestionECSTaskRole:
+BioinformaticsECSTaskRole:
   Type: AWS::IAM::Role 
   Properties: 
-    RoleName: ${self:provider.stage}-PreciselyIngestionECSTaskRole
+    RoleName: ${self:provider.stage}-PreciselyBioinformaticsECSTaskRole
     AssumeRolePolicyDocument: 
       <<: *DefaultAssumeRolePolicyDocument
       Statement:
@@ -75,7 +75,7 @@ IngestionECSTaskRole:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
       - arn:aws:iam::aws:policy/AmazonSESFullAccess
     Policies:
-      - ${file(./serverless/resources/role-policies.yml):IngestionECSTaskPolicy}
+      - ${file(./serverless/resources/role-policies.yml):BioinformaticsECSTaskPolicy}
 
 UserUploadLambdaRole:
   Type: AWS::IAM::Role
