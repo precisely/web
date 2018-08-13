@@ -72,6 +72,6 @@ UserUploadPolicy: # for issuing time-limited tokens which for uploading to S3
           - s3:*
         Resource: 
           # presigned URL permission requires bucket & object access
-          - arn:aws:s3:::${self:custom.vars.userUploadBucket}
-          - arn:aws:s3:::${self:custom.vars.userUploadBucket}/*
+          - arn:aws:s3:::${self:custom.vars.bioinformaticsUploadBucket}
+          - arn:aws:s3:::${self:custom.vars.bioinformaticsUploadBucket}/*
 ...

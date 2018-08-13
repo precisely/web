@@ -1,26 +1,26 @@
-S3BucketUserUpload:
+S3BucketBioinformaticsUpload:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:custom.vars.userUploadBucket}
+    BucketName: ${self:custom.vars.bioinformaticsUploadBucket}
     
-S3BucketGeneticsVCF:
+S3BucketBioinformaticsVCF:
   Type: AWS::S3::Bucket
   Properties:
-    BucketName: ${self:custom.vars.geneticsVCFBucket}
+    BucketName: ${self:custom.vars.bioinformaticsVCFBucket}
 
 S3BucketBioinformaticsError:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:custom.vars.bioinformaticsErrorBucket}
 
-RawDataUploadLambdaPermission:
+BioinformaticsUploadLambdaPermission:
   Type: AWS::Lambda::Permission
   Properties:
     FunctionName:
-       # serverless generates this name from `functions: UserDataUpload: ...`
-      Fn::GetAtt: [ RawDataUploadLambdaFunction, Arn ]
+      # serverless adds suffix "LambdaFunction" to function names:
+      Fn::GetAtt: [ BioinformaticsUploadProcessorLambdaFunction, Arn ]
     Principal: s3.amazonaws.com
     Action: lambda:InvokeFunction
     SourceAccount:
       Ref: AWS::AccountId
-    SourceArn: arn:aws:s3:::${self:custom.vars.userUploadBucket}
+    SourceArn: arn:aws:s3:::${self:custom.vars.bioinformaticsUploadBucket}

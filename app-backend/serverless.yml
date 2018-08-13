@@ -29,10 +29,10 @@ provider:
     #   NODE_ENV={production|development} yarn sls ...
     NODE_ENV: ${env:NODE_ENV, self:custom.vars.nodeEnv}
 
-    # S3 buckets
-    S3_BUCKET_GENETICS_VCF: ${self:custom.vars.geneticsVCFBucket}
-    S3_BUCKET_USER_UPLOAD: ${self:custom.vars.userUploadBucket}
-    S3_BUCKET_INGESTION_ERROR: ${self:custom.vars.bioinformaticsErrorBucket}
+    # S3 buckets - the S3_BUCKET_ prefix follows the convention of serverless
+    S3_BUCKET_BIOINFORMATICS_VCF: ${self:custom.vars.bioinformaticsVCFBucket}
+    S3_BUCKET_BIOINFORMATICS_UPLOAD: ${self:custom.vars.bioinformaticsUploadBucket}
+    S3_BUCKET_BIOINFORMATICS_ERROR: ${self:custom.vars.bioinformaticsErrorBucket}
 
     BASE_DOMAIN: ${self:custom.common.baseDomain} # the root domain, adjusted for developer environments
     GRAPHQL_API_PATH: ${self:custom.common.graphQLAPIPath}
@@ -93,8 +93,8 @@ custom:
       offline: DEBUG
 
     # S3 resource names
-    geneticsVCFBucket: ${self:provider.stage}-precisely-genetics-vcf
-    userUploadBucket: ${self:provider.stage}-precisely-user-upload
+    bioinformaticsVCFBucket: ${self:provider.stage}-precisely-bioinformatics-vcf
+    bioinformaticsUploadBucket: ${self:provider.stage}-precisely-bioinformatics-upload
     bioinformaticsErrorBucket: ${self:provider.stage}-precisely-bioinformatics-error
 
     # Bioinformatics ECS Fargate Task
@@ -175,17 +175,17 @@ functions:
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
   # Raw data uploader is triggered by new file in any of the raw data buckets
-  RawDataUpload:
+  BioinformaticsUploadProcessor:
     role: SystemRole
-    handler: src/services/genetics-pipeline/handlers.rawDataUpload
+    handler: src/services/bioinformatics/handlers.uploadProcessor
     environment:
-      INGESTION_CLUSTER: ${self:custom.vars.bioinformaticsClusterName}
-      INGESTION_TASK_NAME: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
-      INGESTION_CONTAINER_NAME: ${self:custom.vars.bioinformaticsContainerName}
+      BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsClusterName}
+      BIOINFORMATICS_TASK_NAME: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
+      BIOINFORMATICS_CONTAINER_NAME: ${self:custom.vars.bioinformaticsContainerName}
       FULL_SUBNET: FullSubnet-PreciselyDefaultVPC # manually created
     events:
       - s3:
-          bucket: UserUpload
+          bucket: BioinformaticsUpload
           event: s3:ObjectCreated:*
 
   SysAddNewVariantRequirementsFromReports:
