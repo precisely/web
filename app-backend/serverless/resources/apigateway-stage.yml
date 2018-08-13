@@ -1,0 +1,19 @@
+---
+ApiGatewayStage:
+  Type: AWS::ApiGateway::Stage
+  DependsOn: ApiGatewayRestApi
+  Properties: 
+    StageName: ${self:provider.stage}
+    Description: ${self:provider.stage}
+    RestApiId: 
+      Ref: ApiGatewayRestApi  # Serverless framework's default REST API logical id
+                              # see: https://serverless.com/framework/docs/providers/aws/events/apigateway/
+    DeploymentId: 
+      Ref: __deployment__     # serverless-plugin-bind-deployment-id replaces this sentinel with the true deploymentId
+    MethodSettings: 
+      - DataTraceEnabled: true
+        HttpMethod: "*"
+        LoggingLevel: INFO
+        ResourcePath: /*
+        MetricsEnabled: true
+    

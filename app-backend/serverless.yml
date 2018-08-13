@@ -58,20 +58,12 @@ resources:
   - Resources: ${file(./serverless/resources/network/routes.yml)}
   - Resources: ${file(./serverless/resources/network/gateway.yml)}
 
+  - Resources: ${file(./serverless/resources/apigateway-stage.yml)}
 plugins:
-  # You'll need to comment out the severless-domain-manager plugin on the first deploy:
-  # 1. yarn sls create_domain
-  # 2. comment out the serverless-domain-manager plugin
-  # 3. yarn deploy
-  # 4. uncomment the plugin
-  # 5. yarn deploy
-  # This is likely related to this issue: https://github.com/serverless/serverless/issues/4029#issuecomment-319984929
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
-  - serverless-api-stage
   - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
-  - serverless-pseudo-parameters
   - serverless-plugin-scripts
   - serverless-offline # serverless-offline must be last in the list
 
