@@ -5,6 +5,8 @@
   "scripts": {
     "build": "yarn sls webpack",
     "console": "yarn sls console",
+    "deploy:new": "yarn sls create_domain && yarn deploy && tput setaf 6 && echo \"New domains may take up to 40 minutes to be initialized.\n\" && tput setaf sgr0",
+    "deploy:delete": "scripts/guard-prod && yarn sls remove && yarn sls delete_domain",
     "deploy": "yarn sls deploy",
     "dynamodb": "yarn sls dynamodb start",
     "dynamodb:test:offline": "ENV=test-offline yarn sls dynamodb start",

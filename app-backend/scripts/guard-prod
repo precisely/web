@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$STAGE" == "prod" ] || [ "$ENV" == "prod" ]; then
+  echo "Disallowed in production environment"
+  exit -1
+fi
+
