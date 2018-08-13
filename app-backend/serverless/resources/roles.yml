@@ -58,24 +58,6 @@ SystemRole:
   
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
-        
-BioinformaticsECSTaskRole:
-  Type: AWS::IAM::Role 
-  Properties: 
-    RoleName: ${self:provider.stage}-PreciselyBioinformaticsECSTaskRole
-    AssumeRolePolicyDocument: 
-      <<: *DefaultAssumeRolePolicyDocument
-      Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-              - ecs-tasks.amazonaws.com
-          Action: sts:AssumeRole
-    ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-      - arn:aws:iam::aws:policy/AmazonSESFullAccess
-    Policies:
-      - ${file(./serverless/resources/role-policies.yml):BioinformaticsECSTaskPolicy}
 
 UserUploadLambdaRole:
   Type: AWS::IAM::Role
