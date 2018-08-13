@@ -67,6 +67,7 @@ plugins:
   # 5. yarn deploy
   # This is likely related to this issue: https://github.com/serverless/serverless/issues/4029#issuecomment-319984929
   - serverless-domain-manager
+  - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
   - serverless-api-stage
   - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
