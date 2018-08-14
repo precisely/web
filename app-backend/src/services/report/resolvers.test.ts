@@ -6,8 +6,8 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:16 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-13 15:17:43
  */
 
 // tslint:disable no-any
@@ -17,7 +17,7 @@ import { destroyFixtures, rememberFixtures } from 'src/common/fixtures';
 
 import { Report } from './models';
 import {resolvers} from './resolvers';
-import { addReportPersonalizationFixtures } from './services/personalizer/fixtures';
+import { addReportPersonalizationFixtures } from './fixtures/simple';
 import { makeContext } from 'src/services/graphql/test-helpers';
 import { TypedError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';

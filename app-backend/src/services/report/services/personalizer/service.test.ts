@@ -6,15 +6,15 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:28 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:28 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-13 15:17:17
  */
 
 import {Report} from 'src/services/report/models';
 import {destroyFixtures} from 'src/common/fixtures';
 
 import {Personalizer} from './service';
-import { addReportPersonalizationFixtures } from 'src/services/report/services/personalizer/fixtures';
+import { addReportPersonalizationFixtures } from '../../fixtures/simple';
 
 describe('Personalizer', function () {
   describe('constructor', function () {
