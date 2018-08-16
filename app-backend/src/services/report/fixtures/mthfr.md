@@ -31,7 +31,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 <# C677T #>
 <AnalysisBox>
   <Analysis name="C677T"
-            case={ variant("NC_00001.11:g.[14783C>T];[14783=]") } > 
+            case={ variantCall("NC_00001.11:g.[14783C>T];[14783=]") } > 
 
     # What does this mean?
 
@@ -47,7 +47,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
   </Analysis>
 
   <Analysis name="C677T"
-            case={ variantCall("NC_00001.11:g.[14783C>T];[14783C>T]") }> 
+            case={ variantCall("("NC_00001.11:g.[14783C>T];[14783C>T]") }> 
 
     # What does this mean?
 
@@ -195,10 +195,10 @@ Some people with mild loss of function variant may benefit from supplementing th
 
 <# A1298C (A:C) C677T (T:T) #>
 
-| Variant       |Population %           | 
-| :-------------: |:-------------:|
-| A1298C (A:C)  | 20% |
-| C677T (T:T) | 9%      |
+| Variant        |Population %   | 
+|:--------------:|:-------------:|
+| A1298C (A:C)   | 20%           |
+| C677T (T:T)    | 9%            |
 
 # Moderate Loss of Function
 

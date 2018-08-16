@@ -49,17 +49,6 @@ export const variantCall: InterpolationFunction = function(context: Context, var
   }
 };
 
-/**
- * Processes VariantCall objects, adding them to a SmartReport context
- * for use by other functions in this file. The variantCalls represent the
- * user's variants.
- * @param variantCalls
- * @param context
- */
-export function addVariantCallsToContext(vcs: VariantCall[], context: Context): void {
-  context.svnVariants = vcs.map(variantCallToSVNGenotype);
-}
-
 function alleleFromGenotypeFn(vc: VariantCall) {
   const {start, refBases, altBases} = vc.get();
   return (g: number): string => {
@@ -82,4 +71,15 @@ export function variantCallToSVNGenotype(vc: VariantCall): Variant {
   const { refName, refVersion } = ensureProps(vc.get(), 'refName', 'refVersion');
   const svnVariant = `${refName}.${refVersion}:g.${cisAlleles.join(';')}`;
   return parse(svnVariant);
+}
+
+/**
+ * Processes VariantCall objects, adding them to a SmartReport context
+ * for use by other functions in this file. The variantCalls represent the
+ * user's variants.
+ * @param variantCalls
+ * @param context
+ */
+export function addVariantCallsToContext(vcs: VariantCall[], context: Context): void {
+  context.svnVariants = vcs.map(variantCallToSVNGenotype);
 }

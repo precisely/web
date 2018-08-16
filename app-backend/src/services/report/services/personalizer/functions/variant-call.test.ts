@@ -15,7 +15,7 @@ import {Variant} from 'seqvarnomjs';
 
 import {VariantCall} from 'src/services/variant-call';
 
-import { variantCall, addVariantCallsToContext } from './functions';
+import { variantCall, addVariantCallsToContext } from './variant-call';
 
 describe('Personalizer reducer functions', function () {
   const context: Context = {};
