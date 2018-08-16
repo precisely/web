@@ -106,8 +106,8 @@ describe('Report model', function () {
       const report = new Report({
         title: 'Report with variant function',
         content: `<AnalysisBox>
-                    <Analysis case={ variant("chr1.37p13:g.[10A>T];[10=]") }/>
-                    <Analysis case={ variant("chr2.37p13:g.[20A>T];[20=]") }/>
+                    <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
+                    <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>
                   </AnalysisBox>`,
         ownerId: 'user123'
       });
@@ -127,8 +127,8 @@ describe('Report model', function () {
       it('should collect variants in the __svnVariantRequirements key of the context', function () {
         const parsedContent = PreciselyParser.parse(
           `<AnalysisBox>
-            <Analysis case={ variant("chr1.37p13:g.[10A>T];[10=]") }/>
-            <Analysis case={ variant("chr2.37p13:g.[20A>T];[20=]") }/>
+            <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
+            <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>
           </AnalysisBox>`);
         const {variantIndexes} = calculateReportRequirements(parsedContent);
         expect(variantIndexes).toBeDefined();

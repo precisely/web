@@ -10,7 +10,7 @@ let ownerCounter = 0;
 function reportFixture(svnVariants: string[], title?: string, ownerId?: string) {
   title = title || `title${titleCounter++}`;
   ownerId = ownerId || `owner${ownerCounter++}`;
-  const variantFuncalls = svnVariants.map(v => `variant("${v}")`);
+  const variantFuncalls = svnVariants.map(v => `variantCall("${v}")`);
   return new Report({ title, ownerId, content: `{ ${variantFuncalls.join(' and ')} }`});
 }
 

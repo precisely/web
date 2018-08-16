@@ -11,6 +11,6 @@
  */
 
 import {AnalysisBox} from './analysis';
-import {variant} from './functions';
+import {variantCall } from './functions';
 export const components = { AnalysisBox };
-export const functions = { variant };
+export const functions = { variantCall };

@@ -18,7 +18,7 @@ import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db
 import {VariantIndex, JoiVariantIndex, normalizeReferenceName} from 'src/common/variant-tools';
 
 import {PreciselyParser} from './parser';
-import {variant} from './services/personalizer/reducers/functions';
+import {variantCall} from './services/personalizer/reducers/functions';
 const { uuid } = dynogels.types;
 
 export type ReportState = 'published' | 'draft';
@@ -161,7 +161,7 @@ export function calculateReportRequirements(parsedContent: ReducibleElement[]
 ): { variantIndexes: VariantIndex[] } {
   const context: Context = {};
   const reducer = new Reducer({ 
-    functions: { variant },   // every mention of variant will be evaluated
+    functions: { variantCall },   // every mention of variant will be evaluated
     analysisMode: true        // turn on analysisMode
   }); 
   reducer.reduce(parsedContent, context);

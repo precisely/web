@@ -45,22 +45,22 @@ export async function addReportPersonalizationFixtures() {
   const report = new Report({
     ownerId: 'author',
     content: `<AnalysisBox>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10=]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10=]") }>
                 Wild Type
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10A>T]") }>
                 Heterozygote-T
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10A>C]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10A>C]") }>
                 Heterozygote-C
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>T];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10A>T]") }>
                 Homozygote-T
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>C];[10A>C]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>C];[10A>C]") }>
                 Homozygote-C
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>C];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>C];[10A>T]") }>
                 Compound Heterozygote
                 </Analysis>
               </AnalysisBox>`,

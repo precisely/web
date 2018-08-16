@@ -27,7 +27,7 @@ import { ensureProps } from 'src/common/type-tools';
  * @param context 
  * @param variantDescription 
  */
-export const variant: InterpolationFunction = function(context: Context, variantDescription: string): boolean {
+export const variantCall: InterpolationFunction = function(context: Context, variantDescription: string): boolean {
   const userVariants: SVNVariant[] = context.svnVariants;
   if (!context.__reportSVNVariantPatterns) {
     context.__reportSVNVariantPatterns = {};
@@ -43,7 +43,6 @@ export const variant: InterpolationFunction = function(context: Context, variant
               || (context.__reportSVNVariantPatterns[variantDescription] = parse(variantDescription));
 
     const result = userVariants && userVariants.some(uv => uv.matches(pattern));
-    // console.log('variant(%s)=>%s in \ncontext: %s', variantDescription, result, JSON.stringify(context, null, 2));
     return !!result;
   } catch (e) {
     throw new Error(`Invalid argument to variant: ${variantDescription}`);
@@ -57,12 +56,12 @@ export const variant: InterpolationFunction = function(context: Context, variant
  * @param variantCalls
  * @param context
  */
-export function addVariantCallsToContext(variantCalls: VariantCall[], context: Context): void {
-  context.svnVariants = variantCalls.map(variantCallToSVNGenotype);
+export function addVariantCallsToContext(vcs: VariantCall[], context: Context): void {
+  context.svnVariants = vcs.map(variantCallToSVNGenotype);
 }
 
-function alleleFromGenotypeFn(variantCall: VariantCall) {
-  const {start, refBases, altBases} = variantCall.get();
+function alleleFromGenotypeFn(vc: VariantCall) {
+  const {start, refBases, altBases} = vc.get();
   return (g: number): string => {
     if (g === 0) {
       return `[${start}=]`;
@@ -72,15 +71,15 @@ function alleleFromGenotypeFn(variantCall: VariantCall) {
         return `[${start}${refBases}>${altBase}]`;
       }
     }
-    throw new Error(`Unable process variant call genotype ${g} in ${variantCall.get()}`);
+    throw new Error(`Unable process variant call genotype ${g} in ${vc.get()}`);
   };
 }
 
-export function variantCallToSVNGenotype(variantCall: VariantCall): Variant {
-  const toAllele = alleleFromGenotypeFn(variantCall);
+export function variantCallToSVNGenotype(vc: VariantCall): Variant {
+  const toAllele = alleleFromGenotypeFn(vc);
   
-  const cisAlleles = variantCall.getValid('genotype').map(toAllele).filter(o => o);
-  const { refName, refVersion } = ensureProps(variantCall.get(), 'refName', 'refVersion');
+  const cisAlleles = vc.getValid('genotype').map(toAllele).filter(o => o);
+  const { refName, refVersion } = ensureProps(vc.get(), 'refName', 'refVersion');
   const svnVariant = `${refName}.${refVersion}:g.${cisAlleles.join(';')}`;
   return parse(svnVariant);
 }

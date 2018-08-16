@@ -15,7 +15,7 @@ import {Variant} from 'seqvarnomjs';
 
 import {VariantCall} from 'src/services/variant-call';
 
-import { variant, addVariantCallsToContext } from './functions';
+import { variantCall, addVariantCallsToContext } from './functions';
 
 describe('Personalizer reducer functions', function () {
   const context: Context = {};
@@ -81,27 +81,27 @@ describe('Personalizer reducer functions', function () {
   describe('variant', function () {
     describe('detecting variants in context', function () {
       it('should fail to detect a non-existent wild-type variant', function () {
-        expect(variant(context, 'chr1.37p13:g.[100=];[100=]')).toBeFalsy();
+        expect(variantCall(context, 'chr1.37p13:g.[100=];[100=]')).toBeFalsy();
       });
 
       it('should detect a wild-type variant', function () {
-        expect(variant(context, 'chr2.37p13:g.[200=];[200=]')).toBeTruthy();
+        expect(variantCall(context, 'chr2.37p13:g.[200=];[200=]')).toBeTruthy();
       });
 
       it('should detect a compound heterozygous variant', function () {
-        expect(variant(context, 'chr4.37p13:g.[400T>G];[400=]')).toBeTruthy();
+        expect(variantCall(context, 'chr4.37p13:g.[400T>G];[400=]')).toBeTruthy();
       });
 
       it('should detect a compound heterozygous variant', function () {
-        expect(variant(context, 'chr3.37p13:g.[300T>G];[300T>A]')).toBeTruthy();
+        expect(variantCall(context, 'chr3.37p13:g.[300T>G];[300T>A]')).toBeTruthy();
       });
 
       it('should detect a homozygous variant', function () {
-        expect(variant(context, 'chr5.37p13:g.[500T>A];[500T>A]')).toBeTruthy();
+        expect(variantCall(context, 'chr5.37p13:g.[500T>A];[500T>A]')).toBeTruthy();
       });
 
       it('should return falsy for a monozygous variant', function () {
-        expect(variant(context, 'chr1.37p13:g.[9999A>T]')).toBeFalsy();
+        expect(variantCall(context, 'chr1.37p13:g.[9999A>T]')).toBeFalsy();
       });
     });
   });
