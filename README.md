@@ -60,7 +60,17 @@ yarn dynamodb:test:offline
 yarn test
 # with --watch flag:
 yarn test --watch
+
+# run tests in a specific environment:
+ENV=aneil yarn test # uses config/aneil.env environment
+
+# run tests with more logging (test-offline default level is `warn`)
+LOG_LEVEL=silly yarn test
 ```
+
+
+The `test-offline` environment is 
+
 
 #### Start Backend Server
 
