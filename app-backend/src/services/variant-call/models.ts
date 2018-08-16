@@ -119,11 +119,11 @@ export const VariantCall = defineModel<
       // start index with respect to sequence - must be string for DynamoDB indexing
       start: JoiStart.required(),
       // end index of variant
-      end: Joi.number().greater(Joi.ref('start')),
+      end: Joi.number().min(Joi.ref('start')),
       // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
-      altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]+)|<NON_REF>/, 'altbases pattern')).min(1),
+      altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]*)|<NON_REF>/, 'altbases pattern')).min(1),
       // sequence being replaced e.g., "A"
-      refBases: Joi.string().uppercase().regex(/[ATGC]+/, 'reference bases pattern'),
+      refBases: Joi.string().uppercase().regex(/\.|[ATGC]*/, 'reference bases pattern'),
       // array of 1-based indexes into alternateBases
       genotype: Joi.array().items(Joi.number()),
       // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
@@ -170,24 +170,36 @@ export const VariantCall = defineModel<
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
   try {
-    const {refName, refVersion, start, sampleType, sampleId, genotype, refBases } = ensureProps(
-      variantCall, 'start', 'genotype', 'sampleType', 'sampleId', 'genotype', 'refName', 'refBases', 'refVersion'
+    const {refName, refVersion, start, sampleType, sampleId, genotype, refBases, altBases } = ensureProps(
+      variantCall, 'start', 'genotype', 'sampleType', 'sampleId', 'genotype', 'refName', 
+      'refBases', 'refVersion', 'altBases'
     );
-    const end = start + refBases.length;  
+    const end = start + Math.max( ... genotype.map(
+      g => lengthFromGenotypeIndex(refBases, altBases, g)
+    ));
     const accession = refToNCBIAccession(refName, refVersion);
     
     const variantId = makeVariantId(refName, refVersion, start, end, sampleType, sampleId);
     const zygosity = zygosityFromGenotype(genotype);
-    next(null, {...variantCall, variantId, zygosity, accession });
+    next(null, {...variantCall, end, variantId, zygosity, accession });
   } catch (e) {
     next(e);
   }
 }
 
+function lengthFromGenotypeIndex(refBases: string, altBases: string[], index: number): number {
+  const bases = basesFromGenotypeIndex(refBases, altBases, index);
+  return bases === '.' ? 0 : bases.length;
+}
+
+function basesFromGenotypeIndex(refBases: string, altBases: string[], index: number): string {
+  return index === 0 ? refBases : altBases[index - 1];
+}
+
 function makeVariantId(
   refName: string, refVersion: string, start: number, end: number, sampleType: string, sampleId: string
 ) {
-  return `${refName}:${refVersion}:${start}:${sampleType}:${sampleId}:${end}`;
+  return `${refName}:${refVersion}:${start}:${end}:${sampleType}:${sampleId}`;
 }
 
 function makePartialVariantId({refVersion, refName, start}: VariantIndex) {
