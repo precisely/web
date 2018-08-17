@@ -6,15 +6,77 @@
 * without modification, are not permitted.
 */
 import { VariantCall } from './models';
+import { destroyFixtures, addFixtures, resetAllTables } from 'src/common/fixtures';
 
 describe('VariantCall', function () {
-  describe('forUser', function () {
-    it.skip('should retrieve an instance if the user has variant calls for those ref-indexes', () => null);
-    it.skip("should retrieve an empty list if the user doesn't have variant calls for those ref-indexes", () => null);
-    it.skip('should retrieve an instance for a user given VariantCallIndexes with rsIds', () => null);
-    it.skip("should retrieve an empty list if the user doesn't have variant calls for those rsIds", () => null);
-    it.skip('should retrieve a list containing variant calls for refIndexes and rsIds', () => null);
+  beforeAll(resetAllTables);
 
+  describe('forUser', function () {
+    beforeEach(async () => {
+      await addFixtures(new VariantCall({
+        userId: 'bob-user-id',
+        refName: 'chr1',
+        refVersion: '37p13',
+        start: 100,
+        sampleType: '23andme',
+        sampleId: 'sampleId123',
+        genotype: [0, 1],
+        refBases: 'c',
+        altBases: ['t']
+      }), new VariantCall({
+        userId: 'bob-user-id',
+        refName: 'chr2',
+        refVersion: '37p13',
+        start: 200,
+        sampleType: '23andme',
+        sampleId: 'sampleId123',
+        genotype: [1, 1],
+        refBases: 'c',
+        altBases: ['t']
+      }),
+      new VariantCall({
+        userId: 'bob-user-id',
+        refName: 'chr3',
+        refVersion: '37p13',
+        start: 300,
+        sampleType: '23andme',
+        sampleId: 'sampleId123',
+        genotype: [0, 0],
+        refBases: 'c',
+        altBases: ['t']
+      }));
+    });
+    
+    afterEach(destroyFixtures);
+    
+    it('should retrieve one item if the user has a variantcall matching the variant index provided', async function () {
+      const variantCalls = await VariantCall.forUser('bob-user-id', [{
+        refName: 'chr1', refVersion: '37p13', start: 100
+      }]);
+      expect(variantCalls).toHaveLength(1);
+    });
+
+    it('should retrieve no items if the user has no variantcalls matching the variant index provided', 
+      async function () {
+      const variantCalls = await VariantCall.forUser('bob-user-id', [{
+        refName: 'chrX', refVersion: '37p13', start: 100
+      }]);
+      expect(variantCalls).toHaveLength(0);
+    });
+
+    it('should retrieve two items if the user has a variantcalls matching the variant indexes provided', 
+      async function () {
+      const variantCalls = await VariantCall.forUser('bob-user-id', [{
+        refName: 'chr1', refVersion: '37p13', start: 100
+      }, {
+        refName: 'chr2', refVersion: '37p13', start: 200
+      }]);
+      expect(variantCalls).toHaveLength(2);
+    });
+
+    it("should retrieve an empty list if the user doesn't have variant calls for those ref-indexes", async () => {
+      return;
+    });
   });
 
   describe('save', function () {

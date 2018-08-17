@@ -68,7 +68,11 @@ class VariantCallStaticMethods {
     const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
     variantIndexes.forEach((index: VariantIndex) => {
       const partialId = makePartialVariantId(index);
-      queries.push(VariantCall.query(userId).where('variantId').beginsWith(partialId).execAsync());
+      queries.push(VariantCall.query(userId)
+        .consistentRead(true)
+        .where('variantId')
+        .beginsWith(partialId)
+        .execAsync());
     });
 
     const execResults = await Promise.all(queries);
