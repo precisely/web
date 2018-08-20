@@ -11,3 +11,4 @@
  */
 
 export { AnalysisBox } from './analysis-box';
+export { GeneMap } from './gene-map';
