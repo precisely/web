@@ -6,16 +6,16 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:44 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:44 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-17 14:08:23
  */
 
 import {Context} from 'smart-report';
-import {Variant} from 'seqvarnomjs';
 
 import {VariantCall} from 'src/services/variant-call';
 
-import { variantCall, addVariantCallsToContext } from './variant-call';
+import { variantCall } from '.';
+import { addVariantCallsToContext } from './helpers';
 
 describe('Personalizer reducer functions', function () {
   const context: Context = {};
@@ -68,7 +68,20 @@ describe('Personalizer reducer functions', function () {
   describe('addVariantCallsToContext', function () {
     it('should add a list of svnVariants to the context object', function () {
       expect(context.svnVariants).toBeDefined();
-      expect(context.svnVariants.map((v: Variant) => v.toString())).toEqual([
+      expect(context.svnVariants.map((v: any) => v.toString())).toEqual([ // tslint:disable-line no-any
+        'chr1.37p13:g.[100=];[100A>T]',
+        'chr2.37p13:g.[200=];[200=]',
+        'chr3.37p13:g.[300T>A];[300T>G]',
+        'chr4.37p13:g.[400=];[400T>G]',
+        'chr5.37p13:g.[500T>A];[500T>A]',
+      ]);
+    });
+  });
+
+  describe('addVariantCallsToContext', function () {
+    it('should add a list of svnVariants to the context object', function () {
+      expect(context.svnVariants).toBeDefined();
+      expect(context.svnVariants.map((v: any) => v.toString())).toEqual([ // tslint:disable-line no-any
         'chr1.37p13:g.[100=];[100A>T]',
         'chr2.37p13:g.[200=];[200=]',
         'chr3.37p13:g.[300T>A];[300T>G]',
@@ -105,5 +118,4 @@ describe('Personalizer reducer functions', function () {
       });
     });
   });
-
 });

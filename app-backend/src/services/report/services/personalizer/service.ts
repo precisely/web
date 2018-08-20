@@ -9,8 +9,9 @@
 import {Report} from 'src/services/report/models';
 import {VariantCall} from 'src/services/variant-call/models';
 import {Reducer, ReducibleElement, ReducedElement, Context} from 'smart-report/lib';
-import { components, functions } from './components';
-import { addVariantCallsToContext } from './functions';
+import * as components from './components';
+import * as functions from './data-types/functions';
+import { addVariantCallsToContext } from './data-types/variant-call/helpers';
 
 export const PreciselyReducer = new Reducer({
   components: components,
