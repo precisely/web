@@ -33,6 +33,6 @@ Note: currently, refVersion should only be `37p13`.
   // invalid input response:
   { data: { refName: 'chr2',  refVersion: 'invalid-ref-version', start: 20, altBases: ['G'], refBases: 'T', sampleType: '23andme',
             sampleId: 'b4ccfd7a87a', userId: '4b76ff8a12c', genotype: [0, 1] },
-  , error: 'Error: invalid refVersion' } // or similar error message
+    error: 'Error: invalid refVersion' } // or similar error message
 ]
 ```
