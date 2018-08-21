@@ -31,7 +31,9 @@ describe('VariantCall', function () {
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',
-          altBases: ['t']
+          altBases: ['t'],
+          filter: 'pass',
+          imputed: true
         }).saveAsync();
       });
 
@@ -49,6 +51,8 @@ describe('VariantCall', function () {
         expect(vc.get('refVersion')).toEqual('37p13');
         expect(vc.get('sampleType')).toEqual('23andme');
         expect(vc.get('sampleId')).toEqual('sampleId123');
+        expect(vc.get('filter')).toEqual('PASS');
+        expect(vc.get('imputed')).toEqual(true);
       });
 
       it('should uppercase the ref and altbases', function () {
