@@ -43,7 +43,9 @@ export class VariantCallAttributes {
   // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
   genotypeLikelihood?: number;
   // Filter
-  filter?: string[];
+  filter?: string;
+  // Imputed
+  imputed?: boolean;
 
   //
   // Annotations
@@ -128,8 +130,12 @@ export const VariantCall = defineModel<
       genotype: Joi.array().items(Joi.number()),
       // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
       genotypeLikelihood: Joi.array().items(Joi.number()).length(3).optional(),
+      
       // Filter
-      filter: Joi.array().items(Joi.string().uppercase().valid(...VariantFilter)).optional(),
+      filter: Joi.string().uppercase().optional(),
+      
+      // Was the reading imputed?
+      imputed: Joi.boolean().default(false),
 
       //
       // Annotations
