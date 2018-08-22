@@ -7,11 +7,12 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:41 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-17 14:45:40
+ * @Last Modified time: 2018-08-22 08:00:44
  */
 
 import {Context, InterpolationFunction} from 'smart-report';
 import { SequenceVariant, parse } from 'src/common/svn';
+import { normalizeAccession } from 'src/common/variant-tools';
 
 /**
  * SmartReport function: 
@@ -36,9 +37,14 @@ export const variantCall: InterpolationFunction = function(context: Context, var
       throw new Error('Argument must be provided to variant function');
     }
     // get the cached pattern or parse the description and store it
-    pattern = context.__reportSVNVariantPatterns[variantDescription]
-              || (context.__reportSVNVariantPatterns[variantDescription] = parse(variantDescription));
+    pattern = context.__reportSVNVariantPatterns[variantDescription];
 
+    if (!pattern) {
+      pattern = parse(variantDescription);
+      pattern.ac = normalizeAccession(pattern.ac);
+      context.__reportSVNVariantPatterns[variantDescription] = pattern;
+    }
+    
     const result = userVariants && userVariants.some(uv => uv.matches(pattern));
     return !!result;
   } catch (e) {
