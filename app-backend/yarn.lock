@@ -6585,8 +6585,9 @@ sequelize@4.35.2:
     validator "^9.4.1"
     wkx "^0.4.1"
 
-"seqvarnomjs@file:///Users/aneil/code/precisely/seqvarnomjs":
+"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.2.2":
   version "1.2.2"
+  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#543d64049e038cbdfe972cad17f5ea5e3d40b4e3"
   dependencies:
     lodash "^4.17.5"
     mathjs "^3.16.3"
