@@ -14,7 +14,7 @@ import {Report} from 'src/services/report/models';
 import {destroyFixtures} from 'src/common/fixtures';
 
 import {Personalizer} from './service';
-import { addReportPersonalizationFixtures } from '../../fixtures/simple';
+import { addSimpleReportFixtures } from '../../fixtures/simple';
 
 describe('Personalizer', function () {
   describe('constructor', function () {
@@ -29,7 +29,7 @@ describe('Personalizer', function () {
     describe('when there are users with different genotypes for the same SNP,', function() {
       let report: Report;
       beforeAll(async function() {
-        const result = await addReportPersonalizationFixtures();
+        const result = await addSimpleReportFixtures();
         report = result.report;
       });
 
