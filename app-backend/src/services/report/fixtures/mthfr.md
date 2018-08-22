@@ -1,3 +1,9 @@
+<#
+  c677t_het = variantCall("NC_000001.10:g.[11856378G>A];[11856378=]");
+  c677t_hom = variantCall("NC_000001.10:g.[11856378G>A];[11856378G>A]");
+  a1298c = variantCall("NC_000001.10:g.[11854476C>T];[11854476=]");
+#>
+
 # What does the MTHFR gene do?
 
 MTHFR is involved in the production of folate (also known as B9). Folate is a precursor to the amino acid
@@ -5,23 +11,23 @@ methionine. The body uses [methionine](https://ghr.nlm.nih.gov/condition/hyperme
 
 This gene is located on chromosome 1. The enzyme it creates acts in your endocrine system and pancreas.
 
-<TopicList endocrineSystem pancreas />
+<TopicBar endocrineSystem pancreas />
 
-<GeneMap name="MTHFR" interval="NC_000001.11:g.11785730_11806103"> 
+<GeneMap name="MTHFR" interval="NC_000001.10:g.11845787_11866160="> 
 
   # What are some common mutations of MTHFR?
 
   There are two well-known variants in MTHFR: [C677T](http://gnomad.broadinstitute.org/variant/1-11856378-G-A) and [A1298C](https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=1801131).
 
   <# C677T #>
-  <Variant hgvs="NC_000022.11:g.19963748G>A" name="C677T"> 
+  <Variant hgvs="NC_000001.10:g.11856378G>A" name="C677T"> 
 
     This variant is a change at a specific point in the MTHFR gene from cytosine (C) to thymine (T) resulting in incorrect enzyme function. This substitution of a single nucleotide is known as a missense variant.
 
   </Variant>
   
   <# A1298C #>
-  <Variant hgvs="NC_000022.11:g.19962712C>T" name="A1298C"> 
+  <Variant hgvs="NC_000001.10:g.11854476C>T" name="A1298C"> 
 
     This variant is a change at a specific point in the MTHFR gene from adenine (A) to cytosine (C) resulting in incorrect enzyme function. This substitution of a single nucleotide is known as a missense variant.
 
@@ -30,8 +36,11 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 
 <# C677T #>
 <AnalysisBox>
-  <Analysis name="C677T"
-            case={ variantCall("NC_00001.11:g.[14783C>T];[14783=]") } > 
+  <Analysis name="C677T (C;T)"
+            case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378=]") 
+                    and 
+                    variantCall("NC_000001.10:g.[11854476=];[11854476=]") 
+                  } > 
 
     # What does this mean?
 
@@ -46,8 +55,11 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <piechart percentage=30 />
   </Analysis>
 
-  <Analysis name="C677T"
-            case={ variantCall("("NC_00001.11:g.[14783C>T];[14783C>T]") }> 
+  <Analysis name="C677T (C;C)"
+            case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378G>A]")
+                    and 
+                    variantCall("NC_000001.10:g.[11854476=];[11854476=]") 
+                }> 
 
     # What does this mean?
 
@@ -62,8 +74,12 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <piechart percentage=9 />
   </Analysis>
 
-  <Analysis name="C677T"
-            case={ variantCall("NC_00001.11:g.[14783=];[14783=]") }> 
+  <Analysis name="Wild type"
+            case={ 
+                    variantCall("NC_000001.10:g.[11856378=];[11856378=]")
+                    and 
+                    variantCall("NC_000001.10:g.[11854476=];[11854476=]") 
+              }> 
 
     # What does this mean?
 
@@ -78,8 +94,12 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <Piechart percentage=61 />
   </Analysis>
   
-  <Analysis name="A1298C"
-            case={ variantCall("NC_000001.11:g.[11794419T>G];[11794419T=]") > 
+  <Analysis name="A1298C (A;C)"
+            case={ 
+                    variantCall("NC_000001.10:g.[11856378=];[11856378=]")
+                    and 
+                    variantCall("NC_000001.10:g.[11854476T>G];[11854476T=]") 
+                  } > 
 
     # What does this mean?
 
@@ -94,8 +114,12 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <piechart percentage=20 />
   </Analysis>
 
-  <Analysis name="A1298C"
-            case={ variantCall("NC_000001.11:g.[11794419T>G];[11794419T>G]") }> 
+  <Analysis name="A1298C (C;C)"
+            case={ 
+                    variantCall("NC_000001.10:g.[11856378=];[11856378=]")
+                    and 
+                    variantCall("NC_000001.10:g.[11854476T>G];[11854476T>G]") 
+                  }> 
 
     # What does this mean?
 
@@ -109,23 +133,12 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 
     <piechart percentage=4 />
   </Analysis>
-  <Analysis case={ variantCall("NC_000001.11:g.[11794419T=];[11794419T=]") }          title="A1298C"> 
-
-    # What does this mean?
-
-    Your MTHFR gene has no variants. A normal gene is referred to as a "wild-type" gene.
-
-    # What is the effect of this variant?
-
-    Your variant is not associated with any loss of function.
-
-    # How common is this genotype in the general population?
-
-    <piechart percentage=76 />
-  </Analysis>
   
-  <# C677T (C;T) ; A1298C (A;C) #>
-  <Analysis case={ variantCall("NC_00001.11:g.[14783C>T];[14783=]" case={ variantCall("NC_000001.11:g.[11794419T>G];[11794419T=]"           title="C677T A1298C"> 
+  <# C677T (C;T) and A1298C (A;C) #>
+  <Analysis case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378=]") 
+                    and 
+                    variantCall("NC_000001.10:g.[11854476T>G];[11854476T=]") } 
+            title="C677T A1298C"> 
 
     # What does this mean?
 
@@ -140,23 +153,6 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <piechart percentage=6 />
   </Analysis>
 
-  <# wildtype #>
-  <Analysis name="wildtype" 
-            case={ variantCall("NC_00001.11:g.[14783=];[14783=]") } >
-
-    # What does this mean?
-
-    Your MTHFR gene has no variants. A normal gene is referred to as a "wild-type" gene.
-
-    # What is the effect of this variant?
-
-    This variant is not associated with increased risk.
-
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-  </Genotype>
-
   <# unknown #>
   <Analysis case=true>
 
@@ -170,7 +166,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 
     # How common is this genotype in the general population?
 
-    <piechart percentage= />
+    <piechart percentage=0 />
   </Analysis>
 </AnalysisBox>
 
