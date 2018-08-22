@@ -52,3 +52,7 @@ export async function resetAllTables() {
     await model.createTableAsync();
   }));
 }
+
+export function timeout(ms: number) {
+  return new Promise(res => setTimeout(res, ms));
+}

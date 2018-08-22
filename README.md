@@ -57,9 +57,16 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 ```shell
 yarn dynamodb:test:offline
 # in a new terminal window:
-yarn test
+yarn test # uses the test-offline.env environment by default
+
 # with --watch flag:
 yarn test --watch
+
+# run tests in a specific environment:
+ENV=aneil yarn test # uses config/aneil.env environment
+
+# run tests with more logging (test-offline default level is `warn`)
+LOG_LEVEL=silly yarn test
 ```
 
 #### Start Backend Server

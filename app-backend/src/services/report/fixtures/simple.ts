@@ -6,8 +6,8 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:35 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:35 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-21 07:36:27
  */
 
 import { Report } from '../../models';
@@ -16,16 +16,10 @@ import { addFixtures } from 'src/common/fixtures';
 import { VariantCall } from 'src/services/variant-call';
 
 //
-// This file provides generates users with variants 
-//  Users with variants at chromosome 1, position 10:
-//    user-wt10
-//    user-het10t
-//    user-het10c
-//    user-hom10t
-//    user-hom10c
-//    user-cmpnd10
+// This file provides generates users with every combination of variants 
+//  relevant to the mthfr report
 
-export async function addReportPersonalizationFixtures() {
+export async function addSimpleReportFixtures() {
   const variantData = [
     { userId: 'user-wt10', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
       genotype: [0, 0], sampleType: '23andme', sampleId: 'userwt-23andme' },
@@ -45,22 +39,22 @@ export async function addReportPersonalizationFixtures() {
   const report = new Report({
     ownerId: 'author',
     content: `<AnalysisBox>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10=]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10=]") }>
                 Wild Type
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10A>T]") }>
                 Heterozygote-T
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10=];[10A>C]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10=];[10A>C]") }>
                 Heterozygote-C
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>T];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10A>T]") }>
                 Homozygote-T
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>C];[10A>C]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>C];[10A>C]") }>
                 Homozygote-C
                 </Analysis>
-                <Analysis case={ variant("chr1.37p13:g.[10A>C];[10A>T]") }>
+                <Analysis case={ variantCall("chr1.37p13:g.[10A>C];[10A>T]") }>
                 Compound Heterozygote
                 </Analysis>
               </AnalysisBox>`,

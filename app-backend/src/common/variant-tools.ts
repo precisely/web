@@ -6,8 +6,8 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:26 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:51:26 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-22 07:59:32
  */
 
 import * as Joi from 'joi';
@@ -64,6 +64,26 @@ const VCFRefToAccession = {
 };
 
 const AccessionToVCFRef =  invert(VCFRefToAccession);
+
+/**
+ * Returns a system-valid NCBI accession given a string of the form
+ *   NC_\d+.d+ or chr\d+.\w+
+ * @param ac 
+ */
+export function normalizeAccession(ac: string): string {
+  if (PermissiveNCBIAccessionRegex.test(ac)) {
+    const result = normalizeNCBIAccession(ac);
+    if (ncbiAccessionToRef(result)) {
+      return result;
+    }
+  } else {
+    const [refName, refVersion] = ac.split('.');
+    if (refName && refVersion) {
+      return refToNCBIAccession(refName, refVersion);
+    }
+  }
+  throw new Error(`Unrecognized accession ${ac}`);
+}
 
 export function refToNCBIAccession(refName: string, refVersion: string) {
   const vcfRef = `${refName}.${normalizeGenomeVersion(refVersion)}`;

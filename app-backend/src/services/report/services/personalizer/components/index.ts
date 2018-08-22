@@ -10,7 +10,5 @@
  * @Last Modified time: 2018-08-10 09:50:38 
  */
 
-import {AnalysisBox} from './analysis';
-import {variant} from './functions';
-export const components = { AnalysisBox };
-export const functions = { variant };
+export { AnalysisBox } from './analysis-box';
+export { GeneMap } from './gene-map';

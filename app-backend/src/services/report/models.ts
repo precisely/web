@@ -11,17 +11,18 @@ import { isNumber } from 'util';
 import * as Joi from 'joi';
 import slugify from 'slugify';
 
-import {Variant as SVNVariant} from 'seqvarnomjs';
 import {Context, Reducer, ReducibleElement} from 'smart-report';
 
 import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {VariantIndex, JoiVariantIndex, normalizeReferenceName} from 'src/common/variant-tools';
 
 import {PreciselyParser} from './parser';
-import {variant} from './services/personalizer/reducers/functions';
+import {variantCall} from './services/personalizer/data-types/functions';
 const { uuid } = dynogels.types;
 
 export type ReportState = 'published' | 'draft';
+
+import { SequenceVariant } from 'src/common/svn';
 
 export interface ReportAttributes {
   id?: string;
@@ -161,8 +162,9 @@ export function calculateReportRequirements(parsedContent: ReducibleElement[]
 ): { variantIndexes: VariantIndex[] } {
   const context: Context = {};
   const reducer = new Reducer({ 
-    functions: { variant },   // every mention of variant will be evaluated
+    functions: { variantCall },   
     analysisMode: true        // turn on analysisMode
+                              // functions at every code branch are evaluated
   }); 
   reducer.reduce(parsedContent, context);
   // grab variants and rsIds from the context:
@@ -174,7 +176,7 @@ export function calculateReportRequirements(parsedContent: ReducibleElement[]
   for (const svnVariantName in variantPatterns) {
     if (variantPatterns.hasOwnProperty(svnVariantName)) {
       const svnVariant = variantPatterns[svnVariantName];
-      for (const refIndex of svnVariantToVariantIndexes(<SVNVariant> svnVariant)) {
+      for (const refIndex of svnVariantToVariantIndexes(svnVariant)) { 
         if (variantIndexes.findIndex(rri => refIndexEquals(rri, refIndex)) === -1) {
           variantIndexes.push(refIndex);
         }
@@ -227,7 +229,7 @@ async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFun
   });
 }
 
-function positionsFromSVNVariant(svnVariant: SVNVariant): number[] {
+function positionsFromSVNVariant(svnVariant: SequenceVariant): number[] {
   return svnVariant.listSimpleVariants().map(sv => {
     if (isNumber(sv.pos)) {
       return sv.pos;
@@ -237,7 +239,7 @@ function positionsFromSVNVariant(svnVariant: SVNVariant): number[] {
   });
 }
 
-function svnVariantToVariantIndexes(svnVariant: SVNVariant): VariantIndex[] {
+function svnVariantToVariantIndexes(svnVariant: SequenceVariant): VariantIndex[] {
   const [refName, refVersion] = normalizeReferenceName(svnVariant.ac);
   const positions = positionsFromSVNVariant(svnVariant);
   return positions.map(pos => ({ refName, refVersion, start: pos }));

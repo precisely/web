@@ -6,24 +6,25 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:16 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-22 08:47:50
  */
 
 // tslint:disable no-any
 import { IFieldResolver } from 'graphql-tools';
 
-import { destroyFixtures, rememberFixtures } from 'src/common/fixtures';
+import { destroyFixtures, rememberFixtures, resetAllTables } from 'src/common/fixtures';
 
 import { Report } from './models';
 import {resolvers} from './resolvers';
-import { addReportPersonalizationFixtures } from './services/personalizer/fixtures';
+import { addSimpleReportFixtures } from './fixtures/simple';
 import { makeContext } from 'src/services/graphql/test-helpers';
 import { TypedError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';
 import { isString } from 'util';
 
 describe('Report resolver', function () {
+  beforeAll(resetAllTables);
   
   describe('create', function () {
     afterAll(destroyFixtures);
@@ -97,7 +98,7 @@ describe('Report resolver', function () {
   describe('personalize', function () {
     let report: Report;
     beforeAll(async () => {
-      const fixtures = await addReportPersonalizationFixtures();
+      const fixtures = await addSimpleReportFixtures();
       report = fixtures.report;
     });
 

@@ -6,15 +6,19 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:28 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:28 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-22 12:49:03
  */
+
+const cases = require('jest-in-case');
 
 import {Report} from 'src/services/report/models';
 import {destroyFixtures} from 'src/common/fixtures';
 
 import {Personalizer} from './service';
-import { addReportPersonalizationFixtures } from 'src/services/report/services/personalizer/fixtures';
+import { addSimpleReportFixtures } from '../../fixtures/simple';
+import { addBetaReportFixtures } from 'src/services/report/fixtures/beta';
+import { isTagElement } from 'smart-report';
 
 describe('Personalizer', function () {
   describe('constructor', function () {
@@ -29,13 +33,13 @@ describe('Personalizer', function () {
     describe('when there are users with different genotypes for the same SNP,', function() {
       let report: Report;
       beforeAll(async function() {
-        const result = await addReportPersonalizationFixtures();
+        const result = await addSimpleReportFixtures();
         report = result.report;
       });
 
       afterAll(destroyFixtures);
 
-      it('should personalize the content for a wil$dtype user', async function() {
+      it('should personalize the content for a wildtype user', async function() {
         const personalizer = new Personalizer(report, 'user-wt10');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
@@ -118,6 +122,61 @@ describe('Personalizer', function () {
           ]}
         ]);
       });
+    });
+
+    describe('an actual gene report', function () {
+      let report: Report;
+      beforeAll(async function() {
+        const result = await addBetaReportFixtures();
+        report = result.report;
+      });
+
+      it('should parse the report', function () {
+        expect(report).toBeDefined();
+      });
+
+      it('should personalize the report', async function () {
+        const personalizer = new Personalizer(report, 'user-wt');
+        const elements = await personalizer.personalize();
+        expect(elements).toBeInstanceOf(Array);
+        expect(elements.map(elt => [elt.type, isTagElement(elt) ? elt.name : null])).toEqual([
+          [ 'text', null],
+          [ 'tag', 'topicbar' ],
+          [ 'tag', 'genemap'],
+          [ 'tag', 'analysisbox' ],
+          [ 'text', null ],
+          [ 'tag', 'topicbar' ],
+          [ 'tag', 'topicbar' ]
+        ]);
+      });
+
+      cases('should personalize the report for users with different genetics', async function (
+        [userId, analysisName]: [string, string]
+      ) {
+        const personalizer = new Personalizer(report, userId);
+        const elements = await personalizer.personalize();
+        expect(elements[3]).toMatchObject({
+          type: 'tag',
+          name: 'analysisbox',
+          children: [{
+            type: 'tag',
+            name: 'analysis',
+            attrs: {
+              name: analysisName
+            }
+          }]
+        });
+      }, [
+        [ 'user-wt', 'Wild type' ],
+        [ 'user-c677t-het', 'C677T (C;T)' ],
+        [ 'user-c677t-hom', 'C677T (T;T)' ],
+        [ 'user-a1298c-het', 'A1298C (A;C)' ],
+        [ 'user-a1298c-hom', 'A1298C (C;C)' ],
+        [ 'user-a1298c-c677t-cpd-het', 'C677T (C;T) A1298C (A;C)' ],
+        [ 'user-a1298c-c677t-cpd-hom', 'Unknown' ],
+        [ 'user-a1298c-het-c677t-hom', 'Unknown' ],
+        [ 'user-a1298c-hom-c677t-het', 'Unknown' ]
+      ]);
     });
   });
 });

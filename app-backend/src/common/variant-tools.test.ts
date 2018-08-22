@@ -6,15 +6,33 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:29 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:51:29 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-22 07:45:43
  */
 
 import { 
-  refToNCBIAccession, ncbiAccessionToRef, normalizeNCBIAccession, normalizeReferenceName 
-} from 'src/common/variant-tools';
+  refToNCBIAccession, ncbiAccessionToRef, normalizeNCBIAccession, normalizeReferenceName, normalizeAccession
+} from './variant-tools';
 
 describe('variant-tools', function () {
+  describe('normalizeAccession', function () {
+    it('should normalize NCBI accession numbers', function () {
+      expect(normalizeAccession('nc_01.10')).toEqual('NC_000001.10');
+      expect(normalizeAccession('NC02.11')).toEqual('NC_000002.11');
+    });
+
+    it('should covert refName.refVer strings to NCBI accession numbers', function () {
+      expect(normalizeAccession('chr1.37p13')).toEqual('NC_000001.10');
+      expect(normalizeAccession('chr2.37p13')).toEqual('NC_000002.11');
+    });
+
+    it('should throw an error if unrecognized values are provided', function () {
+      expect(() => normalizeAccession('NC_00001.99')).toThrow();
+      expect(() => normalizeAccession('chr24.37p13')).toThrow();
+      expect(() => normalizeAccession('chr1.38p99')).toThrow();
+    });
+  });
+
   describe('refToNCBIAccession', function () {
     it('should convert a refName/refVersion to the appropriate NCBI accession number', function () {
       expect(refToNCBIAccession('chr1', '37p13')).toEqual('NC_000001.10');

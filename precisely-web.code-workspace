@@ -8,7 +8,7 @@
 		}
 	],
 	"settings": {
-		"fileheader.tpl": "/*\r\n * Copyright (c) 2017-Present, Precise.ly, Inc.\r\n * All rights reserved.\r\n *\r\n * Redistribution and use in source and binary forms, with or\r\n * without modification, are not permitted.\r\n * @Author: {author} \r\n * @Date: {createTime} \r\n * @Last Modified by:   {lastModifiedBy} \r\n * @Last Modified time: {updateTime} \r\n */\r\n\r\n",
+		"fileheader.tpl": "/*\r\n * Copyright (c) 2017-Present, Precise.ly, Inc.\r\n * All rights reserved.\r\n *\r\n * Redistribution and use in source and binary forms, with or\r\n * without modification, are not permitted.\r\n *\r\n * @Author: {author} \r\n * @Date: {createTime} \r\n * @Last Modified by:   {lastModifiedBy} \r\n * @Last Modified time: {updateTime} \r\n */\r\n\r\n",
 		"jest.pathToJest": ".vscode/jest",
 		"search.exclude": {
 			"**/node_modules": true,

@@ -1676,9 +1676,13 @@ colornames@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/colornames/-/colornames-1.1.1.tgz#f8889030685c7c4ff9e2a559f5077eb76a816f96"
 
-colors@^1.1.2, colors@^1.2.0, colors@^1.2.1, colors@^1.2.4:
+colors@^1.1.2, colors@^1.2.0, colors@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.3.0.tgz#5f20c9fef6945cb1134260aab33bfbdc8295e04e"
+
+colors@^1.2.4:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/colors/-/colors-1.3.1.tgz#4accdb89cf2cabc7f982771925e9468784f32f3d"
 
 colorspace@1.1.x:
   version "1.1.1"
@@ -5561,9 +5565,9 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-"ometa-js@git+ssh://git@github.com:aneilbaboo/ometa-js.git#1.5.2-webpackOptions":
-  version "1.5.2"
-  resolved "git+ssh://git@github.com:aneilbaboo/ometa-js.git#d1c3bed7882bafe299550c3a11579f04b0fdd750"
+ometa-js@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/ometa-js/-/ometa-js-1.5.3.tgz#efa844446807cf3fe006f09c14173b3b1192d681"
   dependencies:
     coa "~0.3.9"
     colors "^1.2.4"
@@ -6581,13 +6585,13 @@ sequelize@4.35.2:
     validator "^9.4.1"
     wkx "^0.4.1"
 
-"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs.git#1.2.0":
-  version "1.2.0"
-  resolved "git+ssh://git@github.com/precisely/seqvarnomjs.git#2bc5abf8580b27cfae5ffa94a142e6beea1dfc08"
+"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.2.2":
+  version "1.2.2"
+  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#543d64049e038cbdfe972cad17f5ea5e3d40b4e3"
   dependencies:
     lodash "^4.17.5"
     mathjs "^3.16.3"
-    ometa-js "git+ssh://git@github.com:aneilbaboo/ometa-js.git#1.5.2-webpackOptions"
+    ometa-js "^1.5.3"
     subgraph-isomorphism "^1.0.0"
 
 serialize-javascript@^1.4.0:
@@ -6812,9 +6816,9 @@ smart-buffer@^1.0.13:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-1.1.15.tgz#7f114b5b65fab3e2a35aa775bb12f0d1c649bf16"
 
-"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.1.6":
-  version "1.1.6"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#546f2d31316b8c30ce09767d35cde9f14ee48005"
+"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.2.1":
+  version "1.2.1"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#bdcbe64e6f57e6d5a64d79f681b5c6eb0c8ce7fe"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"

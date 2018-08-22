@@ -6,10 +6,8 @@
 * without modification, are not permitted.
 */
 import {
-  CustomAuthorizerHandler, CustomAuthorizerEvent,
-  CustomAuthorizerCallback, CustomAuthorizerResult,
-  Context,
-  PolicyDocument
+  CustomAuthorizerHandler, CustomAuthorizerEvent, CustomAuthorizerResult,
+  Context, PolicyDocument
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';

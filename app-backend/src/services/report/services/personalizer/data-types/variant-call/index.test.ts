@@ -6,16 +6,16 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:44 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:50:44 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-22 08:45:17
  */
 
 import {Context} from 'smart-report';
-import {Variant} from 'seqvarnomjs';
 
 import {VariantCall} from 'src/services/variant-call';
 
-import { variant, addVariantCallsToContext } from './functions';
+import { variantCall } from '.';
+import { addVariantCallsToContext } from './helpers';
 
 describe('Personalizer reducer functions', function () {
   const context: Context = {};
@@ -66,14 +66,27 @@ describe('Personalizer reducer functions', function () {
   });
 
   describe('addVariantCallsToContext', function () {
-    it('should add a list of svnVariants to the context object', function () {
+    it('should add a list of normalized svnVariants to the context object', function () {
       expect(context.svnVariants).toBeDefined();
-      expect(context.svnVariants.map((v: Variant) => v.toString())).toEqual([
-        'chr1.37p13:g.[100=];[100A>T]',
-        'chr2.37p13:g.[200=];[200=]',
-        'chr3.37p13:g.[300T>A];[300T>G]',
-        'chr4.37p13:g.[400=];[400T>G]',
-        'chr5.37p13:g.[500T>A];[500T>A]',
+      expect(context.svnVariants.map((v: any) => v.toString())).toEqual([ // tslint:disable-line no-any
+        'NC_000001.10:g.[100=];[100A>T]',
+        'NC_000002.11:g.[200=];[200=]',
+        'NC_000003.11:g.[300T>A];[300T>G]',
+        'NC_000004.11:g.[400=];[400T>G]',
+        'NC_000005.9:g.[500T>A];[500T>A]',
+      ]);
+    });
+  });
+
+  describe('addVariantCallsToContext', function () {
+    it('should add a list of normalized svnVariants to the context object', function () {
+      expect(context.svnVariants).toBeDefined();
+      expect(context.svnVariants.map((v: any) => v.toString())).toEqual([ // tslint:disable-line no-any
+        'NC_000001.10:g.[100=];[100A>T]',
+        'NC_000002.11:g.[200=];[200=]',
+        'NC_000003.11:g.[300T>A];[300T>G]',
+        'NC_000004.11:g.[400=];[400T>G]',
+        'NC_000005.9:g.[500T>A];[500T>A]',
       ]);
     });
   });
@@ -81,29 +94,28 @@ describe('Personalizer reducer functions', function () {
   describe('variant', function () {
     describe('detecting variants in context', function () {
       it('should fail to detect a non-existent wild-type variant', function () {
-        expect(variant(context, 'chr1.37p13:g.[100=];[100=]')).toBeFalsy();
+        expect(variantCall(context, 'chr1.37p13:g.[100=];[100=]')).toBeFalsy();
       });
 
       it('should detect a wild-type variant', function () {
-        expect(variant(context, 'chr2.37p13:g.[200=];[200=]')).toBeTruthy();
+        expect(variantCall(context, 'chr2.37p13:g.[200=];[200=]')).toBeTruthy();
       });
 
       it('should detect a compound heterozygous variant', function () {
-        expect(variant(context, 'chr4.37p13:g.[400T>G];[400=]')).toBeTruthy();
+        expect(variantCall(context, 'chr4.37p13:g.[400T>G];[400=]')).toBeTruthy();
       });
 
       it('should detect a compound heterozygous variant', function () {
-        expect(variant(context, 'chr3.37p13:g.[300T>G];[300T>A]')).toBeTruthy();
+        expect(variantCall(context, 'chr3.37p13:g.[300T>G];[300T>A]')).toBeTruthy();
       });
 
       it('should detect a homozygous variant', function () {
-        expect(variant(context, 'chr5.37p13:g.[500T>A];[500T>A]')).toBeTruthy();
+        expect(variantCall(context, 'chr5.37p13:g.[500T>A];[500T>A]')).toBeTruthy();
       });
 
       it('should return falsy for a monozygous variant', function () {
-        expect(variant(context, 'chr1.37p13:g.[9999A>T]')).toBeFalsy();
+        expect(variantCall(context, 'chr1.37p13:g.[9999A>T]')).toBeFalsy();
       });
     });
   });
-
 });

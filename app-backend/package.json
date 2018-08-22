@@ -16,8 +16,8 @@
     "offline": "NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
     "offline:test": "ENV=test-offline NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
     "sls": "yarn env sls",
-    "test": "ENV=test-offline yarn env jest --runInBand",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
+    "test": "ENV=${ENV:-test-offline} yarn env jest --runInBand",
     "wsd": "scripts/wsd"
   },
   "jest": {
@@ -84,9 +84,9 @@
     "logform": "1.5.0",
     "markdown-it": "^8.4.1",
     "sequelize": "4.35.2",
-    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs.git#1.2.0",
+    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs#1.2.2",
     "slugify": "^1.3.0",
-    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#1.1.6",
+    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#1.2.1",
     "winston": "^3.0.0"
   },
   "devDependencies": {
