@@ -6816,9 +6816,9 @@ smart-buffer@^1.0.13:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-1.1.15.tgz#7f114b5b65fab3e2a35aa775bb12f0d1c649bf16"
 
-"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.1.6":
-  version "1.1.6"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#546f2d31316b8c30ce09767d35cde9f14ee48005"
+"smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.2.1":
+  version "1.2.1"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#bdcbe64e6f57e6d5a64d79f681b5c6eb0c8ce7fe"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"
