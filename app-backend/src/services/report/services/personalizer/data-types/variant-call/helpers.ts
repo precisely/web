@@ -19,13 +19,15 @@ function alleleFromGenotypeFn(vc: VariantCall) {
   };
 }
 import { ensureProps } from 'src/common/type-tools';
+import { refToNCBIAccession } from 'src/common/variant-tools';
 
 export function variantCallToSVNGenotype(vc: VariantCall): SequenceVariant {
   const toAllele = alleleFromGenotypeFn(vc);
   
   const cisAlleles = vc.getValid('genotype').map(toAllele).filter(o => o);
   const { refName, refVersion } = ensureProps(vc.get(), 'refName', 'refVersion');
-  const svnVariant = `${refName}.${refVersion}:g.${cisAlleles.join(';')}`;
+  const accession = refToNCBIAccession(refName, refVersion);
+  const svnVariant = `${accession}:g.${cisAlleles.join(';')}`;
   return parse(svnVariant);
 }
 
