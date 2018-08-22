@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-17 08:26:01 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-17 14:06:26
+ * @Last Modified time: 2018-08-21 16:26:26
  */
 
 import { ReducibleTagElement, Context, ReducerFunction, ReducibleElement, isTagElement } from 'smart-report';
@@ -20,8 +20,6 @@ import { isString, isNumber } from 'util';
 export const GeneMap: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   const interval: GeneMapInterval = parseGeneMapInterval(elt);
   
-  Object.assign(elt, interval);
-
   return [elt.children.map(makeGeneMapChildVariantProcessor(interval)), ctx];
 };
 
@@ -57,7 +55,7 @@ export function makeGeneMapChildVariantProcessor({ accession, start, end }: Gene
         !isNumber(simpleVariant.pos) || 
         !(simpleVariant.edit && simpleVariant.edit instanceof NARefAlt)
       ) {
-        throw new Error(`Expecting hgvs attribute to be a simple variant like NC_000001.11:g.123A>C`);
+        throw new Error(`Expecting hgvs attribute to be a simple variant like NC_000001.10:g.123A>C`);
       }
 
       if (simpleVariant.pos < start || simpleVariant.pos > end) {
@@ -94,15 +92,18 @@ export function parseGeneMapInterval(elt: ReducibleTagElement): GeneMapInterval 
   
   const seqVariant: SequenceVariant = parse(interval);
   if (seqVariant.variant.type !== 'simple' || !((<SimpleVariant> seqVariant.variant).pos instanceof Interval)) {
-    throw new Error(`Invalid interval ${interval} - expecting input like NC_000001.11:g.1111_2222`);
+    throw new Error(`Invalid interval ${interval} - expecting input like NC_000001.10:g.1111_2222`);
   }
 
   const simpleVariant: SimpleVariant = <SimpleVariant> seqVariant.variant;
   const svnInterval: Interval = <Interval> simpleVariant.pos;
 
+  const result = {start: svnInterval.start, end: svnInterval.end, accession: seqVariant.ac};
+  Object.assign(elt.attrs, result);
+
   if (!elt.attrs.start || !elt.attrs.end) {
     throw new Error(`GeneMap must contain start and end coordinates`);
   }
 
-  return {start: svnInterval.start, end: svnInterval.end, accession: seqVariant.ac};
+  return result;
 }
