@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-13 15:10:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-21 07:33:55
+ * @Last Modified time: 2018-08-22 12:34:15
  */
 
 // This file represent fixtures for reports in the beta product
@@ -50,7 +50,7 @@ function makeVariantData(userId: string, { c677t, a1298c }: {
   return [
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11856378, refBases: 'G', 
     altBases: [ 'A' ], genotype: c677t, sampleType: '23andme', sampleId: 'userwt-23andme' },
-    { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11854476, refBases: 'C', 
-    altBases: [ 'T' ],  genotype: a1298c, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11854476, refBases: 'T', 
+    altBases: [ 'G' ],  genotype: a1298c, sampleType: '23andme', sampleId: 'userwt-23andme' },
   ];
 }

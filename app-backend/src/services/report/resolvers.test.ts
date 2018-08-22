@@ -7,13 +7,13 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-22 08:46:35
+ * @Last Modified time: 2018-08-22 08:47:50
  */
 
 // tslint:disable no-any
 import { IFieldResolver } from 'graphql-tools';
 
-import { destroyFixtures, rememberFixtures } from 'src/common/fixtures';
+import { destroyFixtures, rememberFixtures, resetAllTables } from 'src/common/fixtures';
 
 import { Report } from './models';
 import {resolvers} from './resolvers';
@@ -24,6 +24,7 @@ import { GraphQLContext } from 'src/services/graphql';
 import { isString } from 'util';
 
 describe('Report resolver', function () {
+  beforeAll(resetAllTables);
   
   describe('create', function () {
     afterAll(destroyFixtures);

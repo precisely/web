@@ -1,7 +1,7 @@
 <#
   c677t_het = variantCall("NC_000001.10:g.[11856378G>A];[11856378=]");
   c677t_hom = variantCall("NC_000001.10:g.[11856378G>A];[11856378G>A]");
-  a1298c = variantCall("NC_000001.10:g.[11854476C>T];[11854476=]");
+  a1298c = variantCall("NC_000001.10:g.[11854476T>G];[11854476=]");
 #>
 
 # What does the MTHFR gene do?
@@ -55,7 +55,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
     <piechart percentage=30 />
   </Analysis>
 
-  <Analysis name="C677T (C;C)"
+  <Analysis name="C677T (T;T)"
             case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378G>A]")
                     and 
                     variantCall("NC_000001.10:g.[11854476=];[11854476=]") 
@@ -137,8 +137,8 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
   <# C677T (C;T) and A1298C (A;C) #>
   <Analysis case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378=]") 
                     and 
-                    variantCall("NC_000001.10:g.[11854476T>G];[11854476T=]") } 
-            title="C677T A1298C"> 
+                    variantCall("NC_000001.10:g.[11854476T>G];[11854476=]") } 
+            name="C677T (C;T) A1298C (A;C)"> 
 
     # What does this mean?
 
@@ -154,7 +154,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
   </Analysis>
 
   <# unknown #>
-  <Analysis case=true>
+  <Analysis name="Unknown" case=true>
 
     # What does this mean?
 
