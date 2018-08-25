@@ -17,7 +17,7 @@ export const Variant: React.StatelessComponent<{
   pos: number,
   refBases: string,
   altBases: string
-}> = ({pos, refBases, altBases, children}: any) => {
+}> = ({pos, refBases, altBases, children}) => {
   return (
     <div>
       <p>Variant at {pos} showing {refBases} to {altBases} change</p>
