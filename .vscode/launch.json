@@ -20,6 +20,23 @@
       "cwd": "${workspaceFolder}/app-backend",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "name": "frontend-jest-tests",
+      "request": "launch",
+      "env": {
+        "IS_OFFLINE": "true",
+        "STAGE": "test",
+        "DYNAMODB_LOCAL_ENDPOINT": "localhost:8000"
+      },
+      "program": "${workspaceFolder}/app-client/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand"
+      ],
+      "cwd": "${workspaceFolder}/app-client",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
