@@ -18,8 +18,6 @@ interface AuthProps {
 
 
 export const AuthRoute = (authProps: AuthProps) => {
-
-  // tslint:disable-next-line:no-unused
   const { component, ...rest } = authProps;
 
   function wrapRender(routeProps: any) {

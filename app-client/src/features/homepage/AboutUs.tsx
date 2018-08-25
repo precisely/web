@@ -45,7 +45,7 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
               disease. They can connect other patients who share their disease ‘subtype,’
               based on the data they’ve accrued.
             </p>
-            <p style={[paragraph, {marginBottom: '55px'}]}>
+            <p style={{...paragraph, marginBottom: '55px'}}>
               We also firmly believe the data our customers assemble is theirs to control and
               share as they see fit.
             </p>
@@ -80,8 +80,11 @@ const paragraph: CSS = {
   ...fontWeight,
 };
 
-const contentStyle: CSS = {
+const contentStyle = {
   width: '936px',
+  // the following syntax was added by CauseCode to DRY out media queries
+  // I don't understand this but, found the following - <AM>:
+  // https://gist.github.com/nickpiesco/9bef21b4f9e236b4430e
   '@media screen and (max-width: 700px)': {
     width: '350px',
   },

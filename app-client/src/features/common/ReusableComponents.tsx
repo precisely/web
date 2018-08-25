@@ -15,15 +15,15 @@ export const Row = Radium(Bootstrap.Row);
 export const Col = Radium(Bootstrap.Col);
 export const Button = Radium(Bootstrap.Button);
 export const Input = Radium(Bootstrap.Input);
-export const InputGroupAddon: React.StatelessComponent<Bootstrap.InputGroupAddonProps & {style: CSS}> =
+export const InputGroupAddon: React.StatelessComponent<Bootstrap.InputGroupAddonProps & {style?: CSS}> =
     Radium(Bootstrap.InputGroupAddon);
-export const InputGroup: React.StatelessComponent<Bootstrap.InputGroupProps & {style: CSS}> =
+export const InputGroup: React.StatelessComponent<Bootstrap.InputGroupProps & {style?: CSS}> =
     Radium(Bootstrap.InputGroup);
 export const Form = Radium(Bootstrap.Form);
 export const FormGroup = Radium(Bootstrap.FormGroup);
 export const FormText = Radium(Bootstrap.FormText);
 export const Collapse = Radium(Bootstrap.Collapse);
-export const Navbar: React.StatelessComponent<Bootstrap.NavbarProps & {style: CSS}> = Radium(Bootstrap.Navbar);
+export const Navbar: React.StatelessComponent<Bootstrap.NavbarProps & {style?: CSS}> = Radium(Bootstrap.Navbar);
 export const NavbarToggler = Radium(Bootstrap.NavbarToggler);
 export const NavbarBrand = Radium(Bootstrap.NavbarBrand);
 export const Nav = Radium(Bootstrap.Nav);

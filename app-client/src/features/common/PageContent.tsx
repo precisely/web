@@ -17,7 +17,7 @@ export interface PageContentProps {
 }
 
 export let PageContent: React.StatelessComponent<PageContentProps> = props => (
-  <Row style={[content, props.style]} className="p-5 mx-auto">
+  <Row style={{...content, ...props.style}} className="p-5 mx-auto">
     <Col style={formColumn}>
       {props.children}
     </Col>
