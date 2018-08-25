@@ -1,0 +1,1 @@
+export { SmartReport } from './SmartReport';

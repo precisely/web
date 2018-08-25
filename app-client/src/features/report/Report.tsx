@@ -9,13 +9,15 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 import {graphql, OptionProps} from 'react-apollo';
+
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
-import {GetReport} from 'src/features/report/queries';
-import {ReportData} from 'src/features/report/interfaces';
-import * as AuthUtils from 'src/utils/auth';
+
+import {GetReport} from './queries';
+import {ReportData} from './interfaces';
+import {SmartReport} from './smart-report';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -27,43 +29,22 @@ export class ReportImpl extends React.Component<ReportProps> {
     this.setState({isLoading: true});
   }
 
-  renderReports = (): JSX.Element | string => {
-    /*
-    const {error, loading, report} = this.props.data;
+  renderSmartReport = (): JSX.Element | string => {
+    const {report} = this.props.data;
+    const elements: any[] = JSON.parse(report.parsedContent);
 
-    if (loading) {
-      return 'Fetching data. Please wait...';
-    }
-
-    if (error) {
-      return 'Unable to fetch the reports.';
-    }
-
-    if (!report || !report.parsedContent) {
-      return <p>No reports found</p>;
-    }
-
-    return (
-      <div>
-        <h6>{report.title}</h6>
-      </div>
-    );
-    */
-    return (
-      <div>
-        your report here, {AuthUtils.getUserName()}
-      </div>
-    );
+    return <SmartReport elements={elements} />;
   }
 
   render(): JSX.Element {
+    const title = this.props.data.report.title;
     return (
       <div>
         <NavigationBar {...this.props}/>
         <Container className="mx-auto mt-5 mb-5">
-          <h1 className="mt-5 mb-4" style={header}>Report data</h1>
+          <h1 className="mt-5 mb-4" style={header}>{title}</h1>
           <PageContent>
-            {this.renderReports()}
+            {this.renderSmartReport()}
           </PageContent>
         </Container>
       </div>
@@ -74,6 +55,6 @@ export class ReportImpl extends React.Component<ReportProps> {
 export const Report = graphql<any, any>(GetReport, {
   options: () => ({
     // Dummy parameters to fetch the data. Will be removed in future.
-    variables: {slug: 'dolorem-error-minima'}
+    variables: {slug: 'mecfs'}
   })
 })(ReportImpl);
