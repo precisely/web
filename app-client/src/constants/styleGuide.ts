@@ -71,7 +71,7 @@ export const header: CSS = {
   marginTop: '65px'
 };
 
-export const loginAndSignupPanel: ExtendedCSS= {
+export const loginAndSignupPanel: ExtendedCSS = {
   width: '597px',
   '@media screen and (max-width: 700px)': {
     width: '345px'
