@@ -33,6 +33,7 @@ export interface ReportAttributes {
   content?: string;
   parsedContent?: string;
   variantIndexes?: VariantIndex[];
+  seed?: boolean;
 }
 
 // Instance methods
@@ -64,6 +65,8 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
 
     // variant calls needed by this report
     variantIndexes: Joi.array().items(JoiVariantIndex).default([]), // variant calls described as refName:start index
+
+    seed: Joi.boolean().description('represents seed data'),
   },
 
   indexes: [{

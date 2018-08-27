@@ -46,6 +46,8 @@ export class VariantCallAttributes {
   filter?: string;
   // Imputed
   imputed?: boolean;
+  // is this seed data?
+  seed?: boolean;
 
   //
   // Annotations
@@ -140,6 +142,9 @@ export const VariantCall = defineModel<
       
       // Was the reading imputed?
       imputed: Joi.boolean().default(false),
+
+      // is this seed data?
+      seed: Joi.boolean().description('represents seed data'),
 
       //
       // Annotations
