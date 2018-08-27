@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:23 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-27 14:31:47
+ * @Last Modified time: 2018-08-27 15:53:54
  */
 
 import { Model, CreateItemOptions, UpdateItemOptions, DestroyItemOptions } from '@aneilbaboo/dynogels-promisified';
@@ -74,4 +74,3 @@ export async function batchDelete<Attrs>( // tslint:disable-line no-any
     }
   );
 }
-
