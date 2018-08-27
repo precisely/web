@@ -13,9 +13,21 @@ export async function variantCommand(userId?: string, variantDescription?: strin
   const [geneVariant, genotype] = variantDescription.split(':');
 
   const variantAttrs = dig(GeneVariants, geneVariant);
+  if (!variantAttrs) {
+    console.log('No variant %s - allowed values are: %s', geneVariant, listGeneVariants().join(', '));
+    process.exit(1);
+    return;
+  } 
   await makeVariant(userId, variantAttrs, genotype);
 }
 
+function listGeneVariants() {
+  return [].concat.apply([], Object.keys(GeneVariants).map(
+    gene => Object.keys(GeneVariants[gene]).map(
+      variant => `${gene}.${variant}`
+    )
+  ));
+}
 function vcattrs(
   chr: number | string, 
   start: number, 
@@ -42,7 +54,12 @@ export function makeVariant(
   const trueGenotype = isString(genotype) 
     ? { het: [0, 1], hom: [1, 1], wt: [0, 0] }[genotype] 
     : genotype || attrs.genotype;
-  const variant = new VariantCall({...attrs, userId, genotype: trueGenotype, seed: true});
+  const variant = new VariantCall({
+    ...attrs, userId, 
+    genotype: trueGenotype, 
+    sampleId: `${userId}-23andme-seed-sample`,
+    sampleType: '23andme', 
+    seed: true});
   return variant.saveAsync();
 }
 
