@@ -171,6 +171,22 @@ yarn test -t 'pattern matching specific test'
 
 Note: to use the integrated test and debugging tools in VSCode, open the workspace file instead of the web directory.
 
+### Seeding Data
+
+```shell
+# add all reports, optionally assigning owner
+yarn seed:reports [--ownerId {ownerId}]
+
+# add variants for given user matching a particular profile 
+# (e.g., all heterozygotic mutants, all wildtype, etc)
+yarn seed:genetics --user {userId} --genetics {wt|hom|het|less-common-het|compound-het} # adds a 
+
+# add a specific variant
+yarn seed:variant {userId} {gene.variant:zygosity}
+# e.g.,
+yarn seed:variant --user 'auth0|d6ba63b91f' --variant mthfr.c677t:het # add heterozygotic variant call for c677t
+```
+
 ##### DynamoDB Admin local
 Provides an easy to use GUI.
 See https://github.com/aaronshaf/dynamodb-admin

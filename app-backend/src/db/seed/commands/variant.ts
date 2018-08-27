@@ -28,6 +28,7 @@ function listGeneVariants() {
     )
   ));
 }
+
 function vcattrs(
   chr: number | string, 
   start: number, 
