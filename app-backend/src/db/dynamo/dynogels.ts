@@ -6,8 +6,8 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:20 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:51:20 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-08-27 13:40:07
  */
 
 import * as https from 'https';
@@ -66,6 +66,16 @@ export function stageTableName(tableName: string): string {
 export function tableNameWithoutStage(tableNameWithEnv: string): string {
   const result = /[^-]*-(.*)/.exec(tableNameWithEnv);
   return result ? result[1] : tableNameWithEnv;
+}
+
+export function listTableNames() {
+  const result = [];
+  for (const tableName in dynogels.models) {
+    if (dynogels.models.hasOwnProperty(tableName)) {
+      result.push(tableName);
+    }
+  }
+  return result;
 }
 
 interface ExtraMethods<Attributes> {
