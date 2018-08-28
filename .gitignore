@@ -17,8 +17,9 @@ coverage
 yarn-error.log
 
 # Ignore .env files
-config/*.env
-!config/test-offline.env
+env/*.env
+!env/test-offline.env
+!env/offline.env
 
 # https://github.com/trek10inc/serverless-secrets#processing-during-packaging
 .serverless-secrets.json
