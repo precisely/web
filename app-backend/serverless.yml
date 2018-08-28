@@ -45,8 +45,6 @@ provider:
     # TODO: better approach
     ADMIN_EMAILS: "aneil@precise.ly,vetoshev@gmail.com"
 
-    DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
-
 resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
@@ -62,6 +60,7 @@ plugins:
   - serverless-webpack
   - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
   - serverless-plugin-scripts
+  - serverless-plugin-git-variables
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
@@ -111,11 +110,18 @@ custom:
     endpointType: regional
 
   dynamodb: # dynamodb-local settings
-    start:
+    start: ${self:custom.dynamodbMode.${env:DYNAMODB_MODE, "disk"}}
+
+  dynamodbMode:
+    memory:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
-      inMemory: true
       migrate: true
-      # seed: true
+      inMemory: true
+    disk:
+      port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
+      migrate: true
+      dbPath: .
+      sharedDb: true
 
   scripts:
     commands:
@@ -123,6 +129,11 @@ custom:
       env: env
       test: jest -t "$TEST" --runInBand
       test:coverage: jest -t "$TEST" --runInBand --coverage
+      seed:genetics: ts-node -r tsconfig-paths/register src/db/seed/cli.ts genetics "${opt:user, ''}" "${opt:genetics, ''}"
+      seed:variant: ts-node -r tsconfig-paths/register src/db/seed/cli.ts variant "${opt:user, ''}" "${opt:variant, ''}"
+      seed:reports: ts-node -r tsconfig-paths/register src/db/seed/cli.ts reports
+      seed:clear: ts-node -r tsconfig-paths/register src/db/seed/cli.ts clear ${opt:model, opt:models, ""}
+    
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}
 

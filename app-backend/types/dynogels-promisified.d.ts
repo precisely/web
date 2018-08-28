@@ -224,6 +224,8 @@ declare module "@aneilbaboo/dynogels-promisified" {
     updateTableAsync(): Promise<AWS.DynamoDB.UpdateTableOutput>;
     describeTableAsync(): Promise<AWS.DynamoDB.DescribeTableOutput>;
     deleteTableAsync(): void;
+
+    schema: any;
   }
 
   export type DynogelsItemCallback<Attributes = { any: any }, Methods = {}> = (

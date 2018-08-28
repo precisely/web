@@ -55,7 +55,7 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 #### Running backend tests locally
 
 ```shell
-yarn dynamodb:test:offline
+yarn dynamodb:test-offline # offline mode starts a dynamo instance at port 8100
 # in a new terminal window:
 yarn test # uses the test-offline.env environment by default
 
@@ -75,9 +75,10 @@ If you want to run the backend locally:
 
 ```shell
 cd app-backend
-yarn offline
+yarn start
 ```
-This command automatically starts (and stops) DynamoDB local.
+
+Note: this command automatically starts (and stops) DynamoDB local.
 
 - By default, GraphQL API endpoint is at ([http://localhost:3001/graphql](http://localhost:3001/graphql))
   - GET (GraphQL Playground GUI) and POST (GraphQL API)
@@ -88,8 +89,8 @@ This command automatically starts (and stops) DynamoDB local.
 
 ```shell
 cd app-client
-yarn start:offline # points at local backend
-yarn start # points at default.env backend
+yarn start # points at offline.env backend
+ENV=deploy yarn start # points at the deployed backend (on AWS)
 ENV=prod yarn start # points at prod backend
 ```
 This starts a static web server at ([http://localhost:3000](http://localhost:3000)). The port can be customize by setting  `FRONTEND_PORT` environment variable.  The domain can be customized by setting `FRONTEND_HOST` (not recommended).
@@ -134,7 +135,7 @@ Copy the React app client id and create an entry in `serverless/common.js`.
 
 ##### Backend
 
-1. Set `STAGE`, and other variables in `config/default.env`, as per the instructions in that folder (see [`README.md`](config/README.md) and [`config/default.env.sample`](config/default.env.sample))
+1. Set `STAGE`, and other variables in `config/deploy.env`, as per the instructions in that folder (see [`README.md`](config/README.md) and [`config/deploy.env.sample`](config/deploy.env.sample))
 
 2. Run first time deployment script
   ```shell
@@ -158,11 +159,18 @@ yarn deploy:delete # remove all resources, including
 
 If you do this, you must `yarn:deploy:new` to use the stage again.
 
+##### DynamoDB Local
+
+Default endpoint: `http://localhost:8000`
+Test endpoint: `http://localhost:8100`
+
+The `DYNAMODB_LOCAL_PORT` environment variable determines where DynamoDB local will be started, and where it is expected. This value defaults to 8000, which means that DynamoDB Local will start at `http://localhost:8000`, however tests use `http://localhost:8100` (configured in `env/test-offline.env`). This way, `yarn start` and `yarn test` can independently of each other.
+
 ##### Running backend tests
 
 ```shell
 # in one terminal window 
-yarn dynamodb:test:offline
+yarn dynamodb:test-offline
 # in your main terminal window
 yarn test # runs all tests
 yarn test --coverage # make coverage report
@@ -170,6 +178,22 @@ yarn test -t 'pattern matching specific test'
 ```
 
 Note: to use the integrated test and debugging tools in VSCode, open the workspace file instead of the web directory.
+
+### Seeding Data
+
+```shell
+# add all reports, optionally assigning owner
+yarn seed:reports [--ownerId {ownerId}]
+
+# add variants for given user matching a particular profile 
+# (e.g., all heterozygotic mutants, all wildtype, etc)
+yarn seed:genetics --user {userId} --genetics {wt|hom|het|less-common-het|compound-het} # adds a 
+
+# add a specific variant
+yarn seed:variant {userId} {gene.variant:zygosity}
+# e.g.,
+yarn seed:variant --user 'auth0|d6ba63b91f' --variant mthfr.c677t:het # add heterozygotic variant call for c677t
+```
 
 ##### DynamoDB Admin local
 Provides an easy to use GUI.
@@ -193,8 +217,10 @@ yarn deploy
 
 How serverless environment variables are determined:
 
-* Serverless wrapper scripts in package.json call `withenv sls {command}` (e.g., `yarn deploy`, `yarn sls`, etc)
-* `withenv` loads `{ENV}.env`; if `ENV` is not set, `default.env` is used
+* Serverless scripts in package.json set `ENV` (or use provided `ENV` value)
+* `withenv` loads `{ENV}.env` from top level `config` dir; 
+  - `config/offline.env` is used by default by most yarn scripts
+  - `config/deploy.env` is used by default by `yarn deploy` scripts
 * Serverless loads `serverless/config.js`, which sets common variables used by both frontend and backend: domain name, Auth0 ids, GraphQL API endpoint, etc.
 * The serverless.yml file generates environment variables available to transpilation, execution and scripting environments. In practical terms, the `environment:` section variables are available to webpack, lambda handlers and EC2/ECS, and to `serverless-plugin-scripts` scripts.
 
@@ -204,13 +230,23 @@ How serverless environment variables are determined:
 
 `IS_OFFLINE` - used by `common.js` to generate settings for running the backend locally. This value is set automatically if `yarn sls offline` is invoked in `app-backend`. To point the client at your local backend, build it with this flag set.
 
+`REGION` - used by Serverless to set the AWS region
+
+`STAGE` - used by Serverless to namespace CloudFormation resources
+
+`LOG_LEVEL` - one of [silly, debug, verbose, info, warn, error](https://github.com/winstonjs/winston#logging )
+
+`DYNAMODB_LOCAL_PORT` - port where dynamodb local is expected / will be started
+
+`DYNAMODB_MODE` - either `memory` or `disk`
+
 ### AWS Accounts
 
 We maintain 3 AWS accounts: dev, stage and prod.
 
 #### dev
 https://dev-precisely.signin.aws.amazon.com/console
-Used for development. Serverless creates separate resources for each developer, deployed as a separate serverless stage. This is configured by setting `STAGE` in config/default.env to your name. When you invoke `yarn sls {cmd}`, the environment is setup using config/default.env.
+Used for development. Serverless creates separate resources for each developer, deployed as a separate serverless stage. This is configured by setting `STAGE` in config/deploy.env to your name. 
 
 #### beta
 https://beta-precisely.signin.aws.amazon.com/console

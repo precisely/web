@@ -20,6 +20,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
+import { ExtendedCSS } from 'src/constants/styleGuide';
 
 const LOGO = require('src/assets/precisely-logo.png');
 
@@ -102,7 +103,7 @@ const logoStyle: CSS = {
   width: '10em',
 };
 
-const navBar: CSS = {
+const navBar: ExtendedCSS = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
   '@media screen and (min-width: 992px)': {

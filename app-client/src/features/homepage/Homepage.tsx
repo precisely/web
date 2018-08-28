@@ -113,7 +113,7 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
               <div style={imageStyle}/>
             </Parallax>
             <div style={parallaxChildren}>
-              <h1 style={[headingStyle, {fontWeight: 300, fontSize: '3.5em'}]}>
+              <h1 style={{...headingStyle, fontWeight: 300, fontSize: '3.5em'}}>
                 Do a deep dive on your DNA
               </h1>
               <h4 style={headingStyle}>

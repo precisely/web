@@ -4,7 +4,7 @@
   "version": "0.0.6",
   "private": true,
   "scripts": {
-    "lint": "cd app-backend && yarn eslint && yarn tslint && cd ../app-client && yarn eslint && yarn tslint",
+    "lint": "echo 'Lint app-backend...' && cd app-backend && yarn tslint && echo 'Lint app-client...' && cd ../app-client && yarn eslint && yarn tslint",
     "postinstall": "cd app-backend && yarn install && cd ../app-client && yarn install",
     "setup": "npm install -g serverless && nvm install v8.10",
     "test": "cd app-backend && yarn test && cd ../app-client && yarn test"

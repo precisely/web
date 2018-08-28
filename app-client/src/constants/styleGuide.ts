@@ -15,11 +15,13 @@ export const buttonHover: string = '#545b62';
 export const defaultBackground: string = '#F5F5F5';
 export const authLockButtonBackground: string = '#FF8A4B';
 
+export type ExtendedCSS = CSS & { [key: string]: any }; // to accomodate media queries and other special Radium strings
+
 export const helveticaFont: CSS = {
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
 };
 
-export const inputStyle: CSS = {
+export const inputStyle: ExtendedCSS = {
   width: '385px',
   height: '44px',
   '@media screen and (max-width: 700px)': {
@@ -30,7 +32,7 @@ export const inputStyle: CSS = {
   }
 };
 
-export const formButton: CSS = {
+export const formButton: ExtendedCSS = {
   width: '100%',
   color: '#fff',
   backgroundColor: buttonDefault,
@@ -69,7 +71,7 @@ export const header: CSS = {
   marginTop: '65px'
 };
 
-export const loginAndSignupPanel: CSS = {
+export const loginAndSignupPanel: ExtendedCSS = {
   width: '597px',
   '@media screen and (max-width: 700px)': {
     width: '345px'
@@ -77,7 +79,7 @@ export const loginAndSignupPanel: CSS = {
 };
 
 export const alignCenter: CSS = {
-  textAlign: '-webkit-center'
+  textAlign: 'center' // '-webkit-center'
 };
 
 export const formMargin: CSS = {

@@ -27,7 +27,7 @@ require('ts-node').register({module: "commonjs"});
 require('tsconfig-paths').register();
 
 function buildServerlessResources() {
-  const {dynogels, tableNameWithoutStage} = require('src/db/dynamo');
+  const {dynogels, tableNameWithoutStage, listTableNames} = require('src/db/dynamo');
   const {upperFirst, camelCase} = require('lodash');
 
   const DynamoDBReadPermissions = [ 'dynamodb:Query', 'dynamodb:Scan', 'dynamodb:GetItem', 'dynamodb:BatchGetItem' ];
@@ -48,30 +48,28 @@ function buildServerlessResources() {
   let definitions = {};
   let permissions = {};
   const models = dynogels.models;
-
-  for (const tableName in models) {
-    if (models.hasOwnProperty(tableName)) {
-      const model = models[tableName];
-      const uppercaseTableName = upperFirst(camelCase(tableNameWithoutStage(tableName)));
-      const serverlessResourceName = `DynamoTable${uppercaseTableName}`;
-      definitions[serverlessResourceName] = {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: model.dynamoCreateTableParams({})
-      };
-      permissions[uppercaseTableName] = {
-        read: {
-          Effect: 'Allow',
-          Action: DynamoDBReadPermissions,
-          Resource: tableResourceArns(serverlessResourceName)
-        },
-        write: {
-          Effect: 'Allow',
-          Action: DynamoDBWritePermissions,
-          Resource: tableResourceArns(serverlessResourceName)
-        }
+  
+  listTableNames().forEach(tableName => {
+    const model = models[tableName];
+    const uppercaseTableName = upperFirst(camelCase(tableNameWithoutStage(tableName)));
+    const serverlessResourceName = `DynamoTable${uppercaseTableName}`;
+    definitions[serverlessResourceName] = {
+      Type: 'AWS::DynamoDB::Table',
+      Properties: model.dynamoCreateTableParams({})
+    };
+    permissions[uppercaseTableName] = {
+      read: {
+        Effect: 'Allow',
+        Action: DynamoDBReadPermissions,
+        Resource: tableResourceArns(serverlessResourceName)
+      },
+      write: {
+        Effect: 'Allow',
+        Action: DynamoDBWritePermissions,
+        Resource: tableResourceArns(serverlessResourceName)
       }
     }
-  }
+  });
   return { definitions, permissions };
 }
 
