@@ -55,7 +55,7 @@ We use [serverless-offline](https://github.com/dherault/serverless-offline) and[
 #### Running backend tests locally
 
 ```shell
-yarn dynamodb:test:offline # offline mode starts a dynamo instance at port 8100
+yarn dynamodb:test-offline # offline mode starts a dynamo instance at port 8100
 # in a new terminal window:
 yarn test # uses the test-offline.env environment by default
 
