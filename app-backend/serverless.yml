@@ -45,8 +45,6 @@ provider:
     # TODO: better approach
     ADMIN_EMAILS: "aneil@precise.ly,vetoshev@gmail.com"
 
-    DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
-
 resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}

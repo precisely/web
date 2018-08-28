@@ -11,7 +11,7 @@
       "env": {
         "IS_OFFLINE": "true",
         "STAGE": "test",
-        "DYNAMODB_LOCAL_ENDPOINT": "localhost:8000"
+        "DYNAMODB_LOCAL_PORT": "8000"
       },
       "program": "${workspaceFolder}/app-backend/node_modules/jest/bin/jest",
       "args": [
@@ -28,7 +28,7 @@
       "env": {
         "IS_OFFLINE": "true",
         "STAGE": "test",
-        "DYNAMODB_LOCAL_ENDPOINT": "localhost:8000"
+        "DYNAMODB_LOCAL_PORT": "8000"
       },
       "program": "${workspaceFolder}/app-client/node_modules/jest/bin/jest",
       "args": [
