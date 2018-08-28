@@ -14,7 +14,7 @@ if (!NODE_ENV) {
   );
 }
 
-// NOTE: We use ../config/withenv to load the environment.
+// NOTE: We use ../env/withenv to load the environment.
 // Keeping this create-react-app boilerplate for reference:
 //
 // // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use

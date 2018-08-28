@@ -1029,6 +1029,13 @@ babel-register@^6.18.0, babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
+babel-runtime@6.23.0:
+  version "6.23.0"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.10.0"
+
 babel-runtime@^6.22.0, babel-runtime@^6.26.0, babel-runtime@^6.9.2:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
@@ -6259,7 +6266,7 @@ realpath-native@^1.0.0:
   dependencies:
     util.promisify "^1.0.0"
 
-regenerator-runtime@^0.10.5:
+regenerator-runtime@^0.10.0, regenerator-runtime@^0.10.5:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
 
@@ -6641,6 +6648,12 @@ serverless-plugin-bind-deployment-id@^1.0.1:
   resolved "https://registry.yarnpkg.com/serverless-plugin-bind-deployment-id/-/serverless-plugin-bind-deployment-id-1.0.1.tgz#c55768670b8414c4b3b78e1e2f037a8a3995c2c4"
   dependencies:
     lodash "4.17.4"
+
+serverless-plugin-git-variables@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-git-variables/-/serverless-plugin-git-variables-3.1.1.tgz#ac0c0b9517f427230625b5f5f2a8715f11ef6250"
+  dependencies:
+    babel-runtime "6.23.0"
 
 "serverless-plugin-scripts@https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz":
   version "1.0.2"

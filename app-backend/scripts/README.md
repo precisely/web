@@ -6,8 +6,8 @@ These are usually called by yarn.
 
 Runs serverless using environment variables defined in `../config`
 
-### default deploy
+### default deployment 
 ```shell
 yarn sls deploy
 ```
-Uses the `STAGE` set in `../config/default.env`.
+Uses the `STAGE` set in `../env/deploy.env`.

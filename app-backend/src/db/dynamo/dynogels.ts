@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:20 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-27 13:40:07
+ * @Last Modified time: 2018-08-28 07:30:07
  */
 
 import * as https from 'https';
@@ -24,7 +24,9 @@ export * from '@aneilbaboo/dynogels-promisified';
 
 // Use DynamoDB local if in offline mode
 if (isOffline) {
-  const dynamoEndpoint = process.env.DYNAMODB_LOCAL_ENDPOINT || 'http://localhost:8000';
+  const port = process.env.DYNAMODB_LOCAL_PORT || '8000';
+  const dynamoEndpoint = `http://localhost:${port}`;
+  
   dynogels.AWS.config.update({
     credentials: new dynogels.AWS.Credentials({
       accessKeyId: 'dummy',

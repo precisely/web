@@ -3,12 +3,13 @@
 set -e
 set -o pipefail
 
-if [[ ${UNAME} == "Darwin" ]]; then
-    cmd="lsof -i :8000"
-else
-    cmd="netstat -t -l | grep 8000"
-fi
+PORT=${DYNAMODB_LOCAL_PORT:-8000}
 
+if [[ $(uname) == "Darwin" ]]; then
+    cmd="lsof -i :$PORT"
+else
+    cmd="netstat -t -l | grep $PORT"
+fi
 attempt=0
 max_attempts=30
 sleep_interval=1

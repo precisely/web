@@ -22,7 +22,8 @@ shift
 if [ -f "${CONFIG_DIR}/${ENV}.env" ]; then
   ENVFILE="${ENV}.env"
 else
-  ENVFILE="default.env"
+  echo "ENV must be set"
+  exit -1
 fi
 
 echo -e "\033[93mLoading ${ENVFILE} environment"
