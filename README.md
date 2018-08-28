@@ -236,6 +236,10 @@ How serverless environment variables are determined:
 
 `LOG_LEVEL` - one of [silly, debug, verbose, info, warn, error](https://github.com/winstonjs/winston#logging )
 
+`DYNAMODB_LOCAL_PORT` - port where dynamodb local is expected / will be started
+
+`DYNAMODB_MODE` - either `memory` or `disk`
+
 ### AWS Accounts
 
 We maintain 3 AWS accounts: dev, stage and prod.
