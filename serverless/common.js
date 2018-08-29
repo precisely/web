@@ -32,11 +32,12 @@ module.exports.vars = (sls)=> {
 
   const offlineAPIPort = env.OFFLINE_API_PORT || 3001;
   const apiHost = isOffline ? `${apiDomain}:${offlineAPIPort}` : apiDomain;
-
+  const apiScheme = isOffline ? 'http' : 'https';
   const certificateName = `*.${rootDomain}`;
   const certificateArn = getCertificateArn(certificateName);
   const graphQLAPIPath = 'graphql';
-
+  const graphQLEndpoint = `${apiScheme}://${apiHost}/${graphQLAPIPath}`;
+  
   // manually provisioned bucket avoids stack removal issue:
   // automatically provisioned bucket causes stack delete failure
   const deploymentBucket = `${account}-precisely-deployment-bucket`;
@@ -60,6 +61,7 @@ module.exports.vars = (sls)=> {
     certificateArn,
     cloudfrontHostedZoneId,
     deploymentBucket,
+    graphQLEndpoint,
     graphQLAPIPath,
     offlineAPIPort,
     isOffline,
