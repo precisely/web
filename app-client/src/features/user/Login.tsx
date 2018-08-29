@@ -13,10 +13,10 @@ const LS_AUTH_LOGIN_REDIRECT = 'auth-login-redirect';
 export class Login extends React.Component<RouteComponentProps<void>> {
 
   webAuth = new Auth0.WebAuth({
-    domain: 'dev-precisely.auth0.com',
+    domain: getEnvVar('REACT_APP_AUTH0_DOMAIN'),
     clientID: getEnvVar('REACT_APP_AUTH0_CLIENT_ID'),
     redirectUri: `${window.location.protocol}//${window.location.host}/login`,
-    audience: 'https://dev-precisely.auth0.com/userinfo',
+    audience: getEnvVar('REACT_APP_AUTH0_AUDIENCE'),
     responseType: 'token id_token',
     scope: 'openid profile'
   });
