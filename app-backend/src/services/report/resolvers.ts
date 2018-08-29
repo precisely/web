@@ -27,12 +27,16 @@ function userIdArgumentIsUser({user, args}: IContext) {
   return args.userId === user.id;
 }
 
+function implicitUserId({args: { userId }}: IContext) {
+  return !userId;
+}
+
 // tslint:disable no-unused-expression
 accessControl
   .grant('user')
     .resource('report')
       .read.onFields('*', '!content', '!variantIndexes', '!personalization').where(reportPublished)
-      .read.onFields('personalization').where(userIdArgumentIsUser)
+      .read.onFields('personalization').where(userIdArgumentIsUser).or(implicitUserId)
   .grant('author')
     .resource('report')
       .read.onFields('*').where(userOwnsResource)      
@@ -60,12 +64,15 @@ export const resolvers = {
       return await context.valid('report:read', reports);
     },
     async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {
+      context.log.info('Report resolver(%j)', {id, slug});
       let report;
       if (id) {
         report = await Report.getAsync(id);
       } else if (slug) {
         report = await Report.findBySlug(slug);
       }
+      // context.log.silly('Report resolver(%j) => %j', {id, slug}, report ? report.get() : 'null');
+      
       return report && await context.valid('report:read', report);
     }
   },
@@ -112,10 +119,11 @@ export const resolvers = {
     ...GraphQLContext.propertyResolver('report', {
       personalization(
         report: Report, { userId }: IContext, context: GraphQLContext
-      ): Promise<ReducedElement[]> {
+    ): Promise<ReducedElement[]> {
         userId = userId || context.userId;
         const personalizer = new Personalizer(report, userId);
-        return personalizer.personalize();
+        const result = personalizer.personalize();
+        return result;
       }
     })
   }

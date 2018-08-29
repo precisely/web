@@ -30,21 +30,22 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 
   renderSmartReport = (): JSX.Element | string => {
+    console.log('PROPS:', this.props);
     const {report} = this.props.data;
-    const elements: any[] = JSON.parse(report.parsedContent);
-
-    return <SmartReport elements={elements} />;
+    return <SmartReport elements={report.personalization} />;
   }
 
   render(): JSX.Element {
-    const title = this.props.data.report.title;
+    console.log('rendering report: %j', this.props);
+    const report = this.props.data && this.props.data.report;
+    const title = report ? report.title : 'Loading';
     return (
       <div>
         <NavigationBar {...this.props}/>
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>{title}</h1>
           <PageContent>
-            {this.renderSmartReport()}
+            {report ? this.renderSmartReport() : 'Loading...'}
           </PageContent>
         </Container>
       </div>
@@ -53,8 +54,10 @@ export class ReportImpl extends React.Component<ReportProps> {
 }
 
 export const Report = graphql<any, any>(GetReport, {
-  options: () => ({
-    // Dummy parameters to fetch the data. Will be removed in future.
-    variables: {slug: 'mecfs'}
-  })
+  options: () => {
+    return {
+      // Dummy parameters to fetch the data. Will be removed in future.
+      variables: {slug: 'mthfr'}
+    };
+  }
 })(ReportImpl);

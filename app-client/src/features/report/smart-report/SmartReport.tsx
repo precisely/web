@@ -50,7 +50,7 @@ function tagElementToReact(elt: any, key: string): React.ReactElement<any> {
   const TagName = ComponentMap[elt.name];
   const childKey = `${key}.${elt.name}`;
   if (!TagName) {
-    throw new Error(`Invalid tag ${elt.name} encountered`);
+    return <div><p>{'<'}{elt.rawName}{'>'} not implemented: {JSON.stringify(elt)}</p></div>;
   }
 
   return <TagName key={key} {...elt.attrs}>{elementsToReact(elt.children, childKey)}</TagName>;
