@@ -20,6 +20,7 @@
     "start": "yarn sls static",
     "test": "yarn sls test ",
     "test:watch": "yarn sls test:watch",
+    "test:coverage": "yarn sls test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --env=jsdom --runInBand",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'"
   },

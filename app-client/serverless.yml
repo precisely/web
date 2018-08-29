@@ -58,4 +58,5 @@ custom:
       build: node scripts/build.js -p
       test: node_modules/.bin/jest -t ${opt:t, ''} --env=jsdom 
       test:watch: node_modules/.bin/jest -t ${opt:t, ''} --env=jsdom --watch
+      test:coverage: node_modules/.bin/jest -t ${opt:t, ''} --env=jsdom --coverage
       
