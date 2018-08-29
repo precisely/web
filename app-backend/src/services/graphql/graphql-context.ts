@@ -28,6 +28,15 @@ export class GraphQLContext {
     public readonly accessControl: AccessControlPlus = _accessControl) {
   }
   
+  private logger: Logger;
+
+  get log() {
+    if (!this.logger) {
+      this.logger = makeLogger(this.lambdaContext.awsRequestId);
+    }
+    return this.logger;
+  }
+
   /**
    * Always returns a Permission representing whether the resource can be accessed
    * 
@@ -35,16 +44,22 @@ export class GraphQLContext {
    * @param resource 
    */
   async can<M>(scope: string, resource?: M, args: IContext = {}): Promise<IPermission> {
+    this.log.debug('GraphQLContext.can(scope: %j, args: %j)', 
+      scope, args);
     const context = {
       event: this.event,
       user: {
         id: this.userId,
-        roles: this.roles },
+        roles: this.roles 
+      },
       args,
       resource: resource
     };
-
-    return await this.accessControl.can(this.roles, scope, context);
+    const permission = await this.accessControl.can(this.roles, scope, context);
+    this.log.silly('GraphQLContext accessControl.can(roles: %j, scope: %j, context: %j) => %j', 
+      this.roles, scope, context, permission
+    ); 
+    return permission;
   }
 
   /**
@@ -74,7 +89,9 @@ export class GraphQLContext {
       if (permission.granted) {
         return res;
       }
+      this.log.debug('Permission denied: %j', permission.denied || 'undefined');
     }
+    
     throw new TypedError(scope, 'accessDenied');
   }
 
@@ -96,7 +113,6 @@ export class GraphQLContext {
    * Shortcut for accessing the currently active user
    */
   get userId(): string {
-    
     return dig(this, 'event.requestContext.authorizer.principalId'); // the auth0 userId "auth0|a6b34ff91"
   }
 
@@ -153,7 +169,7 @@ export class GraphQLContext {
       const accessor = normMap[prop];
       resolver[<string> prop] = async (obj: any, args: IContext, context: GraphQLContext) => {
         if (await context.valid(scope, obj, args)) {
-          return await accessor(obj, args);
+          return await accessor(obj, args, context);
         }
       };
     }
@@ -166,6 +182,7 @@ type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
 type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
 type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
 import {fromPairs, zip, mapValues} from 'lodash';
+import { makeLogger, Logger } from 'src/common/logger';
 
 export function normalizePropertyMap(
   inMap: PropertyMapArg,

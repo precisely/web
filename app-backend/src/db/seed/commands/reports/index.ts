@@ -1,7 +1,7 @@
 // tslint:disable no-any
 import * as fs from 'fs';
 import * as path from 'path';
-import { Report } from 'src/services/report/models';
+import { Report, ReportAttributes } from 'src/services/report/models';
 import { isString } from 'util';
 import { batchCreate } from 'src/db/dynamo/batch';
 
@@ -29,7 +29,6 @@ function reportContent(reportName: string) {
   return buffer.toString('utf-8');
 }
 
-function reportAttributes({title, ownerId = 'system'}: {title: string, ownerId: string}) {
-  console.log('Creating report "%s" for owner "%s"', title, ownerId);
-  return { title, ownerId, content: reportContent(title), seed: true };
+function reportAttributes({title, ownerId = 'system'}: {title: string, ownerId: string}): ReportAttributes {
+  return { title, ownerId, content: reportContent(title), seed: true, state: 'published' };
 }

@@ -11,7 +11,7 @@ export interface ReportData {
   title: string;
   slug: string;
   content: string;
-  parsedContent: string;
+  personalization: any[];
   topLevel?: boolean;
   requirements: string[];
 }

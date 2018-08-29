@@ -17,8 +17,10 @@
     "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
     "eslint": "eslint src",
     "sls": "yarn env sls",
-    "start": "ENV=${ENV:-offline} yarn sls static",
-    "test": "jest --env=jsdom",
+    "start": "yarn sls static",
+    "test": "yarn sls test ",
+    "test:watch": "yarn sls test:watch",
+    "test:coverage": "yarn sls test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --env=jsdom --runInBand",
     "tslint": "tslint 'src/*.tsx' 'src/**/*.tsx' 'src/*.ts' 'src/**/*.ts'"
   },

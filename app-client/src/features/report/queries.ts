@@ -14,18 +14,7 @@ export const GetReport = gql`
       slug
       id
       title
-      genes
-      rawContent
-      parsedContent
-      userData {
-        genotypes {
-          opaqueId
-          quality
-          gene
-          zygosity
-          variantCall
-        }
-      }
+      personalization
     }
   }
 `;

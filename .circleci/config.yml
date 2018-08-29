@@ -84,7 +84,7 @@ ALIASES:
         run:
             name: Run Frontend Tests
             command: |
-                yarn test --coverage
+                yarn test:coverage
                 yarn tslint
                 yarn eslint
                 

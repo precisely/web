@@ -44,7 +44,8 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
     const AUTH0_JWKS_URI = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
     const AUTH0_ISSUER = `https://${AUTH0_DOMAIN}/`;
-    const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
+    // Uncomment when we fix the issue below
+    // const AUTH0_API_IDENTIFIER = process.env.AUTH0_API_IDENTIFIER;
     const AUTH0_JWKS_REQUESTS_PER_MINUTE = parseInt(process.env.JWKS_REQUESTS_PER_MINUTE || '10', 10) || 10;
 
     const token: string = getToken(event);
@@ -64,10 +65,13 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     const verified = <{ sub: string, email: string }> await jwt.verifyAsync(
       token, signingKey,
       {
-        audience: AUTH0_API_IDENTIFIER, // e.g., something like https://{stage}-precise.ly/graphql (not a real uri)
+        // TODO: Fix the audience - currently, audience returned is the auth0 Precisely ReactClient identifier,
+        // not what we want it to be (the AUTH0_API_IDENTIFIER)
+        // audience: AUTH0_API_IDENTIFIER, 
         issuer:  AUTH0_ISSUER // e.g., something like https://{stage}-precise.ly.auth0.com
       }
     );
+    log.silly('auth0.authenticate verified token: %j', verified);
 
     return {
       principalId: verified.sub,
@@ -75,6 +79,7 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
       roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin,user' : 'user'
     };
   } catch (e) {
+    log.silly('Failed to authenticate: %s', e);
     return {
       principalId: 'public',
       roles: 'public'

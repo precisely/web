@@ -45,10 +45,8 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
   const log = makeLogger(context.awsRequestId);
   log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
-  const auth: Auth0AuthenticationResult = (isOffline ?
-    offlineAuthentication(event) :
-    await authenticate(event, log)
-  );
+  const auth: Auth0AuthenticationResult = await authenticate(event, log);
+  
   const authUserPolicy: CustomAuthorizerResult = {
     principalId: auth.principalId,
     policyDocument: InvokeAPIPolicyDocument,
