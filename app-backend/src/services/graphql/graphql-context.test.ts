@@ -42,13 +42,27 @@ describe('GraphQLContext', function () {
 
   context('accessControl', function () {
     const rbac = new AccessControlPlus();
-    const event = makeEvent({ authorizer: { roles: 'user' }});
+    const event = makeEvent({ authorizer: { principalId: 'user-id-123', roles: 'user' }});
     const lambdaCtx = makeLambdaContext();
     const gqlContext = new GraphQLContext(event, lambdaCtx, rbac);
 
     context('can', function () {
       it('should return the expected permissions defined in an AccessControlPlus instance', async function () {
-        rbac.grant('user').scope('report:read').where();
+        rbac.grant('user').scope('report:read');
+
+        const reportReadPermission = await gqlContext.can('report:read');
+        expect(reportReadPermission.granted).toBeTruthy();
+
+        const reportWritePermission = await gqlContext.can('report:write');
+        expect(reportWritePermission.granted).toBeFalsy();
+        expect(reportWritePermission.denied).toEqual([]);
+      });
+
+      it('should add a valid user object to the context provided to an attribute condition', async function () {
+        let capturedUser;
+        const constraint = ({user}: any) => capturedUser = user;
+
+        rbac.grant('user').scope('report:read').where(constraint);
 
         const reportReadPermission = await gqlContext.can('report:read');
         expect(reportReadPermission.granted).toBeTruthy();
@@ -159,7 +173,7 @@ describe('GraphQLContext', function () {
       }}), makeLambdaContext(),
       rbac);
 
-      rbac.grant('user').scope('mymodel:read').onFields('foo').where(({user, resolverArgs}: any) => {
+      rbac.grant('user').scope('mymodel:read').onFields('foo').where(({user, args}: any) => {
         return user.id === args.requestedUserId;
       });
       const resolver = GraphQLContext.propertyResolver('mymodel', {
@@ -170,9 +184,9 @@ describe('GraphQLContext', function () {
 
       type ResolverFn = (root: any, args: any, context: GraphQLContext) => Promise<any>;
       const mymodel = { internalFoo: 'foo value', internalBar: 'bar value' };
-      const args = { requestedUserId: 'bob' };
+      const resolverArgs = { requestedUserId: 'bob' };
 
-      const fooResult = await (<ResolverFn> resolver.foo)(mymodel, args, gqlContext);
+      const fooResult = await (<ResolverFn> resolver.foo)(mymodel, resolverArgs, gqlContext);
       expect(fooResult).toBe('foo value');
     });
   });
