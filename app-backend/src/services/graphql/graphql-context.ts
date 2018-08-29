@@ -55,8 +55,11 @@ export class GraphQLContext {
       args,
       resource: resource
     };
-    this.log.silly('GraphQLContext.can context = %j', context);
-    return await this.accessControl.can(this.roles, scope, context);
+    const permission = await this.accessControl.can(this.roles, scope, context);
+    this.log.silly('GraphQLContext accessControl.can(roles: %j, scope: %j, context: %j) => %j', 
+      this.roles, scope, context, permission
+    ); 
+    return permission;
   }
 
   /**

@@ -23,12 +23,8 @@ function userOwnsResource({user, resource}: IContext) {
   return user.id === resource.get('ownerId');
 }
 
-function userIdArgumentIsUser({user, args}: IContext) {
-  return args.userId === user.id;
-}
-
-function implicitUserId({args: { userId }}: IContext) {
-  return !userId;
+function userIdArgumentIsUserOrImplicit({args, user}: IContext) {
+  return !args.userId || args.userId === user.id;
 }
 
 // tslint:disable no-unused-expression
@@ -36,7 +32,7 @@ accessControl
   .grant('user')
     .resource('report')
       .read.onFields('*', '!content', '!variantIndexes', '!personalization').where(reportPublished)
-      .read.onFields('personalization').where(userIdArgumentIsUser).or(implicitUserId)
+      .read.onFields('personalization').where(userIdArgumentIsUserOrImplicit)
   .grant('author')
     .resource('report')
       .read.onFields('*').where(userOwnsResource)      
