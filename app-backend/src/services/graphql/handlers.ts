@@ -19,7 +19,7 @@ import { makeLogger, Logger } from 'src/common/logger';
 import { GraphQLContext } from './graphql-context';
 import preciselyTypeDefs from 'src/services/schema';
 
-export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+export function apiHandler(event: APIGatewayEvent, context: Context, callback: Callback) {
   try {
     const log = makeLogger(context.awsRequestId);
     const PreciselySchema = makeExecutableSchema({
@@ -34,7 +34,7 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
       rootValue: null,
       context: new GraphQLContext(event, context)
     });
-    log.silly('graphql.apiHandler EVENT: %j\t\tCONTEXT: %j', event, context);
+    log.silly('graphql.apiHandler event: %j\t\tcontext: %j', event, context);
     withCORS(handler, event, context, (err, result) => {
       if (err) {
         log.error('graphql.apiHandler error', err);
@@ -46,7 +46,7 @@ export const apiHandler: Handler = (event: APIGatewayEvent, context: Context, ca
   } catch (e) {
     callback(e);
   }
-};
+}
 
 export function playgroundTitle(stage?: string) {
   return stage !== 'prod' 
@@ -54,17 +54,18 @@ export function playgroundTitle(stage?: string) {
     : `Precise.ly GraphQL Playground`;
 } 
 
-export const playgroundHandler: Handler = function (event: APIGatewayEvent, context: Context, callback: Callback) {
+export function playgroundHandler(event: APIGatewayEvent, context: Context, callback: Callback) {
   try {
     const handler = lambdaPlayground({
       endpoint: process.env.GRAPHQL_API_PATH,
       htmlTitle: playgroundTitle(process.env.STAGE)
     });
+    
     withCORS(handler, event, context, callback);
   } catch (e) {
     callback(e);
   }
-};
+}
 
 function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, callback: Callback) {
   context.callbackWaitsForEmptyEventLoop = false;
@@ -78,7 +79,11 @@ function withCORS(handler: Handler, event: APIGatewayEvent, context: Context, ca
         'Access-Control-Allow-Credentials' : true // Required for cookies, authorization headers with HTTPS
       });
     }
-    log.silly('%s complete error: %j, result: %j', handler.name, error, output);
+    if (error) {
+      log.info('%s error: %j', handler.name, error);
+    } else {
+      log.silly('%s result: %j', handler.name, output);
+    }
     callback(error, output);
   };
 
