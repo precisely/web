@@ -59,8 +59,16 @@ yarn dynamodb:test-offline # offline mode starts a dynamo instance at port 8100
 # in a new terminal window:
 yarn test # uses the test-offline.env environment by default
 
-# with --watch flag:
-yarn test --watch
+# watch changes:
+yarn test:watch
+
+# generate coverage:
+yarn test:coverage
+
+# flags (use with any test:* script)
+yarn test -t 'authorization' # only tests with description matching regex /authorization/
+yarn test -f handler # only load test files matching /handler/ 
+yarn test -f 'handler|resolver' # only load tests in files matching regex /handler|resolver/ 
 
 # run tests in a specific environment:
 ENV=aneil yarn test # uses config/aneil.env environment

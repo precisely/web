@@ -25,7 +25,9 @@
     "seed:clear": "yarn sls seed:clear",
     "sls": "yarn env sls",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
-    "test": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline jest --runInBand",
+    "test": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test",
+    "test:watch": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:watch",
+    "test:coverage": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:coverage",
     "wsd": "scripts/wsd"
   },
   "jest": {

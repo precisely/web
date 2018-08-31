@@ -77,7 +77,7 @@ ALIASES:
         run:
             name: Run Backend Tests
             command: |
-                yarn test --coverage
+                yarn test:coverage
                 yarn tslint
 
     run_frontend_tests: &run_frontend_tests
