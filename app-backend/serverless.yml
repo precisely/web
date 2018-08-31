@@ -127,8 +127,9 @@ custom:
     commands:
       console: ts-node -r tsconfig-paths/register
       env: env
-      test: jest -t "$TEST" --runInBand
-      test:coverage: jest -t "$TEST" --runInBand --coverage
+      test: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand '${opt:f, ""}'
+      test:watch: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --watch '${opt:f, ""}'
+      test:coverage: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --coverage '${opt:f, ""}'
       seed:genetics: ts-node -r tsconfig-paths/register src/db/seed/cli.ts genetics "${opt:user, ''}" "${opt:genetics, ''}"
       seed:variant: ts-node -r tsconfig-paths/register src/db/seed/cli.ts variant "${opt:user, ''}" "${opt:variant, ''}"
       seed:reports: ts-node -r tsconfig-paths/register src/db/seed/cli.ts reports

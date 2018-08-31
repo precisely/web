@@ -55,12 +55,15 @@ if (isOffline) {
   }
 }
 
+if (!process.env.ENV) {
+  log.warn(`ENV environment variable not set`);
+}
+
 let stage: string | undefined;
 export function stageTableName(tableName: string): string {
   stage = stage || process.env.STAGE;
   if (!stage) {
-    log.silly('STAGE environment variable not set, using STAGE=test');
-    stage = 'test';
+    throw new Error(`STAGE not set`);
   }
   return `${stage}-${tableName}`;
 }
