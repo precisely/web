@@ -47,6 +47,7 @@ provider:
 
 resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
+  - Resources: ${file(./serverless/resources/network.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/s3-buckets.yml)}
