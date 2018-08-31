@@ -1,48 +1,38 @@
----
 BioinformaticsECSCluster:
   Type: AWS::ECS::Cluster
   Properties:
-    ClusterName: ${self:custom.vars.bioinformaticsClusterName}
+    ClusterName: ${self:custom.vars.bioinformaticsECSClusterName}
 
-BioinformaticsECSTaskDefinition:
+BioinformaticsECSTask:
   Type: AWS::ECS::TaskDefinition
   Properties:
     ExecutionRoleArn:
       Fn::GetAtt: [SystemRole, Arn]
     TaskRoleArn:
       Fn::GetAtt: [SystemRole, Arn]
-    Family: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
+    Family: ${self:custom.vars.bioinformaticsECSTaskName}
     NetworkMode: awsvpc
-    Memory: 512
-    Cpu: 256
+    Cpu: 4096
+    Memory: 8192
     ContainerDefinitions:
-      -
-        Name: ${self:custom.vars.bioinformaticsContainerName}
-        Memory: 512
-        Cpu: 256
+      - Name: ${self:custom.vars.bioinformaticsECSContainerName}
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
+        Environment:
+          - Name: AWS_S3_ENDPOINT_URL
+            Value: https://s3.amazonaws.com
+          - Name: S3_BUCKET_BIOINFORMATICS_UPLOAD
+            Value: ${self:custom.vars.bioinformaticsUploadBucket}
+          - Name: S3_BUCKET_BIOINFORMATICS_VCF
+            Value: ${self:custom.vars.bioinformaticsVCFBucket}
+          - Name: S3_BUCKET_BIOINFORMATICS_ERROR
+            Value: ${self:custom.vars.bioinformaticsErrorBucket}
         LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group:
-                Ref: BioinformaticsECSLogs
-              awslogs-region:
-                Ref: AWS::Region
-              awslogs-stream-prefix: ${self:provider.stage}-ecs
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: BioinformaticsECSLogs
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: ${self:provider.stage}-ecs-bioinformatics
     RequiresCompatibilities:
       - FARGATE
-
-BioinformaticsECSService:
-  Type: AWS::ECS::Service
-  Properties:
-    Cluster:
-      Ref: BioinformaticsECSCluster
-    ServiceName: ${self:provider.stage}-BioinformaticsECSService
-    TaskDefinition:
-      Ref: BioinformaticsECSTaskDefinition
-    DesiredCount: 0
-    LaunchType: FARGATE
-    NetworkConfiguration:
-      AwsvpcConfiguration:
-        Subnets:
-          - ${self:custom.vars.fullSubnetId}
