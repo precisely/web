@@ -15,7 +15,7 @@ const cases = require('jest-in-case');
 import {Report} from 'src/services/report/models';
 import {destroyFixtures} from 'src/common/fixtures';
 
-import {Personalizer} from './service';
+import {Personalizer} from './personalizer';
 import { addSimpleReportFixtures } from '../../fixtures/simple';
 import { addBetaReportFixtures } from 'src/services/report/fixtures/beta';
 import { isTagElement } from 'smart-report';

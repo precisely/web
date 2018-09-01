@@ -13,7 +13,7 @@ import { IContext } from 'accesscontrol-plus';
 import { GraphQLContext, accessControl } from 'src/services/graphql';
 
 import {Report, ReportState, ReportAttributes} from './models';
-import {Personalizer} from './services/personalizer';
+import {Personalizer} from './services/smart-report';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
