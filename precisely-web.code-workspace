@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "app-client"
+		},
+		{
+			"path": "app-aws-init"
 		}
 	],
 	"settings": {
