@@ -3,7 +3,7 @@ InternetGateway:
   Properties:
     Tags:
       - Key: Name
-        Value: ${self:provider.stage}-InternetGateway
+        Value: InternetGateway
 
 VPC:
   Type: AWS::EC2::VPC
@@ -14,7 +14,7 @@ VPC:
     InstanceTenancy: default
     Tags:
       - Key: Name
-        Value: ${self:provider.stage}-VPC
+        Value: VPC
 
 InternetGatewayAttachment:
   Type: AWS::EC2::VPCGatewayAttachment
@@ -33,7 +33,7 @@ Subnet:
       Ref: VPC
     Tags:
       - Key: Name
-        Value: ${self:provider.stage}-Subnet
+        Value: Subnet
 
 RouteTable:
   Type: AWS::EC2::RouteTable
@@ -42,7 +42,7 @@ RouteTable:
       Ref: VPC
     Tags:
       - Key: Name
-        Value: ${self:provider.stage}-RouteTable
+        Value: RouteTable
 
 RouteOutside:
   Type: AWS::EC2::Route
@@ -64,7 +64,7 @@ SubnetRouteTableAssociation:
 SecurityGroupBase:
   Type: AWS::EC2::SecurityGroup
   Properties:
-    GroupName: ${self:provider.stage}-SecurityGroupBase
+    GroupName: SecurityGroupBase
     GroupDescription: Security group for bioinformatics containers
     VpcId:
       Ref: VPC
@@ -72,10 +72,10 @@ SecurityGroupBase:
       - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
         CidrIp: 0.0.0.0/0
 
-SecurityGroupAllowSSH:
+SecurityGroupAllowInboundSSH:
   Type: AWS::EC2::SecurityGroup
   Properties:
-    GroupName: ${self:provider.stage}-SecurityGroupAllowSSH
+    GroupName: SecurityGroupAllowInboundSSH
     GroupDescription: Security group for bioinformatics containers
     VpcId:
       Ref: VPC

@@ -17,6 +17,7 @@ This repo contains the code for Precise.ly's GraphQL API and React client.
 /                   root folder
    app-backend/     GraphQL API node module & serverless app
    app-client/      React node module & serverless app
+   app-aws-init/    One-time AWS serverless setup
    serverless/      Common configuration
    config/          Environment variables (not committed)
 ```
@@ -243,6 +244,8 @@ How serverless environment variables are determined:
 ### AWS Accounts
 
 We maintain 3 AWS accounts: dev, stage and prod.
+
+When an account is first created, it must undergo a one-time CloudFormation setup using instructions in `app-aws-init/README.md`.
 
 #### dev
 https://dev-precisely.signin.aws.amazon.com/console
