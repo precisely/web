@@ -10,7 +10,7 @@ import { isArray } from 'util';
 import {rememberFixtures, destroyFixtures, resetAllTables} from 'src/common/fixtures';
 
 import {Report, calculateReportRequirements} from './models';
-import { PreciselyParser } from './parser';
+import { Parser } from './services/smart-report';
 
 describe('Report model', function () {
   beforeAll(resetAllTables);
@@ -122,10 +122,11 @@ describe('Report model', function () {
       ]);
     });
   });
+  
   describe('helper methods', function () {
     describe('calculateReportRequirements', function () {
       it('should collect variants in the __svnVariantRequirements key of the context', function () {
-        const parsedContent = PreciselyParser.parse(
+        const parsedContent = Parser.parse(
           `<AnalysisBox>
             <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
             <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>

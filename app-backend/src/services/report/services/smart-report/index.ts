@@ -10,4 +10,5 @@
  * @Last Modified time: 2018-08-10 09:50:32 
  */
 
-export {Personalizer} from './service';
+export {Personalizer} from './personalizer';
+export {Parser} from './parser';

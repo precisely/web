@@ -16,8 +16,8 @@ import {Context, Reducer, ReducibleElement} from 'smart-report';
 import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {VariantIndex, JoiVariantIndex, normalizeReferenceName} from 'src/common/variant-tools';
 
-import {PreciselyParser} from './parser';
-import {variantCall} from './services/personalizer/data-types/functions';
+import {Parser} from './services/smart-report';
+import {variantCall} from './services/smart-report/data-types/functions';
 const { uuid } = dynogels.types;
 
 export type ReportState = 'published' | 'draft';
@@ -220,7 +220,7 @@ async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFun
   }
   let parsedContent: ReducibleElement[] | null = null;
   try {
-    parsedContent = PreciselyParser.parse(rawContent);
+    parsedContent = Parser.parse(rawContent);
   } catch (e) {
     return next(e);
   }
