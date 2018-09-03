@@ -11,7 +11,7 @@ import {isOffline} from 'src/common/environment';
 
 const winston = require('winston');
 const { format } = winston;
-const WinstonCloudWatch = require('@aneilbaboo/winston-cloudwatch');
+const WinstonCloudWatch = require('winston-cloudwatch');
 
 export const LOG_DATA_SEP = '\t|\t';
 
