@@ -58,7 +58,7 @@ plugins:
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
-  - "@aneilbaboo/serverless-dynamodb-local" # this version installs dynamodb to project root by default
+  - serverless-dynamodb-local # this version installs dynamodb to project root by default
   - serverless-plugin-scripts
   - serverless-plugin-git-variables
   - serverless-offline # serverless-offline must be last in the list

@@ -2,15 +2,6 @@
 # yarn lockfile v1
 
 
-"@aneilbaboo/dynamodb-localhost@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@aneilbaboo/dynamodb-localhost/-/dynamodb-localhost-0.0.7.tgz#8793db920c2b6f90bdb10da520f585057cc5599c"
-  dependencies:
-    mkdirp "^0.5.0"
-    progress "^1.1.8"
-    rmdir "^1.2.0"
-    tar "^2.0.0"
-
 "@aneilbaboo/dynogels-promisified@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@aneilbaboo/dynogels-promisified/-/dynogels-promisified-1.0.6.tgz#892f50b28c81de34970c3b0b3fcd394d5f0d9532"
@@ -26,27 +17,6 @@
     joi "11.3.4"
     lodash "4.17.4"
     uuid "3.1.0"
-
-"@aneilbaboo/serverless-dynamodb-local@^0.2.33":
-  version "0.2.33"
-  resolved "https://registry.yarnpkg.com/@aneilbaboo/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.33.tgz#399f8361dd4f79943cbc5f50f10e700e4a87f0c1"
-  dependencies:
-    "@aneilbaboo/dynamodb-localhost" "^0.0.7"
-    aws-sdk "^2.7.0"
-    bluebird "^3.4.6"
-    lodash "^4.17.0"
-
-"@aneilbaboo/winston-cloudwatch@^1.13.0":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@aneilbaboo/winston-cloudwatch/-/winston-cloudwatch-1.13.1.tgz#f8e07f03e427bfed3aaea066784e649f886004d3"
-  dependencies:
-    async "^2.6.0"
-    aws-sdk "^2.186.0"
-    chalk "^2.3.0"
-    lodash.assign "^4.2.0"
-    lodash.find "^4.6.0"
-    lodash.isempty "^4.4.0"
-    proxy-agent "^2.2.0"
 
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0-beta.54"
@@ -446,7 +416,7 @@ acorn@^5.0.0, acorn@^5.3.0, acorn@^5.6.2:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.1.tgz#f095829297706a7c9776958c0afc8930a9b9d9d8"
 
-agent-base@4, agent-base@^4.1.0, agent-base@^4.2.0:
+agent-base@4, agent-base@^4.1.0, agent-base@^4.2.0, agent-base@~4.2.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-4.2.1.tgz#d89e5999f797875674c07d87f260fc41e83e8ca9"
   dependencies:
@@ -787,7 +757,7 @@ async@2.5.0:
   dependencies:
     lodash "^4.14.0"
 
-async@^2.0.0, async@^2.1.4, async@^2.6.0:
+async@^2.0.0, async@^2.1.4, async@^2.6.0, async@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
   dependencies:
@@ -867,9 +837,23 @@ aws-sdk@2.188.0:
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
 
-aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.186.0, aws-sdk@^2.228.0, aws-sdk@^2.7.0:
+aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.228.0:
   version "2.279.1"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.279.1.tgz#3a4fd4167932e4361dbdcfcb174ce4840ffcbf20"
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.1.0"
+    xml2js "0.4.19"
+
+aws-sdk@^2.259.1, aws-sdk@^2.7.0:
+  version "2.307.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.307.0.tgz#53a5906d36061d62e7b2ceb243920c7ef8feac97"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -2286,6 +2270,15 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
+
+dynamodb-localhost@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/dynamodb-localhost/-/dynamodb-localhost-0.0.6.tgz#0ce83e82caeb04a18246c5d87ce2d23af931b6cf"
+  dependencies:
+    mkdirp "^0.5.0"
+    progress "^1.1.8"
+    rmdir "^1.2.0"
+    tar "^2.0.0"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"
@@ -4860,6 +4853,10 @@ lodash.isempty@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isempty/-/lodash.isempty-4.4.0.tgz#6f86cbedd8be4ec987be9aaf33c9684db1b31e7e"
 
+lodash.iserror@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.iserror/-/lodash.iserror-3.1.1.tgz#297b9a05fab6714bc2444d7cc19d1d7c44b5ecec"
+
 lodash.isinteger@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz#619c0af3d03f8b04c31f5882840b77b11cd68343"
@@ -6010,9 +6007,9 @@ proxy-addr@~2.0.3:
     forwarded "~0.1.2"
     ipaddr.js "1.6.0"
 
-proxy-agent@^2.2.0:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/proxy-agent/-/proxy-agent-2.3.1.tgz#3d49d863d46cf5f37ca8394848346ea02373eac6"
+proxy-agent@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/proxy-agent/-/proxy-agent-3.0.1.tgz#4fb7b61b1476d0fe8e3a3384d90e2460bbded3f9"
   dependencies:
     agent-base "^4.2.0"
     debug "^3.1.0"
@@ -6021,7 +6018,7 @@ proxy-agent@^2.2.0:
     lru-cache "^4.1.2"
     pac-proxy-agent "^2.0.1"
     proxy-from-env "^1.0.0"
-    socks-proxy-agent "^3.0.0"
+    socks-proxy-agent "^4.0.1"
 
 proxy-from-env@^1.0.0:
   version "1.0.0"
@@ -6627,6 +6624,15 @@ serverless-domain-manager@^2.3.6:
     aws-sdk "^2.177.0"
     chalk "^2.0.1"
 
+serverless-dynamodb-local@^0.2.33:
+  version "0.2.33"
+  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.33.tgz#c51eab1c7e9a431c6980e922a66edfa7ffbe722e"
+  dependencies:
+    aws-sdk "^2.7.0"
+    bluebird "^3.4.6"
+    dynamodb-localhost "^0.0.6"
+    lodash "^4.17.0"
+
 serverless-offline@^3.25.4:
   version "3.25.6"
   resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-3.25.6.tgz#c730e71e6970c0633db1311fd1c2035c909cd96b"
@@ -6829,6 +6835,10 @@ smart-buffer@^1.0.13:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-1.1.15.tgz#7f114b5b65fab3e2a35aa775bb12f0d1c649bf16"
 
+smart-buffer@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.0.1.tgz#07ea1ca8d4db24eb4cac86537d7d18995221ace3"
+
 "smart-report@git+ssh://git@github.com/precisely/smart-report.git#1.3.1":
   version "1.3.1"
   resolved "git+ssh://git@github.com/precisely/smart-report.git#3b3f5772b49db1b9e81a29ac1df93b8eb7120fba"
@@ -6882,12 +6892,26 @@ socks-proxy-agent@^3.0.0:
     agent-base "^4.1.0"
     socks "^1.1.10"
 
+socks-proxy-agent@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/socks-proxy-agent/-/socks-proxy-agent-4.0.1.tgz#5936bf8b707a993079c6f37db2091821bffa6473"
+  dependencies:
+    agent-base "~4.2.0"
+    socks "~2.2.0"
+
 socks@^1.1.10:
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/socks/-/socks-1.1.10.tgz#5b8b7fc7c8f341c53ed056e929b7bf4de8ba7b5a"
   dependencies:
     ip "^1.1.4"
     smart-buffer "^1.0.13"
+
+socks@~2.2.0:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/socks/-/socks-2.2.1.tgz#68ad678b3642fbc5d99c64c165bc561eab0215f9"
+  dependencies:
+    ip "^1.1.5"
+    smart-buffer "^4.0.1"
 
 source-list-map@^2.0.0:
   version "2.0.0"
@@ -8011,6 +8035,19 @@ winchan@^0.2.0:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
+
+winston-cloudwatch@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/winston-cloudwatch/-/winston-cloudwatch-2.0.2.tgz#ce3f789ad344a390dd62939a58cb6bc1a9ea197c"
+  dependencies:
+    async "^2.6.1"
+    aws-sdk "^2.259.1"
+    chalk "^2.4.1"
+    lodash.assign "^4.2.0"
+    lodash.find "^4.6.0"
+    lodash.isempty "^4.4.0"
+    lodash.iserror "^3.1.1"
+    proxy-agent "^3.0.0"
 
 winston-transport@^4.2.0:
   version "4.2.0"
