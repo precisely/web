@@ -1,0 +1,13 @@
+{
+  "name": "precisely-web-aws-init",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "deploy": "yarn sls deploy"
+  },
+  "author": "Precise.ly, Inc",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^1.28.0"
+  }
+}

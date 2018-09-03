@@ -25,9 +25,9 @@ export async function uploadProcessor(event: S3CreateEvent, context: Context) {
     const ecs = new AWS.ECS();
 
     const params: AWS.ECS.Types.RunTaskRequest = {
-      cluster: getEnvVar('BIOINFORMATICS_CLUSTER'),
+      cluster: getEnvVar('ECS_BIOINFORMATICS_CLUSTER'),
       launchType: 'FARGATE',
-      taskDefinition: getEnvVar('BIOINFORMATICS_TASK_NAME'),
+      taskDefinition: getEnvVar('ECS_BIOINFORMATICS_TASK'),
       count: 1,
       networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
         awsvpcConfiguration: {
@@ -37,7 +37,6 @@ export async function uploadProcessor(event: S3CreateEvent, context: Context) {
       overrides: {
         containerOverrides: [
           {
-            name: process.env.BIOINFORMATICS_CONTAINER_NAME,
             environment: [
               // note to Constantine: name these env vars whatever you want
               //      they don't have any dependencies elsewhere

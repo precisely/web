@@ -1,0 +1,93 @@
+InternetGateway:
+  Type: AWS::EC2::InternetGateway
+  Properties:
+    Tags:
+      - Key: Name
+        Value: InternetGateway
+
+VPC:
+  Type: AWS::EC2::VPC
+  Properties:
+    CidrBlock: 10.0.0.0/16
+    EnableDnsSupport: True
+    EnableDnsHostnames: False
+    InstanceTenancy: default
+    Tags:
+      - Key: Name
+        Value: VPC
+
+InternetGatewayAttachment:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    InternetGatewayId:
+      Ref: InternetGateway
+    VpcId:
+      Ref: VPC
+
+Subnet:
+  Type: AWS::EC2::Subnet
+  Properties:
+    CidrBlock: 10.0.0.0/16
+    MapPublicIpOnLaunch: False
+    VpcId:
+      Ref: VPC
+    Tags:
+      - Key: Name
+        Value: Subnet
+
+RouteTable:
+  Type: AWS::EC2::RouteTable
+  Properties:
+    VpcId:
+      Ref: VPC
+    Tags:
+      - Key: Name
+        Value: RouteTable
+
+RouteOutside:
+  Type: AWS::EC2::Route
+  Properties:
+    GatewayId:
+      Ref: InternetGateway
+    DestinationCidrBlock: 0.0.0.0/0
+    RouteTableId:
+      Ref: RouteTable
+
+SubnetRouteTableAssociation:
+  Type: AWS::EC2::SubnetRouteTableAssociation
+  Properties:
+    RouteTableId:
+      Ref: RouteTable
+    SubnetId:
+      Ref: Subnet
+
+SecurityGroupBase:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupName: SecurityGroupBase
+    GroupDescription: Security group for bioinformatics containers
+    VpcId:
+      Ref: VPC
+    SecurityGroupEgress:
+      - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
+        CidrIp: 0.0.0.0/0
+
+SecurityGroupAllowInboundSSH:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupName: SecurityGroupAllowInboundSSH
+    GroupDescription: Security group for bioinformatics containers
+    VpcId:
+      Ref: VPC
+    SecurityGroupEgress:
+      - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
+        CidrIp: 0.0.0.0/0
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        CidrIp: 0.0.0.0/0
+        FromPort: 22
+        ToPort: 22
+      - IpProtocol: tcp
+        CidrIp: 0.0.0.0/0
+        FromPort: 6601
+        ToPort: 6601

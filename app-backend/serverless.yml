@@ -96,10 +96,10 @@ custom:
     bioinformaticsUploadBucket: ${self:provider.stage}-precisely-bioinformatics-upload
     bioinformaticsErrorBucket: ${self:provider.stage}-precisely-bioinformatics-error
 
-    # Bioinformatics ECS Fargate Task
-    bioinformaticsECSTaskDefinitionName: ${self:provider.stage}-BioinformaticsECSTaskDefinition
-    bioinformaticsContainerName: ${self:provider.stage}-BioinformaticsContainerName
-    bioinformaticsClusterName: ${self:provider.stage}-BioinformaticsECSClusterName
+    # Bioinformatics ECS resource names
+    bioinformaticsECSClusterName: ${self:provider.stage}-BioinformaticsECSCluster
+    bioinformaticsECSContainerName: ${self:provider.stage}-BioinformaticsECSContainer
+    bioinformaticsECSTaskName: ${self:provider.stage}-BioinformaticsECSTask
 
   customDomain: # domain-manager settings - for the api
     domainName: ${self:custom.common.apiDomain}
@@ -191,9 +191,8 @@ functions:
     role: SystemRole
     handler: src/services/bioinformatics/handlers.uploadProcessor
     environment:
-      BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsClusterName}
-      BIOINFORMATICS_TASK_NAME: ${self:custom.vars.bioinformaticsECSTaskDefinitionName}
-      BIOINFORMATICS_CONTAINER_NAME: ${self:custom.vars.bioinformaticsContainerName}
+      ECS_BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
+      ECS_BIOINFORMATICS_TASK: ${self:custom.vars.bioinformaticsECSTaskName}
       FULL_SUBNET: FullSubnet-PreciselyDefaultVPC # manually created
     events:
       - s3:

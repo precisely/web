@@ -1,0 +1,16 @@
+service:
+  name: precisely-aws-init
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${self:custom.common.stage}
+  region: ${self:custom.common.region}
+  profile: ${self:custom.common.profile}
+  deploymentBucket: ${self:custom.common.account}-precisely-deployment-bucket
+
+resources:
+  - Resources: ${file(./serverless/resources/network.yml)}
+
+custom:
+  common: ${file(../serverless/common.js):vars}
