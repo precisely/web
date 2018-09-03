@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "app-aws-init"
+		},
+		{
+			"path": "env"
 		}
 	],
 	"settings": {
