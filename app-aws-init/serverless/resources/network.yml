@@ -91,3 +91,7 @@ SecurityGroupAllowInboundSSH:
         CidrIp: 0.0.0.0/0
         FromPort: 6601
         ToPort: 6601
+      - IpProtocol: udp
+        CidrIp: 0.0.0.0/0
+        FromPort: 60000
+        ToPort: 61000
