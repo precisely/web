@@ -36,3 +36,27 @@ BioinformaticsECSTask:
             awslogs-stream-prefix: ${self:provider.stage}-ecs-bioinformatics
     RequiresCompatibilities:
       - FARGATE
+
+# XXX: This is configured, but currently adds no value. First, we do not have
+# multiple tasks which need to execute together as a "service". Second, more
+# seriously, see the AwsvpcConfiguration down there? One might expect it to
+# provide reasonable defaults for tasks bound to this service, but it does no
+# such thing. Running `aws ecs run-task` _requires_ this information to be
+# passed in at runtime no matter what is configured here.
+BioinformaticsECSService:
+  Type: AWS::ECS::Service
+  Properties:
+    Cluster:
+      Ref: BioinformaticsECSCluster
+    ServiceName: ${self:provider.stage}-BioinformaticsECSService
+    TaskDefinition:
+      Ref: BioinformaticsECSTask
+    DesiredCount: 0
+    LaunchType: FARGATE
+    NetworkConfiguration:
+      AwsvpcConfiguration:
+        AssignPublicIp: ENABLED
+        Subnets:
+          - ${self:custom.vars.subnetId}
+        SecurityGroups:
+          - ${self:custom.vars.securityGroupIdAllowInboundSSH}

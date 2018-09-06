@@ -44,6 +44,9 @@ plugins:
           count_threshold: 5
   fixme:
     enabled: true
+    config:
+      strings:
+        - FIXME
   nodesecurity:
     enabled: true
 exclude_patterns:
