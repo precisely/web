@@ -94,8 +94,8 @@ describe('Report model', function () {
 
       const savePromise = report.saveAsync();
       await expect(savePromise).rejects.toBeInstanceOf(Error);
-      await expect(savePromise).rejects.toHaveProperty('location.lineNumber', 2);
-      await expect(savePromise).rejects.toHaveProperty('location.columnNumber', 7);
+      await expect(savePromise).rejects.toHaveProperty('errors.0.location.lineNumber', 2);
+      await expect(savePromise).rejects.toHaveProperty('errors.0.location.columnNumber', 7);
     });
   });
 
@@ -126,12 +126,12 @@ describe('Report model', function () {
   describe('helper methods', function () {
     describe('calculateReportRequirements', function () {
       it('should collect variants in the __svnVariantRequirements key of the context', function () {
-        const parsedContent = Parser.parse(
+        const {elements, errors} = Parser.parse(
           `<AnalysisBox>
             <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
             <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>
           </AnalysisBox>`);
-        const {variantIndexes} = calculateReportRequirements(parsedContent);
+        const {variantIndexes} = calculateReportRequirements(elements);
         expect(variantIndexes).toBeDefined();
         expect(isArray(variantIndexes)).toBeTruthy();
         expect(variantIndexes).toHaveLength(2);

@@ -7,6 +7,7 @@
 */
 
 import { isNumber } from 'util';
+import { SequenceVariant } from 'src/common/svn';
 
 import * as Joi from 'joi';
 import slugify from 'slugify';
@@ -18,11 +19,11 @@ import {VariantIndex, JoiVariantIndex, normalizeReferenceName} from 'src/common/
 
 import {Parser} from './services/smart-report';
 import {variantCall} from './services/smart-report/data-types/functions';
+import { ReportContentError } from './errors';
+
 const { uuid } = dynogels.types;
 
 export type ReportState = 'published' | 'draft';
-
-import { SequenceVariant } from 'src/common/svn';
 
 export interface ReportAttributes {
   id?: string;
@@ -218,18 +219,17 @@ async function parseReportContent(attrs: ReportAttributes, next: ListenerNextFun
   if (!rawContent) {
     return next(new Error('Report contains no content'));
   }
-  let parsedContent: ReducibleElement[] | null = null;
-  try {
-    parsedContent = Parser.parse(rawContent);
-  } catch (e) {
-    return next(e);
+  const {elements, errors} = Parser.parse(rawContent);
+  if (errors.length === 0) {
+    const requirements = calculateReportRequirements(elements);
+    next(null, {
+      ...attrs, 
+      parsedContent: JSON.stringify(elements),
+      ...requirements
+    });
+  } else {
+    next(new ReportContentError(errors));
   }
-  const requirements = calculateReportRequirements(parsedContent);
-  next(null, {
-    ...attrs, 
-    parsedContent: JSON.stringify(parsedContent),
-    ...requirements
-  });
 }
 
 function positionsFromSVNVariant(svnVariant: SequenceVariant): number[] {
