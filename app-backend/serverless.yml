@@ -76,7 +76,7 @@ custom:
     # This should only need to be done once per account.
     subnetId: ${self:custom.vars.subnetIdMap.${self:custom.common.account}}
     subnetIdMap:
-      dev: subnet-050b917dbfeaf43ad
+      dev: subnet-0d89503ebe51cbf83
       stage: not-yet-provisioned-see-serverless-yml
       prod: not-yet-provisioned-see-serverless-yml
 
@@ -84,7 +84,7 @@ custom:
     # This should only need to be done once per account.
     securityGroupIdAllowInboundSSH: ${self:custom.vars.securityGroupIdAllowInboundSSHMap.${self:custom.common.account}}
     securityGroupIdAllowInboundSSHMap:
-      dev: sg-0ca9e7b2d39e79bd6
+      dev: sg-0bf2d34c97af1f49a
       stage: not-yet-provisioned-see-serverless-yml
       prod: not-yet-provisioned-see-serverless-yml
 
