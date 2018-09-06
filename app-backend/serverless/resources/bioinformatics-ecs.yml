@@ -13,7 +13,7 @@ BioinformaticsECSTask:
     Family: ${self:custom.vars.bioinformaticsECSTaskName}
     NetworkMode: awsvpc
     Cpu: 4096
-    Memory: 30720
+    Memory: 20480
     ContainerDefinitions:
       - Name: ${self:custom.vars.bioinformaticsECSContainerName}
         Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
