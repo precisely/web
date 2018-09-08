@@ -60,3 +60,31 @@ BioinformaticsECSService:
           - ${self:custom.vars.subnetId}
         SecurityGroups:
           - ${self:custom.vars.securityGroupIdAllowInboundSSH}
+
+BioinformaticsMetricFilterErrors:
+  Type: AWS::Logs::MetricFilter
+  Properties:
+    LogGroupName:
+      Ref: BioinformaticsECSLogs
+    FilterPattern: '{$.level="error"}'
+    MetricTransformations:
+      - MetricValue: 1
+        MetricNamespace: Bioinformatics/Tasks
+        MetricName: TaskErrorCount
+
+BioinformaticsAlarm:
+  Type: AWS::CloudWatch::Alarm
+  Properties:
+    AlarmDescription: Bioinformatics task error alert
+    Namespace: Bioinformatics/Tasks
+    MetricName: TaskErrorCount
+    Statistic: Sum
+    Period: 60
+    EvaluationPeriods: 1
+    Threshold: 0
+    ComparisonOperator: GreaterThanThreshold
+    TreatMissingData: notBreaching
+    AlarmActions:
+      - Ref: TopicErrorNotification
+    # InsufficientDataActions:
+    #   - Ref: TopicErrorNotification
