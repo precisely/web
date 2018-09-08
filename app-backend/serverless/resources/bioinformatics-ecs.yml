@@ -70,14 +70,14 @@ BioinformaticsMetricFilterErrors:
     MetricTransformations:
       - MetricValue: 1
         MetricNamespace: Bioinformatics/Tasks
-        MetricName: TaskErrorCount
+        MetricName: ${self:provider.stage}-TaskErrorCount
 
 BioinformaticsAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
     AlarmDescription: Bioinformatics task error alert
     Namespace: Bioinformatics/Tasks
-    MetricName: TaskErrorCount
+    MetricName: ${self:provider.stage}-TaskErrorCount
     Statistic: Sum
     Period: 60
     EvaluationPeriods: 1

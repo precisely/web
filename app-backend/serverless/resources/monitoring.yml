@@ -2,4 +2,4 @@ TopicErrorNotification:
   Type: AWS::SNS::Topic
   Properties:
     DisplayName: Error notifications
-    TopicName: TopicErrorNotification
+    TopicName: ${self:provider.stage}-TopicErrorNotification
