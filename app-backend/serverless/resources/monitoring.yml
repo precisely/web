@@ -1,0 +1,5 @@
+TopicErrorNotification:
+  Type: AWS::SNS::Topic
+  Properties:
+    DisplayName: Error notifications
+    TopicName: ${self:provider.stage}-TopicErrorNotification

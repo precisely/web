@@ -51,6 +51,7 @@ resources:
   - Resources: ${file(./serverless/resources/dynogels-tables.js):Definitions}
   - Resources: ${file(./serverless/resources/s3-buckets.yml)}
   - Resources: ${file(./serverless/resources/logs.yml)}
+  - Resources: ${file(./serverless/resources/monitoring.yml)}
   - Resources: ${file(./serverless/resources/bioinformatics-ecs.yml)}
   - Resources: ${file(./serverless/resources/apigateway-stage.yml)}
   
