@@ -23,12 +23,12 @@ export class Personalizer {
   }
 
   async personalize(): Promise<ReducedElement[]> {
-    const parsedContent: ReducibleElement[] = JSON.parse(this.report.getValid('parsedContent')); 
+    const elements: ReducibleElement[] = this.report.getValid('publishedElements'); 
     const context: Context = {};
     const variantIndexes = this.report.getValid('variantIndexes');
     const variantCalls = await VariantCall.forUser(this.userId, variantIndexes);
     addVariantCallsToContext(variantCalls, context);
 
-    return PreciselyReducer.reduce(parsedContent, context);
+    return PreciselyReducer.reduce(elements, context);
   }
 }

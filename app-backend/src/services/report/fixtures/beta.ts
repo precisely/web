@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-13 15:10:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-22 12:34:15
+ * @Last Modified time: 2018-09-10 17:43:36
  */
 
 // This file represent fixtures for reports in the beta product
@@ -39,6 +39,7 @@ export async function addBetaReportFixtures() {
   });
 
   await addFixtures(report);
+  await report.publish();
   
   return {report, variants};
 }

@@ -35,9 +35,10 @@ accessControl
       .read.onFields('personalization').where(userIdArgumentIsUserOrImplicit)
   .grant('author')
     .resource('report')
-      .read.onFields('*').where(userOwnsResource)      
+      .read.onFields('*').where(userOwnsResource) 
       .create
-      .update.where(userOwnsResource);
+      .update.where(userOwnsResource)
+      .action('publish').where(userOwnsResource);
 // tslint:enable no-unused-expressions
 
 export interface ReportCreateArgs {
@@ -99,9 +100,19 @@ export const resolvers = {
         content: content || report.get('content')
       });
       return await report.updateAsync();
+    },
+    async publishReport(
+      _: null | undefined, 
+      {id}: {id: string}, 
+      context: GraphQLContext
+    ): Promise<Report> {
+      const report = <Report> await context.valid(
+        'report:publish',
+        await Report.getAsync(id)
+      );
+      return await report.publish();
     }
   },
-
   Report: {
     ...GraphQLContext.dynamoAttributeResolver<ReportAttributes>('report', {
       // structured as { graphQLField: dynamoDBAttribute, ... }
