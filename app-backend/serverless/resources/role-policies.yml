@@ -39,6 +39,26 @@ PreciselyDataManagerPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.write}
 
+ECSPolicy:
+  PolicyName: ${self:provider.stage}-PreciselyECSPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - Effect: Allow
+        Action:
+          - ecs:RunTask
+        Resource:
+          - '*'
+      - Effect: Allow
+        Action:
+          - iam:PassRole
+        Resource:
+          Fn::Join:
+            - ""
+            - - "arn:aws:iam::"
+              - ${self:custom.common.accountId}
+              - ":role/${self:provider.stage}-PreciselySystemRole"
+
 #
 # Constantine: the UserUploadPolicy is not yet used; something like this is necessary for the uploader
 #      

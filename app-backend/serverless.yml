@@ -197,18 +197,32 @@ functions:
             type: request
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
+  BioinformaticsUpdateAllUsersCallVariants:
+    role: SystemRole
+    handler: src/services/bioinformatics/handlers.updateAllUsersCallVariants
+    timeout: 300
+    events:
+      - schedule: cron(0 * * * ? *)
+    environment:
+      STAGE: ${self:provider.stage}
+      CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
+      TASK: ${self:custom.vars.bioinformaticsECSTaskName}
+      SUBNET: ${self:custom.vars.subnetId}
+      SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
+
   # Raw data uploader is triggered by new file in any of the raw data buckets
   BioinformaticsUploadProcessor:
     role: SystemRole
     handler: src/services/bioinformatics/handlers.uploadProcessor
-    environment:
-      ECS_BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
-      ECS_BIOINFORMATICS_TASK: ${self:custom.vars.bioinformaticsECSTaskName}
-      FULL_SUBNET: FullSubnet-PreciselyDefaultVPC # manually created
     events:
       - s3:
           bucket: BioinformaticsUpload
           event: s3:ObjectCreated:*
+    environment:
+      ECS_BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
+      ECS_BIOINFORMATICS_TASK: ${self:custom.vars.bioinformaticsECSTaskName}
+      SUBNET: ${self:custom.vars.subnetId}
+      SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 
   SysAddNewVariantRequirementsFromReports:
     role: SystemRole

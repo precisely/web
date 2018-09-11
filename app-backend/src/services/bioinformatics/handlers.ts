@@ -8,11 +8,62 @@
 
 import * as AWS from 'aws-sdk';
 import {log} from 'src/common/logger';
-import {Handler, Context, Callback, S3CreateEvent} from 'aws-lambda';
+import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent} from 'aws-lambda';
 import { getEnvVar } from 'src/common/environment';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context) => {
   // pass
+};
+
+function makeTaskParams(overrides: object): AWS.ECS.Types.RunTaskRequest {
+  const base = {
+    cluster: getEnvVar('CLUSTER'),
+    launchType: 'FARGATE',
+    taskDefinition: getEnvVar('TASK'),
+    count: 1,
+    networkConfiguration: {
+      awsvpcConfiguration: {
+        assignPublicIp: 'ENABLED',
+        subnets: [getEnvVar('SUBNET')],
+        securityGroups: [getEnvVar('SECURITY_GROUP')]
+      }
+    }
+  };
+  const res: AWS.ECS.Types.RunTaskRequest = {...base, ...overrides};
+  return res;
+};
+
+export async function updateAllUsersCallVariants(event: ScheduledEvent, context: Context) {
+  try {
+    let params = makeTaskParams({
+      overrides: {
+        containerOverrides: [
+          {
+            name: `${getEnvVar('STAGE')}-BioinformaticsECSContainer`,
+            cpu: 512,
+            memory: 2048,
+            command: [
+              "/bin/bash",
+              "-c",
+              `/precisely/app/run-remote-access.sh && /precisely/app/run-update.sh --data-source=23andme --stage=${getEnvVar('STAGE')} --test-mock-lambda=false --cleanup-after=true`
+            ]
+          }
+        ]
+      }
+    });
+    const Count = 0;
+    log.info(`${Count} new call variants found`);
+    if (Count > 0) {
+      log.debug(JSON.stringify(params));
+      const ecs = new AWS.ECS();
+      await ecs.runTask(params).promise();
+      log.info(`task ${params.taskDefinition} started`);
+    } else {
+      log.info('no need to run update task, terminating');
+    }
+  } catch (error) {
+    log.error(`error: ${error}`);
+  }
 };
 
 export async function uploadProcessor(event: S3CreateEvent, context: Context) {
@@ -31,7 +82,8 @@ export async function uploadProcessor(event: S3CreateEvent, context: Context) {
       count: 1,
       networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
         awsvpcConfiguration: {
-          subnets: [getEnvVar('FULL_SUBNET')],
+          subnets: [getEnvVar('SUBNET')],
+          securityGroups: [getEnvVar('SECURITY_GROUP')]
         }
       },
       overrides: {

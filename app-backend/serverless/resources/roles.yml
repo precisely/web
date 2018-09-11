@@ -59,6 +59,7 @@ SystemRole:
   
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+      - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
 
 UserUploadLambdaRole:
   Type: AWS::IAM::Role
