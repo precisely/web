@@ -105,4 +105,34 @@ describe('Report schema', function () {
     }
   `    
   ]);
+
+  it('should allow creating a report', async () => {
+    const query = `mutation { createReport(title: "foo", content: "# here is some content") {
+      title content 
+    } }`;
+    const result = await graphql(mockSchema, query, null, {}, {});
+    expect(result).toEqual({
+      data: { createReport: { title: 'str', content: 'str' } }
+    });
+  });
+
+  it('should allow updating a report', async () => {
+    const query = `mutation { updateReport(id: "123", title: "foo", content: "# here is some content") {
+      id title content 
+    } }`;
+    const result = await graphql(mockSchema, query, null, {}, {});
+    expect(result).toEqual({
+      data: { updateReport: { id: 'str', title: 'str', content: 'str' } }
+    });
+  });
+
+  it('should allow publishing a report', async () => {
+    const query = `mutation { publishReport(id: "123") {
+      id title content 
+    } }`;
+    const result = await graphql(mockSchema, query, null, {}, {});
+    expect(result).toEqual({
+      data: { publishReport: { id: 'str', title: 'str', content: 'str' } }
+    });
+  });
 });
