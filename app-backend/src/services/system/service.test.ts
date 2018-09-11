@@ -7,11 +7,24 @@ import { VariantIndex } from 'src/common/variant-tools';
 
 let titleCounter = 0;
 let ownerCounter = 0;
-function reportFixture(svnVariants: string[], title?: string, ownerId?: string) {
+type ReportFixtureArguments = { variants: string[], title?: string, ownerId?: string };
+
+async function addReportFixtures(...args: ReportFixtureArguments[]) {
+  return rememberFixtures(... await Promise.all(args.map(a => addReportFixture(a))));
+}
+
+async function addReportFixture({variants, title, ownerId}: ReportFixtureArguments) {
   title = title || `title${titleCounter++}`;
   ownerId = ownerId || `owner${ownerCounter++}`;
-  const variantFuncalls = svnVariants.map(v => `variantCall("${v}")`);
-  return new Report({ title, ownerId, content: `{ ${variantFuncalls.join(' and ')} }`});
+  const variantFuncalls = variants.map(v => `variantCall("${v}")`);
+  const content = `{ ${variantFuncalls.join(' and ')} }`;
+  const report = new Report({ 
+    title, 
+    ownerId, 
+    content: content
+  });
+  await report.saveAsync();
+  return report.publish();
 }
 
 function refIndexSorter(a: VariantIndex, b: VariantIndex) {
@@ -34,7 +47,7 @@ describe('SystemService', function () {
     });
 
     it('should return one refIndex when there is one report with one refIndex', async function () {
-      await addFixtures(reportFixture(['chr1.37p13:g.[10=];[10=]']));
+      await addReportFixtures({variants: ['chr1.37p13:g.[10=];[10=]']});
 
       const refIndexes = await SystemService.collectVariantIndexes();
 
@@ -46,7 +59,7 @@ describe('SystemService', function () {
     });
 
     it('should return two refIndex when there is one report with two refIndexes', async function () {
-      await addFixtures(reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]']));
+      await addReportFixtures({ variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]'] });
 
       const refIndexes = await SystemService.collectVariantIndexes();
 
@@ -61,9 +74,9 @@ describe('SystemService', function () {
     });
 
     it('should return refIndexes across multiple reports', async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]']),
-        reportFixture(['chr3.37p13:g.[30=];[30=]', 'chr4.37p13:g.[40T>C];[40A>T]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]'] },
+        { variants: ['chr3.37p13:g.[30=];[30=]', 'chr4.37p13:g.[40T>C];[40A>T]'] }
       );
 
       const refIndexes = await SystemService.collectVariantIndexes();
@@ -85,9 +98,9 @@ describe('SystemService', function () {
     });
 
     it('should return a non-redundant set of refIndexes', async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]']),
-        reportFixture(['chr2.37p13:g.[20=];[20=]', 'chr4.37p13:g.[40T>C];[40A>T]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]'] },
+        { variants: ['chr2.37p13:g.[20=];[20=]', 'chr4.37p13:g.[40T>C];[40A>T]'] }
       );
 
       const refIndexes = await SystemService.collectVariantIndexes();
@@ -106,10 +119,10 @@ describe('SystemService', function () {
     });
 
     it('should correctly return refindexes for 3 reports', async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]']),
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]']),
-        reportFixture(['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]'] },
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]'] },
+        { variants: ['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'] }
       );
 
       const {Count: reportCount} = await Report.scan().execAsync();
@@ -129,9 +142,9 @@ describe('SystemService', function () {
     });
     
     it('should create SystemVariantRequirement entries based on variants mentioned in reports', async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]']),
-        reportFixture(['chr3.37p13:g.[30=];[30=]', 'chr4.37p13:g.[40T>C];[40A>T]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20A>T]'] },
+        { variants: ['chr3.37p13:g.[30=];[30=]', 'chr4.37p13:g.[40T>C];[40A>T]'] }
       );
       await SystemService.addNewVariantRequirementsFromReports();
       const svrs = await SystemVariantRequirement.scan().execAsync();
@@ -140,10 +153,10 @@ describe('SystemService', function () {
     });
 
     it('should create SystemVariantRequirement entries based on redundant variants', async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]']),
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]']),
-        reportFixture(['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]'] },
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]'] },
+        { variants: ['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'] }
       );
 
       const {Count: reportCount} = await Report.scan().execAsync();
@@ -205,10 +218,10 @@ describe('SystemService', function () {
 
   describe('getRequirements', function () {
     beforeEach(async function () {
-      await addFixtures(
-        reportFixture(['chr1.37p13:g.[10=];[10=]']),
-        reportFixture(['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]']),
-        reportFixture(['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'])
+      await addReportFixtures(
+        { variants: ['chr1.37p13:g.[10=];[10=]'] },
+        { variants: ['chr1.37p13:g.[10=];[10=]', 'chr2.37p13:g.[20=];[20=]', 'chr3.37p13:g.[30=];[30=]'] },
+        { variants: ['chr4.37p13:g.[40=];[40=]', 'chr5.37p13:g.[50=];[50=]', 'chr6.37p13:g.[60=];[60=]'] }
       );
       await SystemService.addNewVariantRequirementsFromReports();
       const {Items: svrs} = await SystemVariantRequirement.scan().execAsync();

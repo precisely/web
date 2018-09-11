@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:35 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-21 07:36:27
+ * @Last Modified time: 2018-09-10 17:42:56
  */
 
 import { Report } from '../../models';
@@ -61,6 +61,7 @@ export async function addSimpleReportFixtures() {
     title: 'variant-test'
   });
   await addFixtures(report);
+  await report.publish();
   
   const promises = [
     ...<Promise<VariantCall>[]> variants.map(vc => {
