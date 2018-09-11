@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-29 08:08:29
+ * @Last Modified time: 2018-09-10 22:29:18
  */
 
 // tslint:disable no-any
@@ -26,7 +26,7 @@ import { isString } from 'util';
 describe('Report resolver', function () {
   beforeAll(resetAllTables);
   
-  describe('create', function () {
+  describe('createReport', function () {
     afterAll(destroyFixtures);
 
     it('should create a report if the user is an author', async function () {
@@ -53,7 +53,7 @@ describe('Report resolver', function () {
     });  
   });
   
-  describe('update', function () {
+  describe('updateReport', function () {
     afterAll(destroyFixtures);
 
     it('should allow the user to save their own report', async function () {
@@ -92,6 +92,48 @@ describe('Report resolver', function () {
       await expect(promise).rejects.toBeInstanceOf(TypedError);
       await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
       await expect(promise).rejects.toHaveProperty('message', 'report:update');
+    });  
+  });
+  
+  describe('publishReport', function () {
+    afterAll(destroyFixtures);
+
+    it('should allow the user to publish their own report', async function () {
+      const report = await new Report({
+        ownerId: 'bob',
+        title: "Bob's report",
+        content: 'initial content'
+      }).saveAsync();
+      rememberFixtures(report);
+      expect(report.get('state')).toEqual('draft');
+
+      const context = makeContext({ userId: 'bob', roles: ['author']});
+      expect(isString(report.get('id'))).toBeTruthy();
+      const publishedReport = await resolvers.Mutation.publishReport(
+        null, { id: report.getValid('id') },
+        context
+      );
+      expect(publishedReport.get('state')).toEqual('published');
+    });  
+
+    it('should throw an error if the user is not an author', async function () {
+      const report = await new Report({
+        ownerId: 'bob',
+        title: "Bob's report",
+        content: 'initial content'
+      }).saveAsync();
+      rememberFixtures(report);
+
+      // author sally tries to update bob's report
+      const context = makeContext({ userId: 'sally', roles: ['author']});
+      expect(isString(report.get('id'))).toBeTruthy();
+      const promise = resolvers.Mutation.publishReport(
+        null, { id: report.getValid('id') },
+        context
+      );
+      await expect(promise).rejects.toBeInstanceOf(TypedError);
+      await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
+      await expect(promise).rejects.toHaveProperty('message', 'report:publish');
     });  
   });
   

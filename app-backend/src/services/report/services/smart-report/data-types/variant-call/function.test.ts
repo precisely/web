@@ -14,7 +14,7 @@ import {Context} from 'smart-report';
 
 import {VariantCall} from 'src/services/variant-call';
 
-import { variantCall } from '.';
+import { variantCall } from './function';
 import { addVariantCallsToContext } from './helpers';
 
 describe('Personalizer reducer functions', function () {
