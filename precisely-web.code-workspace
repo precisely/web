@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "env"
+		},
+		{
+			"path": "serverless"
 		}
 	],
 	"settings": {
