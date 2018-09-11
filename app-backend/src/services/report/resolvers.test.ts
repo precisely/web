@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-10 22:02:39
+ * @Last Modified time: 2018-09-10 22:29:18
  */
 
 // tslint:disable no-any
@@ -133,7 +133,7 @@ describe('Report resolver', function () {
       );
       await expect(promise).rejects.toBeInstanceOf(TypedError);
       await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
-      await expect(promise).rejects.toHaveProperty('message', 'report:update');
+      await expect(promise).rejects.toHaveProperty('message', 'report:publish');
     });  
   });
   
