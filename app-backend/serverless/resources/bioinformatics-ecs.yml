@@ -86,5 +86,3 @@ BioinformaticsAlarm:
     TreatMissingData: notBreaching
     AlarmActions:
       - Ref: TopicErrorNotification
-    # InsufficientDataActions:
-    #   - Ref: TopicErrorNotification
