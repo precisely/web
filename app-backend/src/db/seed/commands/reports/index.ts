@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Report, ReportAttributes } from 'src/services/report/models';
 import { isString } from 'util';
-import { batchCreate } from 'src/db/dynamo/batch';
+import batchPromises = require('batch-promises');
 
 /**
  * Loads all reports (files with .md) in this directory, assigning ownership to ownerId
@@ -17,9 +17,14 @@ export async function reportsCommand(ownerId: string = 'system') {
     return mdMatch ? mdMatch[1] : null;
   }).filter(x => isString(x));
 
-  const results = await batchCreate(Report, titles.map(title => reportAttributes({ title, ownerId })));
-  console.log('Created reports: %s', results.map(result => {
-    return `{slug: ${result.data.slug}, title: ${result.data.title}, id: ${result.data.id})}`;
+  const reports = await batchPromises(
+    10, titles, title => new Report(reportAttributes({ title, ownerId })).saveAsync()
+  );
+  // publish the reports!
+  await batchPromises(10, reports, (report: Report) => report.publish());
+
+  console.log('Created %d reports: %s', reports.length, reports.map(report => {
+    return `{slug: ${report.get('slug')}, title: ${report.get('title')}, id: ${report.get('id')})}`;
   }).join(', '));
 }
 
