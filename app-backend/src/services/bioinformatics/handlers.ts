@@ -34,7 +34,7 @@ function makeTaskParams(overrides: object): AWS.ECS.Types.RunTaskRequest {
   return res;
 };
 
-export async function updateAllUsersCallVariants(event: ScheduledEvent, context: Context) {
+export async function updateAllUsersVariantCalls(event: ScheduledEvent, context: Context) {
   try {
     let params = makeTaskParams({
       overrides: {
@@ -52,16 +52,16 @@ export async function updateAllUsersCallVariants(event: ScheduledEvent, context:
         ]
       }
     });
-    log.info('checking if any new system call variants have been added...');
+    log.info('checking if any new system variant calls have been added...');
     const res = await SystemVariantRequirement
       .query('new')
       .usingIndex('statusIndex')
       .select('COUNT')
       .execAsync();
     log.info(`res: ${JSON.stringify(res)}`);
-    const Count = res.Count;
-    log.info(`${Count} new call variants found`);
-    if (Count > 0) {
+    const count = res.Count;
+    log.info(`${count} new variant calls found`);
+    if (count > 0) {
       log.debug(JSON.stringify(params));
       const ecs = new AWS.ECS();
       await ecs.runTask(params).promise();

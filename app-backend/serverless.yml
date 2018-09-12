@@ -197,9 +197,9 @@ functions:
             type: request
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
-  BioinformaticsUpdateAllUsersCallVariants:
+  BioinformaticsUpdateAllUsersVariantCalls:
     role: SystemRole
-    handler: src/services/bioinformatics/handlers.updateAllUsersCallVariants
+    handler: src/services/bioinformatics/handlers.updateAllUsersVariantCalls
     timeout: 300
     events:
       - schedule: cron(0 * * * ? *)
