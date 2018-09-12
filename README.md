@@ -202,6 +202,9 @@ yarn seed:genetics --user {userId} --genetics {wt|hom|het|less-common-het|compou
 yarn seed:variant {userId} {gene.variant:zygosity}
 # e.g.,
 yarn seed:variant --user 'auth0|d6ba63b91f' --variant mthfr.c677t:het # add heterozygotic variant call for c677t
+
+# add the system-wide variant requirements:
+yarn sls invoke local -f SysAddNewVariantRequirementsFromReports
 ```
 
 ##### DynamoDB Admin local
