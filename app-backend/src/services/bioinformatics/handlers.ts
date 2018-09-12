@@ -9,6 +9,7 @@
 import * as AWS from 'aws-sdk';
 import {log} from 'src/common/logger';
 import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent} from 'aws-lambda';
+import { SystemVariantRequirement } from 'src/services/system/models/variant-requirement';
 import { getEnvVar } from 'src/common/environment';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context) => {
@@ -51,7 +52,14 @@ export async function updateAllUsersCallVariants(event: ScheduledEvent, context:
         ]
       }
     });
-    const Count = 0;
+    log.info('checking if any new system call variants have been added...');
+    const res = await SystemVariantRequirement
+      .query('new')
+      .usingIndex('statusIndex')
+      .select('COUNT')
+      .execAsync();
+    log.info(`res: ${JSON.stringify(res)}`);
+    const Count = res.Count;
     log.info(`${Count} new call variants found`);
     if (Count > 0) {
       log.debug(JSON.stringify(params));
