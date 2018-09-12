@@ -32,7 +32,7 @@ function makeTaskParams(overrides: object): AWS.ECS.Types.RunTaskRequest {
   };
   const res: AWS.ECS.Types.RunTaskRequest = {...base, ...overrides};
   return res;
-};
+}
 
 export async function updateAllUsersVariantCalls(event: ScheduledEvent, context: Context) {
   try {
@@ -44,8 +44,9 @@ export async function updateAllUsersVariantCalls(event: ScheduledEvent, context:
             cpu: 512,
             memory: 2048,
             command: [
-              "/bin/bash",
-              "-c",
+              '/bin/bash',
+              '-c',
+              // tslint:disable:max-line-length
               `/precisely/app/run-remote-access.sh && /precisely/app/run-update.sh --data-source=23andme --stage=${getEnvVar('STAGE')} --test-mock-lambda=false --cleanup-after=true`
             ]
           }
@@ -72,7 +73,7 @@ export async function updateAllUsersVariantCalls(event: ScheduledEvent, context:
   } catch (error) {
     log.error(`error: ${error}`);
   }
-};
+}
 
 export async function uploadProcessor(event: S3CreateEvent, context: Context) {
   context.callbackWaitsForEmptyEventLoop = false;
