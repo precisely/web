@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-13 15:10:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-10 17:43:36
+ * @Last Modified time: 2018-09-13 10:08:22
  */
 
 // This file represent fixtures for reports in the beta product
@@ -28,30 +28,56 @@ export async function addBetaReportFixtures() {
     ... makeVariantData('user-a1298c-c677t-cpd-het', { c677t: [0, 1], a1298c: [0, 1]}),
     ... makeVariantData('user-a1298c-c677t-cpd-hom', { c677t: [1, 1], a1298c: [1, 1]}),
     ... makeVariantData('user-a1298c-het-c677t-hom', { c677t: [1, 1], a1298c: [1, 0]}),
-    ... makeVariantData('user-a1298c-hom-c677t-het', { c677t: [1, 0], a1298c: [1, 1]})
+    ... makeVariantData('user-a1298c-hom-c677t-het', { c677t: [1, 0], a1298c: [1, 1]}),
+    ... makeVariantData('user-g1192a-het', { g1192a: [1, 0] }),
+    ... makeVariantData('user-g1192a-hom', { g1192a: [1, 1] }),
+    ... makeVariantData('user-a78573551g-het', { a78573551g: [1, 0] }),
+    ... makeVariantData('user-a78573551g-hom', { a78573551g: [1, 1] }),
+    ... makeVariantData('user-a78581651t-het', { a78581651t: [1, 0] }),
+    ... makeVariantData('user-a78581651t-hom', { a78581651t: [1, 1] }),
+    ... makeVariantData('user-c667t-het-g1192a-het', { c677t: [0, 1], g1192a: [1, 0]}),
   ];
   const variants: VariantCall[] = await addVariants(...variantData);
+  
+  const genePanelReport = new Report({
+    ownerId: 'author',
+    title: 'mecfs',
+    content: reportContent('mecfs')
+  });
 
-  const report = new Report({
+  const geneReport = new Report({
     ownerId: 'author',
     title: 'mthfr',
     content: reportContent('mthfr')
   });
 
-  await addFixtures(report);
-  await report.publish();
+  await addFixtures(geneReport, genePanelReport);
+  await geneReport.publish();
+  await genePanelReport.publish();
   
-  return {report, variants};
+  return {geneReport, variants, genePanelReport};
 }
 
-function makeVariantData(userId: string, { c677t, a1298c }: {
-  c677t: [number, number],
-  a1298c: [number, number]
-}) {
+const WT: [number, number] = [0, 0];
+
+function makeVariantData(
+  userId: string, 
+  { // MTHFR variants
+    c677t = WT, a1298c = WT, 
+    // CHRNA5 variants
+    g1192a = WT, a78573551g = WT, a78581651t = WT 
+  }: { [key: string]: [number, number] }
+) {
   return [
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11856378, refBases: 'G', 
     altBases: [ 'A' ], genotype: c677t, sampleType: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11854476, refBases: 'T', 
     altBases: [ 'G' ],  genotype: a1298c, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78882925, refBases: 'G', 
+    altBases: [ 'A' ], genotype: g1192a, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78865893, refBases: 'A', 
+    altBases: [ 'G' ], genotype: a78573551g, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78873993, refBases: 'A', 
+    altBases: [ 'T' ], genotype: a78581651t, sampleType: '23andme', sampleId: 'userwt-23andme' },
   ];
 }
