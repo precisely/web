@@ -10,16 +10,28 @@
 
 We've assembled this list of genes based on research publications implicating their association with ME/CFS and symptoms common to ME/CFS.
 
+
 <IndicatorPanel normal="normal (wildtype)" 
                 abnormal="contains variants" 
                 default="abnormal"> 
-  <Indicator icon="gene" name="MTHFR" link="mthfr" normal={
-      variantCall("NC_000001.10:g.[11856378=];[11856378=]") and 
-      variantCall("NC_000001.10:g.[11854476=];[11854476=]")} />
-  <Indicator icon="gene" name="CHRN5A" link="chrn5a" normal={
+  <Indicator icon="gene" name="MTHFR" link="mthfr" require={
+      variantCall("NC_000001.10:g.11856378") and
+      variantCall("NC_000001.10:g.11854476")
+    } 
+    normal={
+    variantCall("NC_000001.10:g.[11856378=];[11856378=]") and 
+    variantCall("NC_000001.10:g.[11854476=];[11854476=]")
+    } />
+  <Indicator icon="gene" name="CHRN5A" link="chrn5a" require={
+      variantCall("NC_000015.9:g.78882925") and 
+      variantCall("NC_000015.9:g.78865893") and 
+      variantCall("NC_000015.9:g.78873993") 
+    }
+    normal={
       variantCall("NC_000015.9:g.[78882925=];[78882925=]") and 
       variantCall("NC_000015.9:g.[78865893=];[78865893=]") and 
-      variantCall("NC_000015.9:g.[78873993=];[78873993=]") } />
+      variantCall("NC_000015.9:g.[78873993=];[78873993=]") 
+    } />
 </IndicatorPanel>
 
 # What treatments are available?		

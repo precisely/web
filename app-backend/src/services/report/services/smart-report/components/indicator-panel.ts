@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-17 08:26:01 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-13 10:46:45
+ * @Last Modified time: 2018-09-14 11:09:17
  */
 
  //
@@ -23,8 +23,12 @@ import { isString } from 'util';
 
 export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   let {normal, abnormal, default: defaultState} = elt.attrs;
-  normal = normal || 'normal';
-  abnormal = abnormal || 'abnormal';
+  
+  // IndicatorPanel shows a legend, explaining what green vs red means
+  normal = normal || 'normal'; // text for green label
+  abnormal = abnormal || 'abnormal'; // text for red label
+
+  // 
   defaultState = defaultState || 'unknown';
 
   elt.children.map(child => {
@@ -42,7 +46,9 @@ export const Indicator: ReducerFunction = (elt: ReducibleTagElement, ctx: Contex
   if (!/normal|abnormal|unknown/.test(defaultValue)) {
     throw new Error(`Indicator default must be one of normal|abnormal|unknown, but received ${defaultValue}`);
   }
-  if (elt.attrs.abnormal) {
+  if (!elt.attrs.require) {  // requirements not satisfied
+    elt.attrs.state = 'unknown';
+  } else if (elt.attrs.abnormal) {
     elt.attrs.state = 'abnormal';
   } else if (elt.attrs.normal) {
     elt.attrs.state = 'normal';

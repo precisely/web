@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:28 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-13 10:47:30
+ * @Last Modified time: 2018-09-14 11:11:42
  */
 
 const cases = require('jest-in-case');
@@ -186,16 +186,16 @@ describe('Personalizer', function () {
       describe('a gene panel report', function () {
         
         cases('should contain the correct gene indicators for various users', async (
-          [userId, geneStates]: [string, [string, string][]]
+            [userId, geneStates]: [string, [string, string][]]
           ) => {
           const personalizer = new Personalizer(genePanelReport, userId);
           const elements = await personalizer.personalize();
-          const children = map(geneStates, (abnormal, gene) => ({
+          const children = map(geneStates, (state, gene) => ({
             type: 'tag',
             name: 'indicator',
             attrs: {
               name: gene,
-              state: abnormal ? 'abnormal' : 'normal'
+              state: state
             }
           }));
           expect(elements[1]).toMatchObject({
@@ -205,21 +205,22 @@ describe('Personalizer', function () {
           });
         }, [
           // the user and the state of the indicators (false = green/normal | true = red/abnormal)
-          ['user-wt',               { MTHFR: false, CHRN5A: false}],
-          ['user-c677t-het',        { MTHFR: true,  CHRN5A: false}],
-          ['user-c677t-hom',        { MTHFR: true,  CHRN5A: false}],
-          ['user-a1298c-het',       { MTHFR: true,  CHRN5A: false}],
-          ['user-a1298c-c677t-cpd-het', { MTHFR: true,  CHRN5A: false}],
-          ['user-a1298c-c677t-cpd-hom', { MTHFR: true,  CHRN5A: false}],
-          ['user-a1298c-het-c677t-hom', { MTHFR: true,  CHRN5A: false}],
-          ['user-a1298c-hom-c677t-het', { MTHFR: true,  CHRN5A: false}],
-          ['user-g1192a-het',       { MTHFR: false,  CHRN5A: true}],
-          ['user-g1192a-hom',       { MTHFR: false,  CHRN5A: true}],
-          ['user-a78573551g-het',   { MTHFR: false,  CHRN5A: true}],
-          ['user-a78573551g-hom',   { MTHFR: false,  CHRN5A: true}],
-          ['user-a78581651t-het',   { MTHFR: false,  CHRN5A: true}],
-          ['user-a78581651t-hom',   { MTHFR: false,  CHRN5A: true}],
-          ['user-c667t-het-g1192a-het',   { MTHFR: true,  CHRN5A: true}]
+          ['user-wt',                     { MTHFR: 'normal',    CHRN5A: 'normal'}],
+          ['user-c677t-het',              { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-c677t-hom',              { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-a1298c-het',             { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-a1298c-c677t-cpd-het',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-a1298c-c677t-cpd-hom',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-a1298c-het-c677t-hom',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-a1298c-hom-c677t-het',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
+          ['user-g1192a-het',             { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-g1192a-hom',             { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-a78573551g-het',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-a78573551g-hom',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-a78581651t-het',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-a78581651t-hom',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
+          ['user-c667t-het-g1192a-het',   { MTHFR: 'abnormal',  CHRN5A: 'abnormal'}],
+          ['missing-user',                { MTHFR: 'unknown',   CHRN5A: 'unknown'}]
         ]);
       });
     });

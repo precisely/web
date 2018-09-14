@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-22 08:45:17
+ * @Last Modified time: 2018-09-13 14:38:55
  */
 
 import {Context} from 'smart-report';
@@ -116,6 +116,17 @@ describe('Personalizer reducer functions', function () {
       it('should return falsy for a monozygous variant', function () {
         expect(variantCall(context, 'chr1.37p13:g.[9999A>T]')).toBeFalsy();
       });
+
+      describe('when provided location-only syntax', function () {
+        it.only('should be falsey when the variant call is not present at the location', function () {
+          expect(variantCall(context, 'chr1.37p13:g.9999')).toBeFalsy();
+        });
+
+        it('should be truthy when the variant call is present at the location', function () {
+          expect(variantCall(context, 'chr5.37p13:g.500')).toBeTruthy();
+        });
+      });
+      
     });
   });
 });

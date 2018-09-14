@@ -1,3 +1,4 @@
+import {map, flatMap} from 'lodash';
 import { GeneVariants, makeVariant } from './variant';
 
 export async function geneticsCommand(...args: string[]) {
@@ -10,64 +11,30 @@ export async function geneticsCommand(...args: string[]) {
   await fn(userId);
 }
 
+function genotypeCreator(genotype: string, ...vIndexes: number[]) {
+  return async function (userId: string) {
+    const variants = flatMap(map(GeneVariants, gene => {
+      let vIndex = 0;
+      return map(gene, variant => {
+        // if this vIndex is set, then use the genotype for this variant, otherwise it is wildtype
+        const vType = vIndexes.indexOf(vIndex) !== -1 ? genotype :  'wt';
+        vIndex++;
+        return makeVariant(userId, variant, vType);
+      });
+    }));
+    console.log(`Creating ${variants.length} variants for userId '${userId}'`);
+    return Promise.all(variants);
+  };
+}
+
 const Profile = {
-  /**
-   * Wild type variant
-   * 
-   * @param userId 
-   */
-  async wt(userId: string) {
-    await Promise.all([
-      makeVariant(userId, GeneVariants.mthfr.c677t, 'wt'),
-      makeVariant(userId, GeneVariants.mthfr.a1298c, 'wt')
-    ]);
-  },
-
-  /**
-   * Adds common simple heterozygotic makeVariants
-   * 
-   * @param userId 
-   */
-  async het(userId: string) {
-    await Promise.all([
-      makeVariant(userId, GeneVariants.mthfr.c677t, 'het'),
-      makeVariant(userId, GeneVariants.mthfr.a1298c, 'wt')
-    ]);
-  },
-
-  /**
-   * Where a less common heterozygote exists, load that, otherwise
-   * load the common heterozygote
-   * 
-   * @param userId 
-   */
-  'less-common-het': async (userId: string) => {
-    await Promise.all([
-      makeVariant(userId, GeneVariants.mthfr.c677t, 'wt'),
-      makeVariant(userId, GeneVariants.mthfr.a1298c, 'het')
-    ]);
-  },
-
-  /**
-   * Homozygotes
-   * 
-   * @param userId 
-   */
-  async hom(userId: string) {
-    await Promise.all([
-      makeVariant(userId, GeneVariants.mthfr.c677t, 'hom')
-    ]);
-  },
-
-  /**
-   * Where a less common heterzygote exists, load a compound heterozygote
-   * 
-   * @param userId 
-   */
-  'compound-het': async (userId: string) => {
-    await Promise.all([
-      makeVariant(userId, GeneVariants.mthfr.c677t, 'het'),
-      makeVariant(userId, GeneVariants.mthfr.a1298c, 'het')
-    ]);
-  }
+  wt: genotypeCreator('wt'),
+  het: genotypeCreator('het', 0),
+  hom: genotypeCreator('hom', 0),
+  
+  // only the second variant heterozygotic:
+  'less-common-het': genotypeCreator('het', 1),
+  
+  // all variants included as heterozygotes:
+  'compound-het': genotypeCreator('het', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9) // assume there are <= 10 variants
 };
