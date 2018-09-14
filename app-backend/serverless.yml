@@ -145,6 +145,7 @@ custom:
       seed:variant: ts-node -r tsconfig-paths/register src/db/seed/cli.ts variant "${opt:user, ''}" "${opt:variant, ''}"
       seed:reports: ts-node -r tsconfig-paths/register src/db/seed/cli.ts reports
       seed:clear: ts-node -r tsconfig-paths/register src/db/seed/cli.ts clear ${opt:model, opt:models, ""}
+      seed: ts-node -r tsconfig-paths/register src/db/seed/cli.ts
     
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}
