@@ -18,11 +18,12 @@ export async function reportsCommand(ownerId: string = 'system') {
   }).filter(x => isString(x));
 
   const reports = await batchPromises(
-    10, titles, title => new Report(reportAttributes({ title, ownerId })).saveAsync()
+    10, titles, async title => {
+      const report = await new Report(reportAttributes({ title, ownerId })).saveAsync();
+      return await report.publish();
+    }
   );
-  // publish the reports!
-  await batchPromises(10, reports, (report: Report) => report.publish());
-
+  
   console.log('Created %d reports: %s', reports.length, reports.map(report => {
     return `{slug: ${report.get('slug')}, title: ${report.get('title')}, id: ${report.get('id')})}`;
   }).join(', '));
