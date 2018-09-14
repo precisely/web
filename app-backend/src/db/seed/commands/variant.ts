@@ -44,6 +44,11 @@ export const GeneVariants = {
   mthfr: {
     c677t: vcattrs(1, 11856378, 'G', ['A']),
     a1298c: vcattrs(1, 11854476, 'T', ['G'])
+  },
+  chrna5: {
+    g1192a: vcattrs(15, 78882925, 'G', [ 'A' ]),
+    a78573551g: vcattrs(15, 78865893, 'A', [ 'G' ]),
+    a78581651t: vcattrs(15, 78873993, 'A', [ 'T' ])
   }
 };
 
@@ -60,7 +65,8 @@ export function makeVariant(
     genotype: trueGenotype, 
     sampleId: `${userId}-23andme-seed-sample`,
     sampleType: '23andme', 
-    seed: true});
+    seed: true
+  });
   return variant.saveAsync();
 }
 

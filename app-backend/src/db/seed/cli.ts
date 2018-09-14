@@ -35,7 +35,7 @@ async function processCommand() {
       console.log(
         'usage:\n' +
         '\tyarn sls seed:genetics {userId} {wt|het|hom|lessCommonHet|compoundHet}\n' +
-        '\tyarn sls seed:variant {userId} {variant - e.g., mthfr.c677t:het}' +
+        '\tyarn sls seed:variant {userId} {variant - e.g., mthfr.c677t:het}\n' +
         '\tyarn sls seed:reports'
       );
   }

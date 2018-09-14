@@ -16,8 +16,11 @@ import { ReducibleTagElement, Context, ReducerFunction, ReducibleElement, isTagE
 import { parse, Interval, SimpleVariant, SequenceVariant, NARefAlt } from 'src/common/svn'; 
 
 import { isString, isNumber } from 'util';
+import {ensureAttributes} from './util';
 
 export const GeneMap: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
+  ensureAttributes('GeneMap', elt.attrs, 'interval');
+  
   const interval: GeneMapInterval = parseGeneMapInterval(elt);
   
   return [elt.children.map(makeGeneMapChildVariantProcessor(interval)), ctx];
@@ -87,7 +90,7 @@ export function parseGeneMapInterval(elt: ReducibleTagElement): GeneMapInterval 
   const { interval } = elt.attrs;
   
   if (!isString(interval)) {
-    throw new Error(`Expecting interval attribute for GeneMap`);
+    throw new Error(`Invalid interval attribute for GeneMap`);
   }
   
   const seqVariant: SequenceVariant = parse(interval);
