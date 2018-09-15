@@ -14,7 +14,7 @@ We've assembled this list of genes based on research publications implicating th
 <IndicatorPanel normal="normal (wildtype)" 
                 abnormal="contains variants" 
                 default="abnormal"> 
-  <Indicator icon="gene" name="MTHFR" link="/report/mthfr" require={
+  <Indicator icon="dna" name="MTHFR" link="/report/mthfr" require={
       variantCall("NC_000001.10:g.11856378") and
       variantCall("NC_000001.10:g.11854476")
     } 
@@ -22,7 +22,7 @@ We've assembled this list of genes based on research publications implicating th
     variantCall("NC_000001.10:g.[11856378=];[11856378=]") and 
     variantCall("NC_000001.10:g.[11854476=];[11854476=]")
     } />
-  <Indicator icon="gene" name="CHRN5A" link="/report/chrn5a" require={
+  <Indicator icon="dna" name="CHRN5A" link="/report/chrn5a" require={
       variantCall("NC_000015.9:g.78882925") and 
       variantCall("NC_000015.9:g.78865893") and 
       variantCall("NC_000015.9:g.78873993") 
