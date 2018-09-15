@@ -223,7 +223,7 @@ opioid analgesics and other drugs that have to be demethylated (the removal of o
 * Eye lens dislocations
 * Unusual (Marfan type) body shape
 * Stroke
-* Blood clotting abnormalities
+* Blood clotting defectiveities
 * Low thyroid hormones (hypothyroidism)
 
 <# symptoms fatigue D005221 memory problems D008569 inflamation D007249 #>

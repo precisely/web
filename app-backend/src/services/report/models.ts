@@ -117,7 +117,7 @@ Report.prototype.publish = async function publishReport() {
     state: 'published', 
     ...requirements });
 
-  return await this.saveAsync();
+  return await this.updateAsync();
 };
 
 //
@@ -183,17 +183,18 @@ Report.before('create', setReportSlug);
  * 
  * @param elements 
  */
-export function calculateReportRequirements(elements: ReducibleElement[]
-  ): { variantIndexes: VariantIndex[] } {
-    const context: Context = {};
-    const reducer = new Reducer({ 
-      functions: { variantCall },   
-      analysisMode: true        // turn on analysisMode
-                                // functions at every code branch are evaluated
-    }); 
-    reducer.reduce(elements, context);
-    const variantIndexes = extractVariantIndexes(context);
-    
-    const result = { variantIndexes: variantIndexes };
-    return result;
-  }
+export function calculateReportRequirements(
+  elements: ReducibleElement[]
+): { variantIndexes: VariantIndex[] } {
+  const context: Context = {};
+  const reducer = new Reducer({ 
+    functions: { variantCall },   
+    analysisMode: true        // turn on analysisMode
+                              // functions at every code branch are evaluated
+  }); 
+  reducer.reduce(elements, context);
+  const variantIndexes = extractVariantIndexes(context);
+  
+  const result = { variantIndexes: variantIndexes };
+  return result;
+}

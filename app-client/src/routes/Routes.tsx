@@ -26,14 +26,14 @@ export class Routes extends React.Component {
 
     return (
       <Switch>
-        <AuthRoute path="/report" exact={true}
-                   component={makeLoadable('Report', 'report/Report')} />
         <Route path="/" exact={true}
                component={makeLoadable('Homepage', 'homepage/Homepage')} />
         <Route path="/login" exact={true}
                component={makeLoadable('Login', 'user/Login')} />
         <Route path="/about-us" exact={true}
                component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
+        <AuthRoute path="/report/:slug" exact={true}
+                   component={makeLoadable('Report', 'report/Report')} />
         <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
       </Switch>
     );

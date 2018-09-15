@@ -30,13 +30,11 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 
   renderSmartReport = (): JSX.Element | string => {
-    console.log('PROPS:', this.props);
     const {report} = this.props.data;
     return <SmartReport elements={report.personalization} />;
   }
 
   render(): JSX.Element {
-    console.log('rendering report: %j', this.props);
     const report = this.props.data && this.props.data.report;
     const title = report ? report.title : 'Loading';
     return (
@@ -54,10 +52,10 @@ export class ReportImpl extends React.Component<ReportProps> {
 }
 
 export const Report = graphql<any, any>(GetReport, {
-  options: () => {
+  options: ({match}) => {
     return {
       // Dummy parameters to fetch the data. Will be removed in future.
-      variables: {slug: 'mthfr'}
+      variables: {slug: match.params.slug}
     };
   }
 })(ReportImpl);
