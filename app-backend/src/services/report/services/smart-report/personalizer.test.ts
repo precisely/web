@@ -204,22 +204,22 @@ describe('Personalizer', function () {
             children
           });
         }, [
-          // the user and the state of the indicators (false = green/normal | true = red/abnormal)
+          // the user and the state of the indicators (false = green/normal | true = red/defective)
           ['user-wt',                     { MTHFR: 'normal',    CHRN5A: 'normal'}],
-          ['user-c677t-het',              { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-c677t-hom',              { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-a1298c-het',             { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-a1298c-c677t-cpd-het',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-a1298c-c677t-cpd-hom',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-a1298c-het-c677t-hom',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-a1298c-hom-c677t-het',   { MTHFR: 'abnormal',  CHRN5A: 'normal'}],
-          ['user-g1192a-het',             { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-g1192a-hom',             { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-a78573551g-het',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-a78573551g-hom',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-a78581651t-het',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-a78581651t-hom',         { MTHFR: 'normal',    CHRN5A: 'abnormal'}],
-          ['user-c667t-het-g1192a-het',   { MTHFR: 'abnormal',  CHRN5A: 'abnormal'}],
+          ['user-c677t-het',              { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-c677t-hom',              { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-a1298c-het',             { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-a1298c-c677t-cpd-het',   { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-a1298c-c677t-cpd-hom',   { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-a1298c-het-c677t-hom',   { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-a1298c-hom-c677t-het',   { MTHFR: 'defective',  CHRN5A: 'normal'}],
+          ['user-g1192a-het',             { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-g1192a-hom',             { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-a78573551g-het',         { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-a78573551g-hom',         { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-a78581651t-het',         { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-a78581651t-hom',         { MTHFR: 'normal',    CHRN5A: 'defective'}],
+          ['user-c667t-het-g1192a-het',   { MTHFR: 'defective',  CHRN5A: 'defective'}],
           ['missing-user',                { MTHFR: 'unknown',   CHRN5A: 'unknown'}]
         ]);
       });

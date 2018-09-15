@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-export const IndicatorPanel: React.StatelessComponent = ({normal, abnormal, children}: any) => {
+export const IndicatorPanel: React.StatelessComponent = ({normal, defective, children}: any) => {
   return (
     <div>
       <h6>this is the legend</h6>
       <p>{normal ? `green text: ${normal}` : ''}</p>
-      <p>{abnormal ? `red text: ${abnormal}` : ''}</p>
+      <p>{defective ? `red text: ${defective}` : ''}</p>
       <h6>these are icons representing the genes</h6>
       {...children}
     </div>
@@ -26,11 +26,11 @@ const BUTTON = {
       down: require('src/assets/indicator/dna/unknown/down.png'),
       disabled: require('src/assets/indicator/dna/unknown/disabled.png')
     },
-    abnormal: {
-      rest: require('src/assets/indicator/dna/abnormal/rest.png'),
-      hover: require('src/assets/indicator/dna/abnormal/hover.png'),
-      down: require('src/assets/indicator/dna/abnormal/down.png'),
-      disabled: require('src/assets/indicator/dna/abnormal/disabled.png')
+    defective: {
+      rest: require('src/assets/indicator/dna/defective/rest.png'),
+      hover: require('src/assets/indicator/dna/defective/hover.png'),
+      down: require('src/assets/indicator/dna/defective/down.png'),
+      disabled: require('src/assets/indicator/dna/defective/disabled.png')
     }
   }
 };

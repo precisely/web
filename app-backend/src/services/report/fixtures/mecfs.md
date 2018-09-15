@@ -12,8 +12,8 @@ We've assembled this list of genes based on research publications implicating th
 
 
 <IndicatorPanel normal="normal (wildtype)" 
-                abnormal="contains variants" 
-                default="abnormal"> 
+                defective="contains variants" 
+                default="defective"> 
   <Indicator icon="dna" name="MTHFR" link="mthfr" require={
       variantCall("NC_000001.10:g.11856378") and
       variantCall("NC_000001.10:g.11854476")
