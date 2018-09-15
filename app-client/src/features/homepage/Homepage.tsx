@@ -64,7 +64,7 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
           <Col md={{size: 4}} xs={{size: 12}}>
             <img src={mailbox} alt=""/>
             <p className="pt-4" style={{fontSize: '0.9rem', fontWeight: 100}}>
-              Simply spit in the saliva sample turb and return it in the pre-stamped,
+              Simply spit in the saliva sample tube and return it in the pre-stamped,
               pre-addressed package and mail it.
             </p>
           </Col>
