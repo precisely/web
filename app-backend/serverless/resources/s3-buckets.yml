@@ -2,7 +2,20 @@ S3BucketBioinformaticsUpload:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:custom.vars.bioinformaticsUploadBucket}
-    
+    CorsConfiguration:
+      CorsRules:
+        - AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - HEAD
+            - DELETE
+          AllowedOrigins:
+            - '*'
+          AllowedHeaders:
+            - '*'
+          MaxAge: 3000
+
 S3BucketBioinformaticsVCF:
   Type: AWS::S3::Bucket
   Properties:

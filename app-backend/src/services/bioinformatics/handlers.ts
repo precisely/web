@@ -75,6 +75,33 @@ export async function updateAllUsersVariantCalls(event: ScheduledEvent, context:
   }
 }
 
+class UploadTokenEvent {
+  key: string
+}
+
+export async function getUploadToken(event: UploadTokenEvent, context: Context) {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true
+  };
+  try {
+    log.info('generating upload token');
+    const params = {
+      Bucket: getEnvVar('S3_BUCKET_BIOINFORMATICS_UPLOAD'),
+      Key: event.key,
+      Expires: 600
+    };
+    // XXX: Signature version 4 is critical! Without it, uploads will fail with
+    // mysterious signature and CORS errors.
+    const s3 = new AWS.S3({signatureVersion: 'v4'});
+    const signedUrl = s3.getSignedUrl('putObject', params);
+    return signedUrl;
+  } catch (error) {
+    log.error(`error: ${error}`);
+    return error.toString()
+  }
+}
+
 export async function uploadProcessor(event: S3CreateEvent, context: Context) {
   context.callbackWaitsForEmptyEventLoop = false;
 

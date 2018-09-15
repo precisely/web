@@ -54,7 +54,7 @@ resources:
   - Resources: ${file(./serverless/resources/monitoring.yml)}
   - Resources: ${file(./serverless/resources/bioinformatics-ecs.yml)}
   - Resources: ${file(./serverless/resources/apigateway-stage.yml)}
-  
+
 plugins:
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
@@ -214,6 +214,21 @@ functions:
       SUBNET: ${self:custom.vars.subnetId}
       SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 
+  BioinformaticsGetUploadToken:
+    role: SystemRole
+    handler: src/services/bioinformatics/handlers.getUploadToken
+    events:
+      - http:
+          path: ${self:custom.common.bioinformaticsUploadTokenPath}
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "key" : "$input.params(''key'')" }'
+    environment:
+      S3_BUCKET_BIOINFORMATICS_UPLOAD: ${self:custom.vars.bioinformaticsUploadBucket}
+
   # Raw data uploader is triggered by new file in any of the raw data buckets
   BioinformaticsUploadProcessor:
     role: SystemRole
@@ -223,8 +238,8 @@ functions:
           bucket: BioinformaticsUpload
           event: s3:ObjectCreated:*
     environment:
-      ECS_BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
-      ECS_BIOINFORMATICS_TASK: ${self:custom.vars.bioinformaticsECSTaskName}
+      CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
+      TASK: ${self:custom.vars.bioinformaticsECSTaskName}
       SUBNET: ${self:custom.vars.subnetId}
       SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 

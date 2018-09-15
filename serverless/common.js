@@ -37,6 +37,8 @@ module.exports.vars = (sls)=> {
   const certificateArn = getCertificateArn(certificateName);
   const graphQLAPIPath = 'graphql';
   const graphQLEndpoint = `${apiScheme}://${apiHost}/${graphQLAPIPath}`;
+  const bioinformaticsUploadTokenPath = 'bioinformaticsUploadToken';
+  const bioinformaticsUploadTokenEndpoint = `${apiScheme}://${apiHost}/${bioinformaticsUploadTokenPath}`;
   
   // manually provisioned bucket avoids stack removal issue:
   // automatically provisioned bucket causes stack delete failure
@@ -54,17 +56,19 @@ module.exports.vars = (sls)=> {
     accountId: { Ref: 'AWS::AccountId' },
     apiDomain,
     apiHost,
-    auth0Tenant,
     auth0ReactClientId,
+    auth0Tenant,
     baseDomain,
-    certificateName,
+    bioinformaticsUploadTokenEndpoint,
+    bioinformaticsUploadTokenPath,
     certificateArn,
+    certificateName,
     cloudfrontHostedZoneId,
     deploymentBucket,
-    graphQLEndpoint,
     graphQLAPIPath,
-    offlineAPIPort,
+    graphQLEndpoint,
     isOffline,
+    offlineAPIPort,
     profile,
     region,
     rootDomain,

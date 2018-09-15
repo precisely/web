@@ -10,6 +10,9 @@ import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 import {graphql, OptionProps} from 'react-apollo';
 
+import * as AuthUtils from 'src/utils/auth';
+
+import {FileUpload} from 'src/features/common/FileUpload';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
@@ -34,6 +37,15 @@ export class ReportImpl extends React.Component<ReportProps> {
     return <SmartReport elements={report.personalization} />;
   }
 
+  renderUploadScreen = (): JSX.Element | string => {
+    return (
+      <div>
+        upload screen {AuthUtils.getUserName()}
+        <FileUpload />
+      </div>
+    );
+  }
+
   render(): JSX.Element {
     const report = this.props.data && this.props.data.report;
     const title = report ? report.title : 'Loading';
@@ -43,7 +55,7 @@ export class ReportImpl extends React.Component<ReportProps> {
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>{title}</h1>
           <PageContent>
-            {report ? this.renderSmartReport() : 'Loading...'}
+            {report ? this.renderSmartReport() : this.renderUploadScreen()}
           </PageContent>
         </Container>
       </div>

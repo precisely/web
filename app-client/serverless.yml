@@ -23,7 +23,9 @@ provider:
     REACT_APP_AUTH0_CLIENT_ID: ${self:custom.common.auth0ReactClientId}
     REACT_APP_GRAPHQL_ENDPOINT: ${self:custom.common.graphQLEndpoint}
     REACT_APP_LAUNCH_PAGE: ${env:LAUNCH_PAGE, ''}
-
+    # helper URL
+    REACT_APP_BIOINFORMATICS_UPLOAD_TOKEN_ENDPOINT: ${self:custom.common.bioinformaticsUploadTokenEndpoint}
+    
 resources:
   - Resources: ${file(./serverless/resources/s3-website-bucket.yml)}
   - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}
