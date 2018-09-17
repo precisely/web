@@ -17,7 +17,7 @@ type VariantCall {
   userId: String,
   variantId: String,
 
-  sampleType: String,
+  sampleSource: String,
   sampleId: String,
   
   refName: String,
