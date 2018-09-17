@@ -57,7 +57,7 @@ export const resolvers = {
       { state, ownerId }: { state?: ReportState, ownerId?: string }, 
       context: GraphQLContext
     ) {
-      const reports = await Report.listReports({ state });
+      const reports = await Report.listReports({ state, ownerId });
       return await context.valid('report:read', reports);
     },
     async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {

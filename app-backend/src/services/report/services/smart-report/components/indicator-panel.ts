@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-17 08:26:01 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-14 11:09:17
+ * @Last Modified time: 2018-09-15 08:52:03
  */
 
  //
@@ -22,13 +22,13 @@ import {ensureAttributes} from './util';
 import { isString } from 'util';
 
 export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
-  let {normal, defective, default: defaultState} = elt.attrs;
+  let {normal, defective, enhanced, default: defaultState} = elt.attrs;
   
   // IndicatorPanel shows a legend, explaining what green vs red means
   normal = normal || 'normal'; // text for green label
   defective = defective || 'defective'; // text for red label
+  enhanced = enhanced || 'enhanced';
 
-  // 
   defaultState = defaultState || 'unknown';
 
   elt.children.map(child => {
@@ -43,7 +43,7 @@ export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: C
 export const Indicator: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   ensureAttributes('Indicator', elt.attrs, 'icon', 'name');
   const defaultValue = isString(elt.attrs.default) ? elt.attrs.default : 'unknown';
-  if (!/normal|defective|unknown/.test(defaultValue)) {
+  if (!/normal|defective|unknown|enhanced/.test(defaultValue)) {
     throw new Error(`Indicator default must be one of normal|defective|unknown, but received ${defaultValue}`);
   }
   if (!elt.attrs.require) {  // requirements not satisfied

@@ -6,15 +6,11 @@
  * without modification, are not permitted.
  */
 
-import gql from 'graphql-tag';
 
-export const GetReport = gql`
-  query Report($slug: String!) {
-    report(slug: $slug) {
-      slug
-      id
-      title
-      personalization
+export const GetReports = gql`
+  query ListReports($ownerId: String, $state: String) {
+    reports(state: $state, ownerId: $ownerId) {
+      id slug title draftContent publishedContent state
     }
   }
 `;

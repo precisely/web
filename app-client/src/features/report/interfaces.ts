@@ -12,6 +12,9 @@ export interface ReportData {
   slug: string;
   content: string;
   personalization: any[];
-  topLevel?: boolean;
-  requirements: string[];
+  publishedContent: string;
+  publishedElements: any[];
+  updatedAt: string;
+  createdAt: string;
+  publishedAt: string;
 }

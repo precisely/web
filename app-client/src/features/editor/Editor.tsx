@@ -16,12 +16,11 @@ import {Container} from 'src/features/common/ReusableComponents';
 import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 
-import {ReportData} from './interfaces';
-import {SmartReport} from './smart-report';
+import {ReportData} from 'src/features/report/interfaces';
 
-export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
+export type EditorProps = OptionProps<void, {reports: ReportData[]}> & RouteComponentProps<void>;
 
-export class ReportImpl extends React.Component<ReportProps> {
+export class EditorImpl extends React.Component<EditorProps> {
 
   state = {isLoading: false};
 
@@ -29,14 +28,8 @@ export class ReportImpl extends React.Component<ReportProps> {
     this.setState({isLoading: true});
   }
 
-  renderSmartReport = (): JSX.Element | string => {
-    const {report} = this.props.data;
-    return <SmartReport elements={report.personalization} />;
-  }
-
   render(): JSX.Element {
-    const report = this.props.data && this.props.data.report;
-    const title = report ? report.title : 'Loading';
+    const report = this.props.data && this.props.data.reports;
     return (
       <div>
         <NavigationBar {...this.props}/>
@@ -51,22 +44,16 @@ export class ReportImpl extends React.Component<ReportProps> {
   }
 }
 
-export const GetReport = gql`
-  query Report($slug: String!) {
-    report(slug: $slug) {
-      slug
-      id
-      title
-      personalization
-    }
+export const Editor = graphql<any, any>(gql`
+query listReports($ownerId: String, $state: String) {
+  reports(state: $state, ownerId: $ownerId) {
+    id slug title draftContent publishedContent state
   }
-`;
-
-export const Report = graphql<any, any>(GetReport, {
+}, {
   options: ({match}) => {
     return {
       // Dummy parameters to fetch the data. Will be removed in future.
       variables: {slug: match.params.slug}
     };
   }
-})(ReportImpl);
+})(EditorImpl);
