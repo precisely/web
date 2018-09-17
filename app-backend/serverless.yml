@@ -14,6 +14,7 @@ provider:
   ##
   ## Environment for handlers
   environment:
+    ENV: ${env:ENV}
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
     ACCOUNT_ID: ${self:custom.common.accountId}
@@ -238,6 +239,16 @@ functions:
   SysGetVariantRequirements:
     role: SystemRole
     handler: src/services/system/handlers.getVariantRequirements
+    timeout: 120
+
+  UserSampleCreate:
+    role: SystemRole
+    handler: src/services/user-sample/handlers.createUserSample
+    timeout: 120
+
+  UserSampleUpdate:
+    role: SystemRole
+    handler: src/services/user-sample/handlers.updateUserSample
     timeout: 120
 
   VariantCallBatchCreate:
