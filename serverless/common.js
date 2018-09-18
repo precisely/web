@@ -138,7 +138,7 @@ function getCertificateArn(certificateName) {
   switch(certificateName) {
     case '*.codeprecisely.net': return 'arn:aws:acm:us-east-1:416000760642:certificate/f44b4ee7-b4cb-4d32-9c19-58ca6a97b42d';
     case '*.precisionhealth.site': return 'arn:aws:acm:us-east-1:370821419022:certificate/c281fb80-ef3e-45ee-be79-61d570ff486e';
-    case '*.precise.ly': return 'arn:aws:acm:us-east-1:576199076748:certificate/f6ce2125-f772-4821-9741-47a8098068f1';
+    case '*.precise.ly': return 'arn:aws:acm:us-east-1:576199076748:certificate/2b09a577-889e-4f67-b5be-8bf92c3c0798';
     case '*.localhost': return 'dummy-localhost-certificate-arn';
     default: throw new Error(`Certificate ARN for ${certificateName} must be set in ${__filename}`);
   }

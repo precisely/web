@@ -12,19 +12,19 @@ import {RouteComponentProps} from 'react-router';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container, Col} from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {helveticaFont} from 'src/constants/styleGuide';
+import {helveticaFont, white} from 'src/constants/styleGuide';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
 const ParallaxProvider = scrollParallax.ParallaxProvider;
-const asset = require('src/assets/asset.png');
+const asset = require('src/assets/faces-v-3-b.jpg');
 const dnaImg = require('src/assets/dna_sketch.png');
 const mailbox = require('src/assets/mailbox.png');
 const clipboard = require('src/assets/clipboard.png');
 const shoppingCart = require('src/assets/shopping-cart.png');
 
 @Radium
-export class Homepage extends React.Component<RouteComponentProps<void>> {
+export class HomePage extends React.Component<RouteComponentProps<void>> {
 
   renderProductDescription = (): JSX.Element => {
     return (
@@ -49,7 +49,7 @@ export class Homepage extends React.Component<RouteComponentProps<void>> {
 
   renderProcessDescription = (): JSX.Element => {
     return (
-      <div className="pt-5 pb-4" style={{backgroundColor: '#F5F5F5'}}>
+      <div className="pt-5 pb-4" style={{backgroundColor: white}}>
         <h3 style={headingStyle}>
           How it works
         </h3>
