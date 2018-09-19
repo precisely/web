@@ -16,7 +16,7 @@ export class LoadingPage extends React.Component {
 
   render(): JSX.Element {
     return(
-      <div style={loadingWrapper}>.
+      <div style={loadingWrapper}>
         <div style={{textAlign: 'center'}}>
           <FontAwesome name="circle-o-notch" spin={true} size="3x" />
           <h4 style={{fontSize: 20}}>Loading...</h4>
