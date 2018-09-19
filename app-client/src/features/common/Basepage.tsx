@@ -12,7 +12,7 @@ import {Routes} from 'src/routes/Routes';
 import {defaultBackground, helveticaFont} from 'src/constants/styleGuide';
 import {CSS} from 'src/interfaces';
 
-export class Basepage extends React.Component {
+export class BasePage extends React.Component {
 
   render(): JSX.Element {
     return (

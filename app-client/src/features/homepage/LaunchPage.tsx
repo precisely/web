@@ -37,7 +37,7 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
           </NavbarBrand>
         </Navbar>
         <h1 style={{...titleStyle, color: preciselyGreen, backgroundColor: 'transparent'}}>
-          Personalized Genetic Reports from the World’s Experts
+          Personalized Genetic Reports for Chronic Disease
         </h1>
         <div style={imageStyle} />
         <div>
