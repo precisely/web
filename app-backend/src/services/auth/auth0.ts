@@ -18,13 +18,12 @@ export function getToken(event: CustomAuthorizerEvent): string {
     throw new Error(`Expected event.type parameter to have value REQUEST`);
   }
 
-  if (!event.headers || !event.headers.Authorization) {
+  const tokenString = event.headers && (event.headers.Authorization || event.headers.authorization);
+  if (!tokenString) {
     throw new Error('Missing Authorization header');
   }
 
-  const tokenString: string = event.headers.Authorization;
-
-  var match = tokenString.match(/^Bearer (.*)$/i);
+  const match = tokenString.match(/^Bearer (.*)$/i);
   if (!match || match.length < 2) {
     throw new Error(`Invalid Authorization token - '${tokenString.substr(0, 50)}...' does not match 'Bearer .*'`);
   }
@@ -71,7 +70,7 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
         issuer:  AUTH0_ISSUER // e.g., something like https://{stage}-precise.ly.auth0.com
       }
     );
-    log.silly('auth0.authenticate verified token: %j', verified);
+    log.info('auth0.authenticate verified token: %j', verified);
 
     return {
       principalId: verified.sub,
