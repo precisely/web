@@ -36,7 +36,7 @@ export class Footer extends React.Component {
         <div className="pt-5 pb-5 text-center sticky-bottom" style={footerStyle} />
       );
     }
-    
+
     return this.renderWithRealFooter();
   }
 }
