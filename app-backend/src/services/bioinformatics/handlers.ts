@@ -8,7 +8,8 @@
 
 import * as AWS from 'aws-sdk';
 import {log} from 'src/common/logger';
-import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent} from 'aws-lambda';
+import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
+import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent, APIGatewayEvent} from 'aws-lambda';
 import { SystemVariantRequirement } from 'src/services/system/models/variant-requirement';
 import { getEnvVar } from 'src/common/environment';
 
@@ -75,20 +76,19 @@ export async function updateAllUsersVariantCalls(event: ScheduledEvent, context:
   }
 }
 
-class UploadTokenEvent {
-  key: string
-}
-
-export async function getUploadToken(event: UploadTokenEvent, context: Context) {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': true
-  };
+export async function getUploadSignedURL(event: APIGatewayEvent, context: Context) {
   try {
-    log.info('generating upload token');
+    log.info('generating signed S3 upload URL');
+    log.info('context');
+    log.info(JSON.stringify(context));
+    log.info('event');
+    log.info(JSON.stringify(event));
+    if ('public' === event['principalId']) {
+      throw new Error('authentication failed');
+    }
     const params = {
       Bucket: getEnvVar('S3_BUCKET_BIOINFORMATICS_UPLOAD'),
-      Key: event.key,
+      Key: `${event['principalId']}/${event['params_query']['key']}`,
       Expires: 600
     };
     // XXX: Signature version 4 is critical! Without it, uploads will fail with
@@ -102,7 +102,7 @@ export async function getUploadToken(event: UploadTokenEvent, context: Context) 
   }
 }
 
-export async function uploadProcessor(event: S3CreateEvent, context: Context) {
+export async function processUpload(event: S3CreateEvent, context: Context) {
   context.callbackWaitsForEmptyEventLoop = false;
 
   try {

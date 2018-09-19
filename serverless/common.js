@@ -37,9 +37,9 @@ module.exports.vars = (sls)=> {
   const certificateArn = getCertificateArn(certificateName);
   const graphQLAPIPath = 'graphql';
   const graphQLEndpoint = `${apiScheme}://${apiHost}/${graphQLAPIPath}`;
-  const bioinformaticsUploadTokenPath = 'bioinformaticsUploadToken';
-  const bioinformaticsUploadTokenEndpoint = `${apiScheme}://${apiHost}/${bioinformaticsUploadTokenPath}`;
-  
+  const bioinformaticsUploadSignedURLPath = 'bioinformaticsUploadSignedURL';
+  const bioinformaticsUploadSignedURLEndpoint = `${apiScheme}://${apiHost}/${bioinformaticsUploadSignedURLPath}`;
+
   // manually provisioned bucket avoids stack removal issue:
   // automatically provisioned bucket causes stack delete failure
   const deploymentBucket = `${account}-precisely-deployment-bucket`;
@@ -59,8 +59,8 @@ module.exports.vars = (sls)=> {
     auth0ReactClientId,
     auth0Tenant,
     baseDomain,
-    bioinformaticsUploadTokenEndpoint,
-    bioinformaticsUploadTokenPath,
+    bioinformaticsUploadSignedURLEndpoint,
+    bioinformaticsUploadSignedURLPath,
     certificateArn,
     certificateName,
     cloudfrontHostedZoneId,

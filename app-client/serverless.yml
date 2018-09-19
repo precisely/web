@@ -24,7 +24,7 @@ provider:
     REACT_APP_GRAPHQL_ENDPOINT: ${self:custom.common.graphQLEndpoint}
     REACT_APP_LAUNCH_PAGE: ${env:LAUNCH_PAGE, ''}
     # helper URL
-    REACT_APP_BIOINFORMATICS_UPLOAD_TOKEN_ENDPOINT: ${self:custom.common.bioinformaticsUploadTokenEndpoint}
+    REACT_APP_BIOINFORMATICS_UPLOAD_SIGNED_URL_ENDPOINT: ${self:custom.common.bioinformaticsUploadSignedURLEndpoint}
     
 resources:
   - Resources: ${file(./serverless/resources/s3-website-bucket.yml)}

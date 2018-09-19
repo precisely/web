@@ -36,7 +36,8 @@ const InvokeAPIPolicyDocument: PolicyDocument = {
     Effect: 'Allow',
     Action: 'execute-api:Invoke',
     Resource: [
-      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/POST/${process.env.GRAPHQL_API_PATH}`
+      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/POST/${process.env.GRAPHQL_API_PATH}`,
+      `arn:aws:execute-api:${process.env.REGION}:${process.env.ACCOUNT_ID}:*/*/GET/${process.env.BIOINFORMATICS_UPLOAD_SIGNED_URL_PATH}`
     ]
   }]
 };

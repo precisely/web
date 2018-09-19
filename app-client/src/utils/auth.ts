@@ -57,3 +57,16 @@ export function getUserName(): string {
   const user = JSON.parse(localStorage.getItem(LS_AUTH_USER));
   return _.get(user, ['name'], '');
 }
+
+
+export function getUserId(): string {
+  const user = JSON.parse(localStorage.getItem(LS_AUTH_USER));
+  return _.get(user, ['sub'], '');
+}
+
+
+export function makeAuthorizationHeader(): {[key: string]: string} {
+  return {
+    Authorization: `Bearer ${localStorage.getItem(LS_AUTH_ID_TOKEN)}`
+  };
+}
