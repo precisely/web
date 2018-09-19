@@ -10,28 +10,37 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {NavigationBar} from 'src/features/common/NavigationBar';
 import {CSS} from 'src/interfaces';
-import {helveticaFont, preciselyMagenta} from 'src/constants/styleGuide';
-import { Container, Col } from 'src/features/common/ReusableComponents';
-import { preciselyGreen, white } from '../../constants/styleGuide';
-
+import {helveticaThinFont, preciselyMagenta, preciselyGreen} from 'src/constants/styleGuide';
+import { Container } from 'src/features/common/ReusableComponents';
+import { Navbar, NavbarBrand } from '../common/ReusableComponents';
+import { ExtendedCSS } from '../../constants/styleGuide';
 
 const faces = require('src/assets/faces-v-3-b.jpg');
 const iconGallery = require('src/assets/icon-gallery.png');
-
+const logo = require('src/assets/logo.png');
 
 @Radium
 export class LaunchPage extends React.Component<RouteComponentProps<void>> {
 
+  // componentDidMount() {
+  //   document.body.style.backgroundColor = 'white';
+  // }
+
   render(): JSX.Element {
     return (
       <div>
-        <NavigationBar {...this.props} hideMenu={true} backgroundColor="transparent" />
-        <h1 style={{...titleStyle, color: preciselyGreen}}>
-          Personalized Genetic Reports from the World’s Experts
-        </h1>
-        <div style={imageStyle} />
+        <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
+          <NavbarBrand href="/">
+            <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+            <span style={logoTextStyle}>Precise.ly</span>
+          </NavbarBrand>
+        </Navbar>
+        <div style={imageStyle}>
+          <h1 style={{...titleStyle, color: preciselyGreen}}>
+            Personalized Genetic Reports from the World’s Experts
+          </h1>
+        </div>
         <div>
           {this.renderValueProp()}
         </div>
@@ -54,47 +63,24 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
       </Container>
     );
   }
-
 }
-
-
-const containerStyle: CSS = {
-  position: 'relative',
-  width: '100%',
-  height: '50vh',
-  overflow: 'hidden'
-};
 
 const imageStyle: CSS = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   width: '100vw',
-  height: '40vh',
+  height: '500px',
   backgroundPosition: 'center',
 };
 
-const parallaxChildren: CSS = {
-  position: 'absolute',
-  top: '2%',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  alignItems: 'center',
-  textAlign: 'center',
-};
-
 const headingStyle: CSS = {
-  ...helveticaFont,
+  ...helveticaThinFont,
   fontWeight: 200
 };
 
-const homepageSection: CSS = {
-  fontSize: '36px'
-};
-
 const titleStyle: React.CSSProperties = {
-  ...helveticaFont,
+  ...helveticaThinFont,
   fontSize: '36px',
   fontWeight: 50,
   fontStyle: 'normal',
@@ -103,4 +89,33 @@ const titleStyle: React.CSSProperties = {
   letterSpacing: 'normal',
   textAlign: 'center',
   color: '#00bc3e'
+};
+
+const navBar: ExtendedCSS = {
+  letterSpacing: '-1px',
+  transition: 'background-color 0.4s ease',
+  '@media screen and (min-width: 992px)': {
+    padding: '8px 245px',
+  },
+  textTransform: 'uppercase',
+  backgroundColor: 'white'
+};
+
+const logoStyle: CSS = {
+  width: '26px',
+};
+
+const logoTextStyle: CSS = {
+  ...helveticaThinFont,
+  paddingLeft: '4px',
+  // width: '89px',
+  height: '24px',
+  fontSize: '20px',
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 'normal',
+  // letterSpacing: 'normal',
+  color: preciselyMagenta,
+  // letterSpacing: '-0.6px',
+  textTransform: 'none'
 };

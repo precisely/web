@@ -29,6 +29,10 @@ export const helveticaFont: CSS = {
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
 };
 
+export const helveticaThinFont: CSS = {
+  fontFamily: 'HelveticaNeue-Thin, Helvetica, Arial, sans-serif'
+};
+
 export const inputStyle: ExtendedCSS = {
   width: '385px',
   height: '44px',

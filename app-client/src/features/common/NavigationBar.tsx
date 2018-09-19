@@ -20,7 +20,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSS, white, preciselyMagenta, helveticaFont } from 'src/constants/styleGuide';
+import { ExtendedCSS, white, preciselyMagenta, helveticaFont, helveticaThinFont } from 'src/constants/styleGuide';
 
 const logo = require('src/assets/logo.png');
 
@@ -28,14 +28,8 @@ export interface NavigationBarState {
   isOpen?: boolean;
   backgroundColor?: string;
 }
-
-export interface NavigationBarProps {
-  hideMenu?: boolean;
-  backgroundColor?: string;
-}
-
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<void> & NavigationBarProps> {
+export class NavigationBar extends React.Component<RouteComponentProps<void>> {
 
   state: NavigationBarState = {
     isOpen: false,
@@ -51,7 +45,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void> & N
   }
 
   handleScroll = (): void => {
-    this.setState({backgroundColor: window.scrollY > 50 ? this.props.backgroundColor : 'transparent'});
+    this.setState({backgroundColor: window.scrollY > 50 ? white : 'transparent'});
   }
 
   renderLoginStatus() {
@@ -92,9 +86,6 @@ export class NavigationBar extends React.Component<RouteComponentProps<void> & N
 
   renderMenu() {
     const {isOpen} = this.state;
-    if (this.props.hideMenu) {
-      return [];
-    }
 
     return [
       <NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
@@ -122,7 +113,7 @@ const logoStyle: CSS = {
 };
 
 const logoTextStyle: CSS = {
-  ...helveticaFont,
+  ...helveticaThinFont,
   paddingLeft: '4px',
   // width: '89px',
   height: '24px',

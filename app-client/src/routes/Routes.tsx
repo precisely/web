@@ -24,7 +24,6 @@ export class Routes extends React.Component {
 
   render(): JSX.Element {
     if (process.env.REACT_APP_LAUNCH_PAGE === 'true') {
-      console.log('detected launch environment');
       return (
         <Switch>
           <Route path="/" exact={true}
