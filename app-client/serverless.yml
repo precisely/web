@@ -15,8 +15,7 @@ provider:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
     ACCOUNT_ID: ${self:custom.common.accountId}
-    PROFILE: ${self:provider.profile}
-
+    
     # REACT_APP_ env vars are made available to client-side React code;
     # Auth0 values - needed for verifying Auth0 tokens
     REACT_APP_AUTH0_DOMAIN: ${self:custom.common.auth0Tenant}.auth0.com # set in Auth0: dev-precisely, beta-precisely, prod-precisely
@@ -60,4 +59,4 @@ custom:
       test: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom '${opt:f, ""}'
       test:watch: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --watch '${opt:f, ""}'
       test:coverage: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --coverage '${opt:f, ""}'
-      invalidate: node scripts/invalidate.js ${self:provider.stage}
+      invalidate: node scripts/invalidate.js ${self:provider.stage} ${self:provider.profile}

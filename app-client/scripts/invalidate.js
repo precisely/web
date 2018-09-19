@@ -2,7 +2,12 @@ const AWS = require('aws-sdk');
 const {CloudFront, SharedIniFileCredentials} = require('aws-sdk');
 const credentials = new SharedIniFileCredentials({profile: process.env.PROFILE});
 AWS.config.credentials = credentials;
-const profile = process.env.PROFILE;
+
+//
+// usage: yarn sls invalidate {stage-name} {aws-profile-name}
+// 
+const stage = process.argv[2];
+const profile = process.argv[3];
 
 async function getDistributionIdFromTargetOriginId(targetOriginId) {
   const cf = new CloudFront();
@@ -34,12 +39,11 @@ async function invalidateDistribution(distributionId) {
   }).promise();
 }
 
-const stage = process.argv[2];
 getDistributionIdFromTargetOriginId(`${stage}-cloudfront`).then(distributionId => {
   if (distributionId) {
     invalidateDistribution(distributionId).then(result => {
       if (result) {
-        console.log('CloudFront Invalidation created. Path: "/" InvalidationId: %s DistributionId: %s (Path: "/")', result.Invalidation.Id, distributionId);
+        console.log('CloudFront Invalidation created. Path: "/" InvalidationId: %s DistributionId: %s', result.Invalidation.Id, distributionId);
       }
     }).catch(e => {
       console.log('Error creating CloudFront distribution invalidation for %s in stage %s using profile %s: %s', 
