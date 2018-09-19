@@ -20,8 +20,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSS, white } from 'src/constants/styleGuide';
-import { preciselyMagenta } from '../../constants/styleGuide';
+import { ExtendedCSS, white, preciselyMagenta, helveticaFont } from 'src/constants/styleGuide';
 
 const logo = require('src/assets/logo.png');
 
@@ -48,8 +47,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void> & N
   }
 
   componentDidMount(): void {
-    // window.addEventListener('scroll', this.handleScroll);
-    this.setState({backgroundColor: white});
+    window.addEventListener('scroll', this.handleScroll);
   }
 
   handleScroll = (): void => {
@@ -124,10 +122,10 @@ const logoStyle: CSS = {
 };
 
 const logoTextStyle: CSS = {
+  ...helveticaFont,
   paddingLeft: '4px',
   // width: '89px',
   height: '24px',
-  fontFamily: 'HelveticaNeue-Light',
   fontSize: '20px',
   fontStyle: 'normal',
   fontStretch: 'normal',

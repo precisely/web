@@ -14,7 +14,7 @@ import {helveticaFont} from 'src/constants/styleGuide';
 
 @Radium
 export class Footer extends React.Component {
-  render() {
+  renderWithRealFooter() {
     return (
       <div className="pt-5 pb-5 text-center sticky-bottom" style={footerStyle}>
         <div className="row pt-2" style={{fontWeight: 300}}>
@@ -28,6 +28,11 @@ export class Footer extends React.Component {
           <Col md={{size: 2}}>&copy; 2017 Precise.ly</Col>
         </div>
       </div>
+    );
+  }
+  render () {
+    return (
+      <div className="pt-5 pb-5 text-center sticky-bottom" style={footerStyle} />
     );
   }
 }

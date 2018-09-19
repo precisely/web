@@ -6,6 +6,7 @@
  * without modification, are not permitted.
  */
 
+
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
@@ -15,43 +16,22 @@ import {helveticaFont, preciselyMagenta} from 'src/constants/styleGuide';
 import { Container, Col } from 'src/features/common/ReusableComponents';
 import { preciselyGreen, white } from '../../constants/styleGuide';
 
-const scrollParallax = require('react-scroll-parallax');
-const Parallax = scrollParallax.Parallax;
-const ParallaxProvider = scrollParallax.ParallaxProvider;
+
 const faces = require('src/assets/faces-v-3-b.jpg');
 const iconGallery = require('src/assets/icon-gallery.png');
 
-const titleStyle: React.CSSProperties = {
-  height: '42.5px',
-  fontFamily: 'HelveticaNeue-Thin',
-  fontSize: '36px',
-  fontWeight: 50,
-  fontStyle: 'normal',
-  fontStretch: 'normal',
-  lineHeight: 'normal',
-  letterSpacing: 'normal',
-  textAlign: 'center',
-  color: '#00bc3e'
-};
 
 @Radium
 export class LaunchPage extends React.Component<RouteComponentProps<void>> {
+
   render(): JSX.Element {
     return (
       <div>
-        <NavigationBar {...this.props} hideMenu={true} backgroundColor={white} />
-          <ParallaxProvider>
-          <div style={containerStyle}>
-            <Parallax offsetYMin="-100%" offsetYMax="40%" slowerScrollRate={true}>
-              <div style={imageStyle}/>
-            </Parallax>
-            <div style={parallaxChildren}>
-              <h1 style={{...titleStyle, color: preciselyGreen}}>
-                Personalized Genetic Reports from the World's Experts
-              </h1>
-            </div>
-          </div>
-          </ParallaxProvider>
+        <NavigationBar {...this.props} hideMenu={true} backgroundColor="transparent" />
+        <h1 style={{...titleStyle, color: preciselyGreen}}>
+          Personalized Genetic Reports from the World’s Experts
+        </h1>
+        <div style={imageStyle} />
         <div>
           {this.renderValueProp()}
         </div>
@@ -61,34 +41,36 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
 
   renderValueProp = (): JSX.Element => {
     return (
-      <Container className="pt-5 pb-4 ">
-        <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-          <Col md={{size: 6, offset: 3}}>
-            <h4 style={headingStyle}>
-              <span style={{color: preciselyMagenta}}>Precise.ly</span> <span>Discover the genetic basis of your health</span>
-            </h4>
-            <img src={iconGallery}/>
-          </Col>
+      <Container>
+        <div className="pt-4 pb-4" style={{textAlign: 'center'}}>
+          <h4 style={headingStyle}>
+            <span style={{color: preciselyMagenta}}>Precise.ly</span>
+            <span> — Discover the genetic basis of your health</span>
+          </h4>
         </div>
+        <Container className="pt-2 pb-2">
+          <img src={iconGallery} style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', maxWidth: '100%'}} />
+        </Container>
       </Container>
     );
   }
+
 }
+
 
 const containerStyle: CSS = {
   position: 'relative',
   width: '100%',
-  height: '130vh',
-  overflow: 'hidden',
-  backgroundColor: white
+  height: '50vh',
+  overflow: 'hidden'
 };
 
 const imageStyle: CSS = {
   backgroundImage: `url(${faces})`,
-  backgroundSize: 'contain',
+  backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   width: '100vw',
-  height: '130vh',
+  height: '40vh',
   backgroundPosition: 'center',
 };
 
@@ -109,4 +91,16 @@ const headingStyle: CSS = {
 
 const homepageSection: CSS = {
   fontSize: '36px'
+};
+
+const titleStyle: React.CSSProperties = {
+  ...helveticaFont,
+  fontSize: '36px',
+  fontWeight: 50,
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 'normal',
+  letterSpacing: 'normal',
+  textAlign: 'center',
+  color: '#00bc3e'
 };
