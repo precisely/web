@@ -29,18 +29,17 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
 
   render(): JSX.Element {
     return (
-      <div>
+      <div style={{backgroundColor: 'white'}}>
         <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
           <NavbarBrand href="/">
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
             <span style={logoTextStyle}>Precise.ly</span>
           </NavbarBrand>
         </Navbar>
-        <div style={imageStyle}>
-          <h1 style={{...titleStyle, color: preciselyGreen}}>
-            Personalized Genetic Reports from the World’s Experts
-          </h1>
-        </div>
+        <h1 style={{...titleStyle, color: preciselyGreen, backgroundColor: 'transparent'}}>
+          Personalized Genetic Reports from the World’s Experts
+        </h1>
+        <div style={imageStyle} />
         <div>
           {this.renderValueProp()}
         </div>
