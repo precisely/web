@@ -15,6 +15,7 @@ provider:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
     ACCOUNT_ID: ${self:custom.common.accountId}
+    PROFILE: ${self:provider.profile}
 
     # REACT_APP_ env vars are made available to client-side React code;
     # Auth0 values - needed for verifying Auth0 tokens
@@ -31,7 +32,7 @@ resources:
 plugins:
   - serverless-finch
   - serverless-plugin-scripts
-
+  
 custom:
   common: ${file(../serverless/common.js):vars}
 
@@ -44,7 +45,7 @@ custom:
       dev: 60
       beta: 300
       default: 86400
-
+      
   client:
     bucketName: ${self:custom.vars.reactS3BucketName}
     distributionFolder: build
@@ -59,4 +60,4 @@ custom:
       test: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom '${opt:f, ""}'
       test:watch: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --watch '${opt:f, ""}'
       test:coverage: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --coverage '${opt:f, ""}'
-      
+      invalidate: node scripts/invalidate.js ${self:provider.stage}
