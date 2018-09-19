@@ -17,7 +17,7 @@ import {createHttpLink} from 'apollo-link-http';
 import {setContext} from 'apollo-link-context';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
-import {Basepage} from 'src/features/common/Basepage';
+import {BasePage} from 'src/features/common/BasePage';
 import * as Bluebird from 'bluebird';
 
 initReactFastclick();
@@ -53,7 +53,7 @@ ReactDOM.render(
     <StyleRoot>
       <ToastContainer hideProgressBar={true} />
       <BrowserRouter>
-        <Basepage />
+        <BasePage />
       </BrowserRouter>
     </StyleRoot>
   </ApolloProvider>,

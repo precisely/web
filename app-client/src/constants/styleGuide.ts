@@ -10,6 +10,14 @@
 
 import {CSS} from 'src/interfaces';
 
+export const grey1 = '#6c757d';
+export const grey2 = '#545b62';
+export const white = '#FFF';
+export const offWhite = '#F5F5F5';
+export const preciselyOrange = '#FF8A4B';
+export const preciselyMagenta = '#c83a6e';
+export const preciselyGreen = '#00bc3e';
+
 export const buttonDefault: string = '#6c757d';
 export const buttonHover: string = '#545b62';
 export const defaultBackground: string = '#F5F5F5';
@@ -19,6 +27,10 @@ export type ExtendedCSS = CSS & { [key: string]: any }; // to accomodate media q
 
 export const helveticaFont: CSS = {
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+};
+
+export const helveticaThinFont: CSS = {
+  fontFamily: 'HelveticaNeue-Thin, Helvetica, Arial, sans-serif'
 };
 
 export const inputStyle: ExtendedCSS = {

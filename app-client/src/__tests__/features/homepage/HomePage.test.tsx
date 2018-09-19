@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Homepage} from 'src/features/homepage/Homepage';
+import {HomePage} from 'src/features/homepage/HomePage';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container} from 'src/features/common/ReusableComponents';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
@@ -23,10 +23,10 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Homepage tests.', () => {
+describe('HomePage tests.', () => {
 
   const componentTree: ShallowWrapper =
-      shallow(<Homepage history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
+      shallow(<HomePage history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

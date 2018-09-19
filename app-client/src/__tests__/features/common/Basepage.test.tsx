@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Basepage} from 'src/features/common/Basepage';
+import {BasePage} from 'src/features/common/BasePage';
 import {Footer} from 'src/features/common/Footer';
 import {Routes} from 'src/routes/Routes';
 
@@ -18,9 +18,9 @@ unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Basepage tests.', () => {
+describe('BasePage tests.', () => {
 
-  const componentTree: ShallowWrapper = shallow(<Basepage />);
+  const componentTree: ShallowWrapper = shallow(<BasePage />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,

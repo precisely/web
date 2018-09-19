@@ -20,19 +20,18 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSS } from 'src/constants/styleGuide';
+import { ExtendedCSS, white, preciselyMagenta, helveticaFont, helveticaThinFont } from 'src/constants/styleGuide';
 
-const LOGO = require('src/assets/precisely-logo.png');
+const logo = require('src/assets/logo.png');
 
 export interface NavigationBarState {
   isOpen?: boolean;
   backgroundColor?: string;
 }
-
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<any>> {
+export class NavigationBar extends React.Component<RouteComponentProps<void>> {
 
-  state = {
+  state: NavigationBarState = {
     isOpen: false,
     backgroundColor: 'transparent',
   };
@@ -46,7 +45,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   }
 
   handleScroll = (): void => {
-    this.setState({backgroundColor: window.scrollY > 50 ? 'white' : 'transparent'});
+    this.setState({backgroundColor: window.scrollY > 50 ? white : 'transparent'});
   }
 
   renderLoginStatus() {
@@ -70,37 +69,62 @@ export class NavigationBar extends React.Component<RouteComponentProps<any>> {
   }
 
   render() {
-    const {isOpen, backgroundColor} = this.state;
+    const {backgroundColor} = this.state;
 
     navBar.backgroundColor = backgroundColor;
 
     return (
       <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
         <NavbarBrand href="/">
-          <img id="brand-logo" src={LOGO} alt="precise.ly" style={logoStyle} />
+          <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+          <span style={logoTextStyle}>Precise.ly</span>
         </NavbarBrand>
-        <NavbarToggler className="navbar-toggler-right" onClick={this.toggle} />
-        <Collapse isOpen={isOpen} navbar={true}>
-          <Nav className="ml-auto" navbar={true}>
-            <NavItem className="pr-4">
-              <NavLink href="/about-us">about us</NavLink>
-            </NavItem>
-            <NavItem className="pr-4">
-              <NavLink href="/report/mecfs">MECFS Report</NavLink>
-            </NavItem>
-            <NavItem>
-              {this.renderLoginStatus()}
-            </NavItem>
-      </Nav>
-        </Collapse>
+        {... this.renderMenu()}
       </Navbar>
     );
+  }
+
+  renderMenu() {
+    const {isOpen} = this.state;
+
+    return [
+      <NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
+      // tslint:disable-next-line jsx-wrap-multiline
+      <Collapse key="collapse" isOpen={isOpen} navbar={true}>
+        <Nav className="ml-auto" navbar={true}>
+          <NavItem className="pr-4">
+            <NavLink href="/about-us">About Us</NavLink>
+          </NavItem>
+          <NavItem className="pr-4">
+            <NavLink href="/report/mecfs">MECFS Report</NavLink>
+          </NavItem>
+          <NavItem>
+            {this.renderLoginStatus()}
+          </NavItem>
+        </Nav>
+      </Collapse>
+    ];
   }
 
 }
 
 const logoStyle: CSS = {
-  width: '10em',
+  width: '26px',
+};
+
+const logoTextStyle: CSS = {
+  ...helveticaThinFont,
+  paddingLeft: '4px',
+  // width: '89px',
+  height: '24px',
+  fontSize: '20px',
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 'normal',
+  // letterSpacing: 'normal',
+  color: preciselyMagenta,
+  // letterSpacing: '-0.6px',
+  textTransform: 'none'
 };
 
 const navBar: ExtendedCSS = {

@@ -125,20 +125,23 @@ sls config credentials --provider aws -n dev-profile-precisely --key <your_aws_a
 There are a small number of one-time actions that need to be taken when configuring an AWS account for deployment:
 
 1. Create a Public Hosted Zone using AWS Route53
-Point the DNS registrar at the name servers provided by the hosted zone.
-Copy the hostedZoneId and add an entry for the rootHostedZoneId in `serverless/common.js`
+  Point the DNS registrar at the name servers provided by the hosted zone.
+  Copy the hostedZoneId and add an entry for the rootHostedZoneId in `serverless/common.js`
 
-2. Create a wildcard certificate using AWS Certificate Manager
-If you site is "precisionhealth.site", create a cerificate for "*.precisionhealth.site", and verify it.
-Copy the arn of the certificate and add an entry for it in `serverless/common.js`
+2. Create a wildcard certificate using [AWS Certificate Manager](https://console.aws.amazon.com/acm/home?region=us-east-1#/firstrun/ )
+  
+  a. Click "Provision Certificates"
+  b. Create a wildcard certificate by entering `*.precisionhealth.site` if the domain is `precisionhealth.site`
+  c. The domain will be in "Pending validation" state.
+     Expand the domain and click the "Create Record in Route53" to add the CNAME validation entry to the DNS
 
 3. Create a deployment bucket
-It should be named "{accountName}-precisely-deployment-bucket"
+  It should be named "{accountName}-precisely-deployment-bucket"
 
 4. Setup Auth0
-We set up one Auth0 tenant per AWS account. You'll need to create one application representing the React client and one API, representing the GraphQL API. See one of the other tenants for details.
+  We set up one Auth0 tenant per AWS account. You'll need to create one application representing the React client and one API, representing the GraphQL API. See one of the other tenants for details.
 
-Copy the React app client id and create an entry in `serverless/common.js`.
+  Copy the React app client id and create an entry in `serverless/common.js`.
 
 #### Set up your stage
 

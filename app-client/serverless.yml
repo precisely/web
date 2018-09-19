@@ -22,7 +22,8 @@ provider:
     REACT_APP_AUTH0_AUDIENCE: https://${self:custom.common.account}-precise.ly/graphql/api # also set in Auth0 for the graphql API in each tenant
     REACT_APP_AUTH0_CLIENT_ID: ${self:custom.common.auth0ReactClientId}
     REACT_APP_GRAPHQL_ENDPOINT: ${self:custom.common.graphQLEndpoint}
-    
+    REACT_APP_LAUNCH_PAGE: ${env:LAUNCH_PAGE, ''}
+
 resources:
   - Resources: ${file(./serverless/resources/s3-website-bucket.yml)}
   - Resources: ${file(./serverless/resources/cloudfront-distribution.yml)}

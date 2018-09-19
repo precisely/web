@@ -23,21 +23,28 @@ function makeLoadable(componentName: string, path?: string) {
 export class Routes extends React.Component {
 
   render(): JSX.Element {
+    if (process.env.REACT_APP_LAUNCH_PAGE === 'true') {
+      return (
+        <Switch>
+          <Route path="/" exact={true}
+                component={makeLoadable('LaunchPage', 'homepage/LaunchPage')} />
+          <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
+        </Switch>
+      );
+    }
 
     return (
       <Switch>
         <Route path="/" exact={true}
-               component={makeLoadable('Homepage', 'homepage/Homepage')} />
+              component={makeLoadable('HomePage', 'homepage/HomePage')} />
         <Route path="/login" exact={true}
-               component={makeLoadable('Login', 'user/Login')} />
+              component={makeLoadable('Login', 'user/Login')} />
         <Route path="/about-us" exact={true}
-               component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
+              component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
         <AuthRoute path="/report/:slug" exact={true}
-                   component={makeLoadable('Report', 'report/Report')} />
+                  component={makeLoadable('Report', 'report/Report')} />
         <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
       </Switch>
     );
-
   }
-
 }
