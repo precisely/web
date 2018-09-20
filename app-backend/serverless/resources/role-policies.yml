@@ -59,17 +59,15 @@ ECSPolicy:
               - ${self:custom.common.accountId}
               - ":role/${self:provider.stage}-PreciselySystemRole"
 
-#
-# Constantine: the UserUploadPolicy is not yet used; something like this is necessary for the uploader
-#      
-UserUploadPolicy: # for issuing time-limited tokens which for uploading to S3
-  PolicyName: ${self:provider.stage}-PreciselyUserUploadPolicy
+UserUploadS3Policy:
+  PolicyName: ${self:provider.stage}-PreciselyUserUploadS3Policy
   PolicyDocument:
     Version: '2012-10-17'
     Statement:
       - Effect: Allow
         Action:
-          - s3:*
+          - s3:AbortMultipartUpload
+          - s3:PutObject
         Resource: 
           # presigned URL permission requires bucket & object access
           - arn:aws:s3:::${self:custom.vars.bioinformaticsUploadBucket}

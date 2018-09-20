@@ -216,7 +216,7 @@ functions:
       SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 
   BioinformaticsGetUploadSignedURL:
-    role: SystemRole
+    role: UserUploadS3Role
     handler: src/services/bioinformatics/handlers.getUploadSignedURL
     events:
       - http:
