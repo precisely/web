@@ -86,9 +86,11 @@ export async function getUploadSignedURL(event: APIGatewayEvent, context: Contex
     if ('public' === event['principalId']) {
       throw new Error('authentication failed');
     }
+    // TODO: Stop hardcoding 23andMe as a source.
+    const source = '23andme';
     const params = {
       Bucket: getEnvVar('S3_BUCKET_BIOINFORMATICS_UPLOAD'),
-      Key: `${event['principalId']}/${event['params_query']['key']}`,
+      Key: `${event['principalId']}/${source}/${event['params_query']['key']}`,
       Expires: 600
     };
     // XXX: Signature version 4 is critical! Without it, uploads will fail with
@@ -104,55 +106,38 @@ export async function getUploadSignedURL(event: APIGatewayEvent, context: Contex
 
 export async function processUpload(event: S3CreateEvent, context: Context) {
   context.callbackWaitsForEmptyEventLoop = false;
-
+  log.info('starting user upload data import');
   try {
+    const stage = getEnvVar('STAGE');
     const inputBucket = event.Records[0].s3.bucket.name;
     const inputFile = event.Records[0].s3.object.key;
-
-    const ecs = new AWS.ECS();
-
-    const params: AWS.ECS.Types.RunTaskRequest = {
-      cluster: getEnvVar('ECS_BIOINFORMATICS_CLUSTER'),
-      launchType: 'FARGATE',
-      taskDefinition: getEnvVar('ECS_BIOINFORMATICS_TASK'),
-      count: 1,
-      networkConfiguration: { // Despite this being present in ecs related yml forced to pass this
-        awsvpcConfiguration: {
-          subnets: [getEnvVar('SUBNET')],
-          securityGroups: [getEnvVar('SECURITY_GROUP')]
-        }
-      },
+    let [userId, source, file] = inputFile.split('/');
+    if (!userId || !source || !file) {
+      throw new Error(`uploaded file has unexpected path structure: inputBucket=${inputBucket}, inputFile=${inputFile}`);
+    }
+    userId = decodeURI(userId);
+    log.info(`{"userId": "${userId}", "source": "${source}", "file": "${file}"}`);
+    // userId has | characters, so URI-decode decode them
+    let params = makeTaskParams({
       overrides: {
         containerOverrides: [
           {
-            environment: [
-              // note to Constantine: name these env vars whatever you want
-              //      they don't have any dependencies elsewhere
-              {
-                name: 'S3_INPUT_BUCKET',
-                value: inputBucket
-              },
-              {
-                name: 'S3_INPUT_FILE',
-                value: inputFile
-              },
-              {
-                name: 'S3_OUTPUT_VCF_BUCKET',
-                value: getEnvVar('S3_BUCKET_BIOINFORMATICS_VCF')
-              },
-              {
-                name: 'S3_ERROR_BUCKET',
-                value: getEnvVar('S3_BUCKET_BIOINFORMATICS_ERROR')
-              }
+            name: `${stage}-BioinformaticsECSContainer`,
+            command: [
+              '/bin/bash',
+              '-c',
+              // tslint:disable:max-line-length
+              `/precisely/app/run-remote-access.sh && /precisely/app/run-user-import.sh --data-source=${source} --upload-path=${inputFile} --user-id=${userId} --stage=${stage} --test-mock-vcf=false --test-mock-lambda=false --cleanup-after=true`
             ]
           }
         ]
       }
-    };
-
-    log.info(`Bioinformatics file upload processor triggered for ${inputFile}`);
+    });
+    log.info(`bioinformatics file upload processor triggered for ${inputFile}`);
+    const ecs = new AWS.ECS();
     await ecs.runTask(params).promise();
+    log.info(`task ${params.taskDefinition} started`);
   } catch (error) {
-    log.error(`Error Occurred: ${error}`);
+    log.error(`error: ${error}`);
   }
 }
