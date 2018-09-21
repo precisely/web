@@ -2,3 +2,4 @@ BioinformaticsECSLogs:
   Type: AWS::Logs::LogGroup
   Properties:
     LogGroupName: /aws/ecs/${self:provider.stage}-precisely-bioinformatics
+    RetentionInDays: ${self:custom.logRetentionInDays}
