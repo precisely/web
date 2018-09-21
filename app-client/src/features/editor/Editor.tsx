@@ -17,12 +17,13 @@ import {PageContent} from 'src/features/common/PageContent';
 import {header} from 'src/constants/styleGuide';
 
 import {ReportData} from 'src/features/report/interfaces';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 
 export type EditorProps = OptionProps<void, {reports: ReportData[]}> & RouteComponentProps<void>;
 
 export class EditorImpl extends React.Component<EditorProps> {
 
-  state = {isLoading: false};
+  state = {isLoading: false, activeTab: 'draft'};
 
   componentWillMount(): void {
     this.setState({isLoading: true});
@@ -34,9 +35,35 @@ export class EditorImpl extends React.Component<EditorProps> {
       <div>
         <NavigationBar {...this.props}/>
         <Container className="mx-auto mt-5 mb-5">
-          <h1 className="mt-5 mb-4" style={header}>{title}</h1>
+          <h1 className="mt-5 mb-4" style={header}>Editor</h1>
           <PageContent>
-            {report ? this.renderSmartReport() : 'Loading...'}
+            <TabContent activeTab={this.state.activeTab}>
+              <TabPane tabId="1">
+                <Row>
+                  <Col sm="12">
+                    <h4>Tab 1 Contents</h4>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tabId="2">
+                <Row>
+                  <Col sm="6">
+                    <Card body={true}>
+                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                      <Button>Go somewhere</Button>
+                    </Card>
+                  </Col>
+                  <Col sm="6">
+                    <Card body={true}>
+                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                      <Button>Go somewhere</Button>
+                    </Card>
+                  </Col>
+                </Row>
+              </TabPane>
+            </TabContent>
           </PageContent>
         </Container>
       </div>
@@ -49,7 +76,7 @@ query listReports($ownerId: String, $state: String) {
   reports(state: $state, ownerId: $ownerId) {
     id slug title draftContent publishedContent state
   }
-}, {
+}`, {
   options: ({match}) => {
     return {
       // Dummy parameters to fetch the data. Will be removed in future.

@@ -6,6 +6,7 @@
  * without modification, are not permitted.
  */
 
+import gql from 'graphql-tag';
 
 export const GetReports = gql`
   query ListReports($ownerId: String, $state: String) {
