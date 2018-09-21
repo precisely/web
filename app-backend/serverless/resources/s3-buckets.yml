@@ -26,6 +26,7 @@ S3BucketBioinformaticsError:
   Properties:
     BucketName: ${self:custom.vars.bioinformaticsErrorBucket}
 
+# This allows functions.BioinformaticsProcessUpload to work.
 BioinformaticsUploadLambdaPermission:
   Type: AWS::Lambda::Permission
   Properties:

@@ -234,15 +234,17 @@ functions:
     environment:
       S3_BUCKET_BIOINFORMATICS_UPLOAD: ${self:custom.vars.bioinformaticsUploadBucket}
 
-  # Raw data uploader is triggered by new file in any of the raw data buckets
+  # Runs automatically when a file is uploaded. See also
+  # s3-buckets.yml/BioinformaticsUploadLambdaPermission.
   BioinformaticsProcessUpload:
     role: SystemRole
     handler: src/services/bioinformatics/handlers.processUpload
     events:
       - s3:
-          bucket: BioinformaticsUpload
+          bucket: BioinformaticsUpload # XXX: Actually S3BucketBioinformaticsUpload!
           event: s3:ObjectCreated:*
     environment:
+      STAGE: ${self:provider.stage}
       CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
       TASK: ${self:custom.vars.bioinformaticsECSTaskName}
       SUBNET: ${self:custom.vars.subnetId}

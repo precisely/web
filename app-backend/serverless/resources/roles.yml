@@ -70,14 +70,4 @@ SystemRole:
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
-
-UserUploadLambdaRole:
-  Type: AWS::IAM::Role
-  Properties:
-    RoleName: ${self:provider.stage}-PreciselyUserUploadLambdaRole
-    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
-    ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
-    Policies:
-      - ${file(./serverless/resources/role-policies.yml):UserUploadS3Policy}
 ...
