@@ -127,7 +127,7 @@ export async function processUpload(event: S3CreateEvent, context: Context) {
               '/bin/bash',
               '-c',
               // tslint:disable:max-line-length
-              `/precisely/app/run-remote-access.sh && /precisely/app/run-user-import.sh --data-source=${source} --upload-path=${inputFile} --user-id=${userId} --stage=${stage} --test-mock-vcf=false --test-mock-lambda=false --cleanup-after=true`
+              `/precisely/app/run-remote-access.sh && /precisely/app/run-user-import.sh --data-source=${source} --upload-path=${inputFile} --user-id='${userId}' --stage=${stage} --test-mock-vcf=false --test-mock-lambda=false --cleanup-after=true`
             ]
           }
         ]
