@@ -62,11 +62,12 @@ plugins:
   - serverless-dynamodb-local
   - serverless-plugin-scripts
   - serverless-plugin-git-variables
+  - serverless-plugin-log-retention
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
   common: ${file(../serverless/common.js):vars}
-
+  
   vars:
     authorizerTTL: ${env:AUTHORIZER_TTL,self:custom.vars.authorizerTTLMap.${self:custom.common.account},self:custom.vars.authorizerTTLMap.default}
     authorizerTTLMap:
@@ -133,6 +134,8 @@ custom:
       migrate: true
       dbPath: .
       sharedDb: true
+
+  logRetentionInDays: 30 # used to set a global value for all functions
 
   scripts:
     commands:

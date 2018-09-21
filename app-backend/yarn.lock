@@ -5106,6 +5106,10 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
 
+nco@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nco/-/nco-1.0.1.tgz#868de423b4f45f8c05555f1ccb28aa788be06c52"
+
 needle@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.1.tgz#b5e325bd3aae8c2678902fa296f729455d1d3a7d"
@@ -6330,6 +6334,10 @@ semver-regex@^1.0.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
+semver@5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
+
 send@0.16.2:
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/send/-/send-0.16.2.tgz#6ecca1e0f8c156d141597559848df64730a6bbc1"
@@ -6448,6 +6456,13 @@ serverless-plugin-git-variables@^3.1.1:
   resolved "https://registry.yarnpkg.com/serverless-plugin-git-variables/-/serverless-plugin-git-variables-3.1.1.tgz#ac0c0b9517f427230625b5f5f2a8715f11ef6250"
   dependencies:
     babel-runtime "6.23.0"
+
+serverless-plugin-log-retention@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-log-retention/-/serverless-plugin-log-retention-1.0.3.tgz#aab3ea8a313f3a50c5a475ad2ba1358e479389fe"
+  dependencies:
+    nco "1.0.1"
+    semver "5.4.1"
 
 "serverless-plugin-scripts@https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz":
   version "1.0.2"
