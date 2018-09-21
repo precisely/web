@@ -18,7 +18,7 @@ describe('VariantCall', function () {
         refName: 'chr1',
         refVersion: '37p13',
         start: 100,
-        sampleType: '23andme',
+        sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [0, 1],
         refBases: 'c',
@@ -28,7 +28,7 @@ describe('VariantCall', function () {
         refName: 'chr2',
         refVersion: '37p13',
         start: 200,
-        sampleType: '23andme',
+        sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [1, 1],
         refBases: 'c',
@@ -39,7 +39,7 @@ describe('VariantCall', function () {
         refName: 'chr3',
         refVersion: '37p13',
         start: 300,
-        sampleType: '23andme',
+        sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [0, 0],
         refBases: 'c',
@@ -89,7 +89,7 @@ describe('VariantCall', function () {
           refName: 'chr1',
           refVersion: '37p13',
           start: 100,
-          sampleType: '23andme',
+          sampleSource: '23andme',
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',
@@ -111,7 +111,7 @@ describe('VariantCall', function () {
         expect(vc.get('userId')).toEqual('bob-user-id');
         expect(vc.get('refName')).toEqual('chr1');
         expect(vc.get('refVersion')).toEqual('37p13');
-        expect(vc.get('sampleType')).toEqual('23andme');
+        expect(vc.get('sampleSource')).toEqual('23andme');
         expect(vc.get('sampleId')).toEqual('sampleId123');
         expect(vc.get('filter')).toEqual('PASS');
         expect(vc.get('imputed')).toEqual(true);
@@ -132,7 +132,7 @@ describe('VariantCall', function () {
           refName: 'chr1',
           refVersion: '37p13',
           start: 100,
-          sampleType: '23andme',
+          sampleSource: '23andme',
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',
@@ -160,7 +160,7 @@ describe('VariantCall', function () {
           refName: 'chr1',
           refVersion: '37p13',
           start: 100,
-          sampleType: '23andme',
+          sampleSource: '23andme',
           sampleId: 'sampleId123',
           genotype: [0, 0],  // NOTE: genotype is wildtype
           refBases: 'c',
@@ -188,7 +188,7 @@ describe('VariantCall', function () {
           refName: 'chr1',
           refVersion: '37p13',
           start: 100,
-          sampleType: '23andme',
+          sampleSource: '23andme',
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',

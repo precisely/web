@@ -70,14 +70,14 @@ function makeVariantData(
 ) {
   return [
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11856378, refBases: 'G', 
-    altBases: [ 'A' ], genotype: c677t, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    altBases: [ 'A' ], genotype: c677t, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11854476, refBases: 'T', 
-    altBases: [ 'G' ],  genotype: a1298c, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    altBases: [ 'G' ],  genotype: a1298c, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78882925, refBases: 'G', 
-    altBases: [ 'A' ], genotype: g1192a, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    altBases: [ 'A' ], genotype: g1192a, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78865893, refBases: 'A', 
-    altBases: [ 'G' ], genotype: a78573551g, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    altBases: [ 'G' ], genotype: a78573551g, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78873993, refBases: 'A', 
-    altBases: [ 'T' ], genotype: a78581651t, sampleType: '23andme', sampleId: 'userwt-23andme' },
+    altBases: [ 'T' ], genotype: a78581651t, sampleSource: '23andme', sampleId: 'userwt-23andme' },
   ];
 }

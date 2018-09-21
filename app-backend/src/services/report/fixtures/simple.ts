@@ -22,18 +22,18 @@ import { VariantCall } from 'src/services/variant-call';
 export async function addSimpleReportFixtures() {
   const variantData = [
     { userId: 'user-wt10', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [0, 0], sampleType: '23andme', sampleId: 'userwt-23andme' },
+      genotype: [0, 0], sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: 'user-het10t', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [0, 1], sampleType: '23andme', sampleId: 'userhet10t-23andme' },
+      genotype: [0, 1], sampleSource: '23andme', sampleId: 'userhet10t-23andme' },
     { userId: 'user-het10c', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [0, 2], sampleType: '23andme', sampleId: 'userhet10c-23andme' },            
+      genotype: [0, 2], sampleSource: '23andme', sampleId: 'userhet10c-23andme' },            
     { userId: 'user-hom10t', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [1, 1], sampleType: '23andme', sampleId: 'userhom-23andme' },
+      genotype: [1, 1], sampleSource: '23andme', sampleId: 'userhom-23andme' },
     { userId: 'user-hom10c', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [2, 2], sampleType: '23andme', sampleId: 'userhomc-23andme' },
+      genotype: [2, 2], sampleSource: '23andme', sampleId: 'userhomc-23andme' },
     // compound heterozygote:
     { userId: 'user-cmpnd10', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
-      genotype: [1, 2], sampleType: '23andme', sampleId: 'usercmpd-23andme' }
+      genotype: [1, 2], sampleSource: '23andme', sampleId: 'usercmpd-23andme' }
   ];
   const variants: VariantCall[] = await addVariants(...variantData);
   const report = new Report({

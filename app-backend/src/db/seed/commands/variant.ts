@@ -64,7 +64,7 @@ export function makeVariant(
     ...attrs, userId, 
     genotype: trueGenotype, 
     sampleId: `${userId}-23andme-seed-sample`,
-    sampleType: '23andme', 
+    sampleSource: '23andme', 
     seed: true
   });
   return variant.saveAsync();

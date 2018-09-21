@@ -21,7 +21,7 @@ export class VariantCallAttributes {
                       // see computeAttributes
 
   // 23andme, etc:
-  sampleType?: string;
+  sampleSource?: string;
   // file hash or sample identifier
   sampleId?: string;
 
@@ -120,7 +120,7 @@ export const VariantCall = defineModel<
       refVersion: JoiRefVersion,
       
       // 23andme, ancestry, etc
-      sampleType: Joi.string().allow('23andme'),
+      sampleSource: Joi.string().allow('23andme'),
       // unique identifier of the measurement (e.g., 23andme file hash, akesogen id)
       sampleId: Joi.string().required(),
 
@@ -185,8 +185,8 @@ export const VariantCall = defineModel<
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
   try {
-    const {refName, refVersion, start, sampleType, sampleId, genotype, refBases, altBases } = ensureProps(
-      variantCall, 'start', 'genotype', 'sampleType', 'sampleId', 'genotype', 'refName', 
+    const {refName, refVersion, start, sampleSource, sampleId, genotype, refBases, altBases } = ensureProps(
+      variantCall, 'start', 'genotype', 'sampleSource', 'sampleId', 'genotype', 'refName', 
       'refBases', 'refVersion', 'altBases'
     );
     const end = start + Math.max( ... genotype.map(
@@ -194,7 +194,7 @@ function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNex
     ));
     const accession = refToNCBIAccession(refName, refVersion);
     
-    const variantId = makeVariantId(refName, refVersion, start, end, sampleType, sampleId);
+    const variantId = makeVariantId(refName, refVersion, start, end, sampleSource, sampleId);
     const zygosity = zygosityFromGenotype(genotype);
     next(null, {...variantCall, end, variantId, zygosity, accession });
   } catch (e) {
@@ -212,9 +212,9 @@ function basesFromGenotypeIndex(refBases: string, altBases: string[], index: num
 }
 
 function makeVariantId(
-  refName: string, refVersion: string, start: number, end: number, sampleType: string, sampleId: string
+  refName: string, refVersion: string, start: number, end: number, sampleSource: string, sampleId: string
 ) {
-  return `${refName}:${refVersion}:${start}:${end}:${sampleType}:${sampleId}`;
+  return `${refName}:${refVersion}:${start}:${end}:${sampleSource}:${sampleId}`;
 }
 
 function makePartialVariantId({refVersion, refName, start}: VariantIndex) {

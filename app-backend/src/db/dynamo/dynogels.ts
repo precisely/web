@@ -56,7 +56,7 @@ if (isOffline) {
 }
 
 // warn if we're not in a LAMBDA or ENV is not set
-if (!(process.env.ENV || process.env.LAMBDA_ENV)) {
+if (!process.env.ENV) {
   log.warn(`ENV environment variable not set`);
 }
 
