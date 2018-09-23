@@ -86,11 +86,12 @@ export async function getUploadSignedURL(event: APIGatewayEvent, context: Contex
     if ('public' === event['principalId']) {
       throw new Error('authentication failed');
     }
+    const principalId = event['principalId'].replace(/\|/g, '-'); // pipes are shell-hostile
     // TODO: Stop hardcoding 23andMe as a source.
     const source = '23andme';
     const params = {
       Bucket: getEnvVar('S3_BUCKET_BIOINFORMATICS_UPLOAD'),
-      Key: `${event['principalId']}/${source}/${event['params_query']['key']}`,
+      Key: `${principalId}/${source}/${event['params_query']['key']}`,
       Expires: 600
     };
     // XXX: Signature version 4 is critical! Without it, uploads will fail with
@@ -110,12 +111,11 @@ export async function processUpload(event: S3CreateEvent, context: Context) {
   try {
     const stage = getEnvVar('STAGE');
     const inputBucket = event.Records[0].s3.bucket.name;
-    const inputFile = event.Records[0].s3.object.key;
-    let [userId, source, file] = inputFile.split('/');
+    const inputFile = decodeURI(event.Records[0].s3.object.key);
+    const [userId, source, file] = inputFile.split('/');
     if (!userId || !source || !file) {
       throw new Error(`uploaded file has unexpected path structure: inputBucket=${inputBucket}, inputFile=${inputFile}`);
     }
-    userId = decodeURI(userId);
     log.info(`{"userId": "${userId}", "source": "${source}", "file": "${file}"}`);
     // userId has | characters, so URI-decode decode them
     let params = makeTaskParams({
