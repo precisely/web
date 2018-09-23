@@ -17,6 +17,11 @@ export const vcfIngester: Handler = (event: S3CreateEvent, context: Context) => 
   // pass
 };
 
+interface LambdaProxyAPIGatewayEvent extends APIGatewayEvent {
+  principalId: string;
+  paramsQuery: {[key: string]: string};
+}
+
 function makeTaskParams(overrides: object): AWS.ECS.Types.RunTaskRequest {
   const base = {
     cluster: getEnvVar('CLUSTER'),
@@ -76,22 +81,22 @@ export async function updateAllUsersVariantCalls(event: ScheduledEvent, context:
   }
 }
 
-export async function getUploadSignedURL(event: APIGatewayEvent, context: Context) {
+export async function getUploadSignedURL(event: LambdaProxyAPIGatewayEvent, context: Context) {
   try {
     log.info('generating signed S3 upload URL');
     log.info('context');
     log.info(JSON.stringify(context));
     log.info('event');
     log.info(JSON.stringify(event));
-    if ('public' === event['principalId']) {
+    if ('public' === event.principalId) {
       throw new Error('authentication failed');
     }
-    const principalId = event['principalId'].replace(/\|/g, '-'); // pipes are shell-hostile
+    const principalId = event.principalId.replace(/\|/g, '-'); // pipes are shell-hostile
     // TODO: Stop hardcoding 23andMe as a source.
     const source = '23andme';
     const params = {
       Bucket: getEnvVar('S3_BUCKET_BIOINFORMATICS_UPLOAD'),
-      Key: `${principalId}/${source}/${event['params_query']['key']}`,
+      Key: `${principalId}/${source}/${event.paramsQuery.key}`,
       Expires: 600
     };
     // XXX: Signature version 4 is critical! Without it, uploads will fail with
@@ -101,7 +106,7 @@ export async function getUploadSignedURL(event: APIGatewayEvent, context: Contex
     return signedUrl;
   } catch (error) {
     log.error(`error: ${error}`);
-    return error.toString()
+    return error.toString();
   }
 }
 
