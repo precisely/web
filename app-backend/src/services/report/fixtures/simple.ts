@@ -38,7 +38,7 @@ export async function addSimpleReportFixtures() {
   const variants: VariantCall[] = await addVariants(...variantData);
   const report = new Report({
     ownerId: 'author',
-    content: `<AnalysisBox>
+    content: `<AnalysisPanel>
                 <Analysis case={ variantCall("chr1.37p13:g.[10=];[10=]") }>
                 Wild Type
                 </Analysis>
@@ -57,7 +57,7 @@ export async function addSimpleReportFixtures() {
                 <Analysis case={ variantCall("chr1.37p13:g.[10A>C];[10A>T]") }>
                 Compound Heterozygote
                 </Analysis>
-              </AnalysisBox>`,
+              </AnalysisPanel>`,
     title: 'variant-test'
   });
   await addFixtures(report);

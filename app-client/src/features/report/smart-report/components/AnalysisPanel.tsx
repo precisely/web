@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const AnalysisBox: React.StatelessComponent = ({children}: any) => {
+export const AnalysisPanel: React.StatelessComponent = ({children}: any) => {
   return children;
 };
 

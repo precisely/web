@@ -44,7 +44,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-wt10');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
               selfClosing: false, children: [
@@ -58,7 +58,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-het10t');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
               selfClosing: false, children: [
@@ -72,7 +72,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-het10c');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
               selfClosing: false, children: [
@@ -86,7 +86,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-hom10t');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
               selfClosing: false, children: [
@@ -100,7 +100,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-hom10c');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
                 selfClosing: false, children: [
@@ -114,7 +114,7 @@ describe('Personalizer', function () {
         const personalizer = new Personalizer(report, 'user-cmpnd10');
         const personalizedDOM = await personalizer.personalize();
         expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
+            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', attrs: {}, reduced: true, 
             selfClosing: false, children: [
             { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
                 selfClosing: false, children: [
@@ -147,7 +147,7 @@ describe('Personalizer', function () {
             [ 'text', null],
             [ 'tag', 'topicbar' ],
             [ 'tag', 'genemap'],
-            [ 'tag', 'analysisbox' ],
+            [ 'tag', 'analysispanel' ],
             [ 'text', null ],
             [ 'tag', 'topicbar' ],
             [ 'tag', 'topicbar' ]
@@ -161,7 +161,7 @@ describe('Personalizer', function () {
           const elements = await personalizer.personalize();
           expect(elements[3]).toMatchObject({
             type: 'tag',
-            name: 'analysisbox',
+            name: 'analysispanel',
             children: [{
               type: 'tag',
               name: 'analysis',

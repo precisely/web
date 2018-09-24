@@ -3,7 +3,7 @@
 
 ## Part 1
 
-<AnalysisBox>
+<AnalysisPanel>
   <Analysis case={ variantCall("chr1.37p13:g.[234=];[234=]") }>
     One
   </Analysis>
@@ -22,12 +22,12 @@
   <Analysis case={ variantCall("chr4.37p13:g.[10A>C];[10A>T]") }>
     Six
   </Analysis>
-</AnalysisBox>
+</AnalysisPanel>
 
 
 ## Part 2
 
-<AnalysisBox>
+<AnalysisPanel>
   <Analysis case={ variantCall("chr4.37p13:g.[37800=];[37800=]") }>
     One
   </Analysis>
@@ -64,4 +64,4 @@
   <Analysis case={ variantCall("chr20.37p13:g.[108328=];[108328=]") }>
     Twelve
   </Analysis>
-</AnalysisBox>
+</AnalysisPanel>

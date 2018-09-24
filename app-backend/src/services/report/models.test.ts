@@ -140,10 +140,10 @@ describe('Report model', function () {
     it('should have variantIndexes set correctly', async function () {
       const report = new Report({
         title: 'Report with variant function',
-        content: `<AnalysisBox>
+        content: `<AnalysisPanel>
                     <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
                     <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>
-                  </AnalysisBox>`,
+                  </AnalysisPanel>`,
         ownerId: 'user123'
       });
       const savedReport = await report.saveAsync();
@@ -164,10 +164,10 @@ describe('Report model', function () {
     describe('calculateReportRequirements', function () {
       it('should collect variants in the __svnVariantRequirements key of the context', function () {
         const {elements, errors} = Parser.parse(
-          `<AnalysisBox>
+          `<AnalysisPanel>
             <Analysis case={ variantCall("chr1.37p13:g.[10A>T];[10=]") }/>
             <Analysis case={ variantCall("chr2.37p13:g.[20A>T];[20=]") }/>
-          </AnalysisBox>`);
+          </AnalysisPanel>`);
         const {variantIndexes} = calculateReportRequirements(elements);
         expect(variantIndexes).toBeDefined();
         expect(isArray(variantIndexes)).toBeTruthy();

@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:47 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-08-22 06:47:05
+ * @Last Modified time: 2018-09-21 15:25:34
  */
 
 import { ReducibleTagElement, Context, ReducerFunction, Attributes, removeTags } from 'smart-report';
@@ -15,14 +15,14 @@ import { isString } from 'util';
 
 // https://github.com/precisely/web/issues/202
 // mode = first | all  (first is default)
-// <AnalysisBox title="mek3" mode="first">  
+// <AnalysisPanel title="mek3" mode="first">  
 //   <Analysis  name="this" case={}>
 //   </Analysis >
 //   <AnalysisCase case={}>
 //   </Analysis>
 //
 
-export const AnalysisBox: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
+export const AnalysisPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   const mode: string = isString(ctx.mode) ? ctx.mode.toLowerCase() : 'first';
   let foundMatch = false;
   return [removeTags(elt.children, ({__name, case: caseValue }: Attributes) => {

@@ -47,23 +47,23 @@ describe('SmartReport', () => {
       </div>))).toBeTruthy();
   });
 
-  it('foo should render an AnalysisBox with no elements', () => {
+  it('foo should render an AnalysisPanel with no elements', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [] }
+      { type: 'tag', name: 'analysispanel', children: [] }
     ])).html()).toEqual('<div></div>');
   });
 
-  it('should render an AnalysisBox with one child Analysis element', () => {
+  it('should render an AnalysisPanel with one child Analysis element', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [{
+      { type: 'tag', name: 'analysispanel', children: [{
         type: 'tag', name: 'analysis', attrs: { name: 'foo' }, children: []
       }] }
     ])).contains(<div><h1>foo</h1></div>)).toBeTruthy();
   });
 
-  it('should render an AnalysisBox with one child Analysis element containing text', () => {
+  it('should render an AnalysisPanel with one child Analysis element containing text', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [{
+      { type: 'tag', name: 'analysispanel', children: [{
         type: 'tag', name: 'analysis', attrs: { name: 'foo' }, children: [{
           type: 'text', blocks: ['<p>bar</p>']
         }]

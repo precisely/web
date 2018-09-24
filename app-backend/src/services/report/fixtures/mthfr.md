@@ -35,7 +35,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 </GeneMap>
 
 <# C677T #>
-<AnalysisBox>
+<AnalysisPanel>
   <Analysis name="C677T (C;T)"
             case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378=]") 
                     and 
@@ -168,7 +168,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 
     <piechart percentage=0 />
   </Analysis>
-</AnalysisBox>
+</AnalysisPanel>
 
 <# A1298C (C:C) C677T (C:T) #>
 
