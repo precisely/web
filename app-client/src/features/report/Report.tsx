@@ -21,6 +21,7 @@ import {header} from 'src/constants/styleGuide';
 import {GetReport} from './queries';
 import {ReportData} from './interfaces';
 import {SmartReport} from './smart-report';
+import { LoadingPage } from 'src/features/common/LoadingPage';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -55,7 +56,7 @@ export class ReportImpl extends React.Component<ReportProps> {
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>{title}</h1>
           <PageContent>
-            {report ? this.renderSmartReport() : this.renderUploadScreen()}
+            {report ? this.renderSmartReport() : <LoadingPage/>}
           </PageContent>
         </Container>
       </div>
