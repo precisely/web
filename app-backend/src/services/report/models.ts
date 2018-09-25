@@ -17,6 +17,7 @@ import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 import {Parser} from './services/smart-report';
 import {variantCall, extractVariantIndexes} from './services/smart-report/data-types/variant-call';
 import { ReportContentError } from './errors';
+import { UserSampleRequirement, JoiUserSampleRequirement } from 'src/services/user-sample/external';
 
 const { uuid } = dynogels.types;
 
@@ -32,6 +33,7 @@ export interface ReportAttributes {
   publishedContent?: string;
   publishedElements?: ReducibleElement[];
   variantIndexes?: VariantIndex[];
+  userSampleRequirements?: UserSampleRequirement[];
   seed?: boolean;
 }
 
@@ -67,7 +69,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     
     // variant calls needed by this report
     variantIndexes: Joi.array().items(JoiVariantIndex).default([]), // variant calls described as refName:start index
-
+    userSampleRequirements: Joi.array().items(JoiUserSampleRequirement).default([]),
     seed: Joi.boolean().description('represents seed data'),
   },
 

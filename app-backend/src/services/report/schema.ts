@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:49:33 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-10 17:44:31
+ * @Last Modified time: 2018-09-24 12:36:07
  */
 
 import gql from 'graphql-tag';
@@ -25,6 +25,11 @@ type Report {
   updatedAt: String
 }
 
+input UserSampleRequirement {
+  type: [String]!,
+  source: String
+}
+
 enum ReportState {
   published
   pending
@@ -37,7 +42,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createReport(title: String!, content: String!): Report,
-  updateReport(id: String!, title: String!, content: String!): Report,
+  createReport(title: String!, content: String!, userSampleRequirements: [UserSampleRequirement]): Report,
+  updateReport(id: String!, title: String!, content: String!, userSampleRequirements: [UserSampleRequirement]): Report,
   publishReport(id: String): Report
 }`];
