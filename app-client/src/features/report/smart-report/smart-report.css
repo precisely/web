@@ -1,0 +1,19 @@
+.smart-report {
+  text-align: left;
+  font-family: HelveticaNeue-Light, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.smart-report h1, .smart-report h2, .smart-report h3, .smart-report h4, .smart-report h5, .smart-report h6, .smart-report h7, .smart-report h8, .smart-report h9 {
+  font-weight: bolder !important;
+  font-family: HelveticaNeue-Bold, Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+}
+
+.smart-report h1 {
+  font-size: 22px !important;
+}
+
+.smart-report h2 {
+  font-size: 18px !important;
+}
