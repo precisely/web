@@ -37,7 +37,7 @@ module.exports.vars = (sls)=> {
   const certificateArn = getCertificateArn(certificateName);
   const graphQLAPIPath = 'graphql';
   const graphQLEndpoint = `${apiScheme}://${apiHost}/${graphQLAPIPath}`;
-  const bioinformaticsUploadSignedURLPath = 'bioinformaticsUploadSignedURL';
+  const bioinformaticsUploadSignedURLPath = 'signed-upload-url/bioinformatics';
   const bioinformaticsUploadSignedURLEndpoint = `${apiScheme}://${apiHost}/${bioinformaticsUploadSignedURLPath}`;
 
   // manually provisioned bucket avoids stack removal issue:
