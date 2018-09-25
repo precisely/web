@@ -30,6 +30,16 @@ GraphQLAPIRole:
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):APIPolicy}
 
+UserUploadS3Role:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:provider.stage}-PreciselyUserUploadS3Role
+    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
+    ManagedPolicyArns: *DefaultManagedPolicyArns
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+      - ${file(./serverless/resources/role-policies.yml):UserUploadS3Policy}
+
 SystemRole: 
   Type: AWS::IAM::Role
   Properties:
@@ -60,14 +70,4 @@ SystemRole:
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
-
-UserUploadLambdaRole:
-  Type: AWS::IAM::Role
-  Properties:
-    RoleName: ${self:provider.stage}-PreciselyUserUploadRole
-    AssumeRolePolicyDocument: *DefaultAssumeRolePolicyDocument
-    ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
-    Policies:
-      - ${file(./serverless/resources/role-policies.yml):UserUploadPolicy}
 ...

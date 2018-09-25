@@ -37,6 +37,7 @@ provider:
 
     BASE_DOMAIN: ${self:custom.common.baseDomain} # the root domain, adjusted for developer environments
     GRAPHQL_API_PATH: ${self:custom.common.graphQLAPIPath}
+    BIOINFORMATICS_UPLOAD_SIGNED_URL_PATH: ${self:custom.common.bioinformaticsUploadSignedURLPath}
 
     # Auth0 values - needed for verifying Auth0 tokens
     AUTH0_TENANT_NAME: ${self:custom.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
@@ -55,7 +56,7 @@ resources:
   - Resources: ${file(./serverless/resources/monitoring.yml)}
   - Resources: ${file(./serverless/resources/bioinformatics-ecs.yml)}
   - Resources: ${file(./serverless/resources/apigateway-stage.yml)}
-  
+
 plugins:
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
@@ -215,17 +216,38 @@ functions:
       SUBNET: ${self:custom.vars.subnetId}
       SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 
-  # Raw data uploader is triggered by new file in any of the raw data buckets
-  BioinformaticsUploadProcessor:
+  BioinformaticsGetUploadSignedURL:
+    role: UserUploadS3Role
+    handler: src/services/bioinformatics/handlers.getUploadSignedURL
+    events:
+      - http:
+          path: ${self:custom.common.bioinformaticsUploadSignedURLPath}
+          method: get
+          cors: true
+          authorizer:
+            name: APIAuthorizer
+            type: request
+            resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
+          integration: lambda
+          request:
+            template:
+              application/json: ${file(./serverless/resources/lambda-http-template)}
+    environment:
+      S3_BUCKET_BIOINFORMATICS_UPLOAD: ${self:custom.vars.bioinformaticsUploadBucket}
+
+  # Runs automatically when a file is uploaded. See also
+  # s3-buckets.yml/BioinformaticsUploadLambdaPermission.
+  BioinformaticsProcessUpload:
     role: SystemRole
-    handler: src/services/bioinformatics/handlers.uploadProcessor
+    handler: src/services/bioinformatics/handlers.processUpload
     events:
       - s3:
-          bucket: BioinformaticsUpload
+          bucket: BioinformaticsUpload # XXX: Actually S3BucketBioinformaticsUpload!
           event: s3:ObjectCreated:*
     environment:
-      ECS_BIOINFORMATICS_CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
-      ECS_BIOINFORMATICS_TASK: ${self:custom.vars.bioinformaticsECSTaskName}
+      STAGE: ${self:provider.stage}
+      CLUSTER: ${self:custom.vars.bioinformaticsECSClusterName}
+      TASK: ${self:custom.vars.bioinformaticsECSTaskName}
       SUBNET: ${self:custom.vars.subnetId}
       SECURITY_GROUP: ${self:custom.vars.securityGroupIdAllowInboundSSH}
 

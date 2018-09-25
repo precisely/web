@@ -2,7 +2,20 @@ S3BucketBioinformaticsUpload:
   Type: AWS::S3::Bucket
   Properties:
     BucketName: ${self:custom.vars.bioinformaticsUploadBucket}
-    
+    CorsConfiguration:
+      CorsRules:
+        - AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - HEAD
+            - DELETE
+          AllowedOrigins:
+            - '*'
+          AllowedHeaders:
+            - '*'
+          MaxAge: 3000
+
 S3BucketBioinformaticsVCF:
   Type: AWS::S3::Bucket
   Properties:
@@ -13,12 +26,13 @@ S3BucketBioinformaticsError:
   Properties:
     BucketName: ${self:custom.vars.bioinformaticsErrorBucket}
 
+# This allows functions.BioinformaticsProcessUpload to work.
 BioinformaticsUploadLambdaPermission:
   Type: AWS::Lambda::Permission
   Properties:
     FunctionName:
       # serverless adds suffix "LambdaFunction" to function names:
-      Fn::GetAtt: [ BioinformaticsUploadProcessorLambdaFunction, Arn ]
+      Fn::GetAtt: [ BioinformaticsProcessUploadLambdaFunction, Arn ]
     Principal: s3.amazonaws.com
     Action: lambda:InvokeFunction
     SourceAccount:
