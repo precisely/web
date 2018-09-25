@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 export const AnalysisPanel: React.StatelessComponent = ({children}: any) => {
+  // TODO: handle userSampleStatus
   return children;
 };
 
