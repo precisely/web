@@ -12,9 +12,9 @@ import {Reducer, ReducibleElement, ReducedElement, Context} from 'smart-report';
 import * as components from './components';
 import * as functions from './data-types/functions';
 import { addVariantCallsToContext } from './data-types/variant-call/helpers';
-import { UserSample, UserSampleAttributes } from 'src/services/user-sample/models';
+import { UserSample, UserSampleAttributes, UserSampleStaticMethods } from 'src/services/user-sample/models';
 import { keyAllBy } from 'src/common/utils';
-import { UserSampleRequirement, UserSampleRequirementStatus } from 'src/services/user-sample/external';
+import { UserSampleRequirement, UserSampleRequirementStatus, UserSampleStatus } from 'src/services/user-sample/external';
 
 export const PreciselyReducer = new Reducer({
   components: components,
@@ -63,13 +63,14 @@ export class Personalizer {
 
   calculateUserSampleStatus(
     satisfied: UserSampleRequirementStatus[], unsatisfied: UserSampleRequirement[]
-  ): 'ready' | 'error' | 'processing' | 'unsatisfied' {
+  ): UserSampleStatus | undefined {
     if (unsatisfied && unsatisfied.length > 0) {
-      return 'unsatisfied';
+      return undefined;
     } else if (satisfied && satisfied.length > 0) {
       const notReadyIndex = satisfied.findIndex(usa => usa.status !== 'ready');
-      return notReadyIndex === -1 ? 'ready' : satisfied[notReadyIndex].status;
-    } 
-    return 'ready';
+      return notReadyIndex === -1 ? UserSampleStatus.ready : satisfied[notReadyIndex].status;
+    } else {
+      return UserSampleStatus.ready;
+    }
   }
 }

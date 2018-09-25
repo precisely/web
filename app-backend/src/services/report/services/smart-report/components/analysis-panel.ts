@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:47 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-21 15:25:34
+ * @Last Modified time: 2018-09-25 08:54:49
  */
 
 import { ReducibleTagElement, Context, ReducerFunction, Attributes, removeTags } from 'smart-report';
@@ -25,15 +25,22 @@ import { isString } from 'util';
 export const AnalysisPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   const mode: string = isString(ctx.mode) ? ctx.mode.toLowerCase() : 'first';
   let foundMatch = false;
-  return [removeTags(elt.children, ({__name, case: caseValue }: Attributes) => {
-    // remove all analysis tags (foundMatch or if match has been found) 
-    const remove = __name === 'analysis' && (!caseValue || foundMatch);
-    
-    // only set foundMatch tag when mode === first
-    if (!remove && mode === 'first') {
-      foundMatch = true;
-    }
+  // set the status of the AnalysisPanel
+  const userSampleStatus = elt.attrs.status = ctx.__userSampleRequirements.status;
+  elt.attrs.userSampleStatus = userSampleStatus;
+  if (userSampleStatus === 'ready') {
+    return [removeTags(elt.children, ({__name, case: caseValue }: Attributes) => {
+      // remove all analysis tags (foundMatch or if match has been found) 
+      const remove = __name === 'analysis' && (!caseValue || foundMatch);
+      
+      // only set foundMatch tag when mode === first
+      if (!remove && mode === 'first') {
+        foundMatch = true;
+      }
 
-    return remove;
-  }), ctx];
+      return remove;
+    }), ctx];
+  } else {
+    return [[], ctx];
+  }
 };
