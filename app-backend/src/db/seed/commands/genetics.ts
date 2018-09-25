@@ -29,7 +29,7 @@ function genotypeCreator(genotype: string, ...vIndexes: number[]) {
       });
     }));
     console.log(`Creating ${variants.length} variants for userId '${userId}'`);
-    return Promise.all([...variants, userSample]);
+    return Promise.all<any>([...variants, userSample]); // tslint:disable-line no-any
   };
 }
 

@@ -12,9 +12,11 @@ import {Reducer, ReducibleElement, ReducedElement, Context} from 'smart-report';
 import * as components from './components';
 import * as functions from './data-types/functions';
 import { addVariantCallsToContext } from './data-types/variant-call/helpers';
-import { UserSample, UserSampleAttributes, UserSampleStaticMethods } from 'src/services/user-sample/models';
 import { keyAllBy } from 'src/common/utils';
-import { UserSampleRequirement, UserSampleRequirementStatus, UserSampleStatus } from 'src/services/user-sample/external';
+import { UserSample } from 'src/services/user-sample/models';
+import { 
+  UserSampleRequirement, UserSampleRequirementStatus, UserSampleStatus 
+} from 'src/services/user-sample/external';
 
 export const PreciselyReducer = new Reducer({
   components: components,
