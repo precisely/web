@@ -1,5 +1,7 @@
 import {map, flatMap} from 'lodash';
 import { GeneVariants, makeVariant } from './variant';
+import { UserSample, UserSampleAttributes } from 'src/services/user-sample/models';
+import { UserSampleStatus, UserSampleType } from 'src/services/user-sample/external';
 
 export async function geneticsCommand(...args: string[]) {
   const [userId, profile] = args;
@@ -13,6 +15,10 @@ export async function geneticsCommand(...args: string[]) {
 
 function genotypeCreator(genotype: string, ...vIndexes: number[]) {
   return async function (userId: string) {
+    const userSample = UserSample.createAsync({
+      userId: userId, id: `${userId}-seed-sample`, seed: true, source: '23andme', 
+      status: UserSampleStatus.ready, type: UserSampleType.genetics
+    });
     const variants = flatMap(map(GeneVariants, gene => {
       let vIndex = 0;
       return map(gene, variant => {
@@ -23,7 +29,7 @@ function genotypeCreator(genotype: string, ...vIndexes: number[]) {
       });
     }));
     console.log(`Creating ${variants.length} variants for userId '${userId}'`);
-    return Promise.all(variants);
+    return Promise.all([...variants, userSample]);
   };
 }
 
