@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@aneilbaboo/dynamodb-localhost@^0.0.7-aneilbaboo1":
+  version "0.0.7-aneilbaboo1"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/dynamodb-localhost/-/dynamodb-localhost-0.0.7-aneilbaboo1.tgz#300d43c8fb906483aa163c1eae6586e494a1ba97"
+  dependencies:
+    mkdirp "^0.5.0"
+    progress "^1.1.8"
+    rmdir "^1.2.0"
+    tar "^2.0.0"
+
 "@aneilbaboo/dynogels-promisified@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@aneilbaboo/dynogels-promisified/-/dynogels-promisified-1.0.6.tgz#892f50b28c81de34970c3b0b3fcd394d5f0d9532"
@@ -17,6 +26,15 @@
     joi "11.3.4"
     lodash "4.17.4"
     uuid "3.1.0"
+
+"@aneilbaboo/serverless-dynamodb-local@0.2.35-aneilbaboo3":
+  version "0.2.35-aneilbaboo3"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.35-aneilbaboo3.tgz#8c7cfa987fbc7f7f44a3e778419094327023db29"
+  dependencies:
+    "@aneilbaboo/dynamodb-localhost" "^0.0.7-aneilbaboo1"
+    aws-sdk "^2.7.0"
+    bluebird "^3.4.6"
+    lodash "^4.17.0"
 
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0-beta.54"
@@ -842,9 +860,23 @@ aws-sdk@^*, aws-sdk@^2.177.0, aws-sdk@^2.228.0:
     uuid "3.1.0"
     xml2js "0.4.19"
 
-aws-sdk@^2.259.1, aws-sdk@^2.7.0:
+aws-sdk@^2.259.1:
   version "2.307.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.307.0.tgz#53a5906d36061d62e7b2ceb243920c7ef8feac97"
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.1.0"
+    xml2js "0.4.19"
+
+aws-sdk@^2.7.0:
+  version "2.334.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.334.0.tgz#cf70be2f28f5350a882618a665c9703ad8a5e8c2"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -2214,6 +2246,15 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 dynamodb-localhost@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/dynamodb-localhost/-/dynamodb-localhost-0.0.6.tgz#0ce83e82caeb04a18246c5d87ce2d23af931b6cf"
+  dependencies:
+    mkdirp "^0.5.0"
+    progress "^1.1.8"
+    rmdir "^1.2.0"
+    tar "^2.0.0"
+
+dynamodb-localhost@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/dynamodb-localhost/-/dynamodb-localhost-0.0.7.tgz#6642d6eb7a29a8c586cc783dd6a59ec3dc00e2ad"
   dependencies:
     mkdirp "^0.5.0"
     progress "^1.1.8"
@@ -3799,7 +3840,7 @@ is-wsl@^1.1.0:
 
 is@~0.2.6:
   version "0.2.7"
-  resolved "https://registry.yarnpkg.com/is/-/is-0.2.7.tgz#3b34a2c48f359972f35042849193ae7264b63562"
+  resolved "http://registry.npmjs.org/is/-/is-0.2.7.tgz#3b34a2c48f359972f35042849193ae7264b63562"
 
 isarray@0.0.1:
   version "0.0.1"
@@ -4702,9 +4743,13 @@ lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-lodash@^4.0.0, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.0, lodash@^4.17.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.8.0:
+lodash@^4.0.0, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.8.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
+lodash@^4.17.0:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 logform@1.5.0:
   version "1.5.0"
@@ -6426,9 +6471,9 @@ serverless-domain-manager@^2.3.6:
     aws-sdk "^2.177.0"
     chalk "^2.0.1"
 
-serverless-dynamodb-local@^0.2.33:
-  version "0.2.33"
-  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.33.tgz#c51eab1c7e9a431c6980e922a66edfa7ffbe722e"
+serverless-dynamodb-local@^0.2.35:
+  version "0.2.35"
+  resolved "https://registry.yarnpkg.com/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.35.tgz#abc8000a8b39ce06fd5a8bdf560278ef93fc68d4"
   dependencies:
     aws-sdk "^2.7.0"
     bluebird "^3.4.6"

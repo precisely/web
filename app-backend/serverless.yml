@@ -131,6 +131,9 @@ custom:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       migrate: true
       inMemory: true
+      heapInit: 8192m
+      heapMax: 8192m
+      heapInitMax: 8192m
     disk:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       migrate: true

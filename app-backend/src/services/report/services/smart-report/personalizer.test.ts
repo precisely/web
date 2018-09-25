@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:28 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 15:51:13
+ * @Last Modified time: 2018-09-25 15:59:09
  */
 
 const cases = require('jest-in-case');
@@ -31,6 +31,36 @@ describe('Personalizer', function () {
   });
 
   describe('personalize,', function() {
+    describe('when the sample has error status', function () {
+      afterAll(destroyFixtures);
+
+      it('should not show analysispanel children and should report the error as an attribute', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-sample-error');
+        const personalizedDOM = await personalizer.personalize();
+        expect(personalizedDOM).toEqual([
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+            attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
+            children: []}
+        ]);
+      });
+    });
+
+    describe('when the required sample type is missing', function () {
+      afterAll(destroyFixtures);
+
+      it('should personalize the content for a wildtype user', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-sample-missing');
+        const personalizedDOM = await personalizer.personalize();
+        expect(personalizedDOM).toEqual([
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+            attrs: { userSampleStatus: undefined }, reduced: true, selfClosing: false, 
+            children: []}
+        ]);
+      });
+    });
+
     describe('when the sample has been received', function () {
       describe('when there are users with different genotypes for the same SNP,', function() {
         let report: Report;
