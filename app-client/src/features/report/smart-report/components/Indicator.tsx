@@ -15,7 +15,7 @@ import * as React from 'react';
 export type IndicatorProps = {icon: string, name: string, state: string, link: string, disabled: boolean, navigation: any};
 
 export const Indicator: React.StatelessComponent<IndicatorProps> = ({icon, name, state, link, disabled, navigation}: IndicatorProps) => {
-  const iconImage = disabled ? BUTTON[icon][state]['rest'] : BUTTON[icon][state]['disabled'];
+  const iconImage = disabled ? BUTTON[icon][state]['disabled'] : BUTTON[icon][state]['rest'];
   // FIXME: need to incorporate hover, down, disabled states
   const clickHandler = () => {
     console.log('Navigating to %s', link);
@@ -24,7 +24,7 @@ export const Indicator: React.StatelessComponent<IndicatorProps> = ({icon, name,
   // FIXME: these aren't the right colors:
   const fontColor = disabled ? 'lightgray' : 'black';
   return (
-    <div style={{float: 'left', margin: '5px'}} onClick={disabled ? clickHandler : null}>
+    <div style={{float: 'left', margin: '5px'}} onClick={disabled ? null : clickHandler}>
       <div key="indicatorName" style={{color: fontColor}}>{name}</div>
       <div key="indicatorImage"><img src={iconImage}/></div>
     </div>

@@ -22,6 +22,10 @@ IndicatorPanelState
     super(props);
   }
 
+  componentDidMount() {
+    this.setState({userSampleStatus: this.props.userSampleStatus});
+  }
+
   render() {
     return (
       <div style={{position: 'relative', minHeight: '200px', minWidth: '100%', textAlign: 'center'}}>
