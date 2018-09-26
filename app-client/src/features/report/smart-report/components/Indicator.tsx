@@ -12,14 +12,14 @@
  */
 import * as React from 'react';
 
-export type IndicatorProps = {icon: string, name: string, state: string, link: string, disabled: boolean, navigation: any};
+export type IndicatorProps = {icon: string, name: string, state: string, link: string, disabled: boolean};
 
-export const Indicator: React.StatelessComponent<IndicatorProps> = ({icon, name, state, link, disabled, navigation}: IndicatorProps) => {
+export const Indicator: React.StatelessComponent<IndicatorProps> = ({icon, name, state, link, disabled}: IndicatorProps) => {
   const iconImage = disabled ? BUTTON[icon][state]['disabled'] : BUTTON[icon][state]['rest'];
   // FIXME: need to incorporate hover, down, disabled states
   const clickHandler = () => {
     console.log('Navigating to %s', link);
-    navigation.navigate(link);
+    window.location.href = link;
   };
   // FIXME: these aren't the right colors:
   const fontColor = disabled ? 'lightgray' : 'black';
