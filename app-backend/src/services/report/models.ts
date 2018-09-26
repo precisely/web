@@ -14,7 +14,7 @@ import {Context, Reducer, ReducibleElement} from 'smart-report';
 import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 
-import {Parser} from './services/smart-report';
+import {Parser, Analyzer} from './services/smart-report';
 import {variantCall, extractVariantIndexes} from './services/smart-report/data-types/variant-call';
 import { ReportContentError } from './errors';
 import { UserSampleRequirement, JoiUserSampleRequirement } from 'src/services/user-sample/external';
@@ -112,7 +112,7 @@ Report.prototype.publish = async function publishReport() {
   if (errors.length > 0) {
     throw new ReportContentError(errors);
   }
-  const requirements = calculateReportRequirements(elements);
+  const requirements = Analyzer.extractRequirements(elements);
   this.set({ 
     publishedElements: elements, 
     publishedContent: content, 
@@ -175,28 +175,3 @@ async function setReportSlug(attrs: ReportAttributes, next: ListenerNextFunction
 }
 
 Report.before('create', setReportSlug);
-
-//
-// Supporting functions
-// 
-
-/**
- * Runs the reducer in analysisMode to discover variants mentioned in the report
- * 
- * @param elements 
- */
-export function calculateReportRequirements(
-  elements: ReducibleElement[]
-): { variantIndexes: VariantIndex[] } {
-  const context: Context = {};
-  const reducer = new Reducer({ 
-    functions: { variantCall },   
-    analysisMode: true        // turn on analysisMode
-                              // functions at every code branch are evaluated
-  }); 
-  reducer.reduce(elements, context);
-  const variantIndexes = extractVariantIndexes(context);
-  
-  const result = { variantIndexes: variantIndexes };
-  return result;
-}
