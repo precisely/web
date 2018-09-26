@@ -1,13 +1,13 @@
 import {map, flatMap} from 'lodash';
 import { GeneVariants, makeVariant } from './variant';
-import { UserSample, UserSampleAttributes } from 'src/services/user-sample/models';
+import { UserSample } from 'src/services/user-sample/models';
 import { UserSampleStatus, UserSampleType } from 'src/services/user-sample/external';
 
 export async function geneticsCommand(...args: string[]) {
   const [userId, profile] = args;
   const fn = Profile[profile];
   if (!fn) {
-    console.log(`usage: yarn sls seed:genetics {userId} {${Object.keys(Profile).join('|')}`);
+    console.log(`usage: yarn sls seed:genetics --user {userId} --genetics {${Object.keys(Profile).join('|')}`);
     process.exit(1);
   }
   await fn(userId);
