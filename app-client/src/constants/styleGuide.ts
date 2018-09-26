@@ -18,10 +18,18 @@ export const preciselyOrange = '#FF8A4B';
 export const preciselyMagenta = '#c83a6e';
 export const preciselyGreen = '#00bc3e';
 
+export const AnalysisColors = {
+  defective: '#fc3f28',
+  normal: '#00bc3e',
+  enhanced: '#2B3FE0',
+  unknown: '#9B9B9B'
+};
+
 export const buttonDefault: string = '#6c757d';
 export const buttonHover: string = '#545b62';
 export const defaultBackground: string = '#F5F5F5';
 export const authLockButtonBackground: string = '#FF8A4B';
+
 
 export type ExtendedCSS = CSS & { [key: string]: any }; // to accomodate media queries and other special Radium strings
 

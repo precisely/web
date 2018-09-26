@@ -197,7 +197,7 @@ describe('Personalizer', function () {
                 type: 'tag',
                 name: 'analysis',
                 attrs: {
-                  name: analysisName
+                  title: analysisName
                 }
               }]
             });
