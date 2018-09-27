@@ -11,6 +11,6 @@ import { Indicator, IndicatorPanel } from 'src/services/report/services/smart-re
  * @Last Modified time: 2018-09-13 09:46:27
  */
 
-export { AnalysisBox } from './analysis-box';
+export { AnalysisPanel } from './analysis-panel';
 export { GeneMap } from './gene-map';
 export { Indicator, IndicatorPanel } from './indicator-panel';

@@ -27,3 +27,31 @@ export function extend<T, U>(first: T, second: U): T & U {
 
   return result;
 }
+
+/**
+ * Collects all objects with the same key value into lists, 
+ *    with each list hashed by the key value
+ * E.g.,
+ * keyAllBy([
+ *  {type: 'foo', a:1}, 
+ *  {type: 'bar', a: 2}, 
+ *  {type: 'bar', b: 3}
+ * ], 'type')
+ * => { 
+ *   foo: [{type: 'foo', a: 1}],
+ *   bar: [{type: 'bar', a: 2}, {type: 'bar', b: 3}]
+ * }
+ * @param objList
+ * @param key 
+ * 
+ */
+export function keyAllBy<T extends {[key: string]: any }, K extends string>( // tslint:disable-line no-any
+  objList: T[], key: string
+): { [key: string]: T[] } { 
+  const result = {};
+  objList.forEach(obj => {
+    const keyValue = obj[key];
+    result[keyValue] = (result[keyValue] || []).push(obj);
+  });
+  return result;
+}

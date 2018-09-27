@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Report, ReportAttributes } from 'src/services/report/models';
 import { isString } from 'util';
 import batchPromises = require('batch-promises');
+import { UserSampleType } from 'src/services/user-sample/external';
 
 /**
  * Loads all reports (files with .md) in this directory, assigning ownership to ownerId
@@ -36,5 +37,7 @@ function reportContent(reportName: string) {
 }
 
 function reportAttributes({title, ownerId = 'system'}: {title: string, ownerId: string}): ReportAttributes {
-  return { title, ownerId, content: reportContent(title), seed: true, state: 'published' };
+  return { title, ownerId, content: reportContent(title), seed: true, state: 'published', userSampleRequirements: [
+    { type: UserSampleType.genetics }
+  ] };
 }

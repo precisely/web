@@ -9,8 +9,9 @@
 import * as React from 'react';
 import * as components from './components';
 import { transform } from 'lodash';
+import './smart-report.css';
 
-const ComponentMap = transform<React.StatelessComponent, React.StatelessComponent>(
+const ComponentMap = transform<any, any>(
   components,
   (result, value, key) => {
     result[key.toLowerCase()] = value;
@@ -20,7 +21,7 @@ const ComponentMap = transform<React.StatelessComponent, React.StatelessComponen
 export const SmartReport: React.StatelessComponent<{ elements: any[]}> = (
   { elements }
 ) => { // tslint:disable-line no-any
-  const result = <div>{...elementsToReact(elements, 'smart-report')}</div>;
+  const result = <div className="smart-report">{...elementsToReact(elements, 'smart-report')}</div>;
   return result;
 };
 

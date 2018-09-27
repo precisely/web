@@ -23,7 +23,8 @@
 			"**/node_modules": true,
 			"**/bower_components": true,
 			"**/coverage": true
-		}
+		},
+		"tslint.autoFixOnSave": true
 	}
 
 }

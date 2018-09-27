@@ -151,8 +151,8 @@ describe('Report resolver', function () {
       const personalizationResolver = <IFieldResolver<Report, GraphQLContext>> resolvers.Report.personalization;
       const result = await personalizationResolver(report, { userId: 'user-hom10c' }, context, <any> null );
       expect(result).toEqual([
-        { type: 'tag', name: 'analysisbox', rawName: 'AnalysisBox', attrs: {}, reduced: true, 
-          selfClosing: false, children: [
+        { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+          attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
           { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
             selfClosing: false, children: [
             { type: 'text', blocks: ['<p>Homozygote-C</p>'], reduced: true }

@@ -16,7 +16,7 @@ import * as functions from './data-types/functions';
 export const Parser = new SmartReportParser({
   markdownEngine: markdownItEngine(),
   allowedTags: [
-    'AnalysisBox', 'Analysis', 
+    'AnalysisPanel', 'Analysis', 
     'IndicatorPanel', 'Indicator',
     'GeneMap', 'Variant', 'PieChart', 
     'TopicBar'],
