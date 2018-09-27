@@ -8,7 +8,6 @@
 import {addFixtures} from 'src/common/fixtures';
 
 import {VariantCallAttributes, VariantCall} from './models';
-import { UserSampleStatus } from 'src/services/user-sample/external';
 import { UserSample, UserSampleAttributes } from 'src/services/user-sample/models';
 
 export function addVariants(

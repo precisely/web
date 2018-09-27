@@ -13,7 +13,6 @@
 // SystemVariantRequirements represents the variant calls that
 // need to be pulled from 
 import * as Joi from 'joi';
-import {v4} from 'uuid';
 
 import {defineModel, ModelInstance } from 'src/db/dynamo/dynogels';
 import { UserSampleStatus, UserSampleType } from './external';

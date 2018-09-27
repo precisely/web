@@ -9,7 +9,7 @@
 import * as Joi from 'joi';
 import slugify from 'slugify';
 
-import {Context, Reducer, ReducibleElement} from 'smart-report';
+import {ReducibleElement} from 'smart-report';
 
 import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
