@@ -255,7 +255,9 @@ functions:
     role: SystemRole
     handler: src/services/system/handlers.addNewVariantRequirementsFromReports
     timeout: 120
-      
+    events:
+      - schedule: cron(0/10 * * * ? *)
+
   SysUpdateVariantRequirementStatuses:
     role: SystemRole
     handler: src/services/system/handlers.updateVariantRequirementStatuses
