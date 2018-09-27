@@ -26,7 +26,7 @@ export enum UserSampleStatus {
 export class UserSampleAttributes {
   userId?: string;
   id?: string;                // typically a GUID or filehash
-  type?: 'genetics' | 'survey';     // genetics | 
+  type?: UserSampleSource;
   source?: string;
   status?: UserSampleStatus;
   statusMessage?: string;
