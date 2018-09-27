@@ -26,6 +26,7 @@ APIPolicy:
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.read}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.Report.write}
       - ${file(./serverless/resources/dynogels-tables.js):Permissions.VariantCall.read}
+      - ${file(./serverless/resources/dynogels-tables.js):Permissions.UserSample.read}
 
 PreciselyDataManagerPolicy:
   PolicyName: ${self:provider.stage}-PreciselyDataManagerPolicy

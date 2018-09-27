@@ -1,5 +1,3 @@
-import {ReducibleElement, ReducibleTagElement} from 'smart-report';
-import * as AWS from 'aws-sdk';
 /**
  * 
  * @param attrs 

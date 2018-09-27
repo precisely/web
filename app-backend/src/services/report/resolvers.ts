@@ -14,6 +14,7 @@ import { GraphQLContext, accessControl } from 'src/services/graphql';
 
 import {Report, ReportState, ReportAttributes} from './models';
 import {Personalizer} from './services/smart-report';
+import { UserSampleRequirement } from 'src/services/user-sample/external';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
@@ -44,6 +45,7 @@ accessControl
 export interface ReportCreateArgs {
   title: string;
   content: string;
+  userSampleRequirements?: UserSampleRequirement[];
 }
 
 export interface ReportUpdateArgs extends Partial<ReportCreateArgs> {
@@ -57,7 +59,8 @@ export const resolvers = {
       { state, ownerId }: { state?: ReportState, ownerId?: string }, 
       context: GraphQLContext
     ) {
-      const reports = await Report.listReports({ state });
+      ownerId = ownerId || context.userId;
+      const reports = await Report.listReports({ state, ownerId });
       return await context.valid('report:read', reports);
     },
     async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {
@@ -75,12 +78,12 @@ export const resolvers = {
   },
   Mutation: {
     async createReport(
-      _: null | undefined, {title, content}: ReportCreateArgs, context: GraphQLContext
+      _: null | undefined, {title, content, userSampleRequirements}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
           ownerId: context.userId,
-          content, title
+          content, title, userSampleRequirements
         })
       );
       return await report.saveAsync();

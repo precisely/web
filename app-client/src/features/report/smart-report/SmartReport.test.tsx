@@ -22,18 +22,18 @@ describe('SmartReport', () => {
   it('should render a text element', () => {
     expect(shallow(smartReport([
       { type: 'text', blocks: ['<p>Hello</p>']}
-    ])).html()).toEqual('<div><div><p>Hello</p></div></div>');
+    ])).html()).toEqual('<div class="smart-report"><div><p>Hello</p></div></div>');
 
     // the same test using htmlDiv:
     expect(mount(smartReport([
       { type: 'text', blocks: ['<p>Hello</p>']}
-    ])).contains(<div>{htmlDiv('<p>Hello</p>')}</div>)).toBeTruthy();
+    ])).contains(<div className="smart-report">{htmlDiv('<p>Hello</p>')}</div>)).toBeTruthy();
   });
 
   it('should render a text element with multiple blocks', () => {
     expect(mount(smartReport([
       { type: 'text', blocks: ['<p>Hello', ' Sailor!</p>']}
-    ])).contains(<div>{htmlDiv('<p>Hello Sailor!</p>')}</div>)).toBeTruthy();
+    ])).contains(<div className="smart-report">{htmlDiv('<p>Hello Sailor!</p>')}</div>)).toBeTruthy();
   });
 
   it('should render multiple text elements', () => {
@@ -41,34 +41,34 @@ describe('SmartReport', () => {
       { type: 'text', blocks: ['<p>Hello', ' Sailor!</p>']},
       { type: 'text', blocks: ['<p>What\'s up, doc?</p>']}
     ])).contains((
-      <div>
+      <div className="smart-report">
         {htmlDiv('<p>Hello Sailor!</p>')}
         {htmlDiv("<p>What's up, doc?</p>")}
       </div>))).toBeTruthy();
   });
 
-  it('foo should render an AnalysisBox with no elements', () => {
+  it('foo should render an AnalysisPanel with no elements', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [] }
-    ])).html()).toEqual('<div></div>');
+      { type: 'tag', name: 'analysispanel', children: [] }
+    ])).html()).toEqual('<div class="smart-report"></div>');
   });
 
-  it('should render an AnalysisBox with one child Analysis element', () => {
+  it('should render an AnalysisPanel with one child Analysis element', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [{
-        type: 'tag', name: 'analysis', attrs: { name: 'foo' }, children: []
+      { type: 'tag', name: 'analysispanel', attrs: { titlePrefix: 'prefix' }, children: [{
+        type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: []
       }] }
-    ])).contains(<div><h1>foo</h1></div>)).toBeTruthy();
+    ])).containsMatchingElement(<div><h1>prefix foo</h1></div>)).toBeTruthy();
   });
 
-  it('should render an AnalysisBox with one child Analysis element containing text', () => {
+  it('should render an AnalysisPanel with one child Analysis element containing text', () => {
     expect(mount(smartReport([
-      { type: 'tag', name: 'analysisbox', children: [{
-        type: 'tag', name: 'analysis', attrs: { name: 'foo' }, children: [{
+      { type: 'tag', name: 'analysispanel', children: [{
+        type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: [{
           type: 'text', blocks: ['<p>bar</p>']
         }]
       }] }
-    ])).contains(<div><h1>foo</h1>{htmlDiv('<p>bar</p>')}</div>)).toBeTruthy();
+    ])).containsMatchingElement(<div><h1>foo</h1>{htmlDiv('<p>bar</p>')}</div>)).toBeTruthy();
   });
 
   it('should render a GeneMap', () => {

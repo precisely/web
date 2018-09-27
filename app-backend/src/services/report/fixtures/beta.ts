@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-13 15:10:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-13 10:08:22
+ * @Last Modified time: 2018-09-25 16:08:18
  */
 
 // This file represent fixtures for reports in the beta product
@@ -16,7 +16,8 @@ import { Report } from '../models';
 import { reportContent } from './util';
 import { addFixtures } from 'src/common/fixtures';
 import { VariantCall } from 'src/services/variant-call';
-import { addVariants } from 'src/services/variant-call/test-helpers';
+import { addVariants, addUserSamples } from 'src/services/variant-call/test-helpers';
+import { UserSampleType, UserSampleStatus } from 'src/services/user-sample/external';
 
 export async function addBetaReportFixtures() {
   const variantData = [
@@ -37,18 +38,29 @@ export async function addBetaReportFixtures() {
     ... makeVariantData('user-a78581651t-hom', { a78581651t: [1, 1] }),
     ... makeVariantData('user-c667t-het-g1192a-het', { c677t: [0, 1], g1192a: [1, 0]}),
   ];
+  const userSamples = await addUserSamples(variantData.map(vd => vd.userId), {
+    type: UserSampleType.genetics,
+    source: '23andme',
+    status: UserSampleStatus.ready
+  });
   const variants: VariantCall[] = await addVariants(...variantData);
   
   const genePanelReport = new Report({
     ownerId: 'author',
     title: 'mecfs',
-    content: reportContent('mecfs')
+    content: reportContent('mecfs'),
+    userSampleRequirements: [
+      { type: UserSampleType.genetics }
+    ]
   });
 
   const geneReport = new Report({
     ownerId: 'author',
     title: 'mthfr',
-    content: reportContent('mthfr')
+    content: reportContent('mthfr'),
+    userSampleRequirements: [
+      { type: UserSampleType.genetics }
+    ]
   });
 
   await addFixtures(geneReport, genePanelReport);

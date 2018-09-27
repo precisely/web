@@ -12,3 +12,4 @@
 
 export {Personalizer} from './personalizer';
 export {Parser} from './parser';
+export {Analyzer} from './analyzer';

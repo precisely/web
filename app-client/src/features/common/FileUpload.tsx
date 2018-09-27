@@ -16,7 +16,9 @@ interface FileUploadComponentState {
 }
 
 
-export class FileUpload extends React.Component<any, FileUploadComponentState> {
+export class FileUpload extends React.Component<{
+  onFinish?: (complete: boolean) => void
+}, FileUploadComponentState> {
 
   constructor(props: any) {
     super(props);
@@ -36,9 +38,6 @@ export class FileUpload extends React.Component<any, FileUploadComponentState> {
       method: 'GET',
       headers: {...AuthUtils.makeAuthorizationHeader()}
     };
-    const endpoint = process.env.REACT_APP_BIOINFORMATICS_UPLOAD_SIGNED_URL_ENDPOINT;
-    const e2 = process.env.REACT_APP_GRAPHQL_ENDPOINT;
-    const e3 = getEnvVar('REACT_APP_GRAPHQL_ENDPOINT');
     const locationResp = await fetch(
       `${getEnvVar('REACT_APP_BIOINFORMATICS_UPLOAD_SIGNED_URL_ENDPOINT')}?key=${this.state.hash}`,
   fetchOptionsLocation);
@@ -59,6 +58,7 @@ export class FileUpload extends React.Component<any, FileUploadComponentState> {
     const uploadResult = await fetch(location, fetchOptionsUpload);
     if (200 === uploadResult.status) {
       this.setState({uploadState: UploadState.Success});
+      this.callFinishCallback(true);
     } else {
       const resultBody = await uploadResult.text();
       // TODO: Unfortunately, the result body is a full HTML document, and
@@ -66,6 +66,13 @@ export class FileUpload extends React.Component<any, FileUploadComponentState> {
       // to get a better error.
       console.log('error:', resultBody);
       this.setState({uploadState: UploadState.Failure, reason: 'AWS mystery'});
+      this.callFinishCallback(false);
+    }
+  }
+
+  callFinishCallback(result: boolean) {
+    if (this.props.onFinish) {
+      this.props.onFinish(result);
     }
   }
 

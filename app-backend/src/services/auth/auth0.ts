@@ -73,7 +73,7 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
     log.info('auth0.authenticate verified token: %j', verified);
 
     return {
-      principalId: verified.sub,
+      principalId: auth0SubToUserId(verified.sub),
       email: verified.email,
       roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin,user' : 'user'
     };
@@ -84,4 +84,8 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
       roles: 'public'
     };
   }
+}
+
+function auth0SubToUserId(sub: string) {
+  return sub.replace('|', '-');
 }

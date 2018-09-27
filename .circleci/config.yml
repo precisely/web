@@ -146,7 +146,7 @@ jobs:
             - *yarn_install
             - *install_dynamodb
             - *run_dynamodb
-            - run: ./scripts/wait-for-dynamodb-local.sh
+            - run: yarn env:test-offline ./scripts/wait-for-dynamodb-local.sh
             - *save_backend_cache
             - *run_backend_tests
             - *build_webpack
