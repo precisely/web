@@ -48,12 +48,12 @@ export class FileUpload extends React.Component<{
       location = location.slice(1, location.length - 1);
     }
     // upload
-    const formData = new FormData();
-    const f = this.state.file;
-    formData.append('file', f);
+    // XXX: The upload MUST put the file in the body directly, without using
+    // FormData because FormData is incompatible with S3 uploads:
+    // https://github.com/aws/aws-sdk-js/issues/547#issuecomment-86873980
     const fetchOptionsUpload: RequestInit = {
       method: 'PUT',
-      body: formData
+      body: this.state.file
     };
     const uploadResult = await fetch(location, fetchOptionsUpload);
     if (200 === uploadResult.status) {

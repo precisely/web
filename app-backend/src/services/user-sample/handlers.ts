@@ -20,10 +20,12 @@ export const createUserSample: Handler = async (
   const log = makeLogger(context.awsRequestId);
   log.info('createUserSample EVENT: %j\t\tCONTEXT: %j', event, context);
   try {
-    return await UserSample.createAsync(event, {
+    const res = await UserSample.createAsync(event, {
       overwrite: false
     });
-  } catch (e) { 
+    return res.get();
+  } catch (e) {
+    log.error('something is wrong', e);
     // detect AWS SDK DynamoDB error:
     if (e.code === 'ConditionalCheckFailedException') {
       throw new Error(`Attempt to overwrite UserSample(userId=${event.userId}, id=${event.id})`);

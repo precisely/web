@@ -12,6 +12,8 @@ import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
 import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent, APIGatewayEvent} from 'aws-lambda';
 import { SystemVariantRequirement } from 'src/services/system/models/variant-requirement';
 import { getEnvVar } from 'src/common/environment';
+import { createUserSample } from 'src/services/user-sample/handlers';
+import { UserSampleStatus, UserSampleSource, UserSampleAttributes } from 'src/services/user-sample/models';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context) => {
   // pass
@@ -110,6 +112,19 @@ export async function getUploadSignedURL(event: LambdaProxyAPIGatewayEvent, cont
   }
 }
 
+async function createUserSampleWrapper(userId: string, source: string, file: string, context: Context) {
+  const s: UserSampleAttributes = {
+    userId,
+    id: file,
+    type: UserSampleSource.genetics,
+    source,
+    status: UserSampleStatus.processing,
+    statusMessage: 'upload succeeded'
+  };
+  // tslint:disable-line:no-any
+  return await createUserSample(s, context, <any> undefined);
+}
+
 export async function processUpload(event: S3CreateEvent, context: Context) {
   context.callbackWaitsForEmptyEventLoop = false;
   log.info('starting user upload data import');
@@ -122,7 +137,8 @@ export async function processUpload(event: S3CreateEvent, context: Context) {
       throw new Error(`uploaded file has unexpected path structure: inputBucket=${inputBucket}, inputFile=${inputFile}`);
     }
     log.info(`{"userId": "${userId}", "source": "${source}", "file": "${file}"}`);
-    // userId has | characters, so URI-decode decode them
+    await createUserSampleWrapper(userId, source, file, context);
+    log.info('user sample should have been created in DynamoDB');
     let params = makeTaskParams({
       overrides: {
         containerOverrides: [
