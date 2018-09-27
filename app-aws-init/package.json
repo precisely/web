@@ -3,7 +3,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "deploy": "yarn sls deploy"
+    "deploy": "yarn sls deploy",
+    "env": "yarn env:deploy",
+    "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
+    "sls": "yarn env sls"
   },
   "author": "Precise.ly, Inc",
   "license": "ISC",

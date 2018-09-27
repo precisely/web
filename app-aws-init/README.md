@@ -6,5 +6,6 @@ NB: This is only separate from `app-backend` because it needs a separate `server
 
 Use:
 ```
-REGION=us-east-1 yarn deploy
+yarn deploy # deploy to the account in ../env/deploy.env
+ENV=beta yarn deploy # deploy to the beta account
 ```
