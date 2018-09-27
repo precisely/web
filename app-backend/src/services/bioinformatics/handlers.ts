@@ -8,12 +8,12 @@
 
 import * as AWS from 'aws-sdk';
 import {log} from 'src/common/logger';
-import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
-import {Handler, Context, Callback, S3CreateEvent, ScheduledEvent, APIGatewayEvent} from 'aws-lambda';
+import {Handler, Context, S3CreateEvent, ScheduledEvent, APIGatewayEvent} from 'aws-lambda';
 import { SystemVariantRequirement } from 'src/services/system/models/variant-requirement';
 import { getEnvVar } from 'src/common/environment';
 import { createUserSample } from 'src/services/user-sample/handlers';
-import { UserSampleStatus, UserSampleSource, UserSampleAttributes } from 'src/services/user-sample/models';
+import { UserSampleAttributes } from 'src/services/user-sample/models';
+import { UserSampleStatus, UserSampleType } from 'src/services/user-sample/external';
 
 export const vcfIngester: Handler = (event: S3CreateEvent, context: Context) => {
   // pass
@@ -116,13 +116,13 @@ async function createUserSampleWrapper(userId: string, source: string, file: str
   const s: UserSampleAttributes = {
     userId,
     id: file,
-    type: UserSampleSource.genetics,
+    type: UserSampleType.genetics,
     source,
     status: UserSampleStatus.processing,
     statusMessage: 'upload succeeded'
   };
   // tslint:disable-line:no-any
-  return await createUserSample(s, context, <any> undefined);
+  return await createUserSample(s, context, <any> undefined); // tslint:disable-line no-any
 }
 
 export async function processUpload(event: S3CreateEvent, context: Context) {
