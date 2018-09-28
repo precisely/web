@@ -128,7 +128,7 @@
     "serverless-plugin-bind-deployment-id": "^1.0.1",
     "serverless-plugin-git-variables": "^3.1.1",
     "serverless-plugin-log-retention": "^1.0.3",
-    "serverless-plugin-scripts": "https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely1/serverless-plugin-scripts-v1.0.2.tgz",
+    "serverless-plugin-scripts": "https://github.com/precisely/serverless-plugin-scripts/releases/download/v1.0.2precisely2/serverless-plugin-scripts-v1.0.2precisely2.tgz",
     "serverless-pseudo-parameters": "^1.6.0",
     "serverless-webpack": "^5.2.0",
     "ts-jest": "^23.1.4",
