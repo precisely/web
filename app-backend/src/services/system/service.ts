@@ -29,6 +29,7 @@ export class SystemService {
     attrList: SystemVariantRequirementAttributes[],
     logger: Logger = log
   ): Promise<{ variantRequirements: BatchItem<SystemVariantRequirementAttributes>[]}> {
+    logger.debug('SystemService.updateVariantRequirementStatuses');
     const normalizedAttrs = attrList.map(attrs => {
       const result = { ...attrs, id: SystemVariantRequirement.makeId(attrs) };
       return result;
@@ -41,10 +42,12 @@ export class SystemService {
   }
 
   static async getVariantRequirements(
-    status: SystemVariantRequirementStatus = SystemVariantRequirementStatus.new,
+    status?: SystemVariantRequirementStatus,
     logger: Logger = log
   ): Promise<SystemVariantRequirementAttributes[]> {
-    const result = await SystemVariantRequirement.query(status).usingIndex('statusIndex').execAsync();
+    logger.debug('SystemService.getVariantRequirements');
+    const result = status ? await SystemVariantRequirement.query(status).usingIndex('statusIndex').execAsync()
+                          : await SystemVariantRequirement.scan().execAsync();
     return result ? result.Items.map(r => r.get()) : [];
   }
 
