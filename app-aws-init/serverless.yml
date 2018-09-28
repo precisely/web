@@ -10,7 +10,7 @@ provider:
   deploymentBucket: ${self:custom.common.deploymentBucket}
 
 resources:
-  - Resources: ${file(./serverless/resources/network.yml)}
+  - ${file(./serverless/resources/network.yml)}
 
 custom:
   common: ${file(../serverless/common.js):vars}
