@@ -60,6 +60,17 @@ ECSPolicy:
               - ${self:custom.common.accountId}
               - ":role/${self:provider.stage}-PreciselySystemRole"
 
+LambdaExecutionPolicy:
+  PolicyName: ${self:provider.stage}-PreciselyLambdaExecutionPolicy
+  PolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      - Effect: Allow
+        Action:
+          - lambda:InvokeFunction
+        Resource:
+          - '*'
+
 UserUploadS3Policy:
   PolicyName: ${self:provider.stage}-PreciselyUserUploadS3Policy
   PolicyDocument:
