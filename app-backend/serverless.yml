@@ -124,7 +124,7 @@ custom:
     disk:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       migrate: true
-      dbPath: .
+      dbPath: .dynamodb
       sharedDb: true
 
   logRetentionInDays: 30 # used to set a global value for all functions
