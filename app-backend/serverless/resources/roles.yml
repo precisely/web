@@ -66,8 +66,8 @@ SystemRole:
       - arn:aws:iam::aws:policy/AmazonSQSFullAccess
       - arn:aws:iam::aws:policy/AmazonSNSFullAccess 
       - arn:aws:iam::aws:policy/AmazonSESFullAccess
-  
     Policies:  
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
+      - ${file(./serverless/resources/role-policies.yml):LambdaExecutionPolicy}
 ...
