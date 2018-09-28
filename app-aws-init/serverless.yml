@@ -1,5 +1,5 @@
 service:
-  name: precisely-aws-init
+  name: precisely-aws
 
 provider:
   name: aws
@@ -7,7 +7,7 @@ provider:
   stage: ${self:custom.common.stage}
   region: ${self:custom.common.region}
   profile: ${self:custom.common.profile}
-  deploymentBucket: ${self:custom.common.account}-precisely-deployment-bucket
+  deploymentBucket: ${self:custom.common.deploymentBucket}
 
 resources:
   - Resources: ${file(./serverless/resources/network.yml)}

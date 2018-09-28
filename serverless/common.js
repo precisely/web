@@ -13,10 +13,15 @@ module.exports.vars = (sls)=> {
   if (!region) {
     throw new Error(`AWS region must be provided as an environment variable REGION or argument to serverless`);
   }
-  // Corresponds to an AWS account (dev, beta, prod)
-  const account = /^beta|prod$/.test(stage) ? stage : 'dev';
-  const defaultProfile = `${account}-profile-precisely`;
-  const profile = opt.profile || env.PROFILE || defaultProfile;
+  
+  // Corresponds to an AWS account (dev, beta, prod) 
+  //   - key role is to determine which profile in ~/.aws/credentials is used
+  const account = process.env.ACCOUNT || 'dev';
+  const defaultProfile = `${account}-profile-precisely`; 
+
+  // Maybe in some specialized circumstance you want to override the profile
+  // in ~/.aws/credentials which is determined by `account`
+  const profile = opt.profile || env.PROFILE || defaultProfile; 
   const auth0Tenant = isOffline ? 'dev-precisely' : `${account}-precisely`;
   const auth0ReactClientId = getAuth0ReactClientId(account);
   const rootDomain = isOffline ? 'localhost'
@@ -76,7 +81,7 @@ module.exports.vars = (sls)=> {
     s3HostedZoneId,
     stage
   };
-
+  
   return result;
 };
 
@@ -141,7 +146,7 @@ function getAuth0ReactClientId(account) {
 function getCertificateArn(certificateName) {
   switch(certificateName) {
     case '*.codeprecisely.net': return 'arn:aws:acm:us-east-1:416000760642:certificate/f44b4ee7-b4cb-4d32-9c19-58ca6a97b42d';
-    case '*.precisionhealth.site': return 'arn:aws:acm:us-east-1:370821419022:certificate/c281fb80-ef3e-45ee-be79-61d570ff486e';
+    case '*.precisionhealth.site': return 'arn:aws:acm:us-east-1:370821419022:certificate/d5d4772a-e26e-4852-90d4-5e3bda95d040';
     case '*.precise.ly': return 'arn:aws:acm:us-east-1:576199076748:certificate/566cd3b7-0f18-46bb-b61f-ddb4dfd8ed87';
     case '*.localhost': return 'dummy-localhost-certificate-arn';
     default: throw new Error(`Certificate ARN for ${certificateName} must be set in ${__filename}`);
