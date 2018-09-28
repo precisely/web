@@ -1,97 +1,123 @@
-SystemInternetGateway:
-  Type: AWS::EC2::InternetGateway
-  Properties:
-    Tags:
-      - Key: Name
-        Value: SystemInternetGateway
+Resources:
+  SystemInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: SystemInternetGateway
 
-SystemVPC:
-  Type: AWS::EC2::VPC
-  Properties:
-    CidrBlock: 10.0.0.0/16
-    EnableDnsSupport: True
-    EnableDnsHostnames: False
-    InstanceTenancy: default
-    Tags:
-      - Key: Name
-        Value: SystemVPC
+  SystemVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: True
+      EnableDnsHostnames: False
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: SystemVPC
 
-SystemInternetGatewayAttachment:
-  Type: AWS::EC2::VPCGatewayAttachment
-  Properties:
-    InternetGatewayId:
-      Ref: SystemInternetGateway
-    VpcId:
+  SystemInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: SystemInternetGateway
+      VpcId:
+        Ref: SystemVPC
+
+  SystemSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      MapPublicIpOnLaunch: False
+      VpcId:
+        Ref: SystemVPC
+      Tags:
+        - Key: Name
+          Value: SystemSubnet
+
+  SystemRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: SystemVPC
+      Tags:
+        - Key: Name
+          Value: SystemRouteTable
+
+  SystemRouteOutside:
+    Type: AWS::EC2::Route
+    Properties:
+      GatewayId:
+        Ref: SystemInternetGateway
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId:
+        Ref: SystemRouteTable
+
+  SystemSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: SystemRouteTable
+      SubnetId:
+        Ref: SystemSubnet
+
+  SystemSecurityGroupBase:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SystemSecurityGroupBase
+      GroupDescription: Security group for bioinformatics containers
+      VpcId:
+        Ref: SystemVPC
+      SecurityGroupEgress:
+        - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
+          CidrIp: 0.0.0.0/0
+
+  SystemSecurityGroupAllowInboundSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SystemSecurityGroupAllowInboundSSH
+      GroupDescription: Security group for bioinformatics containers
+      VpcId:
+        Ref: SystemVPC
+      SecurityGroupEgress:
+        - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 6601
+          ToPort: 6601
+        - IpProtocol: udp
+          CidrIp: 0.0.0.0/0
+          FromPort: 60000
+          ToPort: 61000
+Outputs:
+  systemId:
+    Description: The system VPC id
+    Value: 
       Ref: SystemVPC
-
-SystemSubnet:
-  Type: AWS::EC2::Subnet
-  Properties:
-    CidrBlock: 10.0.0.0/16
-    MapPublicIpOnLaunch: False
-    VpcId:
-      Ref: SystemVPC
-    Tags:
-      - Key: Name
-        Value: SystemSubnet
-
-SystemRouteTable:
-  Type: AWS::EC2::RouteTable
-  Properties:
-    VpcId:
-      Ref: SystemVPC
-    Tags:
-      - Key: Name
-        Value: SystemRouteTable
-
-SystemRouteOutside:
-  Type: AWS::EC2::Route
-  Properties:
-    GatewayId:
-      Ref: SystemInternetGateway
-    DestinationCidrBlock: 0.0.0.0/0
-    RouteTableId:
-      Ref: SystemRouteTable
-
-SystemSubnetRouteTableAssociation:
-  Type: AWS::EC2::SubnetRouteTableAssociation
-  Properties:
-    RouteTableId:
-      Ref: SystemRouteTable
-    SubnetId:
+    Export:
+      Name: SystemVPCId
+  systemSubnetId:
+    Description: The system VPC subnet id
+    Value: 
       Ref: SystemSubnet
-
-SystemSecurityGroupBase:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
-    GroupName: SystemSecurityGroupBase
-    GroupDescription: Security group for bioinformatics containers
-    VpcId:
-      Ref: SystemVPC
-    SecurityGroupEgress:
-      - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
-        CidrIp: 0.0.0.0/0
-
-SystemSecurityGroupAllowInboundSSH:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
-    GroupName: SystemSecurityGroupAllowInboundSSH
-    GroupDescription: Security group for bioinformatics containers
-    VpcId:
-      Ref: SystemVPC
-    SecurityGroupEgress:
-      - IpProtocol: -1 # -1 means all, otherwise tcp, udp, or icmp
-        CidrIp: 0.0.0.0/0
-    SecurityGroupIngress:
-      - IpProtocol: tcp
-        CidrIp: 0.0.0.0/0
-        FromPort: 22
-        ToPort: 22
-      - IpProtocol: tcp
-        CidrIp: 0.0.0.0/0
-        FromPort: 6601
-        ToPort: 6601
-      - IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-        FromPort: 60000
-        ToPort: 61000
+    Export:
+      Name: SystemSubnetId
+  systemSecurityGroupAllowInboundSSHId:
+    Description:  Id of security group which allows inbound SSH connections
+    Value:
+      Ref: SystemSecurityGroupAllowInboundSSH
+    Export:
+      Name: SystemSecurityGroupAllowInboundSSHId
+  systemSecurityGroupBaseId:
+    Description:  Main security group which does not allow inbound SSH
+    Value:
+      Ref: SystemSecurityGroupBase
+    Export:
+      Name: SystemSecurityGroupBaseId

@@ -1,11 +1,10 @@
 {
-  "name": "precisely-web-aws-init",
+  "name": "precisely-web-app-init",
   "description": "",
   "private": true,
   "scripts": {
     "deploy": "yarn sls deploy",
-    "env": "yarn env:deploy",
-    "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
+    "env": "ENV=init ../env/withenv",
     "sls": "yarn env sls"
   },
   "author": "Precise.ly, Inc",

@@ -22,6 +22,7 @@ env/*.env*
 !env/offline.env
 !env/prod.env
 !env/beta.env
+!env/init.env
 
 # https://github.com/trek10inc/serverless-secrets#processing-during-packaging
 .serverless-secrets.json

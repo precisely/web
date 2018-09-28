@@ -6613,7 +6613,7 @@ serverless-webpack@^5.2.0:
     semver "^5.5.0"
     ts-node "^3.2.0"
 
-serverless@^1.28.0:
+serverless@^1.32.0:
   version "1.32.0"
   resolved "https://registry.yarnpkg.com/serverless/-/serverless-1.32.0.tgz#84bd7b56dfa14edea0bf95a685e9013dc9ff5ab8"
   dependencies:

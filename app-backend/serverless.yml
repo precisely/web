@@ -9,7 +9,7 @@ provider:
   stage: ${self:custom.common.stage}
   region: ${self:custom.common.region}
   profile: ${self:custom.common.profile}
-  deploymentBucket: ${self:custom.common.account}-precisely-deployment-bucket
+  deploymentBucket: ${self:custom.common.deploymentBucket}
 
   ##
   ## Environment for handlers
@@ -76,21 +76,11 @@ custom:
       dev: 0
       default: 300
 
-    # XXX: These must be manually generated using app-aws-init and entered here.
-    # This should only need to be done once per account.
-    subnetId: ${self:custom.vars.subnetIdMap.${self:custom.common.account}}
-    subnetIdMap:
-      dev: subnet-0d89503ebe51cbf83
-      beta: subnet-0600e6d0b4f7be080
-      prod: not-yet-provisioned-see-serverless-yml
-
-    # XXX: These must be manually generated using app-aws-init and entered here.
-    # This should only need to be done once per account.
-    securityGroupIdAllowInboundSSH: ${self:custom.vars.securityGroupIdAllowInboundSSHMap.${self:custom.common.account}}
-    securityGroupIdAllowInboundSSHMap:
-      dev: sg-0bf2d34c97af1f49a
-      beta: sg-0df80ca931eca86e5
-      prod: not-yet-provisioned-see-serverless-yml
+    # CloudFormation Exports from the app-aws-init stack
+    subnetId: 
+      Fn::ImportValue: SystemSubnetId
+    securityGroupIdAllowInboundSSH: 
+      Fn::ImportValue: SystemSecurityGroupAllowInboundSSHId
 
     nodeEnv: ${env:NODE_ENV, self:custom.vars.nodeEnvMap.${self:custom.common.account}}
     nodeEnvMap:
