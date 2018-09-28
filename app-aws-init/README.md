@@ -6,5 +6,5 @@ NB: This is only separate from `app-backend` because it needs a separate `server
 
 Use:
 ```
-ACCOUNT=dev yarn deploy # initialize dev account
+ENV=prod yarn deploy # prod.env sets ACCOUNT=prod
 ```
