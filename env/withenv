@@ -19,10 +19,12 @@ else
   SCRIPT="${1}"
 fi
 shift
-if [ -f "${CONFIG_DIR}/${ENV}.env" ]; then
+envfile="${CONFIG_DIR}/${ENV}.env"
+
+if [ -f "$envfile" ]; then
   ENVFILE="${ENV}.env"
 else
-  echo "ENV must be set"
+  echo -e "\033[93mCan't find ENV file: $envfile"
   exit -1
 fi
 
