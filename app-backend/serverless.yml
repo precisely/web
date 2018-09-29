@@ -132,15 +132,16 @@ custom:
   scripts:
     commands:
       console: ts-node -r tsconfig-paths/register
+      dynamodb:reset: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts dynamodb:reset
       env: env
       test: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand '${opt:f, ""}'
       test:watch: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --watch '${opt:f, ""}'
       test:coverage: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --coverage '${opt:f, ""}'
-      seed:genetics: ts-node -r tsconfig-paths/register src/db/seed/cli.ts genetics "${opt:user, ''}" "${opt:genetics, ''}"
-      seed:variant: ts-node -r tsconfig-paths/register src/db/seed/cli.ts variant "${opt:user, ''}" "${opt:variant, ''}"
-      seed:reports: ts-node -r tsconfig-paths/register src/db/seed/cli.ts reports
-      seed:clear: ts-node -r tsconfig-paths/register src/db/seed/cli.ts clear ${opt:model, opt:models, ""}
-      seed: ts-node -r tsconfig-paths/register src/db/seed/cli.ts
+      seed:clear: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:clear ${opt:model, opt:models, ""}
+      seed:genetics: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:genetics "${opt:user, ''}" "${opt:genetics, ''}"
+      seed:variant: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:variant "${opt:user, ''}" "${opt:variant, ''}"
+      seed:reports: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:reports
+      seed: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts
     
   serverless-offline:
     port: ${self:custom.common.offlineAPIPort}

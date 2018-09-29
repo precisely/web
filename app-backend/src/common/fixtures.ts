@@ -6,12 +6,13 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:47 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:51:47 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-09-28 11:26:42
  */
 
 import { Item } from '@aneilbaboo/dynogels-promisified';
-import * as dynogels from '@aneilbaboo/dynogels-promisified';
+export { resetAllTables } from 'src/db/dynamo';
+
 // tslint:disable:no-any
 type AnyItem = Item<any, any>;
 var rememberedFixtures: AnyItem[] = [];
@@ -41,16 +42,6 @@ export function rememberFixtures(...fixtures: AnyItem[]) {
 export async function destroyFixtures() {
   await Promise.all(rememberedFixtures.map((f: any) => f.destroyAsync()));
   rememberedFixtures = [];
-}
-
-export async function resetAllTables() {
-  if (process.env.STAGE === 'prod') {
-    throw new Error('Refusing to clear tables on prod');
-  }
-  await Promise.all(Object.values(dynogels.models).map(async model => {
-    await model.deleteTableAsync();
-    await model.createTableAsync();
-  }));
 }
 
 export function timeout(ms: number) {

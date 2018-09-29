@@ -1,5 +1,4 @@
-import { models, listTableNames, tableNameWithoutStage } from 'src/db/dynamo/dynogels';
-import { batchDelete } from 'src/db/dynamo/batch';
+import {models, batchDelete, listTableNames} from 'src/db/dynamo';
 
 export async function clearCommand(tables?: string) {
   const tableNames = tables ? tables.toLowerCase().split(',').map(t => `${process.env.STAGE}-${t}`) : listTableNames();

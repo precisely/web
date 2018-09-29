@@ -210,6 +210,14 @@ yarn seed:variant --user 'auth0|d6ba63b91f' --variant mthfr.c677t:het # add hete
 yarn sls invoke local -f SysAddNewVariantRequirementsFromReports
 ```
 
+### Reseting DynamoDB
+
+```shell
+yarn seed:clear # removes all seed data from all tables
+yarn seed:clear --models Report,VariantCall # removes seed data from Report and VariantCall tables
+yarn dynamodb:reset  # deletes then re-creates all tables, delete ALL data (seed and non-seed)
+```
+
 ##### DynamoDB Admin local
 Provides an easy to use GUI.
 See https://github.com/aaronshaf/dynamodb-admin
