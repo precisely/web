@@ -104,6 +104,23 @@ ENV=prod yarn start # points at prod backend
 ```
 This starts a static web server at ([http://localhost:3000](http://localhost:3000)). The port can be customize by setting  `FRONTEND_PORT` environment variable.  The domain can be customized by setting `FRONTEND_HOST` (not recommended).
 
+#### Offline Auth
+
+Bypass Auth0 authentication by starting both the client and server in offline-auth mode.
+
+```shell
+yarn start:offline-auth # in app-client
+yarn start:offline-auth # in app-backend
+```
+
+You can set various env variables to control authentication information:
+
+```shell
+USER_ID (default "auth0-offlineid")
+USER_EMAIL (default "aneil@precise.ly")
+USER_ROLES (default "user,author,admin")
+```
+
 ### Deploying to AWS Developer Account
 
 The infrastructure allows for deployment of multiple isolated developer environments, each with its own resources (tables, domain names, gateways, S3 buckets, etc) so developers can work on and test independent branches on the AWS cloud. This is achieved by setting the `STAGE` environment variable, which  `serverless` uses to generate distinctly named [CloudFormation stacks](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html).

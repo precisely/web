@@ -15,19 +15,21 @@ export function logout() {
 
 
 export function isAuthenticated() {
+  if (process.env.REACT_APP_OFFLINE_AUTH) {
+    return true;
+  } else {
+    const expiresAt = Number(localStorage.getItem(LS_AUTH_EXPIRES_IN));
+    const accessToken: string = localStorage.getItem(LS_AUTH_ACCESS_TOKEN);
 
-  const expiresAt = Number(localStorage.getItem(LS_AUTH_EXPIRES_IN));
-  const accessToken: string = localStorage.getItem(LS_AUTH_ACCESS_TOKEN);
+    if (accessToken &&
+        accessToken.length > 0 &&
+        expiresAt > 0 &&
+        expiresAt > new Date().getTime()) {
+      return accessToken;
+    }
 
-  if (accessToken &&
-      accessToken.length > 0 &&
-      expiresAt > 0 &&
-      expiresAt > new Date().getTime()) {
-    return accessToken;
+    return false;
   }
-
-  return false;
-
 }
 
 
