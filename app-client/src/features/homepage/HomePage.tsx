@@ -17,7 +17,7 @@ import {helveticaFont, white} from 'src/constants/styleGuide';
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
 const ParallaxProvider = scrollParallax.ParallaxProvider;
-const asset = require('src/assets/faces-v-3-b.jpg');
+const asset = require('src/assets/home/faces.png');
 const dnaImg = require('src/assets/dna_sketch.png');
 const mailbox = require('src/assets/mailbox.png');
 const clipboard = require('src/assets/clipboard.png');

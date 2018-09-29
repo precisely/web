@@ -16,7 +16,7 @@ import { Container } from 'src/features/common/ReusableComponents';
 import { Navbar, NavbarBrand } from '../common/ReusableComponents';
 import { ExtendedCSS } from '../../constants/styleGuide';
 
-const faces = require('src/assets/faces-v-3-b.jpg');
+const faces = require('src/assets/home/faces.png');
 const iconGallery = require('src/assets/icon-gallery.png');
 const logo = require('src/assets/logo.png');
 
