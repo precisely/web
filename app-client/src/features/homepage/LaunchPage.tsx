@@ -17,8 +17,8 @@ import { Navbar, NavbarBrand } from '../common/ReusableComponents';
 import { ExtendedCSS } from '../../constants/styleGuide';
 
 const faces = require('src/assets/home/faces.png');
-const iconGallery = require('src/assets/icon-gallery.png');
-const logo = require('src/assets/logo.png');
+const iconGallery = require('src/assets/home/icon-gallery.png');
+const logo = require('src/assets/logo/with-lines/small.png');
 
 @Radium
 export class LaunchPage extends React.Component<RouteComponentProps<void>> {

@@ -6,75 +6,122 @@
  * without modification, are not permitted.
  */
 
+
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {NavigationBar} from 'src/features/common/NavigationBar';
-import {Container, Col} from 'src/features/common/ReusableComponents';
 import {CSS} from 'src/interfaces';
-import {helveticaFont, white} from 'src/constants/styleGuide';
+import { helveticaThinFont, preciselyMagenta, preciselyGreen, white, offWhite, helveticaFont,  defaultTextColor } from 'src/constants/styleGuide';
+import { Container, Col } from 'src/features/common/ReusableComponents';
+import { NavigationBar } from 'src/features/common/NavigationBar';
 
+const faces = require('src/assets/home/faces.png');
+const dnaImg = require('src/assets/home/icon-dna.png');
+const dnaMagnifier = require('src/assets/home/dna-magnifier.png');
+const clipboard = require('src/assets/home/clipboard.png');
+const upload23andMe = require('src/assets/home/23andme-upload.png');
+
+const iconGallery = require('src/assets/home/icon-gallery.png');
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
 const ParallaxProvider = scrollParallax.ParallaxProvider;
-const asset = require('src/assets/home/faces.png');
-const dnaImg = require('src/assets/dna_sketch.png');
-const mailbox = require('src/assets/mailbox.png');
-const clipboard = require('src/assets/clipboard.png');
-const shoppingCart = require('src/assets/shopping-cart.png');
 
 @Radium
 export class HomePage extends React.Component<RouteComponentProps<void>> {
 
-  renderProductDescription = (): JSX.Element => {
+  // componentDidMount() {
+  //   document.body.style.backgroundColor = white;
+  // }
+
+  render(): JSX.Element {
+    return (
+      <div style={{backgroundColor: white, color: defaultTextColor}}>
+        <NavigationBar {...this.props}/>
+        <ParallaxProvider>
+          <h1 style={{...titleStyle, color: preciselyGreen, backgroundColor: 'transparent'}}>
+            Personalized Genetic Reports for Chronic Disease
+          </h1>
+          <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
+            <div style={backgroundStyle} />
+          </Parallax>
+          {this.renderSlab(this.renderFirstProduct(), false)}
+          {this.renderSlab(this.renderHowItWorks(), true)}
+          {this.renderSlab(this.renderValueProp(), false)}
+        </ParallaxProvider>
+      </div>
+    );
+  }
+
+  smallTextStyle(): CSS {
+    return {...helveticaFont, fontSize: 8, color: defaultTextColor};
+  }
+
+  renderSlab(content: JSX.Element, alternateColor: boolean = false) {
+    return (
+      <div style={{position: 'relative', textAlign: 'center', backgroundColor: alternateColor ? offWhite : white}}>
+        {content}
+      </div>
+    );
+  }
+
+  renderValueProp = (): JSX.Element => {
+    return (
+      <Container>
+        <div className="pt-4 pb-4" style={{textAlign: 'center'}}>
+          <h4 style={headingStyle}>
+            <span style={{color: preciselyMagenta}}>Precise.ly</span>
+            <span> — Discover the genetic basis of your health</span>
+          </h4>
+        </div>
+        <Container className="pt-2 pb-2">
+          <img src={iconGallery} style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', maxWidth: '100%'}} />
+        </Container>
+      </Container>
+    );
+  }
+
+  renderFirstProduct = (): JSX.Element => {
     return (
       <Container className="pt-5 pb-4">
         <h3 style={headingStyle}>
-          Want to understand your health? Start here.
+          Our first product: a genetic report for ME/CFS
         </h3>
-        <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
-        <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-          <Col md={{size: 6, offset: 3}}>
-            <p>Our first product is for the ME/CFS community. By sequencing your DNA,
-              we can tell you which gene variants you have that are common amongst
-              people with ME/CFS, and which ones you don’t.</p>
-            <br/>
-            <p>This knowledge can help you evaluate treatment options with your doctor.
-              If you have ME/CFS, check out our report at Helix.com. </p>
-          </Col>
+        <h3 style={headingStyle}>
+          For a limited time, get your personalized report for free.
+        </h3>
+        <img src={dnaImg} style={{maxWidth: '100%', maxHeight: '100%' }}/>
+        <div className="lead row" style={this.smallTextStyle()}>
+            <p>We all have questions about our health. Precise.ly is the first service to deliver personalized
+               insights from the world’s top health experts designed to help you understand and improve your health.
+            </p>
         </div>
       </Container>
     );
   }
 
-  renderProcessDescription = (): JSX.Element => {
+  renderHowItWorksCol(icon: any, text: string) {
     return (
-      <div className="pt-5 pb-4" style={{backgroundColor: white}}>
+      <Col md={{size: 4}} xs={{size: 12}}>
+        <img src={icon} alt="" style={{height: '100px'}}/>
+        <p className="pt-4" style={this.smallTextStyle()}>
+          {text}
+        </p>
+      </Col>
+    );
+  }
+
+  renderHowItWorks = (): JSX.Element => {
+    const col1 = this.renderHowItWorksCol(upload23andMe, 'Securely upload your 23andMe data to Precise.ly (we will never share your data!)');
+    const col2 = this.renderHowItWorksCol(dnaMagnifier, 'Precise.ly will perform additional analysis of your DNA to identify ' +
+                                                        'and make it available for reports');
+    const col3 = this.renderHowItWorksCol(clipboard, 'Check your email! Your report will be ready to view in about an hour.');
+    return (
+      <div className="pt-5 pb-4" style={{textAlign: 'center'}}>
         <h3 style={headingStyle}>
           How it works
         </h3>
         <div className="row mt-5" style={{width: '70%', margin: 'auto'}}>
-          <Col md={{size: 4}} xs={{size: 12}}>
-            <img src={shoppingCart} alt=""/>
-            <p className="pt-4" style={{fontSize: '0.9rem', fontWeight: 100}}>
-              Order our ME/CFS panel on Helix.com.
-              You’ll receive a saliva sample tube in the mail about 10 days later.
-            </p>
-          </Col>
-          <Col md={{size: 4}} xs={{size: 12}}>
-            <img src={mailbox} alt=""/>
-            <p className="pt-4" style={{fontSize: '0.9rem', fontWeight: 100}}>
-              Simply spit in the saliva sample tube and return it in the pre-stamped,
-              pre-addressed package and mail it.
-            </p>
-          </Col>
-          <Col md={{size: 4}} xs={{size: 12}}>
-            <img src={clipboard} alt=""/>
-            <p className="pt-4" style={{fontSize: '0.9rem', fontWeight: 100}}>
-              We’ll notify you by email once we’ve finished sequencing your DNA.
-              Just click the link in the email to create your account and view your ME/CFS report.
-            </p>
-          </Col>
+          {col1} {col2} {col3}
         </div>
       </div>
     );
@@ -102,67 +149,31 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
       </Container>
     );
   }
-
-  render(): JSX.Element {
-    return (
-      <div>
-        <NavigationBar {...this.props}/>
-        <ParallaxProvider>
-          <div style={containerStyle}>
-            <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
-              <div style={imageStyle}/>
-            </Parallax>
-            <div style={parallaxChildren}>
-              <h1 style={{...headingStyle, fontWeight: 300, fontSize: '3.5em'}}>
-                Do a deep dive on your DNA
-              </h1>
-              <h4 style={headingStyle}>
-                Understand yourself like never before
-              </h4>
-            </div>
-          </div>
-        </ParallaxProvider>
-        <div style={homepageSection} className="text-center">
-          {this.renderProductDescription()}
-          {this.renderProcessDescription()}
-          {this.renderMoreInformation()}
-        </div>
-      </div>
-    );
-  }
 }
 
-const containerStyle: CSS = {
-  position: 'relative',
-  width: '100%',
-  height: '100vh',
-  overflow: 'hidden',
-};
-
-const imageStyle: CSS = {
-  backgroundImage: `url(${asset})`,
-  backgroundSize: 'contain',
+const backgroundStyle: CSS = {
+  backgroundImage: `url(${faces})`,
+  backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   width: '100vw',
-  height: '150vh',
+  height: '500px',
   backgroundPosition: 'center',
-};
-
-const parallaxChildren: CSS = {
-  position: 'absolute',
-  top: '10%',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  alignItems: 'center',
-  textAlign: 'center',
 };
 
 const headingStyle: CSS = {
   ...helveticaFont,
-  fontWeight: 200
+  fontSize: '20px',
+  fontWeight: 300
 };
 
-const homepageSection: CSS = {
-  fontSize: '36px'
+const titleStyle: React.CSSProperties = {
+  ...helveticaThinFont,
+  fontSize: '32px',
+  fontWeight: 50,
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 'normal',
+  letterSpacing: 'normal',
+  textAlign: 'center',
+  color: '#00bc3e'
 };
