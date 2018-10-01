@@ -11,7 +11,6 @@ import {
 } from 'aws-lambda';
 import { authenticate, Auth0AuthenticationResult } from './auth0';
 import {makeLogger} from 'src/common/logger';
-import {isOffline} from 'src/common/environment';
 
 export const apiAuthorizer: CustomAuthorizerHandler = async (event: CustomAuthorizerEvent, context: Context) => {
   const log = makeLogger(context.awsRequestId);
@@ -25,8 +24,9 @@ export const apiAuthorizer: CustomAuthorizerHandler = async (event: CustomAuthor
 
 function offlineAuthentication(event: CustomAuthorizerEvent): Auth0AuthenticationResult {
   return {
-    principalId: 'auth0|0001',
-    email: 'aneil@precise.ly'
+    principalId: process.env.USER_ID || 'auth0-offlineid',
+    roles: process.env.USER_ROLE || 'author,user,admin',
+    email: process.env.USER_EMAIL || 'aneil@precise.ly'
   };
 }
 
@@ -47,7 +47,7 @@ async function makeUserPolicy(event: CustomAuthorizerEvent, context: Context): P
   const log = makeLogger(context.awsRequestId);
   log.silly('APIAuthorizer event: %j', event);
   // auth0 returns userId and scopes
-  const auth: Auth0AuthenticationResult = await authenticate(event, log);
+  const auth: Auth0AuthenticationResult = process.env.OFFLINE_AUTH ? offlineAuthentication(event) : await authenticate(event, log);
   
   const authUserPolicy: CustomAuthorizerResult = {
     principalId: auth.principalId,
