@@ -14,6 +14,8 @@ import {CSS} from 'src/interfaces';
 import { helveticaThinFont, preciselyMagenta, preciselyGreen, white, offWhite, helveticaFont,  defaultTextColor } from 'src/constants/styleGuide';
 import { Container, Col } from 'src/features/common/ReusableComponents';
 import { NavigationBar } from 'src/features/common/NavigationBar';
+import {Button} from 'reactstrap';
+import { Link } from '../common/ReusableComponents';
 
 const faces = require('src/assets/home/faces.png');
 const dnaImg = require('src/assets/home/icon-dna.png');
@@ -53,7 +55,7 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
   }
 
   smallTextStyle(): CSS {
-    return {...helveticaFont, fontSize: 8, color: defaultTextColor};
+    return {...helveticaFont, color: defaultTextColor};
   }
 
   renderSlab(content: JSX.Element, alternateColor: boolean = false) {
@@ -91,10 +93,14 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
         </h3>
         <img src={dnaImg} style={{maxWidth: '100%', maxHeight: '100%' }}/>
         <div className="lead row" style={this.smallTextStyle()}>
-            <p>We all have questions about our health. Precise.ly is the first service to deliver personalized
-               insights from the world’s top health experts designed to help you understand and improve your health.
-            </p>
+          <p>We all have questions about our health. Precise.ly is the first service to deliver personalized
+              insights from the world’s top health experts designed to help you understand and improve your health.
+          </p>
         </div>
+        {/* FIXME: I have no idea how to properly style a button with a link */}
+        <Link to="/report/mecfs">
+          <Button style={{backgroundColor: preciselyMagenta}} size="lg">Get Your Personalized Report Now</Button>
+        </Link>
       </Container>
     );
   }
@@ -162,7 +168,6 @@ const backgroundStyle: CSS = {
 
 const headingStyle: CSS = {
   ...helveticaFont,
-  fontSize: '20px',
   fontWeight: 300
 };
 
