@@ -30,6 +30,6 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/__tests__"
+    "src/**/*.test.*"
   ]
 }

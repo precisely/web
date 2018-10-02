@@ -160,8 +160,9 @@ module.exports = {
           },
           // Compile .tsx?
           {
-            test: /\.(ts|tsx)$/,
+            test: /^(?!.*\.test\.tsx?).*\.tsx?$/,
             include: paths.appSrc,
+            exclude: path.join(paths.appSrc, '**/*.tests?.*'),
             loader: require.resolve('ts-loader'),
             options: {configFile: 'tsconfig.json'}
           },

@@ -10,20 +10,27 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {AboutUs} from 'src/features/homepage/AboutUs';
+import {Dashboard} from 'src/features/user/Dashboard';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
+import {Container, Link} from 'src/features/common/ReusableComponents';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('AboutUs tests.', () => {
+describe('Dashboard tests.', () => {
 
   const componentTree: ShallowWrapper<RouteComponentProps<void>> =
-      shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
+      shallow(
+      <Dashboard
+        history={mockedHistory}
+        match={mockedMatch()}
+        location={mockedLocation}
+        staticContext={{}}
+      />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,
@@ -34,9 +41,9 @@ describe('AboutUs tests.', () => {
   }, [
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
-    ['h2', 'h2', 1],
-    ['h5', 'h5', 1],
-    ['p', 'p', 5],
+    ['h1', 'h1', 1],
+    ['Link', Link, 1],
+    ['Container', Container, 1],
     ['PageContent', PageContent, 1]
   ]);
 });

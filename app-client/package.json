@@ -31,7 +31,7 @@
       "src/**/*.{ts,tsx}",
       "!**/node_modules/**",
       "!src/interfaces/**",
-      "!src/__tests__/**",
+      "!src/**/*.test/*",
       "!src/index.tsx",
       "!**/registerServiceWorker.ts",
       "!src/ambientInterfaces.d.ts"
