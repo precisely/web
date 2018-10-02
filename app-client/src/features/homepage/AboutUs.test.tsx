@@ -8,25 +8,22 @@
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
+import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {HomePage} from 'src/features/homepage/HomePage';
+import {AboutUs} from 'src/features/homepage/AboutUs';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {Container} from 'src/features/common/ReusableComponents';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
-
-const scrollParallax = require('react-scroll-parallax');
-const Parallax = scrollParallax.Parallax;
-const ParallaxProvider = scrollParallax.ParallaxProvider;
+import {PageContent} from 'src/features/common/PageContent';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('HomePage tests.', () => {
+describe('AboutUs tests.', () => {
 
-  const componentTree: ShallowWrapper =
-      shallow(<HomePage history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
+  const componentTree: ShallowWrapper<RouteComponentProps<void>> =
+      shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,
@@ -37,15 +34,9 @@ describe('HomePage tests.', () => {
   }, [
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
-    ['ParallaxProvider', ParallaxProvider, 1],
-    ['Container', Container, 2],
-    ['Parallax', Parallax, 1],
-    ['img', 'img', 5],
-    ['div', 'div', 9],
-    ['h1', 'h1', 1],
-    ['h3', 'h3', 3],
-    ['h4', 'h4', 1],
-    ['p', 'p', 6],
+    ['h2', 'h2', 1],
+    ['h5', 'h5', 1],
+    ['p', 'p', 5],
+    ['PageContent', PageContent, 1]
   ]);
-
 });

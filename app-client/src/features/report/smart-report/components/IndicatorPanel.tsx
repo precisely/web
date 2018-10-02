@@ -69,9 +69,10 @@ IndicatorPanelState
 
   conditionallyRenderFileUpload() {
     const fileUploadCallback = (complete: boolean) => {
-      console.log('fileUploadCallback called: %s', complete);
       if (complete) {
         this.setState({userSampleStatus: 'processing', showUpload: false });
+      } else {
+        // FIXME: show toast
       }
     };
 

@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2011-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -8,29 +9,25 @@
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
-import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {Dashboard} from 'src/features/user/Dashboard';
+import {HomePage} from 'src/features/homepage/HomePage';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {PageContent} from 'src/features/common/PageContent';
-import {Container, Link} from 'src/features/common/ReusableComponents';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/__tests__/testSetup';
+import {Container} from 'src/features/common/ReusableComponents';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
+
+const scrollParallax = require('react-scroll-parallax');
+const Parallax = scrollParallax.Parallax;
+const ParallaxProvider = scrollParallax.ParallaxProvider;
 
 const unroll = require('unroll');
 unroll.use(it);
 
 configure({adapter: new Adapter()});
 
-describe('Dashboard tests.', () => {
+describe('HomePage tests.', () => {
 
-  const componentTree: ShallowWrapper<RouteComponentProps<void>> =
-      shallow(
-      <Dashboard
-        history={mockedHistory}
-        match={mockedMatch()}
-        location={mockedLocation}
-        staticContext={{}}
-      />);
+  const componentTree: ShallowWrapper =
+      shallow(<HomePage history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
       done: () => void,
@@ -41,9 +38,15 @@ describe('Dashboard tests.', () => {
   }, [
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
+    ['ParallaxProvider', ParallaxProvider, 1],
+    ['Container', Container, 3],
+    ['Parallax', Parallax, 1],
+    ['img', 'img', 5],
+    ['div', 'div', 9],
     ['h1', 'h1', 1],
-    ['Link', Link, 1],
-    ['Container', Container, 1],
-    ['PageContent', PageContent, 1]
+    ['h3', 'h3', 3],
+    ['h4', 'h4', 1],
+    ['p', 'p', 4],
   ]);
+
 });

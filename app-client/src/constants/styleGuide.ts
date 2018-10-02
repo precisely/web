@@ -17,6 +17,7 @@ export const offWhite = '#F5F5F5';
 export const preciselyOrange = '#FF8A4B';
 export const preciselyMagenta = '#c83a6e';
 export const preciselyGreen = '#00bc3e';
+export const defaultTextColor = '#4a4a4a';
 
 export const AnalysisColors = {
   defective: '#fc3f28',

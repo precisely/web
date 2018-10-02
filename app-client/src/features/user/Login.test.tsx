@@ -3,7 +3,7 @@ import * as Auth0 from 'auth0-js';
 import * as AuthUtils from 'src/utils/auth';
 import * as Enzyme from 'enzyme';
 import * as React from 'react';
-import { Login } from 'src/features/user/Login';
+import { Login } from './Login';
 import { MemoryRouter } from 'react-router-dom';
 
 

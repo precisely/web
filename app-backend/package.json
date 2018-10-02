@@ -45,7 +45,7 @@
       "src/**/*.ts",
       "!**/node_modules/**",
       "!src/interfaces/**",
-      "!src/__tests__/**"
+      "!src/**/*.test.*"
     ],
     "transform": {
       "^.+\\.ts?$": "ts-jest",

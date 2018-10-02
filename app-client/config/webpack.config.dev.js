@@ -10,6 +10,7 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const RobotstxtPlugin = require("robotstxt-webpack-plugin").default;
 
 // Setting NODE_PATH to current working directory to support absolute imports
 process.env.NODE_PATH = './';
@@ -110,6 +111,14 @@ module.exports = {
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new RobotstxtPlugin({
+        policy: [
+          {
+            userAgent: "*",
+            disallow: "/*"
+          }
+        ]
+      })
     ],
   },
   module: {
@@ -151,8 +160,9 @@ module.exports = {
           },
           // Compile .tsx?
           {
-            test: /\.(ts|tsx)$/,
+            test: /^(?!.*\.test\.tsx?).*\.tsx?$/,
             include: paths.appSrc,
+            exclude: path.join(paths.appSrc, '**/*.tests?.*'),
             loader: require.resolve('ts-loader'),
             options: {configFile: 'tsconfig.json'}
           },

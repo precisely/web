@@ -22,7 +22,7 @@ import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
 import { ExtendedCSS, white, preciselyMagenta, helveticaFont, helveticaThinFont } from 'src/constants/styleGuide';
 
-const logo = require('src/assets/logo.png');
+const logo = require('src/assets/logo/with-lines/small.png');
 
 export interface NavigationBarState {
   isOpen?: boolean;
@@ -33,7 +33,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>> {
 
   state: NavigationBarState = {
     isOpen: false,
-    backgroundColor: 'transparent',
+    backgroundColor: white,
   };
 
   toggle = (): void => {
@@ -133,5 +133,6 @@ const navBar: ExtendedCSS = {
   '@media screen and (min-width: 992px)': {
     padding: '8px 245px',
   },
-  textTransform: 'uppercase'
+  textTransform: 'uppercase',
+  zIndex: 1000000
 };
