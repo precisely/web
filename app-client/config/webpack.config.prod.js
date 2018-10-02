@@ -147,6 +147,16 @@ module.exports = {
           // "url" loader works just like "file" loader but it also embeds
           // assets smaller than specified size as data URLs to avoid requests.
           {
+            test: [/\/constant\/.*\.(bmp|gif|jpe?g|png)$/],
+            loader: require.resolve('url-loader'),
+            options: {
+              limit: 10000,
+              name: 'static/media/[name].[ext]',
+            },
+          },
+          // "url" loader works just like "file" loader but it also embeds
+          // assets smaller than specified size as data URLs to avoid requests.
+          {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
             options: {
@@ -237,9 +247,9 @@ module.exports = {
     ],
   },
   plugins: [
-    // Copy in the Precise.ly logo file so it can be referenced without a
+    // Copy in the Precise.ly icon file so it can be referenced without a
     // cache-buster hash:
-    new CopyWebpackPlugin([{from: 'src/assets/precisely-logo.png', to: 'static/media'}]),
+    new CopyWebpackPlugin([{from: 'src/assets/constant/precisely-icon.png', to: 'static/media'}]),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
