@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2011-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -38,14 +39,14 @@ describe('HomePage tests.', () => {
     ['elementName', 'element', 'count'],
     ['NavigationBar', NavigationBar, 1],
     ['ParallaxProvider', ParallaxProvider, 1],
-    ['Container', Container, 2],
+    ['Container', Container, 3],
     ['Parallax', Parallax, 1],
     ['img', 'img', 5],
     ['div', 'div', 9],
     ['h1', 'h1', 1],
     ['h3', 'h3', 3],
     ['h4', 'h4', 1],
-    ['p', 'p', 6],
+    ['p', 'p', 4],
   ]);
 
 });
