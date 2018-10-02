@@ -1,4 +1,4 @@
-# Precisely-web (v0.0.6)
+# Precisely-web
 [![CircleCI](https://circleci.com/gh/precisely/web/tree/dev.svg?style=shield&circle-token=e8a280413512b633fffbf56266e4687bab29b60d)](https://circleci.com/gh/precisely/web/tree/dev)
 
 ---
