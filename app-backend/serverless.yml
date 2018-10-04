@@ -194,6 +194,10 @@ functions:
             type: request
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
+  SendEmail:
+    role: SystemRole
+    handler: src/services/email/handlers.sendEmail
+
   BioinformaticsUpdateAllUsersVariantCalls:
     role: SystemRole
     handler: src/services/bioinformatics/handlers.updateAllUsersVariantCalls
