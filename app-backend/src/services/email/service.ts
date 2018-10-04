@@ -1,9 +1,8 @@
 import * as AWS from 'aws-sdk';
 import * as SendGrid from '@sendgrid/mail';
-import { MailData } from "@sendgrid/helpers/classes/mail";
+import { MailData } from '@sendgrid/helpers/classes/mail';
 
 import * as Logger from 'src/common/logger';
-
 
 export interface EmailConf {
   to: string;
@@ -11,17 +10,15 @@ export interface EmailConf {
   text: string;
 }
 
-
 const ssmParamSendGridToken = 'API_TOKEN_SENDGRID';
-
 
 export class EmailService {
 
   static async send(conf: EmailConf, log: Logger.Logger = Logger.log): Promise<boolean> {
     log.info(`attempting to send email to ${conf.to}`);
     const ssm = new AWS.SSM();
-    const sgKeyRaw = await ssm.getParameter({Name: ssmParamSendGridToken}).promise();
-    const sgKey = sgKeyRaw && sgKeyRaw['Parameter'] && sgKeyRaw['Parameter']['Value'];
+    const sgKeyRaw: AWS.SSM.Types.GetParameterResult = await ssm.getParameter({Name: ssmParamSendGridToken}).promise();
+    const sgKey = sgKeyRaw && sgKeyRaw.Parameter && sgKeyRaw.Parameter.Value;
     if (sgKey) {
       SendGrid.setApiKey(sgKey);
     } else {
@@ -34,7 +31,12 @@ export class EmailService {
       subject: conf.subject,
       text: conf.text
     };
-    await SendGrid.send(mailData);
+    try {
+      await SendGrid.send(mailData);
+    } catch (err) {
+      log.error(`email send failed: ${err}`);
+      return false;
+    }
     return true;
   }
 
