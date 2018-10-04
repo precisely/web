@@ -117,10 +117,11 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
   }
 
   renderHowItWorks = (): JSX.Element => {
-    const col1 = this.renderHowItWorksCol(upload23andMe, 'Securely upload your 23andMe data to Precise.ly (we will never share your data!)');
-    const col2 = this.renderHowItWorksCol(dnaMagnifier, 'Precise.ly will perform additional analysis of your DNA to identify ' +
-                                                        'and make it available for reports');
-    const col3 = this.renderHowItWorksCol(clipboard, 'Check your email! Your report will be ready to view in about an hour.');
+    const col1 = this.renderHowItWorksCol(upload23andMe, 'Upload your 23andMe data to Precise.ly. ' +
+                                                         'Your data is secure and always under your control.');
+    const col2 = this.renderHowItWorksCol(dnaMagnifier, 'Precise.ly performs computational analysis on millions of points in your genome, ' +
+                                                        'and prepares details personalized reports for you.');
+    const col3 = this.renderHowItWorksCol(clipboard, 'Check your email! Your report will be ready to view tomorrow.');
     return (
       <div className="pt-5 pb-4" style={{textAlign: 'center'}}>
         <h3 style={headingStyle}>
