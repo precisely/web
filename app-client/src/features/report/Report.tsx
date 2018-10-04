@@ -22,6 +22,7 @@ import {GetReport} from './queries';
 import {ReportData} from './interfaces';
 import {SmartReport} from './smart-report';
 import { LoadingPage } from 'src/features/common/LoadingPage';
+import { ErrorView } from '../common/ErrorView';
 
 export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
 
@@ -33,9 +34,13 @@ export class ReportImpl extends React.Component<ReportProps> {
     this.setState({isLoading: true});
   }
 
-  renderSmartReport = (): JSX.Element | string => {
-    const {report} = this.props.data;
-    return <SmartReport elements={report.personalization} />;
+  renderSmartReport = (report: {title: string, personalization: any[]}): JSX.Element | string => {
+    return (
+      <>
+        <h1 className="mt-5 mb-4" style={header}>{report.title}</h1>
+        <SmartReport elements={report.personalization} />
+      </>
+    );
   }
 
   renderUploadScreen = (): JSX.Element | string => {
@@ -47,16 +52,28 @@ export class ReportImpl extends React.Component<ReportProps> {
     );
   }
 
+  renderContent() {
+    const {data} = this.props;
+    console.log(this.props);
+    if (data) {
+      if (data.report) {
+        return this.renderSmartReport(data.report);
+      } else if (data.error) {
+        return <ErrorView {...data.error} />;
+      }
+    }
+
+    return <LoadingPage/>;
+  }
+
   render(): JSX.Element {
     const report = this.props.data && this.props.data.report;
-    const title = report ? report.title : 'Loading';
     return (
       <div>
         <NavigationBar {...this.props}/>
         <Container className="mx-auto mt-5 mb-5">
-          <h1 className="mt-5 mb-4" style={header}>{title}</h1>
           <PageContent>
-            {report ? this.renderSmartReport() : <LoadingPage/>}
+            {this.renderContent()}
           </PageContent>
         </Container>
       </div>
