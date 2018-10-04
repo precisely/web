@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-10 22:29:18
+ * @Last Modified time: 2018-10-03 17:42:55
  */
 
 // tslint:disable no-any
@@ -19,7 +19,7 @@ import { Report } from './models';
 import {resolvers} from './resolvers';
 import { addSimpleReportFixtures } from './fixtures/simple';
 import { makeContext } from 'src/services/graphql/test-helpers';
-import { TypedError } from 'src/common/errors';
+import { AccessDeniedError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';
 import { isString } from 'util';
 
@@ -47,9 +47,8 @@ describe('Report resolver', function () {
         null, { title: 'create-report-test', content: '# h1'},
         context
       );
-      await expect(promise).rejects.toBeInstanceOf(TypedError);
-      await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
-      await expect(promise).rejects.toHaveProperty('message', 'report:create');
+      await expect(promise).rejects.toBeInstanceOf(AccessDeniedError);
+      await expect(promise).rejects.toHaveProperty('data.scope', 'report:create');
     });  
   });
   
@@ -89,9 +88,8 @@ describe('Report resolver', function () {
         null, { id: <string> report.get('id'), content: 'updated content'},
         context
       );
-      await expect(promise).rejects.toBeInstanceOf(TypedError);
-      await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
-      await expect(promise).rejects.toHaveProperty('message', 'report:update');
+      await expect(promise).rejects.toBeInstanceOf(AccessDeniedError);
+      await expect(promise).rejects.toHaveProperty('data.scope', 'report:update');
     });  
   });
   
@@ -131,9 +129,8 @@ describe('Report resolver', function () {
         null, { id: report.getValid('id') },
         context
       );
-      await expect(promise).rejects.toBeInstanceOf(TypedError);
-      await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
-      await expect(promise).rejects.toHaveProperty('message', 'report:publish');
+      await expect(promise).rejects.toBeInstanceOf(AccessDeniedError);
+      await expect(promise).rejects.toHaveProperty('data.scope', 'report:publish');
     });  
   });
   
@@ -166,9 +163,8 @@ describe('Report resolver', function () {
       const context = makeContext({ userId: 'bob', roles: ['user']});
       const personalizationResolver = <IFieldResolver<Report, GraphQLContext>> resolvers.Report.personalization;
       const promise = personalizationResolver(report, { userId: 'user-hom10c' }, context, <any> null);
-      await expect(promise).rejects.toBeInstanceOf(TypedError);
-      await expect(promise).rejects.toHaveProperty('type', 'accessDenied');
-      await expect(promise).rejects.toHaveProperty('message', 'report:read:personalization');
+      await expect(promise).rejects.toBeInstanceOf(AccessDeniedError);
+      await expect(promise).rejects.toHaveProperty('data.scope', 'report:read:personalization');
     });
   });
 });

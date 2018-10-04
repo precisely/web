@@ -13,6 +13,7 @@ import {Handler, Context, Callback, APIGatewayEvent} from 'aws-lambda';
 import {graphqlLambda} from 'apollo-server-lambda';
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import {makeExecutableSchema} from 'graphql-tools';
+import {formatError} from 'apollo-errors';
 
 import {resolvers} from 'src/services/resolvers';
 import { makeLogger, Logger } from 'src/common/logger';
@@ -32,7 +33,8 @@ export function apiHandler(event: APIGatewayEvent, context: Context, callback: C
       schema: PreciselySchema,
       tracing: true,
       rootValue: null,
-      context: new GraphQLContext(event, context)
+      context: new GraphQLContext(event, context),
+      formatError
     });
     log.silly('graphql.apiHandler event: %j\t\tcontext: %j', event, context);
     withCORS(handler, event, context, (err, result) => {
