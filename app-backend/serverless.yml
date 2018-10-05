@@ -30,6 +30,8 @@ provider:
     #   NODE_ENV={production|development} yarn sls ...
     NODE_ENV: ${env:NODE_ENV, self:custom.vars.nodeEnv}
 
+    FROM_EMAIL: ${self:custom.vars.fromEmail}
+
     # S3 buckets - the S3_BUCKET_ prefix follows the convention of serverless
     S3_BUCKET_BIOINFORMATICS_VCF: ${self:custom.vars.bioinformaticsVCFBucket}
     S3_BUCKET_BIOINFORMATICS_UPLOAD: ${self:custom.vars.bioinformaticsUploadBucket}
@@ -94,6 +96,13 @@ custom:
       beta: INFO
       dev: DEBUG
       offline: DEBUG
+
+    fromEmail: ${self:custom.vars.fromEmailMap.${self:custom.common.account}}
+    fromEmailMap:
+      prod: customer-success@precise.ly
+      beta: customer-success@precisionhealth.site
+      dev: no-one-dev-environment@example.com
+      offline: no-one-offline-environment@example.com
 
     # S3 resource names
     bioinformaticsVCFBucket: ${self:provider.stage}-precisely-bioinformatics-vcf
@@ -193,6 +202,10 @@ functions:
             name: APIAuthorizer
             type: request
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
+
+  SendEmail:
+    role: SystemRole
+    handler: src/services/email/handlers.sendEmail
 
   BioinformaticsUpdateAllUsersVariantCalls:
     role: SystemRole
