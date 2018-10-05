@@ -4,7 +4,7 @@ import { MailData } from '@sendgrid/helpers/classes/mail';
 
 import * as Logger from 'src/common/logger';
 
-export interface EmailConf {
+export interface EmailArgs {
   to: string;
   subject: string;
   text: string;
@@ -14,7 +14,7 @@ const ssmParamSendGridToken = 'API_TOKEN_SENDGRID';
 
 export class EmailService {
 
-  static async send(conf: EmailConf, log: Logger.Logger = Logger.log): Promise<boolean> {
+  static async send(conf: EmailArgs, log: Logger.Logger = Logger.log): Promise<boolean> {
     log.info(`attempting to send email to ${conf.to}`);
     const ssm = new AWS.SSM();
     const sgKeyRaw: AWS.SSM.Types.GetParameterResult = await ssm.getParameter({Name: ssmParamSendGridToken}).promise();
