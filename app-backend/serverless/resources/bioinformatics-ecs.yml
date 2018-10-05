@@ -16,7 +16,7 @@ BioinformaticsECSTask:
     Memory: 20480
     ContainerDefinitions:
       - Name: ${self:custom.vars.bioinformaticsECSContainerName}
-        Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:latest
+        Image: 416000760642.dkr.ecr.us-east-1.amazonaws.com/dev/precisely-bioinformatics:${self:custom.common.account}
         Environment:
           - Name: AWS_S3_ENDPOINT_URL
             Value: https://s3.amazonaws.com
