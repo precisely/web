@@ -3,6 +3,7 @@ import * as SendGrid from '@sendgrid/mail';
 import { MailData } from '@sendgrid/helpers/classes/mail';
 
 import * as Logger from 'src/common/logger';
+import { getEnvVar } from 'src/common/environment';
 
 export interface EmailArgs {
   to: string;
@@ -26,7 +27,7 @@ export class EmailService {
       return false;
     }
     const mailData: MailData = {
-      from: 'system@precise.ly',
+      from: getEnvVar('FROM_EMAIL'),
       to: conf.to,
       subject: conf.subject,
       text: conf.text
