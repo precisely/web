@@ -85,11 +85,12 @@ export class FileUpload extends React.Component<{
     this.setState({file: f});
     const reader = new FileReader();
     reader.onload = (event: any) => {
-      const binary = event.target.result;
-      const hash = CryptoJS.SHA256(binary).toString();
+      const arrayBuffer = event.target.result;
+      const wordArray = CryptoJS.lib.WordArray.create(arrayBuffer);
+      const hash = CryptoJS.SHA256(wordArray).toString();
       this.setState({hash, uploadState: UploadState.Ready});
     };
-    reader.readAsBinaryString(f);
+    reader.readAsArrayBuffer(f);
   }
 
   renderUploadStatus = () => {
