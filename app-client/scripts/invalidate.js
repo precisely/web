@@ -1,13 +1,13 @@
 const AWS = require('aws-sdk');
 const {CloudFront, SharedIniFileCredentials} = require('aws-sdk');
-const credentials = new SharedIniFileCredentials({profile: process.env.PROFILE});
-AWS.config.credentials = credentials;
 
 //
 // usage: yarn sls invalidate {stage-name} {aws-profile-name}
 // 
 const stage = process.argv[2];
 const profile = process.argv[3];
+const credentials = new SharedIniFileCredentials({profile});
+AWS.config.credentials = credentials;
 
 async function getDistributionIdFromTargetOriginId(targetOriginId) {
   const cf = new CloudFront();
