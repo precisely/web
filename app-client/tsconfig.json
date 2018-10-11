@@ -21,7 +21,11 @@
       "src/*": [ "src/*" ],
       "*": [ "*" ],
       "react": ["node_modules/@types/react"]
-    }
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "./types"
+    ]
   },
   "exclude": [
     "node_modules",
