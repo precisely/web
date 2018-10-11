@@ -31,7 +31,6 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!**/node_modules/**",
-      "!src/interfaces/**",
       "!src/**/*.test/*",
       "!src/index.tsx",
       "!**/registerServiceWorker.ts",

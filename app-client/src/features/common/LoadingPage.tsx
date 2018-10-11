@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import * as FontAwesome from 'react-fontawesome';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 
 @Radium
 export class LoadingPage extends React.Component {
@@ -26,10 +26,9 @@ export class LoadingPage extends React.Component {
   }
 }
 
-const loadingWrapper: CSS = {
+const loadingWrapper: CSSProperties = {
   height: '100vh',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '#F1F1F1',
+  justifyContent: 'center'
 };

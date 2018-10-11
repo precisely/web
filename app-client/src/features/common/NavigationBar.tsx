@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 import {
   Collapse,
   Navbar,
@@ -20,7 +20,7 @@ import {
 } from 'src/features/common/ReusableComponents';
 import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSS, white, preciselyMagenta, helveticaFont, helveticaThinFont } from 'src/constants/styleGuide';
+import { ExtendedCSSProperties, white, preciselyMagenta, helveticaThinFont } from 'src/constants/styleGuide';
 
 const logo = require('src/assets/logo/with-lines/small.png');
 
@@ -108,11 +108,11 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>> {
 
 }
 
-const logoStyle: CSS = {
+const logoStyle: CSSProperties = {
   width: '26px',
 };
 
-const logoTextStyle: CSS = {
+const logoTextStyle: CSSProperties = {
   ...helveticaThinFont,
   paddingLeft: '4px',
   // width: '89px',
@@ -127,7 +127,7 @@ const logoTextStyle: CSS = {
   textTransform: 'none'
 };
 
-const navBar: ExtendedCSS = {
+const navBar: ExtendedCSSProperties = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
   '@media screen and (min-width: 992px)': {

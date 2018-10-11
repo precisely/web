@@ -8,7 +8,7 @@
 
 // All the global CSS styles and color constants should be written here
 
-import {CSS} from 'src/interfaces';
+import {CSSProperties} from 'react';
 
 export const grey1 = '#6c757d';
 export const grey2 = '#545b62';
@@ -32,17 +32,17 @@ export const defaultBackground: string = '#F5F5F5';
 export const authLockButtonBackground: string = '#FF8A4B';
 
 
-export type ExtendedCSS = CSS & { [key: string]: any }; // to accomodate media queries and other special Radium strings
+export type ExtendedCSSProperties = CSSProperties & { [key: string]: any }; // to accomodate media queries and other special Radium strings
 
-export const helveticaFont: CSS = {
+export const helveticaFont: CSSProperties = {
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
 };
 
-export const helveticaThinFont: CSS = {
+export const helveticaThinFont: CSSProperties = {
   fontFamily: 'HelveticaNeue-Thin, Helvetica, Arial, sans-serif'
 };
 
-export const inputStyle: ExtendedCSS = {
+export const inputStyle: ExtendedCSSProperties = {
   width: '385px',
   height: '44px',
   '@media screen and (max-width: 700px)': {
@@ -53,7 +53,7 @@ export const inputStyle: ExtendedCSS = {
   }
 };
 
-export const formButton: ExtendedCSS = {
+export const formButton: ExtendedCSSProperties = {
   width: '100%',
   color: '#fff',
   backgroundColor: buttonDefault,
@@ -66,16 +66,16 @@ export const formButton: ExtendedCSS = {
   }
 };
 
-export const removeBorderRadius: CSS = {
+export const removeBorderRadius: CSSProperties = {
   borderRadius: 0
 };
 
-export const noBorderTop: CSS = {
+export const noBorderTop: CSSProperties = {
   borderTop: 'none',
   ...removeBorderRadius
 };
 
-export const container: CSS = {
+export const container: CSSProperties = {
   height: '-webkit-fill-available',
   display: 'flex',
   justifyContent: 'center',
@@ -84,7 +84,7 @@ export const container: CSS = {
   padding: 0
 };
 
-export const header: CSS = {
+export const header: CSSProperties = {
   textAlign: 'center',
   fontWeight: 200,
   fontSize: '30px',
@@ -92,18 +92,18 @@ export const header: CSS = {
   marginTop: '65px'
 };
 
-export const loginAndSignupPanel: ExtendedCSS = {
+export const loginAndSignupPanel: ExtendedCSSProperties = {
   width: '597px',
   '@media screen and (max-width: 700px)': {
     width: '345px'
   }
 };
 
-export const alignCenter: CSS = {
+export const alignCenter: CSSProperties = {
   textAlign: 'center' // '-webkit-center'
 };
 
-export const formMargin: CSS = {
+export const formMargin: CSSProperties = {
   marginTop: '37px',
   marginBottom: '35px'
 };

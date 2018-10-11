@@ -10,7 +10,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 import { helveticaThinFont, preciselyMagenta, preciselyGreen, white, offWhite, helveticaFont,  defaultTextColor } from 'src/constants/styleGuide';
 import { Container, Col } from 'src/features/common/ReusableComponents';
 import { NavigationBar } from 'src/features/common/NavigationBar';
@@ -54,7 +54,7 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
     );
   }
 
-  smallTextStyle(): CSS {
+  smallTextStyle(): CSSProperties {
     return {...helveticaFont, color: defaultTextColor};
   }
 
@@ -158,7 +158,7 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
   }
 }
 
-const backgroundStyle: CSS = {
+const backgroundStyle: CSSProperties = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -167,7 +167,7 @@ const backgroundStyle: CSS = {
   backgroundPosition: 'center',
 };
 
-const headingStyle: CSS = {
+const headingStyle: CSSProperties = {
   ...helveticaFont,
   fontWeight: 300
 };

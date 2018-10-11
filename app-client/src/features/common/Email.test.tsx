@@ -11,7 +11,8 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure} from 'enzyme';
 import {Input} from 'src/features/common/ReusableComponents';
 import {Email, EmailProps} from 'src/features/common/Email';
-import {CSS} from 'src/interfaces';
+
+type CSSProperties = React.CSSProperties;
 
 configure({adapter: new Adapter()});
 
@@ -19,7 +20,7 @@ describe('Email tests.', () => {
 
   const handleChange = jest.fn();
 
-  const getComponentTree = (style?: CSS): ShallowWrapper<EmailProps> => shallow(
+  const getComponentTree = (style?: CSSProperties): ShallowWrapper<EmailProps> => shallow(
     <Email placeholder="email" value="test@example.com" onChange={handleChange} style={style}/>
   );
 
@@ -29,7 +30,7 @@ describe('Email tests.', () => {
   });
 
   it('should render the component with the style provided as a prop.', () => {
-    const sampleStyle: CSS = {width: '100%'};
+    const sampleStyle: CSSProperties = {width: '100%'};
     const componentTree: ShallowWrapper<EmailProps> = getComponentTree(sampleStyle);
     expect(componentTree.props().style).toEqual(sampleStyle);
   });

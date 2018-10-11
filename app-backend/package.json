@@ -45,7 +45,6 @@
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!**/node_modules/**",
-      "!src/interfaces/**",
       "!src/**/*.test.*"
     ],
     "transform": {

@@ -1,16 +1,21 @@
 /*
-* Copyright (c) 2017-Present, CauseCode Technologies Pvt Ltd, India.
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or
-* without modification, are not permitted.
-*/
+ * Copyright (c) 2017-Present, Precise.ly, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are not permitted.
+ *
+ * @Author: Aneil Mallavarapu
+ * @Date: 2018-10-06 05:38:39
+ * @Last Modified by:   Aneil Mallavarapu
+ * @Last Modified time: 2018-10-06 05:38:39
+ */
 
 import * as React from 'react';
 import * as Radium from 'radium';
 import * as FontAwesome from 'react-fontawesome';
 import {Link} from 'src/features/common/ReusableComponents';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 
 @Radium
 export class NotFound extends React.Component {
@@ -28,7 +33,7 @@ export class NotFound extends React.Component {
   }
 }
 
-const container: CSS = {
+const container: CSSProperties = {
   height: '100vh',
   display: 'flex',
   alignItems: 'center',
@@ -36,19 +41,19 @@ const container: CSS = {
   backgroundColor: '#FAFCD6',
 };
 
-const contentWrapper: CSS = {
+const contentWrapper: CSSProperties = {
   textAlign: 'center',
 };
 
-const fontColor: CSS = {
+const fontColor: CSSProperties = {
   fontSize: '100px',
   color: '#259F6C',
 };
 
-const linkStyle: CSS = {
+const linkStyle: CSSProperties = {
   color: '#1E6B7F',
 };
 
-const message: CSS = {
+const message: CSSProperties = {
   color: '#1E6B7F',
 };

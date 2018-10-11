@@ -11,8 +11,8 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {PageContent} from 'src/features/common/PageContent';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {CSS} from 'src/interfaces';
 import {Container} from 'src/features/common/ReusableComponents';
+type CSSProperties = React.CSSProperties;
 
 @Radium
 export class AboutUs extends React.Component<RouteComponentProps<void>> {
@@ -56,17 +56,17 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
   }
 }
 
-const fontWeight: CSS = {
+const fontWeight: CSSProperties = {
   fontWeight: 200,
 };
 
-const pageHeader: CSS = {
+const pageHeader: CSSProperties = {
   ...fontWeight,
   fontSize: '40px',
   marginTop: '-3px',
 };
 
-const subHeader: CSS = {
+const subHeader: CSSProperties = {
   ...fontWeight,
   fontSize: '20px',
   letterSpacing: '1px',
@@ -74,7 +74,7 @@ const subHeader: CSS = {
   marginBottom: '20px',
 };
 
-const paragraph: CSS = {
+const paragraph: CSSProperties = {
   textAlign: 'left',
   fontSize: '16px',
   ...fontWeight,
