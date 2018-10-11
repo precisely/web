@@ -14,7 +14,7 @@ import {Dashboard} from 'src/features/user/Dashboard';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {PageContent} from 'src/features/common/PageContent';
 import {Container, Link} from 'src/features/common/ReusableComponents';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils';
 
 const unroll = require('unroll');
 unroll.use(it);
