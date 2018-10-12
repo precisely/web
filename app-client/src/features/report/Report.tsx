@@ -35,12 +35,6 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   }
 
   render(): JSX.Element {
-    const {data}  = this.props;
-    if (!data || data.loading) {
-      return <LoadingPage/>;
-    }
-
-    checkGraphQLData(data);
     return (
       <NavigationPage>
         <WhitePage>
@@ -69,7 +63,12 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   }
 
   renderContent() {
-    const {data} = this.props;
+    const {data}  = this.props;
+    if (!data || data.loading) {
+      return <LoadingPage/>;
+    }
+
+    checkGraphQLData(data);
     if (data.report) {
       return this.renderSmartReport(data.report);
     } else {
