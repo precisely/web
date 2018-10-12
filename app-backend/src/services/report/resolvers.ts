@@ -65,14 +65,15 @@ export const resolvers = {
       return await context.valid('report:read', reports);
     },
     async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {
-      context.log.info('Report resolver(%j)', {id, slug});
+      context.log.info('Calling resolver report(%j)', {id, slug});
       let report;
       if (id) {
         report = await Report.getAsync(id);
       } else if (slug) {
         report = await Report.findBySlug(slug);
       }
-      // context.log.silly('Report resolver(%j) => %j', {id, slug}, report ? report.get() : 'null');
+
+      context.log.silly('Finished resolver report(%j) => %j', {id, slug}, report ? report.get() : 'null');
       if (report) {
         return await context.valid('report:read', report);
       } else  {
