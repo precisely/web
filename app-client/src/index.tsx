@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import initReactFastclick from 'react-fastclick';
+import initializeReactFastclick = require('react-fastclick');
 import {StyleRoot} from 'radium';
 import {BrowserRouter} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';
@@ -22,7 +22,7 @@ import {ToastContainer} from 'react-toastify';
 import {BasePage} from 'src/features/common/BasePage';
 import * as Bluebird from 'bluebird';
 
-initReactFastclick();
+initializeReactFastclick();
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,

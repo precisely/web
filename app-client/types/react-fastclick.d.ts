@@ -1,3 +1,4 @@
 declare module 'react-fastclick' {
-  export default function initReactFastclick(): void;
+  function initializeReactFastclick(): void;
+  export = initializeReactFastclick;
 }
