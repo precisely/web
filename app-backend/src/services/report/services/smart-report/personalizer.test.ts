@@ -42,14 +42,13 @@ describe('Personalizer', function () {
       describe('when the sample has error status', function () {
         afterEach(destroyFixtures);
         it('should not show analysispanel children and should report the error as an attribute', async function() {
-          expect(true).toBeTruthy();
-          // const personalizer = new Personalizer(report, 'user-sample-error');
-          // const personalizedDOM = await personalizer.personalize();
-          // expect(personalizedDOM).toEqual([
-          //   { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-          //     attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
-          //     children: []}
-          // ]);
+          const personalizer = new Personalizer(report, 'user-sample-error');
+          const personalizedDOM = await personalizer.personalize();
+          expect(personalizedDOM).toEqual([
+            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
+              children: []}
+          ]);
         });
       });
 
