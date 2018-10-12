@@ -51,11 +51,11 @@ export async function addSimpleReportFixtures() {
     type: UserSampleType.genetics,
     source: '23andme'
   }), 
-  // ... await addUserSamples( ['user-sample-error'], { 
-  //   status: UserSampleStatus.error,
-  //   type: UserSampleType.genetics,
-  //   source: '23andme' 
-  // })
+  ... await addUserSamples( ['user-sample-error'], { 
+    status: UserSampleStatus.error,
+    type: UserSampleType.genetics,
+    source: '23andme' 
+  })
   ];
   
   const variantData = [...userSampleReadyVariantData, userSampleMissingVariantData, userSampleErrorVariantData];

@@ -31,33 +31,38 @@ describe('Personalizer', function () {
   });
 
   describe('personalize,', function() {
-    
-    describe('when the sample has error status', function () {
-      afterEach(destroyFixtures);
-      it('should not show analysispanel children and should report the error as an attribute', async function() {
-        const { report } = await addSimpleReportFixtures();
-        expect(true).toBeTruthy();
-        // const personalizer = new Personalizer(report, 'user-sample-error');
-        // const personalizedDOM = await personalizer.personalize();
-        // expect(personalizedDOM).toEqual([
-        //   { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-        //     attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
-        //     children: []}
-        // ]);
+    describe('failure modes', function () {
+      let report: Report;
+      beforeAll(async function() {
+        const result = await addSimpleReportFixtures();
+        report = result.report;
       });
-    });
 
-    describe('when the required sample type is missing', function () {
-      afterEach(destroyFixtures);
-      it('should personalize the content for a wildtype user', async function() {
-        const { report } = await addSimpleReportFixtures();
-        const personalizer = new Personalizer(report, 'user-sample-missing');
-        const personalizedDOM = await personalizer.personalize();
-        expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-            attrs: { userSampleStatus: undefined }, reduced: true, selfClosing: false, 
-            children: []}
-        ]);
+      afterAll(destroyFixtures);
+      describe('when the sample has error status', function () {
+        afterEach(destroyFixtures);
+        it('should not show analysispanel children and should report the error as an attribute', async function() {
+          expect(true).toBeTruthy();
+          // const personalizer = new Personalizer(report, 'user-sample-error');
+          // const personalizedDOM = await personalizer.personalize();
+          // expect(personalizedDOM).toEqual([
+          //   { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+          //     attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
+          //     children: []}
+          // ]);
+        });
+      });
+
+      describe('when the required sample type is missing', function () {
+        it('should personalize the content for a wildtype user', async function() {
+          const personalizer = new Personalizer(report, 'user-sample-missing');
+          const personalizedDOM = await personalizer.personalize();
+          expect(personalizedDOM).toEqual([
+            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { userSampleStatus: undefined }, reduced: true, selfClosing: false, 
+              children: []}
+          ]);
+        });
       });
     });
 
