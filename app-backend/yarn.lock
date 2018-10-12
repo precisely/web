@@ -705,9 +705,9 @@ apollo-codegen@^0.19.1:
     source-map-support "^0.5.0"
     yargs "^10.0.3"
 
-apollo-errors@^1.9.0:
+"apollo-errors@git+ssh://git@github.com/precisely/apollo-errors#precisely/version-2":
   version "1.9.0"
-  resolved "https://registry.yarnpkg.com/apollo-errors/-/apollo-errors-1.9.0.tgz#f1ed0ca0a6be5cd2f24e2eaa7b0860a10146ff51"
+  resolved "git+ssh://git@github.com/precisely/apollo-errors#b522183573c70ad7a0b6c4094420500b9f9e8374"
   dependencies:
     assert "^1.4.1"
     extendable-error "^0.1.5"

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2017-Present, Precise.ly, Inc.
  * All rights reserved.
@@ -8,19 +7,19 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:51 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-03 14:21:08
+ * @Last Modified time: 2018-10-06 09:10:52
  */
 
 import { createError } from 'apollo-errors';
 
-export const NotFoundError = createError('NotFoundError', {
+export const NotFoundError = createError('not_found', {
   message: 'Not Found'
 });
 
-export const AccessDeniedError = createError('AccessDeniedError', {
+export const AccessDeniedError = createError('access_denied', {
   message: 'Access Denied'
 });
 
-export const AuthenticationError = createError('AuthenticationError', {
-  message: 'Authentication Failure'
+export const AuthenticationError = createError('authentication', {
+  message: 'Authentication Required'
 });
