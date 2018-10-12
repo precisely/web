@@ -10,6 +10,7 @@ import * as React from 'react';
 import {Footer} from 'src/features/common/Footer';
 import {Routes} from 'src/routes/Routes';
 import {defaultBackground, helveticaFont} from 'src/constants/styleGuide';
+import { ErrorPage } from 'src/features/common/ErrorPage';
 
 type CSSProperties = React.CSSProperties;
 
@@ -19,7 +20,9 @@ export class BasePage extends React.Component<any, any> {
     return (
       <div style={container}>
         <div style={routes}>
-          <Routes />
+          <ErrorPage>
+            <Routes />
+          </ErrorPage>
         </div>
         <Footer />
       </div>

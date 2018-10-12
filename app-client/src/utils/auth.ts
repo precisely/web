@@ -13,6 +13,10 @@ export function logout() {
   window.location.href = '/';
 }
 
+export function login() {
+  removeAuthentication();
+  window.location.href = '/login';
+}
 
 export function isAuthenticated() {
   if (process.env.REACT_APP_OFFLINE_AUTH) {

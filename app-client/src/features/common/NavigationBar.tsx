@@ -18,7 +18,6 @@ import {
   NavItem,
   NavLink,
 } from 'src/features/common/ReusableComponents';
-import { RouteComponentProps } from 'react-router';
 import * as AuthUtils from 'src/utils/auth';
 import { ExtendedCSSProperties, white, preciselyMagenta, helveticaThinFont } from 'src/constants/styleGuide';
 
@@ -29,7 +28,7 @@ export interface NavigationBarState {
   backgroundColor?: string;
 }
 @Radium
-export class NavigationBar extends React.Component<RouteComponentProps<void>> {
+export class NavigationBar extends React.Component {
 
   state: NavigationBarState = {
     isOpen: false,
@@ -56,9 +55,8 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>> {
     function clickHandler(): void {
       if (AuthUtils.isAuthenticated()) {
         AuthUtils.logout();
-      }
-      else {
-        props.history.push('/login');
+      } else {
+        AuthUtils.login();
       }
     }
     return (
@@ -74,7 +72,7 @@ export class NavigationBar extends React.Component<RouteComponentProps<void>> {
     navBar.backgroundColor = backgroundColor;
 
     return (
-      <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
+      <Navbar light={true} sticky="top" expand="md" className="navbar" style={navBar}>
         <NavbarBrand href="/">
           <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
           <span style={logoTextStyle}>Precise.ly</span>

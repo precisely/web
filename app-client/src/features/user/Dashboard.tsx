@@ -11,7 +11,7 @@ import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
 import {Container, Link} from 'src/features/common/ReusableComponents';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {PageContent} from 'src/features/common/PageContent';
+import {WhitePage} from 'src/features/common/WhitePage';
 import {header} from 'src/constants/styleGuide';
 
 @Radium
@@ -28,9 +28,9 @@ export class Dashboard extends React.Component<RouteComponentProps<void>> {
         <NavigationBar {...this.props}/>
         <Container className="mx-auto mt-5 mb-5">
           <h1 className="mt-5 mb-4" style={header}>Dashboard</h1>
-          <PageContent>
+          <WhitePage>
             <Link to="/view-report">Fetch dummy report</Link>
-          </PageContent>
+          </WhitePage>
         </Container>
       </div>
     );

@@ -12,7 +12,7 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {Dashboard} from 'src/features/user/Dashboard';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {PageContent} from 'src/features/common/PageContent';
+import {WhitePage} from 'src/features/common/WhitePage';
 import {Container, Link} from 'src/features/common/ReusableComponents';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils';
 
@@ -44,6 +44,6 @@ describe('Dashboard tests.', () => {
     ['h1', 'h1', 1],
     ['Link', Link, 1],
     ['Container', Container, 1],
-    ['PageContent', PageContent, 1]
+    ['WhitePage', WhitePage, 1]
   ]);
 });

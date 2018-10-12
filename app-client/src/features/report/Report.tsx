@@ -7,31 +7,47 @@
  */
 
 import * as React from 'react';
-import {RouteComponentProps} from 'react-router';
-import {graphql, OptionProps} from 'react-apollo';
+import { graphql, OptionProps } from 'react-apollo';
 
 import * as AuthUtils from 'src/utils/auth';
 
 import {FileUpload} from 'src/features/common/FileUpload';
-import {NavigationBar} from 'src/features/common/NavigationBar';
-import {Container} from 'src/features/common/ReusableComponents';
-import {PageContent} from 'src/features/common/PageContent';
+import {WhitePage} from 'src/features/common/WhitePage';
 import {header} from 'src/constants/styleGuide';
 
 import {GetReport} from './queries';
-import {ReportData} from './interfaces';
 import {SmartReport} from './smart-report';
+import { ReportData } from './interfaces';
 import { LoadingPage } from 'src/features/common/LoadingPage';
-import { ErrorView } from '../common/ErrorView';
+import { NavigationPage } from 'src/features/common/NavigationPage';
+import { checkGraphQLData } from 'src/errors';
+import { NetworkError } from '../../errors/display-error';
 
-export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
+export type ReportProps = OptionProps & {report: ReportData};
+export type ReportState = {isLoading: boolean};
 
-export class ReportImpl extends React.Component<ReportProps> {
+export class ReportImpl extends React.Component<ReportProps, ReportState> {
 
   state = {isLoading: false};
 
   componentWillMount(): void {
     this.setState({isLoading: true});
+  }
+
+  render(): JSX.Element {
+    const {data}  = this.props;
+    if (!data || data.loading) {
+      return <LoadingPage/>;
+    }
+
+    checkGraphQLData(data);
+    return (
+      <NavigationPage>
+        <WhitePage>
+          {this.renderContent()}
+        </WhitePage>
+      </NavigationPage>
+    );
   }
 
   renderSmartReport = (report: {title: string, personalization: any[]}): JSX.Element | string => {
@@ -54,30 +70,11 @@ export class ReportImpl extends React.Component<ReportProps> {
 
   renderContent() {
     const {data} = this.props;
-    console.log(this.props);
-    if (data) {
-      if (data.report) {
-        return this.renderSmartReport(data.report);
-      } else if (data.error) {
-        return <ErrorView {...data.error} />;
-      }
+    if (data.report) {
+      return this.renderSmartReport(data.report);
+    } else {
+      throw new NetworkError({ description: 'Unable to retrieve report'});
     }
-
-    return <LoadingPage/>;
-  }
-
-  render(): JSX.Element {
-    const report = this.props.data && this.props.data.report;
-    return (
-      <div>
-        <NavigationBar {...this.props}/>
-        <Container className="mx-auto mt-5 mb-5">
-          <PageContent>
-            {this.renderContent()}
-          </PageContent>
-        </Container>
-      </div>
-    );
   }
 }
 
