@@ -208,7 +208,7 @@ functions:
             resultTtlInSeconds: ${self:custom.vars.authorizerTTL}
 
   SendEmail:
-    role: SystemRole
+    role: DangerPIISystemRole
     handler: src/services/email/handlers.sendEmail
 
   BioinformaticsUpdateAllUsersVariantCalls:
