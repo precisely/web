@@ -214,6 +214,7 @@
     "jest-localstorage-mock": "^2.2.0",
     "jest-plugin-context": "^2.7.0",
     "react-test-renderer": "16.0.0",
+    "robotstxt-webpack-plugin": "^4.0.1",
     "serverless": "^1.27.3",
     "serverless-cloudfront-invalidate": "^1.2.1",
     "serverless-finch": "1.3.0",
