@@ -40,11 +40,54 @@ UserUploadS3Role:
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):UserUploadS3Policy}
 
-SystemRole: 
+# XXX: WHENEVER YOU CHANGE SystemRole, ADD THE SAME PERMISSIONS TO
+# DangerPIISystemRole BELOW.
+# Feel free to thank the authors of YAML afterwards for their impeccable taste
+# in "declarative" software design.
+SystemRole:
   Type: AWS::IAM::Role
   Properties:
     RoleName: ${self:provider.stage}-PreciselySystemRole
-    AssumeRolePolicyDocument: &SystemAssumeRolePolicyDocument
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              # APIGateway NOT allowed
+              # SSM NOT allowed
+              - lambda.amazonaws.com
+              - ecs.amazonaws.com
+              - ec2.amazonaws.com
+              - ecs-tasks.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      # AmazonSSMFullAccess NOT allowed
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+      - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+    Policies:
+      - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
+      - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
+      - ${file(./serverless/resources/role-policies.yml):LambdaExecutionPolicy}
+
+# This role can map personally identifiable information (PII) to personal health
+# information (PHI). As few things should have it as possible.
+#
+# XXX: Note this is a COPY of SystemRole, with SSM privileges added. This cannot
+# be made clean and DRY because YAML Ain't A Meaningful (Configuration) Language.
+# Specifically, "merge" (http://yaml.org/type/merge.html) does not work with
+# sequences, and is poorly-specificed for nested structures. This means
+DangerPIISystemRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:provider.stage}-PreciselyDangerPIISystemRole
+    AssumeRolePolicyDocument:
       Version: '2012-10-17'
       Statement:
         - Effect: Allow
@@ -55,19 +98,21 @@ SystemRole:
               - ecs.amazonaws.com
               - ec2.amazonaws.com
               - ecs-tasks.amazonaws.com
+              # DangerPIISystemRole specific entry:
               - ssm.amazonaws.com
           Action: sts:AssumeRole
-    ManagedPolicyArns: 
+    ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
       - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       - arn:aws:iam::aws:policy/AmazonS3FullAccess
-      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess 
+      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
       - arn:aws:iam::aws:policy/AmazonSQSFullAccess
       - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+      # DangerPIISystemRole specific entry:
       - arn:aws:iam::aws:policy/AmazonSSMFullAccess
-    Policies:  
+    Policies:
       - ${file(./serverless/resources/role-policies.yml):DefaultPolicy}
       - ${file(./serverless/resources/role-policies.yml):ECSPolicy}
       - ${file(./serverless/resources/role-policies.yml):LambdaExecutionPolicy}
