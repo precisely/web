@@ -14,6 +14,7 @@ import {AboutUs} from 'src/features/homepage/AboutUs';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {WhitePage} from 'src/features/common/WhitePage';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils.ts';
+import { NavigationPage } from '../common/NavigationPage';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -26,14 +27,14 @@ describe('AboutUs tests.', () => {
       shallow(<AboutUs history={mockedHistory} match={mockedMatch()} location={mockedLocation} staticContext={{}} />);
 
   unroll('it should display #count #elementName elements', (
-      done: () => void,
-      args: {elementName: string, element: EnzymePropSelector, count: number}
+    done: () => void,
+    {element, count}: {elementName: string, element: EnzymePropSelector, count: number}
   ) => {
-    expect(componentTree.find(args.element).length).toBe(args.count);
+    expect(componentTree.find(element).length).toBe(count);
     done();
   }, [
     ['elementName', 'element', 'count'],
-    ['NavigationBar', NavigationBar, 1],
+    ['NavigationPage', NavigationPage, 1],
     ['h2', 'h2', 1],
     ['h5', 'h5', 1],
     ['p', 'p', 5],

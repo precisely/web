@@ -31,7 +31,6 @@ describe('Tests for LoadingPage', () => {
   }, [
     ['elementName', 'element', 'count'],
     ['div', 'div', 2],
-    ['Loading icon', FontAwesome, 1],
-    ['Loading message', 'h4', 1],
+    ['Loading icon', 'img', 1],
   ]);
 });
