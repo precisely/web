@@ -54,7 +54,7 @@ async function getAuth0BearerToken() {
   if (resp && resp.access_token) {
     return resp.access_token;
   } else {
-    throw 'no Auth0 access token retrieved';
+    throw new Error('no Auth0 access token retrieved');
   }
 }
 
@@ -76,7 +76,7 @@ async function getAuth0User(auth0AccessToken: string, userId: string) {
   if (resp && resp.email) {
     return resp.email;
   } else {
-    throw 'Auth0 email retrieval failed';
+    throw new Error('Auth0 email retrieval failed');
   }
 }
 
