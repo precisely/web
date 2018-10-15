@@ -63,7 +63,7 @@ plugins:
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
-  - serverless-dynamodb-local
+  - "@aneilbaboo/serverless-dynamodb-local"
   - serverless-plugin-scripts
   - serverless-plugin-git-variables
   - serverless-plugin-log-retention
@@ -130,11 +130,15 @@ custom:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       migrate: true
       inMemory: true
+      heapInitial: 2048m
+      heapMax: 2048m
     disk:
       port: ${env:DYNAMODB_LOCAL_PORT, "8000"}
       migrate: true
       dbPath: .dynamodb
       sharedDb: true
+      heapInitial: 2048m
+      heapMax: 2048m
 
   logRetentionInDays: 30 # used to set a global value for all functions
 
