@@ -45,7 +45,6 @@
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!**/node_modules/**",
-      "!src/interfaces/**",
       "!src/**/*.test.*"
     ],
     "transform": {
@@ -73,6 +72,7 @@
     "@aneilbaboo/dynogels-promisified": "^1.0.5",
     "@sendgrid/mail": "^6.3.1",
     "accesscontrol-plus": "^1.0.1",
+    "apollo-errors": "git+ssh://git@github.com/precisely/apollo-errors#precisely/version-2",
     "apollo-server-lambda": "1.3.2",
     "apollo-tracing": "^0.1.4",
     "auth0-lock": "^11.5.2",

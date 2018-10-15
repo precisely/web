@@ -6,23 +6,20 @@
  * without modification, are not permitted.
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:51:51 
- * @Last Modified by:   Aneil Mallavarapu 
- * @Last Modified time: 2018-08-10 09:51:51 
+ * @Last Modified by: Aneil Mallavarapu
+ * @Last Modified time: 2018-10-06 09:10:52
  */
 
-type ErrorType = 'accessDenied' | 'unknown' | 'fileError';
+import { createError } from 'apollo-errors';
 
-export class TypedError extends Error {
-  type?: ErrorType;
-  constructor(message: string, type: ErrorType = 'unknown') {
-    super(message);
-    this.type = type;
-    const actualProto = new.target.prototype;
+export const NotFoundError = createError('not_found', {
+  message: 'Not Found'
+});
 
-    if (Object.setPrototypeOf) { 
-      Object.setPrototypeOf(this, actualProto); 
-    } else { 
-      (<any> this).__proto__ = actualProto; // tslint:disable-line no-any
-    } 
-  }
-}
+export const AccessDeniedError = createError('access_denied', {
+  message: 'Access Denied'
+});
+
+export const AuthenticationError = createError('authentication', {
+  message: 'Authentication Required'
+});

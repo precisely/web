@@ -8,30 +8,28 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 import {Row, Col} from 'src/features/common/ReusableComponents';
 
-export interface PageContentProps {
+export interface WhitePageProps {
   children: React.ReactNode;
-  style?: CSS;
+  style?: CSSProperties;
 }
 
-export let PageContent: React.StatelessComponent<PageContentProps> = props => (
+export const WhitePage: React.StatelessComponent<WhitePageProps> = Radium((props: WhitePageProps) => (
   <Row style={{...content, ...props.style}} className="p-5 mx-auto">
     <Col style={formColumn}>
       {props.children}
     </Col>
   </Row>
-);
+));
 
-PageContent = Radium(PageContent);
-
-const formColumn: CSS = {
+const formColumn: CSSProperties = {
   textAlign: 'center',
   padding: 0,
 };
 
-const content: CSS = {
+const content: CSSProperties = {
   backgroundColor: '#fff',
   boxShadow: '0 2px 29px -8px rgba(192, 79, 127, 0.51)',
 };

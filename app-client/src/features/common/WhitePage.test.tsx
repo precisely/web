@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
-import {PageContent} from 'src/features/common/PageContent';
+import {WhitePage} from 'src/features/common/WhitePage';
 import {Row, Col} from 'src/features/common/ReusableComponents';
 
 const unroll = require('unroll');
@@ -20,7 +20,7 @@ configure({adapter: new Adapter()});
 describe('SignupLoginContainer tests.', () => {
 
   const componentTree: ShallowWrapper = shallow(
-    <PageContent>I am a dummy child.</PageContent>
+    <WhitePage>I am a dummy child.</WhitePage>
   );
 
   unroll('it should display #count #elementName elements', (

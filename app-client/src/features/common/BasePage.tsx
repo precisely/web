@@ -10,15 +10,19 @@ import * as React from 'react';
 import {Footer} from 'src/features/common/Footer';
 import {Routes} from 'src/routes/Routes';
 import {defaultBackground, helveticaFont} from 'src/constants/styleGuide';
-import {CSS} from 'src/interfaces';
+import { ErrorPage } from 'src/features/common/ErrorPage';
 
-export class BasePage extends React.Component {
+type CSSProperties = React.CSSProperties;
+
+export class BasePage extends React.Component<any, any> {
 
   render(): JSX.Element {
     return (
       <div style={container}>
         <div style={routes}>
-          <Routes />
+          <ErrorPage>
+            <Routes />
+          </ErrorPage>
         </div>
         <Footer />
       </div>
@@ -26,7 +30,7 @@ export class BasePage extends React.Component {
   }
 }
 
-const container: CSS = {
+const container: CSSProperties = {
   ...helveticaFont,
   backgroundColor: defaultBackground,
   display: 'flex',
@@ -34,7 +38,7 @@ const container: CSS = {
   minHeight: '100vh',
 };
 
-const routes: CSS = {
+const routes: CSSProperties = {
   flex: '1 0 auto',
   width: '100%',
 };

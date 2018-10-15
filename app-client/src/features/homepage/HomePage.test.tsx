@@ -13,7 +13,7 @@ import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {HomePage} from 'src/features/homepage/HomePage';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {Container} from 'src/features/common/ReusableComponents';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils';
 
 const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;

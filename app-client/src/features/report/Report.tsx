@@ -7,25 +7,26 @@
  */
 
 import * as React from 'react';
-import {RouteComponentProps} from 'react-router';
-import {graphql, OptionProps} from 'react-apollo';
+import { graphql, OptionProps } from 'react-apollo';
 
 import * as AuthUtils from 'src/utils/auth';
 
 import {FileUpload} from 'src/features/common/FileUpload';
-import {NavigationBar} from 'src/features/common/NavigationBar';
-import {Container} from 'src/features/common/ReusableComponents';
-import {PageContent} from 'src/features/common/PageContent';
+import {WhitePage} from 'src/features/common/WhitePage';
 import {header} from 'src/constants/styleGuide';
 
 import {GetReport} from './queries';
-import {ReportData} from './interfaces';
 import {SmartReport} from './smart-report';
+import { ReportData } from './interfaces';
 import { LoadingPage } from 'src/features/common/LoadingPage';
+import { NavigationPage } from 'src/features/common/NavigationPage';
+import { checkGraphQLData } from 'src/errors';
+import { NetworkError } from '../../errors/display-error';
 
-export type ReportProps = OptionProps<void, {report: ReportData}> & RouteComponentProps<void>;
+export type ReportProps = OptionProps & {report: ReportData};
+export type ReportState = {isLoading: boolean};
 
-export class ReportImpl extends React.Component<ReportProps> {
+export class ReportImpl extends React.Component<ReportProps, ReportState> {
 
   state = {isLoading: false};
 
@@ -33,9 +34,23 @@ export class ReportImpl extends React.Component<ReportProps> {
     this.setState({isLoading: true});
   }
 
-  renderSmartReport = (): JSX.Element | string => {
-    const {report} = this.props.data;
-    return <SmartReport elements={report.personalization} />;
+  render(): JSX.Element {
+    return (
+      <NavigationPage>
+        <WhitePage>
+          {this.renderContent()}
+        </WhitePage>
+      </NavigationPage>
+    );
+  }
+
+  renderSmartReport = (report: {title: string, personalization: any[]}): JSX.Element | string => {
+    return (
+      <>
+        <h1 className="mt-5 mb-4" style={header}>{report.title}</h1>
+        <SmartReport elements={report.personalization} />
+      </>
+    );
   }
 
   renderUploadScreen = (): JSX.Element | string => {
@@ -47,20 +62,18 @@ export class ReportImpl extends React.Component<ReportProps> {
     );
   }
 
-  render(): JSX.Element {
-    const report = this.props.data && this.props.data.report;
-    const title = report ? report.title : 'Loading';
-    return (
-      <div>
-        <NavigationBar {...this.props}/>
-        <Container className="mx-auto mt-5 mb-5">
-          <h1 className="mt-5 mb-4" style={header}>{title}</h1>
-          <PageContent>
-            {report ? this.renderSmartReport() : <LoadingPage/>}
-          </PageContent>
-        </Container>
-      </div>
-    );
+  renderContent() {
+    const {data}  = this.props;
+    if (!data || data.loading) {
+      return <LoadingPage/>;
+    }
+
+    checkGraphQLData(data);
+    if (data.report) {
+      return this.renderSmartReport(data.report);
+    } else {
+      throw new NetworkError({ description: 'Unable to retrieve report'});
+    }
   }
 }
 

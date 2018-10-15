@@ -8,19 +8,21 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import initReactFastclick from 'react-fastclick';
+import initializeReactFastclick = require('react-fastclick');
 import {StyleRoot} from 'radium';
 import {BrowserRouter} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
 import {createHttpLink} from 'apollo-link-http';
+import { ApolloLink } from 'apollo-link';
+import { onError } from 'apollo-link-error';
 import {setContext} from 'apollo-link-context';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {ToastContainer} from 'react-toastify';
 import {BasePage} from 'src/features/common/BasePage';
 import * as Bluebird from 'bluebird';
 
-initReactFastclick();
+initializeReactFastclick();
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
@@ -38,8 +40,25 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map((values: any) => {
+      console.log(`Error: ${JSON.stringify(values)}`);
+      // console.log(
+      //   `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      // );
+    });
+  }
+
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: ApolloLink.from([
+    authLink, errorLink, httpLink,
+  ]),
   cache: new InMemoryCache(),
 });
 

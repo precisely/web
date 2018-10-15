@@ -12,8 +12,8 @@ import {RouteComponentProps} from 'react-router';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {AboutUs} from 'src/features/homepage/AboutUs';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {PageContent} from 'src/features/common/PageContent';
-import {mockedHistory, mockedMatch, mockedLocation} from 'src/testSetup';
+import {WhitePage} from 'src/features/common/WhitePage';
+import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils.ts';
 
 const unroll = require('unroll');
 unroll.use(it);
@@ -37,6 +37,6 @@ describe('AboutUs tests.', () => {
     ['h2', 'h2', 1],
     ['h5', 'h5', 1],
     ['p', 'p', 5],
-    ['PageContent', PageContent, 1]
+    ['WhitePage', WhitePage, 1]
   ]);
 });

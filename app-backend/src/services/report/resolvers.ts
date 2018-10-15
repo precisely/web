@@ -15,6 +15,7 @@ import { GraphQLContext, accessControl } from 'src/services/graphql';
 import {Report, ReportState, ReportAttributes} from './models';
 import {Personalizer} from './services/smart-report';
 import { UserSampleRequirement } from 'src/services/user-sample/external';
+import {  NotFoundError } from 'src/common/errors';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
@@ -64,16 +65,20 @@ export const resolvers = {
       return await context.valid('report:read', reports);
     },
     async report(_: {}, {id, slug}: {id?: string, slug?: string}, context: GraphQLContext) {
-      context.log.info('Report resolver(%j)', {id, slug});
+      context.log.info('Calling resolver report(%j)', {id, slug});
       let report;
       if (id) {
         report = await Report.getAsync(id);
       } else if (slug) {
         report = await Report.findBySlug(slug);
       }
-      // context.log.silly('Report resolver(%j) => %j', {id, slug}, report ? report.get() : 'null');
-      
-      return report && await context.valid('report:read', report);
+
+      context.log.silly('Finished resolver report(%j) => %j', {id, slug}, report ? report.get() : 'null');
+      if (report) {
+        return await context.valid('report:read', report);
+      } else  {
+        throw new NotFoundError({data: {slug, id, resourceType: 'Report'}});
+      }
     }
   },
   Mutation: {

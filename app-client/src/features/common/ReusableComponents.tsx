@@ -9,21 +9,22 @@
 import * as Radium from 'radium';
 import * as Bootstrap from 'reactstrap';
 import {Link as RouterLink} from 'react-router-dom';
-import {CSS} from 'src/interfaces';
+
+export type CSSProperties = React.CSSProperties;
 
 export const Row = Radium(Bootstrap.Row);
 export const Col = Radium(Bootstrap.Col);
 export const Button = Radium(Bootstrap.Button);
 export const Input = Radium(Bootstrap.Input);
-export const InputGroupAddon: React.StatelessComponent<Bootstrap.InputGroupAddonProps & {style?: CSS}> =
+export const InputGroupAddon: React.StatelessComponent<Bootstrap.InputGroupAddonProps & {style?: CSSProperties}> =
     Radium(Bootstrap.InputGroupAddon);
-export const InputGroup: React.StatelessComponent<Bootstrap.InputGroupProps & {style?: CSS}> =
+export const InputGroup: React.StatelessComponent<Bootstrap.InputGroupProps & {style?: CSSProperties}> =
     Radium(Bootstrap.InputGroup);
 export const Form = Radium(Bootstrap.Form);
 export const FormGroup = Radium(Bootstrap.FormGroup);
 export const FormText = Radium(Bootstrap.FormText);
 export const Collapse = Radium(Bootstrap.Collapse);
-export const Navbar: React.StatelessComponent<Bootstrap.NavbarProps & {style?: CSS}> = Radium(Bootstrap.Navbar);
+export const Navbar: React.StatelessComponent<Bootstrap.NavbarProps & {style?: CSSProperties}> = Radium(Bootstrap.Navbar);
 export const NavbarToggler = Radium(Bootstrap.NavbarToggler);
 export const NavbarBrand = Radium(Bootstrap.NavbarBrand);
 export const Nav = Radium(Bootstrap.Nav);

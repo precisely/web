@@ -1,17 +1,16 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
+const Loadable = require('react-loadable'); // avoid the typings. They are a mess: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/19337
 import { AuthRoute } from './AuthRoute';
 import { LoadingPage } from 'src/features/common/LoadingPage';
 import { Route, Switch } from 'react-router-dom';
+import { NotFoundError } from 'src/errors/display-error';
 
-
-function makeLoadable(componentName: string, path?: string) {
+function makeLoadable(componentName: string, path?: string, extraProps: Object = {}) {
   return Loadable({
     loader: () => import('src/features/' + (path || componentName)),
     render(loaded: any, props: any) {
       const Component: React.ComponentClass<any> = loaded[`${componentName}`];
-
-      return <Component {...props} />;
+      return <Component {...props} {...extraProps}/>;
     },
     loading() {
       return <LoadingPage />;
@@ -19,6 +18,9 @@ function makeLoadable(componentName: string, path?: string) {
   });
 }
 
+const NotFoundErrorComponent = () => {
+  throw new NotFoundError();
+};
 
 export class Routes extends React.Component {
 
@@ -28,7 +30,7 @@ export class Routes extends React.Component {
         <Switch>
           <Route path="/" exact={true}
                 component={makeLoadable('LaunchPage', 'homepage/LaunchPage')} />
-          <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
+          <Route path="*" component={NotFoundErrorComponent} />
         </Switch>
       );
     }
@@ -43,7 +45,7 @@ export class Routes extends React.Component {
               component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
         <AuthRoute path="/report/:slug" exact={true}
                   component={makeLoadable('Report', 'report/Report')} />
-        <Route path="*" component={makeLoadable('NotFound', 'common/NotFound')} />
+        <Route path="*" component={NotFoundErrorComponent} />
       </Switch>
     );
   }

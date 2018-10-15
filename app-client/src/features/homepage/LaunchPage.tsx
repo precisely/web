@@ -10,11 +10,11 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 import {helveticaThinFont, preciselyMagenta, preciselyGreen} from 'src/constants/styleGuide';
 import { Container } from 'src/features/common/ReusableComponents';
 import { Navbar, NavbarBrand } from '../common/ReusableComponents';
-import { ExtendedCSS } from '../../constants/styleGuide';
+import { ExtendedCSSProperties } from '../../constants/styleGuide';
 
 const faces = require('src/assets/home/faces.png');
 const iconGallery = require('src/assets/home/icon-gallery.png');
@@ -64,7 +64,7 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
   }
 }
 
-const imageStyle: CSS = {
+const imageStyle: CSSProperties = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -73,7 +73,7 @@ const imageStyle: CSS = {
   backgroundPosition: 'center',
 };
 
-const headingStyle: CSS = {
+const headingStyle: CSSProperties = {
   ...helveticaThinFont,
   fontWeight: 200
 };
@@ -90,7 +90,7 @@ const titleStyle: React.CSSProperties = {
   color: '#00bc3e'
 };
 
-const navBar: ExtendedCSS = {
+const navBar: ExtendedCSSProperties = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
   '@media screen and (min-width: 992px)': {
@@ -100,11 +100,11 @@ const navBar: ExtendedCSS = {
   backgroundColor: 'white'
 };
 
-const logoStyle: CSS = {
+const logoStyle: CSSProperties = {
   width: '26px',
 };
 
-const logoTextStyle: CSS = {
+const logoTextStyle: CSSProperties = {
   ...helveticaThinFont,
   paddingLeft: '4px',
   // width: '89px',

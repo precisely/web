@@ -12,7 +12,7 @@ import { APIGatewayEvent, Context as LambdaContext } from 'aws-lambda';
 import { Auth0AuthenticationResult } from 'src/services/auth/auth0';
 import _accessControl from 'src/services/auth/access-control';
 import { AccessControlPlus, IPermission, IContext } from 'accesscontrol-plus';
-import { TypedError } from 'src/common/errors';
+import { AccessDeniedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
 import { get as dig } from 'lodash';
 import { IResolverObject } from 'graphql-tools';
@@ -81,7 +81,7 @@ export class GraphQLContext {
       const resources = res;
       const validResources = await Promise.all(resources.map(async resource => {
         const permission = await this.can(scope, resource, args);
-        return  permission.granted ? resource : new TypedError(scope, 'accessDenied');
+        return  permission.granted ? resource : new AccessDeniedError({ data: {scope}});
       }));
       return validResources;
     } else {
@@ -92,7 +92,7 @@ export class GraphQLContext {
       this.log.debug('Permission denied: %j', permission.denied || 'undefined');
     }
     
-    throw new TypedError(scope, 'accessDenied');
+    throw new AccessDeniedError({data: {scope}});
   }
 
   /**

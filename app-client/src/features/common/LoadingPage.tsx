@@ -8,9 +8,9 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import * as FontAwesome from 'react-fontawesome';
-import {CSS} from 'src/interfaces';
-
+// import * as FontAwesome from 'react-fontawesome';
+type CSSProperties = React.CSSProperties;
+const loadingGif = require('src/assets/custom/precisely-loading.gif');
 @Radium
 export class LoadingPage extends React.Component {
 
@@ -18,18 +18,17 @@ export class LoadingPage extends React.Component {
     return(
       <div style={loadingWrapper}>
         <div style={{textAlign: 'center'}}>
-          <FontAwesome name="circle-o-notch" spin={true} size="3x" />
-          <h4 style={{fontSize: 20}}>Loading...</h4>
+          <img src={loadingGif} style={{height: '100px', width: '100px'}}/>
+          {/* <FontAwesome name="circle-o-notch" spin={true} size="3x" /> */}
         </div>
       </div>
     );
   }
 }
 
-const loadingWrapper: CSS = {
+const loadingWrapper: CSSProperties = {
   height: '100vh',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '#F1F1F1',
+  justifyContent: 'center'
 };

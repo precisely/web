@@ -10,7 +10,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {CSS} from 'src/interfaces';
+type CSSProperties = React.CSSProperties;
 import { helveticaThinFont, preciselyMagenta, preciselyGreen, white, offWhite, helveticaFont,  defaultTextColor } from 'src/constants/styleGuide';
 import { Container, Col } from 'src/features/common/ReusableComponents';
 import { NavigationBar } from 'src/features/common/NavigationBar';
@@ -54,7 +54,7 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
     );
   }
 
-  smallTextStyle(): CSS {
+  smallTextStyle(): CSSProperties {
     return {...helveticaFont, color: defaultTextColor};
   }
 
@@ -117,10 +117,11 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
   }
 
   renderHowItWorks = (): JSX.Element => {
-    const col1 = this.renderHowItWorksCol(upload23andMe, 'Securely upload your 23andMe data to Precise.ly (we will never share your data!)');
-    const col2 = this.renderHowItWorksCol(dnaMagnifier, 'Precise.ly will perform additional analysis of your DNA to identify ' +
-                                                        'and make it available for reports');
-    const col3 = this.renderHowItWorksCol(clipboard, 'Check your email! Your report will be ready to view in about an hour.');
+    const col1 = this.renderHowItWorksCol(upload23andMe, 'Upload your 23andMe data to Precise.ly. ' +
+                                                         'Your data is secure and always under your control.');
+    const col2 = this.renderHowItWorksCol(dnaMagnifier, 'Precise.ly performs computational analysis on millions of points in your genome, ' +
+                                                        'and prepares details personalized reports for you.');
+    const col3 = this.renderHowItWorksCol(clipboard, 'Check your email! Your report will be ready to view tomorrow.');
     return (
       <div className="pt-5 pb-4" style={{textAlign: 'center'}}>
         <h3 style={headingStyle}>
@@ -157,7 +158,7 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
   }
 }
 
-const backgroundStyle: CSS = {
+const backgroundStyle: CSSProperties = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -166,7 +167,7 @@ const backgroundStyle: CSS = {
   backgroundPosition: 'center',
 };
 
-const headingStyle: CSS = {
+const headingStyle: CSSProperties = {
   ...helveticaFont,
   fontWeight: 300
 };

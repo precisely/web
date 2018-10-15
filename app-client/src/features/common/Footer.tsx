@@ -8,9 +8,10 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {CSS} from 'src/interfaces';
 import {Col} from 'src/features/common/ReusableComponents';
 import {helveticaFont} from 'src/constants/styleGuide';
+
+type CSSProperties = React.CSSProperties;
 
 @Radium
 export class Footer extends React.Component {
@@ -41,7 +42,7 @@ export class Footer extends React.Component {
   }
 }
 
-const footerStyle: CSS = {
+const footerStyle: CSSProperties = {
   ...helveticaFont,
   backgroundColor: '#F5F5F5',
   fontSize: '1rem',

@@ -9,12 +9,13 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {Input} from 'src/features/common/ReusableComponents';
-import {CSS} from 'src/interfaces';
 import {removeBorderRadius, inputStyle} from 'src/constants/styleGuide';
+
+type CSSProperties = React.CSSProperties;
 
 export interface EmailProps {
   placeholder?: string;
-  style?: CSS;
+  style?: CSSProperties;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
