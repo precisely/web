@@ -102,7 +102,7 @@
     "winston-cloudwatch": "^2.0.2"
   },
   "devDependencies": {
-    "@aneilbaboo/serverless-dynamodb-local": "0.2.35-aneilbaboo3",
+    "@aneilbaboo/serverless-dynamodb-local": "0.2.35-aneilbaboo4",
     "@types/bluebird": "3.5.20",
     "@types/faker": "4.1.2",
     "@types/graphql": "^0.13.3",

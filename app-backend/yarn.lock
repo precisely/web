@@ -27,9 +27,9 @@
     lodash "4.17.4"
     uuid "3.1.0"
 
-"@aneilbaboo/serverless-dynamodb-local@0.2.35-aneilbaboo3":
-  version "0.2.35-aneilbaboo3"
-  resolved "https://registry.yarnpkg.com/@aneilbaboo/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.35-aneilbaboo3.tgz#8c7cfa987fbc7f7f44a3e778419094327023db29"
+"@aneilbaboo/serverless-dynamodb-local@0.2.35-aneilbaboo4":
+  version "0.2.35-aneilbaboo4"
+  resolved "https://registry.yarnpkg.com/@aneilbaboo/serverless-dynamodb-local/-/serverless-dynamodb-local-0.2.35-aneilbaboo4.tgz#a12f28f389db8e5b4c0335481b3441d0d3f1c4dc"
   dependencies:
     "@aneilbaboo/dynamodb-localhost" "^0.0.7-aneilbaboo1"
     aws-sdk "^2.7.0"

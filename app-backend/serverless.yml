@@ -63,7 +63,7 @@ plugins:
   - serverless-domain-manager
   - serverless-plugin-bind-deployment-id # required for APIGatewayStage resource
   - serverless-webpack
-  - serverless-dynamodb-local
+  - "@aneilbaboo/serverless-dynamodb-local"
   - serverless-plugin-scripts
   - serverless-plugin-git-variables
   - serverless-plugin-log-retention
