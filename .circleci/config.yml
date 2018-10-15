@@ -62,7 +62,7 @@ ALIASES:
     run_dynamodb: &run_dynamodb
         run:
             name: Running DynamoDB
-            command: yarn dynamodb:test-offline
+            command: DYNAMODB_MODE=disk yarn dynamodb:test-offline
             background: true
 
     build_webpack: &build_webpack
