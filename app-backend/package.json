@@ -14,6 +14,7 @@
     "dynamodb:test-offline": "yarn env:test-offline sls dynamodb start",
     "dynamodb:admin": "dynamodb-admin",
     "dynamodb:reset": "yarn sls dynamodb:reset",
+    "dynamodb:install": "yarn sls dynamodb install",
     "env": "ENV=${ENV:-offline} ../env/withenv",
     "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
     "env:test-offline": "ENV=${ENV:-test-offline} ../env/withenv",
@@ -101,6 +102,7 @@
     "winston-cloudwatch": "^2.0.2"
   },
   "devDependencies": {
+    "@aneilbaboo/serverless-dynamodb-local": "0.2.35-aneilbaboo3",
     "@types/bluebird": "3.5.20",
     "@types/faker": "4.1.2",
     "@types/graphql": "^0.13.3",
@@ -118,6 +120,7 @@
     "babel-jest": "^23.6.0",
     "body-parser": "^1.18.3",
     "cors": "2.8.4",
+    "dynamodb-localhost": "^0.0.7",
     "graphql-import": "^0.6.0",
     "jest": "^23.4.1",
     "jest-in-case": "^1.0.2",
