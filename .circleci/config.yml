@@ -57,13 +57,24 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: ENV=test-offline yarn sls dynamodb install
+            command: |
+                yarn sls dynamodb install
+                scripts/enable-dynamodb-local-logging.sh
     
     run_dynamodb: &run_dynamodb
         run:
             name: Running DynamoDB
-            command: yarn dynamodb:test-offline
+            command: yarn env:test-offline java -Xms4096m  -Xmx4096m -Djava.library.path=.dynamodb/DynamoDBLocal_lib/ -jar .dynamodb/DynamoDBLocal.jar -sharedDb -dbPath . -port 8100
+                # yarn dynamodb:test-offline
             background: true
+    
+    migrate_dynamodb: &migrate_dynamodb
+        run:
+            name: Migrating DynamoDB
+            command: |
+                sleep 5
+                ENV=test-offline yarn sls dynamodb migrate
+                sleep 5
 
     build_webpack: &build_webpack
         run:
@@ -147,6 +158,7 @@ jobs:
             - *install_dynamodb
             - *run_dynamodb
             - run: ./scripts/wait-for-dynamodb-local.sh
+            - *migrate_dynamodb
             - *save_backend_cache
             - *run_backend_tests
             - *build_webpack

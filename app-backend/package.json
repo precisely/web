@@ -13,6 +13,7 @@
     "dynamodb:test:offline": "echo Deprecated - try yarn dynamodb:test-offline",
     "dynamodb:test-offline": "yarn env:test-offline sls dynamodb start",
     "dynamodb:admin": "dynamodb-admin",
+    "dynamodb:install": "yarn sls dynamodb install",
     "env": "ENV=${ENV:-offline} ../env/withenv",
     "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
     "env:test-offline": "ENV=${ENV:-test-offline} ../env/withenv",
