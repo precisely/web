@@ -182,7 +182,8 @@ custom:
         CacheTtlInSeconds: 3600
 
   webpack:
-    includeModules: true # auto-pack Node modules
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    # includeModules: true # auto-pack Node modules
     packager: 'yarn'     # Packager that will be used to package your external modules
 
 functions:
