@@ -9,9 +9,7 @@ ALIASES:
         docker:
             # specify the version you desire here
             - image: aneilbaboo/precisely-circleci-node-2018-10-14
-              environment:
-                STAGE: test
-
+              
     checkout: &checkout
         checkout:
             path: ~/repo
