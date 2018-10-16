@@ -55,7 +55,7 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: ENV=test-offline yarn sls dynamodb install
+            command: if [ ! -d .dynamodb ]; then yarn sls dynamodb install; else echo "DynamoDB already installed"; fi
     
     run_dynamodb: &run_dynamodb
         run:
