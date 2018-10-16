@@ -69,7 +69,9 @@ ALIASES:
             # XXX: Nasty hack - in some environments (i.e., in Docker containers) yarn build fails
             #      on first attempt and succeeds on the second run
             #      The first run will attempt to build the app-client module for some reason
-            command: ENV=test-offline yarn build || ENV=test-offline yarn build
+            command: |
+                rm -frd ../app-client
+                ENV=test-offline yarn build || ENV=test-offline yarn build
 
     run_backend_tests: &run_backend_tests
         run:
@@ -117,6 +119,7 @@ workflows:
                     branches:
                         only:
                             - dev
+                            - aneil/ciDeploy
                 requires:
                     - build-backend
                     - build-frontend
@@ -126,6 +129,7 @@ workflows:
                     branches:
                         only:
                             - dev
+                            - aneil/ciDeploy
                 requires:
                     - beta-deploy-backend
 
@@ -183,7 +187,6 @@ jobs:
             - *checkout
             - *restore_backend_cache
             - *setup_aws_deployment_profile
-            - run: cp scripts/temp.js node_modules/serverless-plugin-git-variables/lib/index.js
             - run:
                 name: Deploying backend on Beta
                 command: SLS_DEBUG=* ENV=beta yarn deploy

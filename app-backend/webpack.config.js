@@ -10,10 +10,6 @@ module.exports = {
   devtool: process.env.STAGE==='prod' ? null : 'eval',
   externals: [],
   plugins: [
-    new webpack.ContextReplacementPlugin(
-            /sequelize(\\|\/)/,
-            path.resolve(__dirname, '../src')
-    ),
     new webpack.IgnorePlugin(/^ometa-core$/)
   ],
   resolve: {
@@ -33,7 +29,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts(x?)$/,
+        test: /app-backend\/src\/.*\.ts(x?)$/,
+        exclude: /\.test\.ts(x?)$/,
         loader: 'ts-loader',
         options: {configFile: 'tsconfig.json'}
       },
@@ -44,7 +41,7 @@ module.exports = {
       },
       {
         type: 'javascript/auto',
-        test: /\.mjs$/,
+        test: /app-backend\/src\/.*\.mjs$/,
         use: []
       }
     ],
