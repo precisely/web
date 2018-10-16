@@ -12,6 +12,7 @@ describe('SmartReport Analyzer', function () {
         </AnalysisPanel>`);
       const {variantIndexes} = Analyzer.extractRequirements(elements);
       expect(variantIndexes).toBeDefined();
+      expect(errors).toHaveLength(0);
       expect(isArray(variantIndexes)).toBeTruthy();
       expect(variantIndexes).toHaveLength(2);
       expect(variantIndexes).toEqual([

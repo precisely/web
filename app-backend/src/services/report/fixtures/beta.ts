@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-13 15:10:44 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 16:08:18
+ * @Last Modified time: 2018-10-16 09:49:43
  */
 
 // This file represent fixtures for reports in the beta product
@@ -67,7 +67,7 @@ export async function addBetaReportFixtures() {
   await geneReport.publish();
   await genePanelReport.publish();
   
-  return {geneReport, variants, genePanelReport};
+  return {geneReport, variants, genePanelReport, userSamples};
 }
 
 const WT: [number, number] = [0, 0];

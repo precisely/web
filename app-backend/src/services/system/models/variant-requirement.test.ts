@@ -1,6 +1,6 @@
 import { SystemVariantRequirement, SystemVariantRequirementAttributes } from './variant-requirement';
 import { rememberFixtures, destroyFixtures, resetAllTables } from 'src/common/fixtures';
-import { AllowedRefVersion } from 'src/common/variant-tools';
+
 const cases = require('jest-in-case');
 
 describe('SystemVariantRequirement', function () {

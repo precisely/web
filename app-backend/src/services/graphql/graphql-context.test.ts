@@ -13,6 +13,7 @@ import { AccessControlPlus, IContext } from 'accesscontrol-plus';
 import { defineModel } from 'src/db/dynamo/dynogels';
 import { GraphQLContext } from './graphql-context';
 import { makeEvent, makeLambdaContext } from './test-helpers';
+import { GraphQLPermissionContext } from 'src/services/graphql/graphql-context';
 
 describe('GraphQLContext', function () {
   context('roles', function () {
@@ -41,10 +42,15 @@ describe('GraphQLContext', function () {
   });
 
   context('accessControl', function () {
-    const rbac = new AccessControlPlus();
+    let rbac: AccessControlPlus;
+    let gqlContext: GraphQLContext;
     const event = makeEvent({ authorizer: { principalId: 'user-id-123', roles: 'user' }});
     const lambdaCtx = makeLambdaContext();
-    const gqlContext = new GraphQLContext(event, lambdaCtx, rbac);
+    
+    beforeEach(() => {
+      rbac = new AccessControlPlus();
+      gqlContext = new GraphQLContext(event, lambdaCtx, rbac);
+    });
 
     context('can', function () {
       it('should return the expected permissions defined in an AccessControlPlus instance', async function () {
@@ -58,14 +64,18 @@ describe('GraphQLContext', function () {
         expect(reportWritePermission.denied).toEqual([]);
       });
 
-      it('should add a valid user object to the context provided to an attribute condition', async function () {
-        let capturedUser;
-        const constraint = ({user}: any) => capturedUser = user;
+      it('should pass the user object to any conditions', async function () {
+        let testedUser;
+        const condition = ({user}: GraphQLPermissionContext) => {
+          testedUser = user;
+          return user.id === 'user-id-123';
+        };
 
-        rbac.grant('user').scope('report:read').where(constraint);
+        rbac.grant('user').scope('report:read').where(condition);
 
         const reportReadPermission = await gqlContext.can('report:read');
         expect(reportReadPermission.granted).toBeTruthy();
+        expect(testedUser).toMatchObject({ id: 'user-id-123', roles: ['user'] });
 
         const reportWritePermission = await gqlContext.can('report:write');
         expect(reportWritePermission.granted).toBeFalsy();

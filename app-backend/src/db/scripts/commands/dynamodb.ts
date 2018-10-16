@@ -1,4 +1,4 @@
-import { models, listTableNames, resetAllTables, batchDelete } from 'src/db/dynamo';
+import { models, resetAllTables } from 'src/db/dynamo';
 
 export async function dynamodbResetCommand(...args: any[]): Promise<any> { // tslint:disable-line no-any
   await resetAllTables();

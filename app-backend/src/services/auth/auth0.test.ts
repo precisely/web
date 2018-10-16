@@ -1,6 +1,4 @@
-import { getToken, authenticate } from './auth0';
-import { log } from 'src/common/logger';
-import * as jwt from 'jsonwebtoken-promisified';
+import { getToken } from './auth0';
 
 describe('auth0', function () {
   describe('getToken', function () {
