@@ -85,7 +85,13 @@ ALIASES:
                 yarn test:coverage
                 yarn tslint
                 yarn eslint
-                
+    
+    setup_aws_deployment_profile: &setup_aws_deployment_profile
+        run:
+            name: Set AWS Profile
+            # run a script so that the keys don't print into the CircleCI console
+            command: ../.circleci/make-beta-deployment-profile.sh                
+            
     upload_coverage_report: &upload_coverage_report
         run:
             name: Save Coverage Report in S3
@@ -160,27 +166,24 @@ jobs:
                     AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
-
+                    
     beta-deploy-frontend:
         <<: *frontend_defaults
         steps:
             - *checkout
             - *restore_frontend_cache
+            - *setup_aws_deployment_profile
             - run:
-                name: Set AWS Profile (frontend)
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying frontend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
+                name: Deploying frontend on Beta
+                command: ENV=beta yarn deploy
 
     beta-deploy-backend:
         <<: *backend_defaults
         steps:
             - *checkout
             - *restore_backend_cache
+            - *setup_aws_deployment_profile
+            - run: cp scripts/temp.js node_modules/serverless-plugin-git-variables/lib/index.js
             - run:
-                name: Set AWS Profile (backend)
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying backend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
+                name: Deploying backend on Beta
+                command: SLS_DEBUG=* ENV=beta yarn deploy
