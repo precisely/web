@@ -140,6 +140,12 @@ custom:
       heapInitial: 2048m
       heapMax: 2048m
 
+  # serverless-plugin-git-variables doesn't work in the CI environment, so disable it
+  exportGitVariables: ${self:custom.exportGitVariablesOptions.${env:CI, "default"}}
+  exportGitVariablesOptions:
+    true: false
+    default: true
+
   logRetentionInDays: 30 # used to set a global value for all functions
 
   scripts:
