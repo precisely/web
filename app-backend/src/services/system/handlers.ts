@@ -9,7 +9,7 @@
 // tslint:disable:no-any
 
 import { isArray } from 'util';
-import {Handler, Context, Callback} from 'aws-lambda';
+import {Handler, Context} from 'aws-lambda';
 
 import {makeLogger} from 'src/common/logger';
 

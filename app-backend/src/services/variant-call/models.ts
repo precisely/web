@@ -153,7 +153,7 @@ export const VariantCall = defineModel<
       gene: Joi.string().optional(),
       geneStart: Joi.number().optional(), // genomic coordinate for start base
       geneEnd: Joi.number().optional(),   // genomic coordinate for end base
-      zygosity: Joi.string().valid(...Object.values(Zygosity)).optional(), // heterozygous, homozygou,
+      zygosity: Joi.string().valid(...(<any> Object).values(Zygosity)).optional(), // tslint:disable-line no-any
 
       //
       // Index support

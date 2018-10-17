@@ -1,5 +1,5 @@
 import { VariantCall } from 'src/services/variant-call';
-import { VariantCallAttributes, Zygosity } from 'src/services/models';
+import { VariantCallAttributes } from 'src/services/models';
 import { isString } from 'util';
 import { get as dig } from 'lodash';
 

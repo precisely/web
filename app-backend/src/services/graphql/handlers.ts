@@ -16,7 +16,7 @@ import {makeExecutableSchema} from 'graphql-tools';
 import {formatError} from 'apollo-errors';
 
 import {resolvers} from 'src/services/resolvers';
-import { makeLogger, Logger } from 'src/common/logger';
+import { makeLogger } from 'src/common/logger';
 import { GraphQLContext } from './graphql-context';
 import preciselyTypeDefs from 'src/services/schema';
 

@@ -7,7 +7,7 @@
  */
 
 import {apiHandler, playgroundHandler, playgroundTitle} from './handlers';
-import { makeLambdaContext, makeEvent, makeContext } from 'src/services/graphql/test-helpers';
+import { makeLambdaContext, makeEvent } from 'src/services/graphql/test-helpers';
 
 describe('graphql handlers', function () {
   describe('playgroundTitle', function () {

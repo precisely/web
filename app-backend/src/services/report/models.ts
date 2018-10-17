@@ -15,7 +15,6 @@ import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db
 import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 
 import {Parser, Analyzer} from './services/smart-report';
-import {variantCall, extractVariantIndexes} from './services/smart-report/data-types/variant-call';
 import { ReportContentError } from './errors';
 import { UserSampleRequirement, JoiUserSampleRequirement } from 'src/services/user-sample/external';
 

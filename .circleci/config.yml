@@ -9,9 +9,7 @@ ALIASES:
         docker:
             # specify the version you desire here
             - image: aneilbaboo/precisely-circleci-node-2018-10-14
-              environment:
-                STAGE: test
-
+              
     checkout: &checkout
         checkout:
             path: ~/repo
@@ -57,7 +55,7 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: ENV=test-offline yarn sls dynamodb install
+            command: if [ ! -d .dynamodb ]; then yarn sls dynamodb install; else echo "DynamoDB already installed"; fi
     
     run_dynamodb: &run_dynamodb
         run:
@@ -71,7 +69,9 @@ ALIASES:
             # XXX: Nasty hack - in some environments (i.e., in Docker containers) yarn build fails
             #      on first attempt and succeeds on the second run
             #      The first run will attempt to build the app-client module for some reason
-            command: ENV=test-offline yarn build || ENV=test-offline yarn build
+            command: |
+                rm -frd ../app-client
+                ENV=test-offline yarn build || ENV=test-offline yarn build
 
     run_backend_tests: &run_backend_tests
         run:
@@ -87,7 +87,13 @@ ALIASES:
                 yarn test:coverage
                 yarn tslint
                 yarn eslint
-                
+    
+    setup_aws_deployment_profile: &setup_aws_deployment_profile
+        run:
+            name: Set AWS Profile
+            # run a script so that the keys don't print into the CircleCI console
+            command: ../.circleci/make-beta-deployment-profile.sh                
+            
     upload_coverage_report: &upload_coverage_report
         run:
             name: Save Coverage Report in S3
@@ -162,27 +168,23 @@ jobs:
                     AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
-
+                    
     beta-deploy-frontend:
         <<: *frontend_defaults
         steps:
             - *checkout
             - *restore_frontend_cache
+            - *setup_aws_deployment_profile
             - run:
-                name: Set AWS Profile (frontend)
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying frontend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
+                name: Deploying frontend on Beta
+                command: ENV=beta yarn deploy
 
     beta-deploy-backend:
         <<: *backend_defaults
         steps:
             - *checkout
             - *restore_backend_cache
+            - *setup_aws_deployment_profile
             - run:
-                name: Set AWS Profile (backend)
-                command: ./node_modules/.bin/serverless config credentials --provider aws -n beta-profile-precisely --region ${AWS_REGION} --key ${AWS_ACCESS_KEY_STAGE} --secret ${AWS_SECRET_KEY_STAGE}
-            - run:
-                name: Deploying backend on Staging
-                command: STAGE=beta REGION=${AWS_REGION} ./node_modules/.bin/serverless deploy
+                name: Deploying backend on Beta
+                command: SLS_DEBUG=* ENV=beta yarn deploy

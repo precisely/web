@@ -1,4 +1,4 @@
-import { Handler, Context, Callback } from 'aws-lambda';
+import { Context } from 'aws-lambda';
 
 import * as Logger from 'src/common/logger';
 import { EmailArgs, EmailService } from './service';

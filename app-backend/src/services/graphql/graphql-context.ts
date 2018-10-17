@@ -20,6 +20,16 @@ import { isArray, isString } from 'util';
 
 export {_accessControl as accessControl};
 
+export interface GraphQLPermissionContext {
+  event?: APIGatewayEvent;
+  user: {
+    id: string,
+    roles: string[]
+  };
+  args: any;
+  resource: any;
+}
+
 // This is the third argument to every GraphQL resolver
 export class GraphQLContext {
   constructor(
@@ -46,7 +56,7 @@ export class GraphQLContext {
   async can<M>(scope: string, resource?: M, args: IContext = {}): Promise<IPermission> {
     this.log.debug('GraphQLContext.can(scope: %j, args: %j)', 
       scope, args);
-    const context = {
+    const context: GraphQLPermissionContext = {
       event: this.event,
       user: {
         id: this.userId,
