@@ -119,7 +119,6 @@ workflows:
                     branches:
                         only:
                             - dev
-                            - aneil/ciDeploy
                 requires:
                     - build-backend
                     - build-frontend
@@ -129,7 +128,6 @@ workflows:
                     branches:
                         only:
                             - dev
-                            - aneil/ciDeploy
                 requires:
                     - beta-deploy-backend
 
