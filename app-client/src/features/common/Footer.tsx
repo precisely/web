@@ -8,7 +8,7 @@
 
 
 import * as React from 'react';
-import * as Radium from 'radium';
+import Radium from 'radium';
 
 import * as RW from 'src/features/common/RadiumWrappers';
 import * as Styles from 'src/constants/styles';
@@ -44,6 +44,7 @@ export class Footer extends React.Component {
   }
 
 }
+
 
 const footerStyle: React.CSSProperties = {
   ...Styles.fonts.helvetica,

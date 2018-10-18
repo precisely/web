@@ -7,9 +7,9 @@
  */
 
 
-import * as Radium from 'radium';
 import * as React from 'react';
 import * as ReactRouter from 'react-router';
+import Radium from 'radium';
 
 import * as RW from 'src/features/common/RadiumWrappers';
 import * as Styles from 'src/constants/styles';

@@ -9,7 +9,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import initializeReactFastclick = require('react-fastclick');
-import {StyleRoot} from 'radium';
 import {BrowserRouter} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';
 import {ApolloProvider} from 'react-apollo';
@@ -69,12 +68,10 @@ Bluebird.config({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <StyleRoot>
-      <ToastContainer hideProgressBar={true} />
-      <BrowserRouter>
-        <BasePage />
-      </BrowserRouter>
-    </StyleRoot>
+    <ToastContainer hideProgressBar={true} />
+    <BrowserRouter>
+      <BasePage />
+    </BrowserRouter>
   </ApolloProvider>,
   document.getElementById('root') as HTMLElement
 );

@@ -7,8 +7,8 @@
  */
 
 
-import * as Radium from 'radium';
 import * as React from 'react';
+import Radium from 'radium';
 
 import * as AuthUtils from 'src/utils/auth';
 import * as RW from 'src/features/common/RadiumWrappers';
@@ -102,6 +102,7 @@ export class NavigationBar extends React.Component {
   }
 
 }
+
 
 const logoStyle: React.CSSProperties = {
   width: '26px',
