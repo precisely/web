@@ -65,17 +65,17 @@ export class NavigationBar extends React.Component {
 
   render() {
     const {backgroundColor} = this.state;
-
-    navBar.backgroundColor = backgroundColor;
-
+    navbarStyle.backgroundColor = backgroundColor;
     return (
-      <RW.Navbar light={true} sticky="top" expand="md" className="navbar" style={navBar}>
-        <RW.NavbarBrand href="/">
-          <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
-          <span style={logoTextStyle}>Precise.ly</span>
-        </RW.NavbarBrand>
-        {... this.renderMenu()}
-      </RW.Navbar>
+      <RW.Container fluid={false}>
+        <RW.Navbar light={true} sticky="top" style={navbarStyle}>
+          <RW.NavbarBrand href="/" style={navbarBrandStyle}>
+            <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+            <span style={logoTextStyle}>Precise.ly</span>
+          </RW.NavbarBrand>
+          {... this.renderMenu()}
+        </RW.Navbar>
+      </RW.Container>
     );
   }
 
@@ -104,31 +104,32 @@ export class NavigationBar extends React.Component {
 }
 
 
+const navbarStyle: Styles.ExtendedCSSProperties = {
+  letterSpacing: '-1px',
+  transition: 'background-color 0.4s ease',
+  textTransform: 'uppercase',
+  zIndex: 1000000
+};
+
+const navbarBrandStyle: React.CSSProperties = {
+  display: 'flex',
+  verticalAlign: 'middle'
+};
+
 const logoStyle: React.CSSProperties = {
-  width: '26px',
+  width: '40px',
+  height: '40px'
 };
 
 const logoTextStyle: React.CSSProperties = {
   ...Styles.fonts.helveticaThin,
-  paddingLeft: '4px',
-  // width: '89px',
-  height: '24px',
-  fontSize: '20px',
+  paddingLeft: '12px',
+  height: '34px',
+  fontSize: '34px',
   fontStyle: 'normal',
   fontStretch: 'normal',
-  lineHeight: 'normal',
-  // letterSpacing: 'normal',
+  lineHeight: '40px',
   color: Styles.colors.preciselyMagenta,
-  // letterSpacing: '-0.6px',
+  letterSpacing: '0.01em',
   textTransform: 'none'
-};
-
-const navBar: Styles.ExtendedCSSProperties = {
-  letterSpacing: '-1px',
-  transition: 'background-color 0.4s ease',
-  '@media screen and (min-width: 992px)': {
-    padding: '8px 245px',
-  },
-  textTransform: 'uppercase',
-  zIndex: 1000000
 };

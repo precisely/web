@@ -36,7 +36,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
 
   render(): JSX.Element {
     return (
-      <div style={{backgroundColor: Styles.colors.white, color: Styles.colors.defaultTextColor}}>
+      <div style={pageStyle}>
         <NavigationBar {...this.props}/>
         <ParallaxProvider>
           <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
@@ -153,6 +153,11 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
   }
 }
 
+
+const pageStyle: React.CSSProperties = {
+  backgroundColor: Styles.colors.white,
+  color: Styles.colors.defaultTextColor
+};
 
 const backgroundStyle: React.CSSProperties = {
   backgroundImage: `url(${faces})`,

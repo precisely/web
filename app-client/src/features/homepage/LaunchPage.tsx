@@ -29,12 +29,14 @@ export class LaunchPage extends React.Component<ReactRouter.RouteComponentProps<
   render(): JSX.Element {
     return (
       <div style={pageStyle}>
-        <RW.Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navbarStyle}>
-          <RW.NavbarBrand href="/" style={navbarBrandStyle}>
-            <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
-            <span style={logoTextStyle}>Precise.ly</span>
-          </RW.NavbarBrand>
-        </RW.Navbar>
+        <RW.Container fluid={false}>
+          <RW.Navbar light={true} sticky="top" full={true} style={navbarStyle}>
+            <RW.NavbarBrand href="/" style={navbarBrandStyle}>
+              <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+              <span style={logoTextStyle}>Precise.ly</span>
+            </RW.NavbarBrand>
+          </RW.Navbar>
+        </RW.Container>
         <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
           Personalized Genetic Reports for Chronic Disease
         </h1>
@@ -66,7 +68,7 @@ export class LaunchPage extends React.Component<ReactRouter.RouteComponentProps<
 
 
 const pageStyle: React.CSSProperties = {
-  backgroundColor: 'white'
+  backgroundColor: Styles.colors.white,
 };
 
 const navbarBrandStyle: React.CSSProperties = {
@@ -103,11 +105,8 @@ const titleStyle: React.CSSProperties = {
 const navbarStyle: Styles.ExtendedCSSProperties = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
-  '@media screen and (min-width: 992px)': {
-    padding: '8px 245px',
-  },
   textTransform: 'uppercase',
-  backgroundColor: 'white'
+  backgroundColor: Styles.colors.white
 };
 
 const logoStyle: React.CSSProperties = {
@@ -118,13 +117,11 @@ const logoStyle: React.CSSProperties = {
 const logoTextStyle: React.CSSProperties = {
   ...Styles.fonts.helveticaThin,
   paddingLeft: '12px',
-  // width: '89px',
   height: '34px',
   fontSize: '34px',
   fontStyle: 'normal',
   fontStretch: 'normal',
   lineHeight: '40px',
-  // letterSpacing: 'normal',
   color: Styles.colors.preciselyMagenta,
   letterSpacing: '0.01em',
   textTransform: 'none'

@@ -10,6 +10,7 @@
 import * as React from 'react';
 import Radium from 'radium';
 
+import * as RW from 'src/features/common/RadiumWrappers';
 import * as Styles from 'src/constants/styles';
 import { ErrorPage } from 'src/features/common/ErrorPage';
 import { Footer } from 'src/features/common/Footer';
@@ -21,29 +22,24 @@ export class BasePage extends React.Component<any, any> {
 
   render(): JSX.Element {
     return (
-      <div style={container}>
-        <div style={routes}>
-          <ErrorPage>
-            <Routes />
-          </ErrorPage>
-        </div>
+      <RW.Container fluid={true} style={baseContainerStyle}>
+        <ErrorPage>
+          <Routes />
+        </ErrorPage>
         <Footer />
-      </div>
+      </RW.Container>
     );
   }
 
 }
 
 
-const container: React.CSSProperties = {
+const baseContainerStyle: Styles.ExtendedCSSProperties = {
   ...Styles.fonts.helvetica,
   backgroundColor: Styles.colors.defaultBackground,
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100vh',
-};
-
-const routes: React.CSSProperties = {
-  flex: '1 0 auto',
-  width: '100%',
+  paddingLeft: '0px',
+  paddingRight: '0px'
 };
