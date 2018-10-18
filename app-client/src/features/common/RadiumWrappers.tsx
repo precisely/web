@@ -10,7 +10,7 @@ import * as Radium from 'radium';
 import * as Bootstrap from 'reactstrap';
 import {Link as RouterLink} from 'react-router-dom';
 
-export type CSSProperties = React.CSSProperties;
+type CSSProperties = React.CSSProperties;
 
 export const Row = Radium(Bootstrap.Row);
 export const Col = Radium(Bootstrap.Col);

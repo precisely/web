@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AnalysisColors } from 'src/constants/styleGuide';
+import { AnalysisColors } from 'src/constants/styles';
 
 export const AnalysisPanel: React.StatelessComponent<any> = ({titlePrefix, children}: any) => {
   // TODO: handle userSampleStatus

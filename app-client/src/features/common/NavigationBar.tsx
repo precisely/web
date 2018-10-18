@@ -6,33 +6,30 @@
  * without modification, are not permitted.
  */
 
-import * as React from 'react';
+
 import * as Radium from 'radium';
-type CSSProperties = React.CSSProperties;
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'src/features/common/ReusableComponents';
+import * as React from 'react';
+
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSSProperties, white, preciselyMagenta, helveticaThinFont } from 'src/constants/styleGuide';
+import * as RW from 'src/features/common/RadiumWrappers';
+import * as Styles from 'src/constants/styles';
+
 
 const logo = require('src/assets/logo/with-lines/small.png');
+
 
 export interface NavigationBarState {
   isOpen?: boolean;
   backgroundColor?: string;
 }
+
+
 @Radium
 export class NavigationBar extends React.Component {
 
   state: NavigationBarState = {
     isOpen: false,
-    backgroundColor: white,
+    backgroundColor: Styles.colors.white,
   };
 
   toggle = (): void => {
@@ -44,7 +41,7 @@ export class NavigationBar extends React.Component {
   }
 
   handleScroll = (): void => {
-    this.setState({backgroundColor: window.scrollY > 50 ? white : 'transparent'});
+    this.setState({backgroundColor: window.scrollY > 50 ? Styles.colors.white : 'transparent'});
   }
 
   renderLoginStatus() {
@@ -60,9 +57,9 @@ export class NavigationBar extends React.Component {
       }
     }
     return (
-      <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={clickHandler}>
+      <RW.NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={clickHandler}>
         {helper()}
-      </NavLink>
+      </RW.NavLink>
     );
   }
 
@@ -72,13 +69,13 @@ export class NavigationBar extends React.Component {
     navBar.backgroundColor = backgroundColor;
 
     return (
-      <Navbar light={true} sticky="top" expand="md" className="navbar" style={navBar}>
-        <NavbarBrand href="/">
+      <RW.Navbar light={true} sticky="top" expand="md" className="navbar" style={navBar}>
+        <RW.NavbarBrand href="/">
           <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
           <span style={logoTextStyle}>Precise.ly</span>
-        </NavbarBrand>
+        </RW.NavbarBrand>
         {... this.renderMenu()}
-      </Navbar>
+      </RW.Navbar>
     );
   }
 
@@ -86,32 +83,32 @@ export class NavigationBar extends React.Component {
     const {isOpen} = this.state;
 
     return [
-      <NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
+      <RW.NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
       // tslint:disable-next-line jsx-wrap-multiline
-      <Collapse key="collapse" isOpen={isOpen} navbar={true}>
-        <Nav className="ml-auto" navbar={true}>
-          <NavItem className="pr-4">
-            <NavLink href="/about-us">About Us</NavLink>
-          </NavItem>
-          <NavItem className="pr-4">
-            <NavLink href="/report/mecfs">MECFS Report</NavLink>
-          </NavItem>
-          <NavItem>
+      <RW.Collapse key="collapse" isOpen={isOpen} navbar={true}>
+        <RW.Nav className="ml-auto" navbar={true}>
+          <RW.NavItem className="pr-4">
+            <RW.NavLink href="/about-us">About Us</RW.NavLink>
+          </RW.NavItem>
+          <RW.NavItem className="pr-4">
+            <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
+          </RW.NavItem>
+          <RW.NavItem>
             {this.renderLoginStatus()}
-          </NavItem>
-        </Nav>
-      </Collapse>
+          </RW.NavItem>
+        </RW.Nav>
+      </RW.Collapse>
     ];
   }
 
 }
 
-const logoStyle: CSSProperties = {
+const logoStyle: React.CSSProperties = {
   width: '26px',
 };
 
-const logoTextStyle: CSSProperties = {
-  ...helveticaThinFont,
+const logoTextStyle: React.CSSProperties = {
+  ...Styles.fonts.helveticaThin,
   paddingLeft: '4px',
   // width: '89px',
   height: '24px',
@@ -120,12 +117,12 @@ const logoTextStyle: CSSProperties = {
   fontStretch: 'normal',
   lineHeight: 'normal',
   // letterSpacing: 'normal',
-  color: preciselyMagenta,
+  color: Styles.colors.preciselyMagenta,
   // letterSpacing: '-0.6px',
   textTransform: 'none'
 };
 
-const navBar: ExtendedCSSProperties = {
+const navBar: Styles.ExtendedCSSProperties = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
   '@media screen and (min-width: 992px)': {

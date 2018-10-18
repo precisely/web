@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 type CSSProperties = React.CSSProperties;
-import {Row, Col} from 'src/features/common/ReusableComponents';
+import {Row, Col} from 'src/features/common/RadiumWrappers';
 
 export interface WhitePageProps {
   children: React.ReactNode;

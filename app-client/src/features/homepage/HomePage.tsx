@@ -9,13 +9,12 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {RouteComponentProps} from 'react-router';
-type CSSProperties = React.CSSProperties;
-import { helveticaThinFont, preciselyMagenta, preciselyGreen, white, offWhite, helveticaFont,  defaultTextColor } from 'src/constants/styleGuide';
-import { Container, Col } from 'src/features/common/ReusableComponents';
+import * as ReactRouter from 'react-router';
+
+import * as RW from 'src/features/common/RadiumWrappers';
+import * as Styles from 'src/constants/styles';
 import { NavigationBar } from 'src/features/common/NavigationBar';
-import {Button} from 'reactstrap';
-import { Link } from '../common/ReusableComponents';
+
 
 const faces = require('src/assets/home/faces.png');
 const dnaImg = require('src/assets/home/icon-dna.png');
@@ -28,19 +27,19 @@ const scrollParallax = require('react-scroll-parallax');
 const Parallax = scrollParallax.Parallax;
 const ParallaxProvider = scrollParallax.ParallaxProvider;
 
-@Radium
-export class HomePage extends React.Component<RouteComponentProps<void>> {
 
-  // componentDidMount() {
-  //   document.body.style.backgroundColor = white;
-  // }
+@Radium
+export class HomePage extends React.Component<ReactRouter.RouteComponentProps<void>> {
+
+  // NB: This is the app landing page. Its temporary placeholder non-app-enabled
+  // counterpart is LaunchPage.tsx.
 
   render(): JSX.Element {
     return (
-      <div style={{backgroundColor: white, color: defaultTextColor}}>
+      <div style={{backgroundColor: Styles.colors.white, color: Styles.colors.defaultTextColor}}>
         <NavigationBar {...this.props}/>
         <ParallaxProvider>
-          <h1 style={{...titleStyle, color: preciselyGreen, backgroundColor: 'transparent'}}>
+          <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
             Personalized Genetic Reports for Chronic Disease
           </h1>
           <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
@@ -54,13 +53,9 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
     );
   }
 
-  smallTextStyle(): CSSProperties {
-    return {...helveticaFont, color: defaultTextColor};
-  }
-
   renderSlab(content: JSX.Element, alternateColor: boolean = false) {
     return (
-      <div style={{position: 'relative', textAlign: 'center', backgroundColor: alternateColor ? offWhite : white}}>
+      <div style={{position: 'relative', textAlign: 'center', backgroundColor: alternateColor ? Styles.colors.offWhite : Styles.colors.white}}>
         {content}
       </div>
     );
@@ -68,23 +63,23 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
 
   renderValueProp = (): JSX.Element => {
     return (
-      <Container>
+      <RW.Container>
         <div className="pt-4 pb-4" style={{textAlign: 'center'}}>
           <h4 style={headingStyle}>
-            <span style={{color: preciselyMagenta}}>Precise.ly</span>
+            <span style={{color: Styles.colors.preciselyMagenta}}>Precise.ly</span>
             <span> — Discover the genetic basis of your health</span>
           </h4>
         </div>
-        <Container className="pt-2 pb-2">
+        <RW.Container className="pt-2 pb-2">
           <img src={iconGallery} style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', maxWidth: '100%'}} />
-        </Container>
-      </Container>
+        </RW.Container>
+      </RW.Container>
     );
   }
 
   renderFirstProduct = (): JSX.Element => {
     return (
-      <Container className="pt-5 pb-4">
+      <RW.Container className="pt-5 pb-4">
         <h3 style={headingStyle}>
           Our first product: a genetic report for ME/CFS
         </h3>
@@ -92,27 +87,27 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
           For a limited time, get your personalized report for free.
         </h3>
         <img src={dnaImg} style={{maxWidth: '100%', maxHeight: '100%' }}/>
-        <div className="lead row" style={this.smallTextStyle()}>
+        <div className="lead row" style={smallTextStyle}>
           <p>We all have questions about our health. Precise.ly is the first service to deliver personalized
               insights from the world’s top health experts designed to help you understand and improve your health.
           </p>
         </div>
         {/* FIXME: I have no idea how to properly style a button with a link */}
-        <Link to="/report/mecfs">
-          <Button style={{backgroundColor: preciselyMagenta}} size="lg">Get Your Personalized Report Now</Button>
-        </Link>
-      </Container>
+        <RW.Link to="/report/mecfs">
+          <RW.Button style={{backgroundColor: Styles.colors.preciselyMagenta}} size="lg">Get Your Personalized Report Now</RW.Button>
+        </RW.Link>
+      </RW.Container>
     );
   }
 
   renderHowItWorksCol(icon: any, text: string) {
     return (
-      <Col md={{size: 4}} xs={{size: 12}}>
+      <RW.Col md={{size: 4}} xs={{size: 12}}>
         <img src={icon} alt="" style={{height: '100px'}}/>
-        <p className="pt-4" style={this.smallTextStyle()}>
+        <p className="pt-4" style={smallTextStyle}>
           {text}
         </p>
-      </Col>
+      </RW.Col>
     );
   }
 
@@ -136,13 +131,13 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
 
   renderMoreInformation = (): JSX.Element => {
     return (
-      <Container className="pt-5 pb-4 ">
+      <RW.Container className="pt-5 pb-4 ">
         <h3 style={headingStyle}>
           Third Section of the website
         </h3>
         <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
         <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-          <Col md={{size: 6, offset: 3}}>
+          <RW.Col md={{size: 6, offset: 3}}>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
               tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -151,14 +146,15 @@ export class HomePage extends React.Component<RouteComponentProps<void>> {
               eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
               sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
-          </Col>
+          </RW.Col>
         </div>
-      </Container>
+      </RW.Container>
     );
   }
 }
 
-const backgroundStyle: CSSProperties = {
+
+const backgroundStyle: React.CSSProperties = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -167,13 +163,13 @@ const backgroundStyle: CSSProperties = {
   backgroundPosition: 'center',
 };
 
-const headingStyle: CSSProperties = {
-  ...helveticaFont,
+const headingStyle: React.CSSProperties = {
+  ...Styles.fonts.helvetica,
   fontWeight: 300
 };
 
 const titleStyle: React.CSSProperties = {
-  ...helveticaThinFont,
+  ...Styles.fonts.helveticaThin,
   fontSize: '32px',
   fontWeight: 50,
   fontStyle: 'normal',
@@ -182,4 +178,9 @@ const titleStyle: React.CSSProperties = {
   letterSpacing: 'normal',
   textAlign: 'center',
   color: '#00bc3e'
+};
+
+const smallTextStyle: React.CSSProperties = {
+  ...Styles.fonts.helvetica,
+  color: Styles.colors.defaultTextColor
 };

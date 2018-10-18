@@ -8,8 +8,8 @@
 
 import * as React from 'react';
 import * as Radium from 'radium';
-import {Input} from 'src/features/common/ReusableComponents';
-import {removeBorderRadius, inputStyle} from 'src/constants/styleGuide';
+import {Input} from 'src/features/common/RadiumWrappers';
+import {removeBorderRadius, inputStyle} from 'src/constants/styles';
 
 type CSSProperties = React.CSSProperties;
 

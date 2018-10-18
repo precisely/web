@@ -12,7 +12,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {HomePage} from 'src/features/homepage/HomePage';
 import {NavigationBar} from 'src/features/common/NavigationBar';
-import {Container} from 'src/features/common/ReusableComponents';
+import {Container} from 'src/features/common/RadiumWrappers';
 import {mockedHistory, mockedMatch, mockedLocation} from 'src/testUtils';
 
 const scrollParallax = require('react-scroll-parallax');

@@ -10,7 +10,7 @@ import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {WhitePage} from 'src/features/common/WhitePage';
-import {Row, Col} from 'src/features/common/ReusableComponents';
+import {Row, Col} from 'src/features/common/RadiumWrappers';
 
 const unroll = require('unroll');
 unroll.use(it);

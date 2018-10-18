@@ -9,10 +9,10 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import {RouteComponentProps} from 'react-router';
-import {Container, Link} from 'src/features/common/ReusableComponents';
+import {Container, Link} from 'src/features/common/RadiumWrappers';
 import {NavigationBar} from 'src/features/common/NavigationBar';
 import {WhitePage} from 'src/features/common/WhitePage';
-import {header} from 'src/constants/styleGuide';
+import {header} from 'src/constants/styles';
 
 @Radium
 export class Dashboard extends React.Component<RouteComponentProps<void>> {

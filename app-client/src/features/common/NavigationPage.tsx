@@ -9,7 +9,7 @@
 // A page with a navigation bar and standard layout
 import * as React from 'react';
 import { NavigationBar } from './NavigationBar';
-import { Container } from './ReusableComponents';
+import { Container } from './RadiumWrappers';
 
 export class NavigationPage extends React.Component {
 

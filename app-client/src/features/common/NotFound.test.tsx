@@ -11,7 +11,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as FontAwesome from 'react-fontawesome';
 import {ShallowWrapper, shallow, EnzymePropSelector, configure} from 'enzyme';
 import {NotFound} from 'src/features/common/NotFound';
-import {Link} from 'src/features/common/ReusableComponents';
+import {Link} from 'src/features/common/RadiumWrappers';
 
 const unroll = require('unroll');
 unroll.use(it);
