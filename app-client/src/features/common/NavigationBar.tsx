@@ -6,45 +6,36 @@
  * without modification, are not permitted.
  */
 
+
 import * as React from 'react';
-import * as Radium from 'radium';
-type CSSProperties = React.CSSProperties;
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'src/features/common/ReusableComponents';
+import Radium from 'radium';
+
 import * as AuthUtils from 'src/utils/auth';
-import { ExtendedCSSProperties, white, preciselyMagenta, helveticaThinFont } from 'src/constants/styleGuide';
+import * as RW from 'src/features/common/RadiumWrappers';
+import * as Styles from 'src/constants/styles';
+
 
 const logo = require('src/assets/logo/with-lines/small.png');
 
+
 export interface NavigationBarState {
-  isOpen?: boolean;
   backgroundColor?: string;
 }
+
+
 @Radium
 export class NavigationBar extends React.Component {
 
   state: NavigationBarState = {
-    isOpen: false,
-    backgroundColor: white,
+    backgroundColor: 'transparent',
   };
-
-  toggle = (): void => {
-    this.setState({isOpen: !this.state.isOpen});
-  }
 
   componentDidMount(): void {
     window.addEventListener('scroll', this.handleScroll);
   }
 
   handleScroll = (): void => {
-    this.setState({backgroundColor: window.scrollY > 50 ? white : 'transparent'});
+    this.setState({backgroundColor: window.scrollY > 50 ? Styles.colors.white : 'transparent'});
   }
 
   renderLoginStatus() {
@@ -60,77 +51,87 @@ export class NavigationBar extends React.Component {
       }
     }
     return (
-      <NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={clickHandler}>
+      <RW.NavLink id="loginStatus" href="#" onClick={clickHandler}>
         {helper()}
-      </NavLink>
+      </RW.NavLink>
     );
   }
 
   render() {
     const {backgroundColor} = this.state;
-
-    navBar.backgroundColor = backgroundColor;
-
+    navbarStyle.backgroundColor = backgroundColor;
     return (
-      <Navbar light={true} sticky="top" expand="md" className="navbar" style={navBar}>
-        <NavbarBrand href="/">
-          <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
-          <span style={logoTextStyle}>Precise.ly</span>
-        </NavbarBrand>
-        {... this.renderMenu()}
-      </Navbar>
+      <RW.Container fluid={false} className="sticky-top">
+        <RW.Navbar light={true} sticky="top" style={navbarStyle}>
+          <RW.NavbarBrand href="/" style={navbarBrandStyle}>
+            <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+            <span style={logoTextStyle}>Precise.ly</span>
+          </RW.NavbarBrand>
+          {this.renderMenu()}
+        </RW.Navbar>
+      </RW.Container>
     );
   }
 
   renderMenu() {
-    const {isOpen} = this.state;
-
-    return [
-      <NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
-      // tslint:disable-next-line jsx-wrap-multiline
-      <Collapse key="collapse" isOpen={isOpen} navbar={true}>
-        <Nav className="ml-auto" navbar={true}>
-          <NavItem className="pr-4">
-            <NavLink href="/about-us">About Us</NavLink>
-          </NavItem>
-          <NavItem className="pr-4">
-            <NavLink href="/report/mecfs">MECFS Report</NavLink>
-          </NavItem>
-          <NavItem>
-            {this.renderLoginStatus()}
-          </NavItem>
-        </Nav>
-      </Collapse>
-    ];
+    return (
+      <RW.Nav horizontal="true" style={navbarMenuStyle} className="ml-auto">
+        <RW.NavItem>
+          <RW.NavLink href="/about-us">About Us</RW.NavLink>
+        </RW.NavItem>
+        <RW.NavItem>
+          <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
+        </RW.NavItem>
+        <RW.NavItem>
+          {this.renderLoginStatus()}
+        </RW.NavItem>
+      </RW.Nav>
+    );
   }
 
 }
 
-const logoStyle: CSSProperties = {
-  width: '26px',
+
+const navbarHousingStyle: React.CSSProperties = {
+  padding: '0px'
 };
 
-const logoTextStyle: CSSProperties = {
-  ...helveticaThinFont,
-  paddingLeft: '4px',
-  // width: '89px',
-  height: '24px',
-  fontSize: '20px',
+const navbarStyle: React.CSSProperties = {
+  marginLeft: '-10000px',
+  paddingLeft: '10000px',
+  marginRight: '-10000px',
+  paddingRight: '10000px',
+  backgroundColor: 'transparent',
+  letterSpacing: '-0.5px',
+  transition: 'background-color 0.4s ease',
+  textTransform: 'uppercase',
+  flexDirection: 'row',
+  zIndex: 1000000
+};
+
+const navbarBrandStyle: React.CSSProperties = {
+  display: 'flex',
+  verticalAlign: 'middle'
+};
+
+const navbarMenuStyle: React.CSSProperties = {
+  lineHeight: '40px'
+};
+
+const logoStyle: React.CSSProperties = {
+  width: '40px',
+  height: '40px'
+};
+
+const logoTextStyle: React.CSSProperties = {
+  ...Styles.fonts.helveticaThin,
+  paddingLeft: '12px',
+  height: '34px',
+  fontSize: '34px',
   fontStyle: 'normal',
   fontStretch: 'normal',
-  lineHeight: 'normal',
-  // letterSpacing: 'normal',
-  color: preciselyMagenta,
-  // letterSpacing: '-0.6px',
+  lineHeight: '40px',
+  color: Styles.colors.preciselyMagenta,
+  letterSpacing: '0.01em',
   textTransform: 'none'
-};
-
-const navBar: ExtendedCSSProperties = {
-  letterSpacing: '-1px',
-  transition: 'background-color 0.4s ease',
-  '@media screen and (min-width: 992px)': {
-    padding: '8px 245px',
-  },
-  textTransform: 'uppercase',
-  zIndex: 1000000
 };

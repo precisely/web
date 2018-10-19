@@ -8,35 +8,36 @@
 
 
 import * as React from 'react';
-import * as Radium from 'radium';
-import {RouteComponentProps} from 'react-router';
-type CSSProperties = React.CSSProperties;
-import {helveticaThinFont, preciselyMagenta, preciselyGreen} from 'src/constants/styleGuide';
-import { Container } from 'src/features/common/ReusableComponents';
-import { Navbar, NavbarBrand } from '../common/ReusableComponents';
-import { ExtendedCSSProperties } from '../../constants/styleGuide';
+import * as ReactRouter from 'react-router';
+import Radium from 'radium';
+
+import * as RW from 'src/features/common/RadiumWrappers';
+import * as Styles from 'src/constants/styles';
+
 
 const faces = require('src/assets/home/faces.png');
 const iconGallery = require('src/assets/home/icon-gallery.png');
 const logo = require('src/assets/logo/with-lines/small.png');
 
-@Radium
-export class LaunchPage extends React.Component<RouteComponentProps<void>> {
 
-  // componentDidMount() {
-  //   document.body.style.backgroundColor = 'white';
-  // }
+@Radium
+export class LaunchPage extends React.Component<ReactRouter.RouteComponentProps<void>> {
+
+  // NB: This is the temporary placeholder landing page. Its app counterpart is
+  // HomePage.tsx.
 
   render(): JSX.Element {
     return (
-      <div style={{backgroundColor: 'white'}}>
-        <Navbar light={true} sticky="top" expand="md" toggleable="md" className="navbar" style={navBar}>
-          <NavbarBrand href="/">
-            <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
-            <span style={logoTextStyle}>Precise.ly</span>
-          </NavbarBrand>
-        </Navbar>
-        <h1 style={{...titleStyle, color: preciselyGreen, backgroundColor: 'transparent'}}>
+      <div style={pageStyle}>
+        <RW.Container fluid={false}>
+          <RW.Navbar light={true} sticky="top" full={true} style={navbarStyle}>
+            <RW.NavbarBrand href="/" style={navbarBrandStyle}>
+              <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
+              <span style={logoTextStyle}>Precise.ly</span>
+            </RW.NavbarBrand>
+          </RW.Navbar>
+        </RW.Container>
+        <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
           Personalized Genetic Reports for Chronic Disease
         </h1>
         <div style={imageStyle} />
@@ -49,22 +50,33 @@ export class LaunchPage extends React.Component<RouteComponentProps<void>> {
 
   renderValueProp = (): JSX.Element => {
     return (
-      <Container>
+      <RW.Container>
         <div className="pt-4 pb-4" style={{textAlign: 'center'}}>
           <h4 style={headingStyle}>
-            <span style={{color: preciselyMagenta}}>Precise.ly</span>
+            <span style={{color: Styles.colors.preciselyMagenta}}>Precise.ly</span>
             <span> — Discover the genetic basis of your health</span>
           </h4>
         </div>
-        <Container className="pt-2 pb-2">
+        <RW.Container className="pt-2 pb-2">
           <img src={iconGallery} style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', maxWidth: '100%'}} />
-        </Container>
-      </Container>
+        </RW.Container>
+      </RW.Container>
     );
   }
+
 }
 
-const imageStyle: CSSProperties = {
+
+const pageStyle: React.CSSProperties = {
+  backgroundColor: Styles.colors.white,
+};
+
+const navbarBrandStyle: React.CSSProperties = {
+  display: 'flex',
+  verticalAlign: 'middle'
+};
+
+const imageStyle: React.CSSProperties = {
   backgroundImage: `url(${faces})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -73,13 +85,13 @@ const imageStyle: CSSProperties = {
   backgroundPosition: 'center',
 };
 
-const headingStyle: CSSProperties = {
-  ...helveticaThinFont,
+const headingStyle: React.CSSProperties = {
+  ...Styles.fonts.helveticaThin,
   fontWeight: 200
 };
 
 const titleStyle: React.CSSProperties = {
-  ...helveticaThinFont,
+  ...Styles.fonts.helveticaThin,
   fontSize: '36px',
   fontWeight: 50,
   fontStyle: 'normal',
@@ -90,31 +102,27 @@ const titleStyle: React.CSSProperties = {
   color: '#00bc3e'
 };
 
-const navBar: ExtendedCSSProperties = {
+const navbarStyle: Styles.ExtendedCSSProperties = {
   letterSpacing: '-1px',
   transition: 'background-color 0.4s ease',
-  '@media screen and (min-width: 992px)': {
-    padding: '8px 245px',
-  },
   textTransform: 'uppercase',
-  backgroundColor: 'white'
+  backgroundColor: Styles.colors.white
 };
 
-const logoStyle: CSSProperties = {
-  width: '26px',
+const logoStyle: React.CSSProperties = {
+  width: '40px',
+  height: '40px'
 };
 
-const logoTextStyle: CSSProperties = {
-  ...helveticaThinFont,
-  paddingLeft: '4px',
-  // width: '89px',
-  height: '24px',
-  fontSize: '20px',
+const logoTextStyle: React.CSSProperties = {
+  ...Styles.fonts.helveticaThin,
+  paddingLeft: '12px',
+  height: '34px',
+  fontSize: '34px',
   fontStyle: 'normal',
   fontStretch: 'normal',
-  lineHeight: 'normal',
-  // letterSpacing: 'normal',
-  color: preciselyMagenta,
-  // letterSpacing: '-0.6px',
+  lineHeight: '40px',
+  color: Styles.colors.preciselyMagenta,
+  letterSpacing: '0.01em',
   textTransform: 'none'
 };

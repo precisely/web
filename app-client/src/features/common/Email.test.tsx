@@ -9,7 +9,7 @@
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {ShallowWrapper, shallow, configure} from 'enzyme';
-import {Input} from 'src/features/common/ReusableComponents';
+import {Input} from 'src/features/common/RadiumWrappers';
 import {Email, EmailProps} from 'src/features/common/Email';
 
 type CSSProperties = React.CSSProperties;

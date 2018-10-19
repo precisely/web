@@ -12,10 +12,11 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
+import Radium from 'radium';
 import * as FontAwesome from 'react-fontawesome';
-import {Link} from 'src/features/common/ReusableComponents';
+import {Link} from 'src/features/common/RadiumWrappers';
 type CSSProperties = React.CSSProperties;
+
 
 @Radium
 export class NotFound extends React.Component {
@@ -32,6 +33,7 @@ export class NotFound extends React.Component {
     );
   }
 }
+
 
 const container: CSSProperties = {
   height: '100vh',

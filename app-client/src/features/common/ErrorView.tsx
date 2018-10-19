@@ -13,8 +13,9 @@
 
 // Analyzes various e
 import * as React from 'react';
-import * as Radium from 'radium';
+import Radium from 'radium';
 import { DisplayError } from 'src/errors/display-error';
+
 
 // ErrorView expects one of three types of errors:
 //    a JS Error objects (provided as error)
@@ -40,4 +41,5 @@ export class ErrorView extends React.Component<{error: DisplayError}> {
     }
     return null;
   }
+
 }

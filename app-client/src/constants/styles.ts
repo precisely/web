@@ -6,41 +6,53 @@
  * without modification, are not permitted.
  */
 
-// All the global CSS styles and color constants should be written here
 
-import {CSSProperties} from 'react';
+import { CSSProperties } from 'react';
 
-export const grey1 = '#6c757d';
-export const grey2 = '#545b62';
-export const white = '#FFF';
-export const offWhite = '#F5F5F5';
-export const preciselyOrange = '#FF8A4B';
-export const preciselyMagenta = '#c83a6e';
-export const preciselyGreen = '#00bc3e';
-export const defaultTextColor = '#4a4a4a';
 
-export const AnalysisColors = {
+export type ExtendedCSSProperties = CSSProperties & { [key: string]: any }; // to accomodate media queries and other special Radium strings
+
+
+export const colors: {[key: string]: string} = {
+
+  grey1: '#6c757d',
+  grey2: '#545b62',
+  white: '#FFF',
+  offWhite: '#F5F5F5',
+  preciselyOrange: '#FF8A4B',
+  preciselyMagenta: '#c83a6e',
+  preciselyGreen: '#00bc3e',
+  defaultTextColor: '#4a4a4a',
+
+  buttonDefault: '#6c757d',
+  buttonHover: '#545b62',
+  defaultBackground: '#F5F5F5',
+  authLockButtonBackground: '#FF8A4B'
+
+};
+
+
+export const AnalysisColors: {[key: string]: string} = {
   defective: '#fc3f28',
   normal: '#00bc3e',
   enhanced: '#2B3FE0',
   unknown: '#9B9B9B'
 };
 
-export const buttonDefault: string = '#6c757d';
-export const buttonHover: string = '#545b62';
-export const defaultBackground: string = '#F5F5F5';
-export const authLockButtonBackground: string = '#FF8A4B';
 
+export const fonts: {[key: string]: CSSProperties} = {
 
-export type ExtendedCSSProperties = CSSProperties & { [key: string]: any }; // to accomodate media queries and other special Radium strings
+  helvetica: {
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif'
+  },
 
-export const helveticaFont: CSSProperties = {
-  fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+  helveticaThin: {
+    fontFamily: 'HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif',
+    fontWeight: 300
+  }
+
 };
 
-export const helveticaThinFont: CSSProperties = {
-  fontFamily: 'HelveticaNeue-Thin, Helvetica, Arial, sans-serif'
-};
 
 export const inputStyle: ExtendedCSSProperties = {
   width: '385px',
@@ -56,13 +68,13 @@ export const inputStyle: ExtendedCSSProperties = {
 export const formButton: ExtendedCSSProperties = {
   width: '100%',
   color: '#fff',
-  backgroundColor: buttonDefault,
-  borderColor: buttonDefault,
+  backgroundColor: colors.buttonDefault,
+  borderColor: colors.buttonDefault,
   marginTop: '15px',
   ...inputStyle,
   ':hover': {
-    backgroundColor: buttonHover,
-    borderColor: buttonHover
+    backgroundColor: colors.buttonHover,
+    borderColor: colors.buttonHover
   }
 };
 
@@ -80,7 +92,7 @@ export const container: CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: defaultBackground,
+  backgroundColor: colors.defaultBackground,
   padding: 0
 };
 

@@ -7,9 +7,10 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
+import Radium from 'radium';
 type CSSProperties = React.CSSProperties;
-import {Row, Col} from 'src/features/common/ReusableComponents';
+import {Row, Col} from 'src/features/common/RadiumWrappers';
+
 
 export interface WhitePageProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export const WhitePage: React.StatelessComponent<WhitePageProps> = Radium((props
     </Col>
   </Row>
 ));
+
 
 const formColumn: CSSProperties = {
   textAlign: 'center',

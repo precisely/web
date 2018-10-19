@@ -13,7 +13,7 @@ import * as AuthUtils from 'src/utils/auth';
 
 import {FileUpload} from 'src/features/common/FileUpload';
 import {WhitePage} from 'src/features/common/WhitePage';
-import {header} from 'src/constants/styleGuide';
+import {header} from 'src/constants/styles';
 
 import {GetReport} from './queries';
 import {SmartReport} from './smart-report';

@@ -7,10 +7,12 @@
  */
 
 import * as React from 'react';
-import * as Radium from 'radium';
+import Radium from 'radium';
 // import * as FontAwesome from 'react-fontawesome';
 type CSSProperties = React.CSSProperties;
 const loadingGif = require('src/assets/custom/precisely-loading.gif');
+
+
 @Radium
 export class LoadingPage extends React.Component {
 
@@ -25,6 +27,7 @@ export class LoadingPage extends React.Component {
     );
   }
 }
+
 
 const loadingWrapper: CSSProperties = {
   height: '100vh',
