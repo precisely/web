@@ -8,6 +8,7 @@
 
 import * as React from 'react';
 import * as Adapter from 'enzyme-adapter-react-16';
+import * as RW from 'src/features/common/RadiumWrappers';
 import {ShallowWrapper, shallow, configure, EnzymePropSelector} from 'enzyme';
 import {BasePage} from 'src/features/common/BasePage';
 import {Footer} from 'src/features/common/Footer';
@@ -32,6 +33,6 @@ describe('BasePage tests.', () => {
     ['elementName', 'element', 'count'],
     ['Footer', Footer, 1],
     ['Routes', Routes, 1],
-    ['div', 'div', 2],
+    ['Container', RW.Container, 1],
   ]);
 });
