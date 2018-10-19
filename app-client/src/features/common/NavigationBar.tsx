@@ -19,7 +19,6 @@ const logo = require('src/assets/logo/with-lines/small.png');
 
 
 export interface NavigationBarState {
-  isOpen?: boolean;
   backgroundColor?: string;
 }
 
@@ -28,13 +27,8 @@ export interface NavigationBarState {
 export class NavigationBar extends React.Component {
 
   state: NavigationBarState = {
-    isOpen: false,
-    backgroundColor: Styles.colors.white,
+    backgroundColor: 'transparent',
   };
-
-  toggle = (): void => {
-    this.setState({isOpen: !this.state.isOpen});
-  }
 
   componentDidMount(): void {
     window.addEventListener('scroll', this.handleScroll);
@@ -57,7 +51,7 @@ export class NavigationBar extends React.Component {
       }
     }
     return (
-      <RW.NavLink id="loginStatus" style={{cursor: 'pointer'}} onClick={clickHandler}>
+      <RW.NavLink id="loginStatus" href="#" onClick={clickHandler}>
         {helper()}
       </RW.NavLink>
     );
@@ -67,53 +61,61 @@ export class NavigationBar extends React.Component {
     const {backgroundColor} = this.state;
     navbarStyle.backgroundColor = backgroundColor;
     return (
-      <RW.Container fluid={false}>
+      <RW.Container fluid={false} className="sticky-top">
         <RW.Navbar light={true} sticky="top" style={navbarStyle}>
           <RW.NavbarBrand href="/" style={navbarBrandStyle}>
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
             <span style={logoTextStyle}>Precise.ly</span>
           </RW.NavbarBrand>
-          {... this.renderMenu()}
+          {this.renderMenu()}
         </RW.Navbar>
       </RW.Container>
     );
   }
 
   renderMenu() {
-    const {isOpen} = this.state;
-
-    return [
-      <RW.NavbarToggler key="toggler" className="navbar-toggler-right" onClick={this.toggle} />,
-      // tslint:disable-next-line jsx-wrap-multiline
-      <RW.Collapse key="collapse" isOpen={isOpen} navbar={true}>
-        <RW.Nav className="ml-auto" navbar={true}>
-          <RW.NavItem className="pr-4">
-            <RW.NavLink href="/about-us">About Us</RW.NavLink>
-          </RW.NavItem>
-          <RW.NavItem className="pr-4">
-            <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
-          </RW.NavItem>
-          <RW.NavItem>
-            {this.renderLoginStatus()}
-          </RW.NavItem>
-        </RW.Nav>
-      </RW.Collapse>
-    ];
+    return (
+      <RW.Nav horizontal="true" style={navbarMenuStyle} className="ml-auto">
+        <RW.NavItem>
+          <RW.NavLink href="/about-us">About Us</RW.NavLink>
+        </RW.NavItem>
+        <RW.NavItem>
+          <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
+        </RW.NavItem>
+        <RW.NavItem>
+          {this.renderLoginStatus()}
+        </RW.NavItem>
+      </RW.Nav>
+    );
   }
 
 }
 
 
-const navbarStyle: Styles.ExtendedCSSProperties = {
-  letterSpacing: '-1px',
+const navbarHousingStyle: React.CSSProperties = {
+  padding: '0px'
+};
+
+const navbarStyle: React.CSSProperties = {
+  marginLeft: '-10000px',
+  paddingLeft: '10000px',
+  marginRight: '-10000px',
+  paddingRight: '10000px',
+  backgroundColor: 'transparent',
+  letterSpacing: '-0.5px',
   transition: 'background-color 0.4s ease',
   textTransform: 'uppercase',
+  flexDirection: 'row',
   zIndex: 1000000
 };
 
 const navbarBrandStyle: React.CSSProperties = {
   display: 'flex',
   verticalAlign: 'middle'
+};
+
+const navbarMenuStyle: React.CSSProperties = {
+  lineHeight: '40px'
 };
 
 const logoStyle: React.CSSProperties = {
