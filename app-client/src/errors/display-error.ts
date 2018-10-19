@@ -24,7 +24,6 @@ export abstract class DisplayError extends Error {
     this.resolution = resolution;
     this.description = description;
 
-    Error.captureStackTrace(this, DisplayError);
     const actualProto = new.target.prototype;
     const _this: any = this; // tslint:disable-line 
     if (Object.setPrototypeOf) {
