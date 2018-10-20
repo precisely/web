@@ -19,7 +19,7 @@ export class AboutUs extends React.Component<RouteComponentProps<void>> {
   render(): JSX.Element {
     return (
       <NavigationPage {...this.props}>
-        <WhitePage style={contentStyle}>
+        <WhitePage>
           <h2 style={pageHeader}>About Us</h2>
           <h5 style={subHeader}>The story behind Precise.ly</h5>
           <p style={paragraph}>We started out Curious, we’re now Precise.ly.</p>
@@ -75,14 +75,4 @@ const paragraph: CSSProperties = {
   textAlign: 'left',
   fontSize: '16px',
   ...fontWeight,
-};
-
-const contentStyle = {
-  width: '936px',
-  // the following syntax was added by CauseCode to DRY out media queries
-  // I don't understand this but, found the following - <AM>:
-  // https://gist.github.com/nickpiesco/9bef21b4f9e236b4430e
-  '@media screen and (max-width: 700px)': {
-    width: '350px',
-  },
 };
