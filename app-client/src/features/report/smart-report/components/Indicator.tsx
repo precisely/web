@@ -79,5 +79,5 @@ const indicatorImageStyle = (icon: string, state: string, disabled: boolean): St
     ':active': {
       backgroundImage: `url(${BUTTON[icon][state][disabled ? 'disabled' : 'down']})`
     }
-  }
+  };
 };
