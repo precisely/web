@@ -8,6 +8,7 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import initializeReactFastclick = require('react-fastclick');
 import {BrowserRouter} from 'react-router-dom';
 import {ApolloClient} from 'apollo-client';

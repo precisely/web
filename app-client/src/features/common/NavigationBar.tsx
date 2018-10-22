@@ -20,6 +20,7 @@ const logo = require('src/assets/logo/with-lines/small.png');
 
 export interface NavigationBarState {
   backgroundColor?: string;
+  isOpen: boolean;
 }
 
 
@@ -28,6 +29,7 @@ export class NavigationBar extends React.Component {
 
   state: NavigationBarState = {
     backgroundColor: 'transparent',
+    isOpen: false
   };
 
   componentDidMount(): void {
@@ -36,6 +38,10 @@ export class NavigationBar extends React.Component {
 
   handleScroll = (): void => {
     this.setState({backgroundColor: window.scrollY > 50 ? Styles.colors.white : 'transparent'});
+  }
+
+  toggleNavbar = (): void => {
+    this.setState({isOpen: !this.state.isOpen});
   }
 
   renderLoginStatus() {
@@ -62,11 +68,12 @@ export class NavigationBar extends React.Component {
     navbarStyle.backgroundColor = backgroundColor;
     return (
       <RW.Container fluid={false} className="sticky-top">
-        <RW.Navbar light={true} sticky="top" style={navbarStyle}>
+        <RW.Navbar light={true} sticky="top" expand="md" style={navbarStyle}>
           <RW.NavbarBrand href="/" style={navbarBrandStyle}>
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
             <span style={logoTextStyle}>Precise.ly</span>
           </RW.NavbarBrand>
+          <RW.NavbarToggler onClick={this.toggleNavbar} style={navbarTogglerStyle} />
           {this.renderMenu()}
         </RW.Navbar>
       </RW.Container>
@@ -75,17 +82,19 @@ export class NavigationBar extends React.Component {
 
   renderMenu() {
     return (
-      <RW.Nav horizontal="true" style={navbarMenuStyle} className="ml-auto">
-        <RW.NavItem>
-          <RW.NavLink href="/about-us">About Us</RW.NavLink>
-        </RW.NavItem>
-        <RW.NavItem>
-          <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
-        </RW.NavItem>
-        <RW.NavItem>
-          {this.renderLoginStatus()}
-        </RW.NavItem>
-      </RW.Nav>
+      <RW.Collapse navbar={true} isOpen={this.state.isOpen}>
+        <RW.Nav horizontal="true" style={navbarMenuStyle}>
+          <RW.NavItem>
+            <RW.NavLink href="/about-us">About Us</RW.NavLink>
+          </RW.NavItem>
+          <RW.NavItem>
+            <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
+          </RW.NavItem>
+          <RW.NavItem>
+            {this.renderLoginStatus()}
+          </RW.NavItem>
+        </RW.Nav>
+      </RW.Collapse>
     );
   }
 
@@ -114,8 +123,13 @@ const navbarBrandStyle: React.CSSProperties = {
   verticalAlign: 'middle'
 };
 
-const navbarMenuStyle: React.CSSProperties = {
+const navbarTogglerStyle: React.CSSProperties = {
   lineHeight: '40px'
+};
+
+const navbarMenuStyle: React.CSSProperties = {
+  lineHeight: '40px',
+  marginLeft: 'auto'
 };
 
 const logoStyle: React.CSSProperties = {
