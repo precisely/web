@@ -333,7 +333,4 @@ https://www.packtpub.com/graphics/9781784393755/graphics/3755OT_01_28.jpg">
 ### GraphQL GUI
 
 1. Login on the site (this gets an auth token from Auth0 and saves it in your local storage)
-2. Navigate to `/api/gui`
-
-<img width="800" height="500" alt="playground" src="https://user-images.githubusercontent.com/1587005/32695336-96dbbe16-c70d-11e7-96b9-c7ef4e9ba32c.gif">
-
+2. Navigate to `https://api-{yoursubdomain}.codeprecisely.net/graphql`
