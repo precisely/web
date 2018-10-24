@@ -114,7 +114,7 @@ workflows:
             #         - build-backend
 
             # run this job only when dev branch is build
-            - beta-deploy-backend:
+            - deploy-beta-backend:
                 filters:
                     branches:
                         only:
@@ -123,13 +123,13 @@ workflows:
                     - build-backend
                     - build-frontend
 
-            - beta-deploy-frontend:
+            - deploy-beta-frontend:
                 filters:
                     branches:
                         only:
                             - dev
                 requires:
-                    - beta-deploy-backend
+                    - deploy-beta-backend
 
 jobs:
     build-frontend:
@@ -169,7 +169,7 @@ jobs:
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
                     
-    beta-deploy-frontend:
+    deploy-beta-frontend:
         <<: *frontend_defaults
         steps:
             - *checkout
@@ -179,7 +179,7 @@ jobs:
                 name: Deploying frontend on Beta
                 command: ENV=beta yarn deploy
 
-    beta-deploy-backend:
+    deploy-beta-backend:
         <<: *backend_defaults
         steps:
             - *checkout
