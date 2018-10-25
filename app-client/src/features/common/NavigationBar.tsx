@@ -63,11 +63,21 @@ export class NavigationBar extends React.Component {
     );
   }
 
+  renderStyle() {
+    return [
+      <Radium.Style scopeSelector=".navbar-collapse.collapsing" rules={navbarHousingStyle} />,
+      <Radium.Style scopeSelector=".nav-link" rules={navlinkStyle} />
+    ];
+  }
+
   render() {
     const {backgroundColor} = this.state;
     navbarStyle.backgroundColor = backgroundColor;
+    // The <style> tags below enforces centering for the menu during the collapsing
+    // animation. Not truly scoped, unfortunately.
     return (
       <RW.Container fluid={false} className="sticky-top">
+        {this.renderStyle()}
         <RW.Navbar light={true} sticky="top" expand="md" style={navbarStyle}>
           <RW.NavbarBrand href="/" style={navbarBrandStyle}>
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
@@ -82,7 +92,7 @@ export class NavigationBar extends React.Component {
 
   renderMenu() {
     return (
-      <RW.Collapse navbar={true} isOpen={this.state.isOpen}>
+      <RW.Collapse navbar={true} isOpen={this.state.isOpen} style={this.state.isOpen && navbarHousingStyle}>
         <RW.Nav horizontal="true" style={navbarMenuStyle}>
           <RW.NavItem>
             <RW.NavLink href="/about-us">About Us</RW.NavLink>
@@ -102,7 +112,7 @@ export class NavigationBar extends React.Component {
 
 
 const navbarHousingStyle: React.CSSProperties = {
-  padding: '0px'
+  display: 'inline-flex'
 };
 
 const navbarStyle: React.CSSProperties = {
@@ -127,9 +137,18 @@ const navbarTogglerStyle: React.CSSProperties = {
   lineHeight: '40px'
 };
 
-const navbarMenuStyle: React.CSSProperties = {
+const navbarMenuStyle: Styles.ExtendedCSSProperties = {
+  height: '100%',
   lineHeight: '40px',
-  marginLeft: 'auto'
+  marginLeft: 'auto',
+  '@media screen and (max-width: 770px)': {
+    marginRight: 'auto'
+  }
+};
+
+const navlinkStyle: React.CSSProperties = {
+  paddingLeft: '0.5em',
+  paddingRight: '0.5em'
 };
 
 const logoStyle: React.CSSProperties = {
