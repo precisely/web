@@ -65,8 +65,8 @@ export class NavigationBar extends React.Component {
 
   renderStyle() {
     return [
-      <Radium.Style scopeSelector=".navbar-collapse.collapsing" rules={navbarHousingStyle} />,
-      <Radium.Style scopeSelector=".nav-link" rules={navlinkStyle} />
+      <Radium.Style key="1" scopeSelector=".navbar-collapse.collapsing" rules={navbarHousingStyle} />,
+      <Radium.Style key="2" scopeSelector=".nav-link" rules={navlinkStyle} />
     ];
   }
 
