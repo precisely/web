@@ -22,6 +22,7 @@ export const colors: {[key: string]: string} = {
   preciselyOrange: '#FF8A4B',
   preciselyMagenta: '#c83a6e',
   preciselyGreen: '#00bc3e',
+  preciselyPurple: '#9d6ca0',
   defaultTextColor: '#4a4a4a',
 
   buttonDefault: '#6c757d',

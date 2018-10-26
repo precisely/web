@@ -14,7 +14,10 @@ export const GetReport = gql`
       slug
       id
       title
-      personalization
+      personalization {
+        status
+        elements
+      }
     }
   }
 `;

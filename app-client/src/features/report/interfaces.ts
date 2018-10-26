@@ -11,7 +11,10 @@ export interface ReportData {
   title: string;
   slug: string;
   content: string;
-  personalization: any[];
+  personalization: {
+    status?: string,
+    elements: any[]
+  };
   topLevel?: boolean;
   requirements: string[];
 }

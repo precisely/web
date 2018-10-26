@@ -6,16 +6,16 @@
 * without modification, are not permitted.
 */
 import { IResolvers } from 'graphql-tools';
-import {ReducedElement} from 'smart-report';
 
 import { IContext } from 'accesscontrol-plus';
 
 import { GraphQLContext, accessControl } from 'src/services/graphql';
 
-import {Report, ReportState, ReportAttributes} from './models';
-import {Personalizer} from './services/smart-report';
+import { Report, ReportState, ReportAttributes } from './models';
+import { Personalizer } from './services/smart-report';
 import { UserSampleRequirement } from 'src/services/user-sample/external';
-import {  NotFoundError } from 'src/common/errors';
+import { NotFoundError } from 'src/common/errors';
+import { Personalization } from './services/smart-report/personalizer';
 
 function reportPublished({resource}: IContext) {
   return resource.get('state') === 'published';
@@ -31,6 +31,8 @@ function userIdArgumentIsUserOrImplicit({args, user}: IContext) {
 
 // tslint:disable no-unused-expression
 accessControl
+  // note: currently, reports can only be accessed by logged in users
+  //       this might need to change when we make reports SEO-accessible
   .grant('user')
     .resource('report')
       .read.onFields('*', '!content', '!variantIndexes', '!personalization').where(reportPublished)
@@ -134,11 +136,10 @@ export const resolvers = {
     ...GraphQLContext.propertyResolver('report', {
       personalization(
         report: Report, { userId }: IContext, context: GraphQLContext
-    ): Promise<ReducedElement[]> {
+      ): Promise<Personalization> {
         userId = userId || context.userId;
         const personalizer = new Personalizer(report, userId);
-        const result = personalizer.personalize();
-        return result;
+        return personalizer.personalize();
       }
     })
   }

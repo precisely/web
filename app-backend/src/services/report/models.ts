@@ -16,7 +16,7 @@ import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 
 import {Parser, Analyzer} from './services/smart-report';
 import { ReportContentError } from './errors';
-import { UserSampleRequirement, JoiUserSampleRequirement } from 'src/services/user-sample/external';
+import { UserSampleRequirement, JoiUserSampleRequirement, UserSampleStatus } from 'src/services/user-sample/external';
 
 const { uuid } = dynogels.types;
 

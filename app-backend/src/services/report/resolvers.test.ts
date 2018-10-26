@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-03 17:42:55
+ * @Last Modified time: 2018-10-26 07:41:22
  */
 
 // tslint:disable no-any
@@ -147,15 +147,18 @@ describe('Report resolver', function () {
       const context = makeContext({ userId: 'user-hom10c', roles: ['user']});
       const personalizationResolver = <IFieldResolver<Report, GraphQLContext>> resolvers.Report.personalization;
       const result = await personalizationResolver(report, { userId: 'user-hom10c' }, context, <any> null );
-      expect(result).toEqual([
-        { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-          attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
-          { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
-            selfClosing: false, children: [
-            { type: 'text', blocks: ['<p>Homozygote-C</p>'], reduced: true }
+      expect(result).toEqual({
+        status: 'ready',
+        elements: [
+          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+            attrs: { personalize: true }, reduced: true, selfClosing: false, children: [
+            { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
+              selfClosing: false, children: [
+              { type: 'text', blocks: ['<p>Homozygote-C</p>'], reduced: true }
+            ]}
           ]}
-        ]}
-      ]);
+        ]
+      });
     });
 
     it('should throw an error if a different user requests personalization', async function () {

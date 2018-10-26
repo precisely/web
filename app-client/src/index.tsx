@@ -46,9 +46,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.map((values: any) => {
       console.log(`Error: ${JSON.stringify(values)}`);
-      // console.log(
-      //   `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      // );
     });
   }
 

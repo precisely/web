@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:47 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 14:21:53
+ * @Last Modified time: 2018-10-26 07:33:01
  */
 
 import { ReducibleTagElement, Context, ReducerFunction, Attributes, removeTags } from 'smart-report';
@@ -26,9 +26,8 @@ export const AnalysisPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Co
   const mode: string = isString(ctx.mode) ? ctx.mode.toLowerCase() : 'first';
   let foundMatch = false;
   // set the status of the AnalysisPanel
-  const userSampleStatus = ctx.__userSampleRequirements.status;
-  elt.attrs.userSampleStatus = userSampleStatus;
-  if (userSampleStatus === 'ready') {
+  elt.attrs.personalize = ctx.personalize;
+  if (ctx.personalize) {
     return [removeTags(elt.children, ({__name, case: caseValue }: Attributes) => {
       // remove all analysis tags (foundMatch or if match has been found) 
       const remove = __name === 'analysis' && (!caseValue || foundMatch);
