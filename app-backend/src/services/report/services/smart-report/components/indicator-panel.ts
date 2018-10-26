@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-17 08:26:01 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 12:39:37
+ * @Last Modified time: 2018-10-26 07:35:49
  */
 
  //
@@ -28,14 +28,14 @@ export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: C
   normal = normal || 'normal'; // text for green label
   defective = defective || 'defective'; // text for red label
   defaultState = defaultState || 'unknown';
-  const userSampleStatus = ctx.__userSampleRequirements.status;
-  elt.attrs.userSampleStatus = userSampleStatus;
+  elt.attrs.personalize = ctx.personalize;
   elt.children.map(child => {
     if (!isTagElement(child) || child.name !== 'indicator') {
       throw new Error(`IndicatorPanel may only contain Indicator elements`);
     }
+    // allow passing 'default' and 'require' properties to children:
     child.attrs.default = child.attrs.default || defaultState;
-    child.attrs.require = child.attrs.require && userSampleStatus === 'ready';
+    child.attrs.require = child.attrs.require;
   });
   return [elt.children, ctx];
 };
@@ -55,7 +55,9 @@ export const Indicator: ReducerFunction = (elt: ReducibleTagElement, ctx: Contex
   //
   // The problem with this approach is - which condition is matched first?
   // Possible idea for preserving the overall sematics: match in the order provided.
-  if (!elt.attrs.require) {  // requirements not satisfied
+  if (!ctx.personalize) {
+    elt.attrs.state = 'unknown';
+  } else if (!elt.attrs.require) {  // requirements not satisfied
     elt.attrs.state = 'unknown';
   } else if (elt.attrs.defective) {
     elt.attrs.state = 'defective';

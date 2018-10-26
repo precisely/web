@@ -43,43 +43,45 @@ describe('Report schema', function () {
     expect(result).toEqual({
       data: {
         reports: [
-          { id: 'str', ownerId: 'str', title: 'str', content: 'str', personalization: [{type: 'JSON'}]},
-          { id: 'str', ownerId: 'str', title: 'str', content: 'str', personalization: [{type: 'JSON'}]}
+          { id: 'str', ownerId: 'str', title: 'str', content: 'str', 
+            personalization: { status: 'str', elements: [{type: 'JSON'}] }},
+          { id: 'str', ownerId: 'str', title: 'str', content: 'str', 
+            personalization: { status: 'str', elements: [{type: 'JSON'}] }}
         ]
       }
     });
   }, [`
     query {
       reports {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }`, `
     query {
       reports(state: draft) {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }
     `, `
     query {
       reports(state: published) {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }
     `, `
     query {
       reports(state: pending) {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }
     `, `
     query {
       reports(ownerId: "123123") {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }`, `
     query {
       reports(ownerId: "123123", state: pending) {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }`
   ]);
@@ -88,19 +90,20 @@ describe('Report schema', function () {
     const result = await graphql(mockSchema, query, null, {}, {});
     expect(result).toEqual({
       data: {
-        report: { id: 'str', ownerId: 'str', title: 'str', content: 'str', personalization: [{type: 'JSON'}]}
+        report: { id: 'str', ownerId: 'str', title: 'str', content: 'str', 
+        personalization: { status: 'str', elements: [{type: 'JSON'}] }}
       }
     });
   }, [`
     query {
       report(slug: "some-slug") {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }
   `, `
     query {
       report(id: "report-id") {
-        id ownerId content personalization title
+        id ownerId content personalization { status elements } title
       }
     }
   `    

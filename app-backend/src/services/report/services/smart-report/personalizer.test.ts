@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:28 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 15:59:09
+ * @Last Modified time: 2018-10-26 07:37:30
  */
 
 const cases = require('jest-in-case');
@@ -20,6 +20,7 @@ import {Personalizer} from './personalizer';
 import { addSimpleReportFixtures } from '../../fixtures/simple';
 import { addBetaReportFixtures } from 'src/services/report/fixtures/beta';
 import { isTagElement } from 'smart-report';
+import { Personalization } from './personalizer';
 
 describe('Personalizer', function () {
   describe('constructor', function () {
@@ -34,15 +35,16 @@ describe('Personalizer', function () {
     describe('when the sample has error status', function () {
       afterAll(destroyFixtures);
 
-      it('should not show analysispanel children and should report the error as an attribute', async function() {
+      it('should not show analysispanel children and personalization should be false', async function() {
         const { report } = await addSimpleReportFixtures();
         const personalizer = new Personalizer(report, 'user-sample-error');
-        const personalizedDOM = await personalizer.personalize();
-        expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-            attrs: { userSampleStatus: 'error' }, reduced: true, selfClosing: false, 
-            children: []}
-        ]);
+        const personalization = await personalizer.personalize();
+        expect(personalization).toEqual({
+          status: 'error',
+          elements: [{ type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+            attrs: { personalize: false }, reduced: true, selfClosing: false, 
+            children: []}]
+        });
       });
     });
 
@@ -52,12 +54,15 @@ describe('Personalizer', function () {
       it('should personalize the content for a wildtype user', async function() {
         const { report } = await addSimpleReportFixtures();
         const personalizer = new Personalizer(report, 'user-sample-missing');
-        const personalizedDOM = await personalizer.personalize();
-        expect(personalizedDOM).toEqual([
-          { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-            attrs: { userSampleStatus: undefined }, reduced: true, selfClosing: false, 
-            children: []}
-        ]);
+        const personalization = await personalizer.personalize();
+        expect(personalization).toMatchObject({
+          status: undefined,
+          elements: [
+            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { personalize: false }, reduced: true, selfClosing: false, 
+              children: []}
+          ]
+        } );
       });
     });
 
@@ -73,87 +78,110 @@ describe('Personalizer', function () {
 
         it('should personalize the content for a wildtype user', async function() {
           const personalizer = new Personalizer(report, 'user-wt10');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-              attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
-              { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
-                selfClosing: false, children: [
-                { type: 'text', blocks: ['<p>Wild Type</p>'], reduced: true }
-              ]}
-            ]}
-          ]);
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [{ 
+              type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { personalize: true }, reduced: true, selfClosing: false, 
+              children: [
+                { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
+                  selfClosing: false, children: [
+                  { type: 'text', blocks: ['<p>Wild Type</p>'], reduced: true }
+                ]}
+              ]
+            }]
+          });
         });
         
         it('should personalize the content for a heterozygotic user with altbase 1', async function() {
           const personalizer = new Personalizer(report, 'user-het10t');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-              attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [{
+              type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { personalize: true }, reduced: true, selfClosing: false, children: [
               { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
                 selfClosing: false, children: [
                 { type: 'text', blocks: ['<p>Heterozygote-T</p>'], reduced: true }
               ]}
-            ]}
-          ]);
+            ]}]
+          });
         });
 
         it('should personalize the content for a heterozygotic user with altbase 2', async function() {
           const personalizer = new Personalizer(report, 'user-het10c');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-              attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [{ 
+              type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { personalize: true }, reduced: true, selfClosing: false, children: [
               { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
                 selfClosing: false, children: [
                 { type: 'text', blocks: ['<p>Heterozygote-C</p>'], reduced: true }
               ]}
             ]}
-          ]);
+          ]});
         });
 
         it('should personalize the content for a user homozygotic for altbase 1', async function() {
           const personalizer = new Personalizer(report, 'user-hom10t');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
-            { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-              attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
-              { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
-                selfClosing: false, children: [
-                { type: 'text', blocks: ['<p>Homozygote-T</p>'], reduced: true }
-              ]}
-            ]}
-          ]);
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [{ 
+              type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
+              attrs: { personalize: true }, reduced: true, selfClosing: false, 
+              children: [
+                { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
+                  selfClosing: false, children: [
+                  { type: 'text', blocks: ['<p>Homozygote-T</p>'], reduced: true }
+                ]}
+              ]
+            }]
+          });
         });
 
         it('should personalize the content for a user homozygotic for altbase 2', async function() {
           const personalizer = new Personalizer(report, 'user-hom10c');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [
               { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-                attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
-              { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
-                  selfClosing: false, children: [
-                  { type: 'text', blocks: ['<p>Homozygote-C</p>'], reduced: true }
-              ]}
-            ]}
-          ]);
+                attrs: { personalize: true }, reduced: true, selfClosing: false, 
+                children: [
+                  { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
+                    selfClosing: false, children: [
+                      { type: 'text', blocks: ['<p>Homozygote-C</p>'], reduced: true }
+                    ]
+                  } ]
+              }
+            ]
+          });
         });
-
         it('should personalize the content for a user with a compound heterozygotic mutation', async function() {
           const personalizer = new Personalizer(report, 'user-cmpnd10');
-          const personalizedDOM = await personalizer.personalize();
-          expect(personalizedDOM).toEqual([
+          const personalization = await personalizer.personalize();
+          expect(personalization).toMatchObject({
+            status: 'ready',
+            elements: [
               { type: 'tag', name: 'analysispanel', rawName: 'AnalysisPanel', 
-                attrs: { userSampleStatus: 'ready' }, reduced: true, selfClosing: false, children: [
-              { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
-                  selfClosing: false, children: [
-                  { type: 'text', blocks: ['<p>Compound Heterozygote</p>'], reduced: true }
-              ]}
-            ]}
-          ]);
+                attrs: { personalize: true }, reduced: true, selfClosing: false, 
+                children: [
+                  { type: 'tag', name: 'analysis', rawName: 'Analysis', attrs: { case: true }, reduced: true, 
+                      selfClosing: false, children: [
+                      { type: 'text', blocks: ['<p>Compound Heterozygote</p>'], reduced: true }
+                    ]
+                  }
+                ]
+              }
+            ]
+          });
         });
+        
       });
 
       describe('with beta data', function () {
@@ -172,9 +200,9 @@ describe('Personalizer', function () {
 
           it('should personalize the report', async function () {
             const personalizer = new Personalizer(geneReport, 'user-wt');
-            const elements = await personalizer.personalize();
-            expect(elements).toBeInstanceOf(Array);
-            expect(elements.map(elt => [elt.type, isTagElement(elt) ? elt.name : null])).toEqual([
+            const personalization: Personalization = await personalizer.personalize();
+            expect(personalization).toBeInstanceOf(Personalization);
+            expect(personalization.elements.map(elt => [elt.type, isTagElement(elt) ? elt.name : null])).toEqual([
               [ 'text', null],
               [ 'tag', 'topicbar' ],
               [ 'tag', 'genemap'],
@@ -189,7 +217,7 @@ describe('Personalizer', function () {
             [userId, analysisName]: [string, string]
           ) {
             const personalizer = new Personalizer(geneReport, userId);
-            const elements = await personalizer.personalize();
+            const {elements} = await personalizer.personalize();
             expect(elements[3]).toMatchObject({
               type: 'tag',
               name: 'analysispanel',
@@ -220,7 +248,7 @@ describe('Personalizer', function () {
               [userId, geneStates]: [string, [string, string][]]
             ) => {
             const personalizer = new Personalizer(genePanelReport, userId);
-            const elements = await personalizer.personalize();
+            const {elements} = await personalizer.personalize();
             const children = map(geneStates, (state, gene) => ({
               type: 'tag',
               name: 'indicator',

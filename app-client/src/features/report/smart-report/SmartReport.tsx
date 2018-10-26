@@ -20,10 +20,7 @@ const ComponentMap = transform<any, any>(
 
 export const SmartReport: React.StatelessComponent<{ elements: any[]}> = (
   { elements }
-) => { // tslint:disable-line no-any
-  const result = <div className="smart-report">{...elementsToReact(elements, 'smart-report')}</div>;
-  return result;
-};
+) => <div className="smart-report">{...elementsToReact(elements, 'smart-report')}</div>;
 
 function elementsToReact(elements: any[], parentKey: string) {
   let index = 0;

@@ -7,10 +7,11 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:49:33 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-24 12:36:07
+ * @Last Modified time: 2018-10-25 16:11:50
  */
 
 import gql from 'graphql-tag';
+import {default as personalizationSchema} from './services/smart-report/schema';
 
 export default [gql`
 type Report {
@@ -20,7 +21,7 @@ type Report {
   slug: String,
   content: String,
   requiredVariants: [String],
-  personalization(userId: String): JSON,
+  personalization(userId: String): Personalization,
   createdAt: String,
   updatedAt: String
 }
@@ -45,4 +46,6 @@ extend type Mutation {
   createReport(title: String!, content: String!, userSampleRequirements: [UserSampleRequirement]): Report,
   updateReport(id: String!, title: String!, content: String!, userSampleRequirements: [UserSampleRequirement]): Report,
   publishReport(id: String): Report
-}`];
+}`, 
+  ...personalizationSchema
+];
