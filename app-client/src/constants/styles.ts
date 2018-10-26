@@ -105,13 +105,6 @@ export const header: CSSProperties = {
   marginTop: '65px'
 };
 
-export const loginAndSignupPanel: ExtendedCSSProperties = {
-  width: '597px',
-  '@media screen and (max-width: 700px)': {
-    width: '345px'
-  }
-};
-
 export const alignCenter: CSSProperties = {
   textAlign: 'center' // '-webkit-center'
 };
