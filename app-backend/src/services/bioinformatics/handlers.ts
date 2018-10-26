@@ -104,7 +104,7 @@ export async function getUploadSignedURL(event: LambdaProxyAPIGatewayEvent, cont
     // XXX: Signature version 4 is critical! Without it, uploads will fail with
     // mysterious signature and CORS errors.
     const s3 = new AWS.S3({signatureVersion: 'v4'});
-    const signedUrl = s3.getSignedUrl('putObject', params);
+    const signedUrl = await s3.getSignedUrl('putObject', params);
     return signedUrl;
   } catch (error) {
     log.error(`error: ${error}`);
