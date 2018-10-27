@@ -66,50 +66,7 @@ export const inputStyle: ExtendedCSSProperties = {
   }
 };
 
-export const formButton: ExtendedCSSProperties = {
-  width: '100%',
-  color: '#fff',
-  backgroundColor: colors.buttonDefault,
-  borderColor: colors.buttonDefault,
-  marginTop: '15px',
-  ...inputStyle,
-  ':hover': {
-    backgroundColor: colors.buttonHover,
-    borderColor: colors.buttonHover
-  }
-};
 
 export const removeBorderRadius: CSSProperties = {
   borderRadius: 0
-};
-
-export const noBorderTop: CSSProperties = {
-  borderTop: 'none',
-  ...removeBorderRadius
-};
-
-export const container: CSSProperties = {
-  height: '-webkit-fill-available',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: colors.defaultBackground,
-  padding: 0
-};
-
-export const header: CSSProperties = {
-  textAlign: 'center',
-  fontWeight: 200,
-  fontSize: '30px',
-  marginBottom: '25px',
-  marginTop: '65px'
-};
-
-export const alignCenter: CSSProperties = {
-  textAlign: 'center' // '-webkit-center'
-};
-
-export const formMargin: CSSProperties = {
-  marginTop: '37px',
-  marginBottom: '35px'
 };

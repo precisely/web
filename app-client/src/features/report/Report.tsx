@@ -6,13 +6,14 @@
  * without modification, are not permitted.
  */
 
+
 import * as React from 'react';
+import Radium from 'radium';
 import { graphql, OptionProps } from 'react-apollo';
 
+import * as Styles from 'src/constants/styles';
 import {FileUpload} from 'src/features/common/FileUpload';
 import {WhitePage} from 'src/features/common/WhitePage';
-import {header, colors} from 'src/constants/styles';
-
 import {GetReport} from './queries';
 import {SmartReport} from './smart-report';
 import { ReportData } from './interfaces';
@@ -22,12 +23,15 @@ import { checkGraphQLData } from 'src/errors';
 import { NetworkError } from '../../errors/display-error';
 import { CTAOverlay } from './CTAOverlay';
 
+
 export type ReportProps = OptionProps<any, {report: ReportData}>;
 export interface ReportState {
   showUpload: boolean;
   ctaStatus?: string;
 }
 
+
+@Radium
 export class ReportImpl extends React.Component<ReportProps, ReportState> {
 
   state: ReportState = { showUpload: false, ctaStatus: undefined};
@@ -54,10 +58,10 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
 
   renderSmartReport(report: ReportData): JSX.Element | string {
     return (
-      <>
-        <h1 className="mt-5 mb-4" style={header}>{report.title}</h1>
+      <div>
+        <h1 style={reportHeaderStyle}>{report.title}</h1>
         <SmartReport elements={report.personalization.elements} />
-      </>
+      </div>
     );
   }
 
@@ -110,7 +114,6 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
     }
   }
 
-
   renderContent() {
     const {data}  = this.props;
     if (!data || data.loading) {
@@ -124,7 +127,9 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
       throw new NetworkError({ description: 'Unable to retrieve report'});
     }
   }
+
 }
+
 
 export const Report = graphql<any, any>(GetReport, {
   options: ({match}) => {
@@ -134,3 +139,12 @@ export const Report = graphql<any, any>(GetReport, {
     };
   }
 })(ReportImpl);
+
+
+const reportHeaderStyle: React.CSSProperties = {
+  textAlign: 'center',
+  height: '48px',
+  color: Styles.colors.defaultTextColor,
+  fontSize: '40px',
+  fontWeight: 300
+};
