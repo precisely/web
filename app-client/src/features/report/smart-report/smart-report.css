@@ -1,28 +1,22 @@
 .smart-report {
   text-align: left;
-  font-family: HelveticaNeue-Light, Helvetica, Arial, sans-serif;
+  font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
   font-size: 16px;
 }
 
 .smart-report p {
-  color: black;
-}
-
-.smart-report h1, .smart-report h2, .smart-report h3, .smart-report h4, .smart-report h5, .smart-report h6, .smart-report h7, .smart-report h8, .smart-report h9 {
-  font-weight: bolder !important;
-  font-family: HelveticaNeue-Bold, Helvetica, Arial, sans-serif !important;
-  font-size: 16px !important;
-  color: black;
+  color: #4a4a4a;
+  line-height: 21px;
+  font-weight: 300;
 }
 
 .smart-report h1 {
-  font-size: 22px !important;
+  font-size: 22px;
 }
 
 .smart-report h2 {
-  font-size: 18px !important;
-}
-
-.smart-report .highlight h1, .smart-report .highlight h2, .smart-report .highlight  h3, .smart-report .highlight  h4, .smart-report .highlight h6, .smart-report .highlight h7, .smart-report .highlight h8, .smart-report .highlight h9 {
-  color: inherit !important;
+  font-size: 16px;
+  font-weight: 700;
+  padding-top: 1em;
+  border-bottom: 1px solid #9b9b9b;
 }
