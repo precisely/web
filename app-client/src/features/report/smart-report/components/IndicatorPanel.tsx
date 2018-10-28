@@ -8,11 +8,12 @@
  * @Author: Aneil Mallavarapu
  * @Date: 2018-10-16 09:48:39
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-26 10:52:03
+ * @Last Modified time: 2018-10-26 17:06:42
  */
 
 import * as React from 'react';
 import { IndicatorProps } from './Indicator';
+import { colors } from '../../../../constants/styles';
 
 const normalDot = require('src/assets/indicator/legend/normal.png');
 const defectiveDot = require('src/assets/indicator/legend/defective.png');
@@ -28,14 +29,18 @@ export class IndicatorPanel extends React.Component<
   }
 
   render() {
-    const baseStyle: any = {minHeight: '200px', display: 'block', overflow: 'auto', position: 'relative', minWidth: '100%', textAlign: 'center'};
-    const style = this.props.personalize ? baseStyle : {...baseStyle, filter: 'blur(3px)'};
-    const children = this.props.personalize ? this.props.children : this.disabledChildren();
+    const style: any = {minHeight: '200px', display: 'block', overflow: 'auto', position: 'relative', minWidth: '100%', textAlign: 'center'};
+    const children: React.ReactNode = this.props.children;
+    const legend: JSX.Element = this.props.personalize ? this.renderLegend() : (
+      <p style={{textAlign: 'left', color: colors.grey1}}>
+        <em>Your personalized results will appear here</em>
+      </p>
+    );
 
     return (
       <>
         <div style={style}>
-          {this.renderLegend()}
+          {legend}
           <div style={{position: 'absolute', overflow: 'auto'}}>
             {children}
           </div>
@@ -45,7 +50,6 @@ export class IndicatorPanel extends React.Component<
   }
 
   disabledChildren() {
-    console.log('writing disabled children %j', this.props.children);
     return React.Children.map(
       this.props.children, (child: React.ReactElement<IndicatorProps>) => React.cloneElement<IndicatorProps>(child, {
         state: 'unknown', disabled: true
