@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SmartReport } from './SmartReport';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {shallow, mount, configure} from 'enzyme';
-import { Variant } from 'src/features/report/smart-report/components/GeneMap';
+import { Variant } from './components/GeneMap';
 
 configure({adapter: new Adapter()});
 
@@ -47,28 +47,48 @@ describe('SmartReport', () => {
       </div>))).toBeTruthy();
   });
 
-  it('foo should render an AnalysisPanel with no elements', () => {
-    expect(mount(smartReport([
-      { type: 'tag', name: 'analysispanel', children: [] }
-    ])).html()).toEqual('<div class="smart-report"></div>');
+  describe('when personalizing', () => {
+    it('should render a personalized AnalysisPanel with no elements', () => {
+      expect(mount(smartReport([
+        { type: 'tag', name: 'analysispanel', attrs: { personalize: true }, children: [] }
+      ])).html()).toEqual('<div class="smart-report"></div>');
+    });
+
+    it('should render an AnalysisPanel with one child Analysis element', () => {
+      expect(mount(smartReport([
+        { type: 'tag', name: 'analysispanel', attrs: { personalize: true, titlePrefix: 'prefix' }, children: [{
+          type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: []
+        }] }
+      ])).containsMatchingElement(<div><h1>prefix foo</h1></div>)).toBeTruthy();
+    });
+
+    it('should render an AnalysisPanel with one child Analysis element containing text', () => {
+      expect(mount(smartReport([
+        { type: 'tag', name: 'analysispanel', attrs: { personalize: true }, children: [{
+          type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: [{
+            type: 'text', blocks: ['<p>bar</p>']
+          }]
+        }] }
+      ])).containsMatchingElement(<div><h1>foo</h1>{htmlDiv('<p>bar</p>')}</div>)).toBeTruthy();
+    });
   });
 
-  it('should render an AnalysisPanel with one child Analysis element', () => {
-    expect(mount(smartReport([
-      { type: 'tag', name: 'analysispanel', attrs: { titlePrefix: 'prefix' }, children: [{
-        type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: []
-      }] }
-    ])).containsMatchingElement(<div><h1>prefix foo</h1></div>)).toBeTruthy();
-  });
-
-  it('should render an AnalysisPanel with one child Analysis element containing text', () => {
-    expect(mount(smartReport([
-      { type: 'tag', name: 'analysispanel', children: [{
-        type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: [{
-          type: 'text', blocks: ['<p>bar</p>']
-        }]
-      }] }
-    ])).containsMatchingElement(<div><h1>foo</h1>{htmlDiv('<p>bar</p>')}</div>)).toBeTruthy();
+  describe('when not personalized', () => {
+    it('should render an image in the AnalysisPanel representing blank text', () => {
+      expect(mount(smartReport([
+        { type: 'tag', name: 'analysispanel', attrs: { personalize: false }, children: [{
+          type: 'tag', name: 'analysis', attrs: { title: 'foo' }, children: [{
+            type: 'text', blocks: ['<p>bar</p>']
+          }]
+        }] }
+      ])).containsMatchingElement((
+        <div><h1>Your Personalized Analysis</h1>
+          <div>
+            <p><img/></p>
+            <p><img/></p>
+          </div>
+        </div>))).toBeTruthy();
+    });
   });
 
   it('should render a GeneMap', () => {
