@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:49:33 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-25 16:11:50
+ * @Last Modified time: 2018-10-26 16:12:44
  */
 
 import gql from 'graphql-tag';
@@ -18,6 +18,7 @@ type Report {
   id: String,
   ownerId: String,
   title: String,
+  subtitle: String,
   slug: String,
   content: String,
   requiredVariants: [String],

@@ -26,6 +26,7 @@ export interface ReportAttributes {
   id?: string;
   slug?: string;
   title?: string;
+  subtitle?: string;
   ownerId?: string;
   state?: ReportState;
   content?: string;
@@ -43,8 +44,6 @@ interface ReportMethods {
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report | null>;
-  // safeSave({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
-  safeSave(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
   listReports({ state, ownerId }: { state?: ReportState, ownerId?: string }): Promise<Report[]>;
 }
@@ -60,6 +59,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     id: uuid(),
     slug: Joi.string().required(),
     title: Joi.string().required(),
+    subtitle: Joi.string().optional(),
     ownerId: Joi.string().required(),
     state: Joi.string().valid('published', 'draft').default('draft'),
     content: Joi.string().allow(null),

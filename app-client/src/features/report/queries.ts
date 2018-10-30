@@ -14,6 +14,7 @@ export const GetReport = gql`
       slug
       id
       title
+      subtitle
       personalization {
         status
         elements

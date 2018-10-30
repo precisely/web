@@ -47,6 +47,7 @@ accessControl
 
 export interface ReportCreateArgs {
   title: string;
+  subtitle?: string;
   content: string;
   userSampleRequirements?: UserSampleRequirement[];
 }
@@ -85,19 +86,19 @@ export const resolvers = {
   },
   Mutation: {
     async createReport(
-      _: null | undefined, {title, content, userSampleRequirements}: ReportCreateArgs, context: GraphQLContext
+      _: null | undefined, {title, subtitle, content, userSampleRequirements}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
           ownerId: context.userId,
-          content, title, userSampleRequirements
+          content, title, subtitle, userSampleRequirements
         })
       );
       return await report.saveAsync();
     },
     async updateReport(
       _: null | undefined,
-      {id, title, content}: ReportUpdateArgs,
+      {id, title, subtitle, content}: ReportUpdateArgs,
       context: GraphQLContext
     ) {
       const report = <Report> await context.valid(
@@ -107,6 +108,7 @@ export const resolvers = {
       // process raw content here
       report.set({
         title: title || report.get('title'),
+        subtitle: subtitle || report.get('subtitle'),
         content: content || report.get('content')
       });
       return await report.updateAsync();
@@ -130,6 +132,7 @@ export const resolvers = {
       ownerId: 'ownerId',
       slug: 'slug',
       title: 'title',
+      subtitle: 'subtitle',
       content: 'content'
       // variantIndexes: 'variantIndexes'
     }), 
