@@ -156,6 +156,7 @@ custom:
       test: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand '${opt:f, ""}'
       test:watch: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --watch '${opt:f, ""}'
       test:coverage: node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand --coverage '${opt:f, ""}'
+      test:trace: node --trace-warnings node_modules/.bin/jest -t '${opt:t, ''}' --env=jsdom --runInBand '${opt:f, ""}'
       seed:clear: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:clear ${opt:model, opt:models, ""}
       seed:genetics: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:genetics "${opt:user, ''}" "${opt:genetics, ''}"
       seed:variant: ts-node -r tsconfig-paths/register src/db/scripts/cli.ts seed:variant "${opt:user, ''}" "${opt:variant, ''}"
