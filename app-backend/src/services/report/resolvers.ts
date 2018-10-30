@@ -46,9 +46,9 @@ accessControl
 // tslint:enable no-unused-expressions
 
 export interface ReportCreateArgs {
-  title: string;
+  title?: string;
   subtitle?: string;
-  content: string;
+  content?: string;
   userSampleRequirements?: UserSampleRequirement[];
 }
 
@@ -105,12 +105,15 @@ export const resolvers = {
         'report:update',
         await Report.getAsync(id)
       );
-      // process raw content here
-      report.set({
-        title: title || report.get('title'),
-        subtitle: subtitle || report.get('subtitle'),
-        content: content || report.get('content')
-      });
+      if (title) {
+        report.set({title});
+      }
+      if (subtitle) {
+        report.set({subtitle});
+      }
+      if (content) {
+        report.set({content});
+      }
       return await report.updateAsync();
     },
     async publishReport(

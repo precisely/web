@@ -60,7 +60,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     id: uuid(),
     slug: Joi.string().required(),
     title: Joi.string().required(),
-    subtitle: Joi.string().optional(),
+    subtitle: Joi.string().optional().allow(null),
     ownerId: Joi.string().required(),
     state: Joi.string().valid('published', 'draft').default('draft'),
     content: Joi.string().allow(null),
