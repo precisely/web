@@ -5,6 +5,7 @@
   "scripts": {
     "build": "yarn sls webpack",
     "console": "yarn sls console",
+    "debug": "IS_OFFLINE=true ENV=offline SLS_DEBUG=* STAGE=offline REGION=us-east-1 NODE_OPTIONS=--max-old-space-size=4096 node --inspect-brk=5858 ./node_modules/.bin/serverless offline start",
     "deploy": "yarn env:deploy sls deploy",
     "deploy:delete": "scripts/guard-prod && yarn env:deploy sls remove && yarn env:deploy sls delete_domain",
     "deploy:new": "yarn env:deploy sls create_domain && yarn deploy && tput setaf 6 && echo \"New domains may take up to 40 minutes to be initialized.\n\" && tput setaf sgr0",
