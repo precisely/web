@@ -33,7 +33,7 @@ export const colors: {[key: string]: string} = {
 };
 
 
-export const AnalysisColors: {[key: string]: string} = {
+export const analysisColors: {[key: string]: string} = {
   defective: '#fc3f28',
   normal: '#00bc3e',
   enhanced: '#2B3FE0',
