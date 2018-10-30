@@ -11,15 +11,22 @@
  * @Last Modified time: 2018-10-26 17:06:42
  */
 
+
 import * as React from 'react';
+import Radium from 'radium';
+
+
+import * as Styles from 'src/constants/styles';
 import { IndicatorProps } from './Indicator';
-import { colors } from '../../../../constants/styles';
+
 
 const normalDot = require('src/assets/indicator/legend/normal.png');
 const defectiveDot = require('src/assets/indicator/legend/defective.png');
 const enhancedDot = require('src/assets/indicator/legend/enhanced.png');
 const unknownDot = require('src/assets/indicator/legend/unknown.png');
 
+
+@Radium
 export class IndicatorPanel extends React.Component<
 { normal: string, defective: string, enhanced: string, unknown: string, personalize: boolean}
 > {
@@ -29,43 +36,83 @@ export class IndicatorPanel extends React.Component<
   }
 
   render() {
-    const style: any = {minHeight: '200px', display: 'block', overflow: 'auto', position: 'relative', minWidth: '100%', textAlign: 'center'};
     const children: React.ReactNode = this.props.children;
-    const legend: JSX.Element = this.props.personalize ? this.renderLegend() : (
-      <p style={{textAlign: 'left', color: colors.grey1}}>
-        <em>Your personalized results will appear here</em>
-      </p>
-    );
-
+    const legend: JSX.Element =
+      this.props.personalize ?
+      this.renderLegend() : (
+        <p style={notPersonalizedStyle}>
+          <em>Your personalized results will appear here</em>
+        </p>
+      );
     return (
-      <>
-        <div style={style}>
-          {legend}
-          <div style={{position: 'absolute', overflow: 'auto'}}>
-            {children}
-          </div>
+      <div style={indicatorPanelStyle}>
+        {legend}
+        <div style={geneListStyle}>
+          {children}
         </div>
-      </>
+      </div>
     );
   }
 
   disabledChildren() {
     return React.Children.map(
       this.props.children, (child: React.ReactElement<IndicatorProps>) => React.cloneElement<IndicatorProps>(child, {
-        state: 'unknown', disabled: true
+        state: 'unknown',
+        disabled: true
       })
     );
   }
 
-
   renderLegend() {
     return (
-      <>
-      <img src={normalDot}/><span>{this.props.normal}</span>
-      <img src={defectiveDot}/><span>{this.props.defective}</span>
-      {this.props.enhanced ? <><img src={enhancedDot}/><span>{this.props.enhanced}</span></> : null}
-      {this.props.unknown ? <><img src={unknownDot}/><span>{this.props.unknown}</span></> : null}
-      </>
+      <ul id="gene-panel-legend" style={legendStyle}>
+        <span style={legendLabelStyle}>Legend:</span>
+        <Radium.Style key="1" scopeSelector="#gene-panel-legend li" rules={legendEntryStyle} />
+        <Radium.Style key="2" scopeSelector="#gene-panel-legend li img" rules={legendEntryDotStyle} />
+        <li><img src={normalDot}/><span>{this.props.normal}</span></li>
+        <li><img src={defectiveDot}/><span>{this.props.defective}</span></li>
+        {this.props.enhanced ? <li><img src={enhancedDot}/><span>{this.props.enhanced}</span></li> : null}
+        {this.props.unknown ? <li><img src={unknownDot}/><span>{this.props.unknown}</span></li> : null}
+      </ul>
     );
   }
+
 }
+
+
+const indicatorPanelStyle: React.CSSProperties = {
+  display: 'block',
+  overflow: 'auto',
+  position: 'relative',
+  minWidth: '100%',
+  textAlign: 'center'
+};
+
+const legendStyle: React.CSSProperties = {
+  listStyleType: 'none',
+  textAlign: 'left',
+  margin: '0px',
+  padding: '0px'
+};
+
+const legendLabelStyle: React.CSSProperties = {
+};
+
+const legendEntryDotStyle: React.CSSProperties = {
+  paddingRight: '5px'
+};
+
+const legendEntryStyle: React.CSSProperties = {
+  display: 'inline',
+  margin: '0px',
+  padding: '0px',
+  paddingLeft: '1em'
+};
+
+const notPersonalizedStyle: React.CSSProperties = {
+  textAlign: 'left',
+  color: Styles.colors.grey1
+};
+
+const geneListStyle: React.CSSProperties = {
+};

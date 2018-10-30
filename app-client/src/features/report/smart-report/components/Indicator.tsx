@@ -49,11 +49,10 @@ export const Indicator: React.StatelessComponent<IndicatorProps> = Radium(({icon
   const clickHandler = () => {
     window.location.href = link;
   };
-  // FIXME: these aren't the right colors:
   const fontColor = disabled ? 'lightgray' : 'black';
   return (
     <div style={indicatorBoxStyle} onClick={disabled ? null : clickHandler}>
-      <div key="indicatorName" style={{color: fontColor}}>{name}</div>
+      <div key="indicatorName" style={indicatorNameStyle(state, disabled)}>{name}</div>
       <div key="indicatorImage" style={indicatorImageStyle(icon, state, disabled)} />
     </div>
   );
@@ -61,9 +60,29 @@ export const Indicator: React.StatelessComponent<IndicatorProps> = Radium(({icon
 
 
 const indicatorBoxStyle: React.CSSProperties = {
+  width: '89px',
   float: 'left',
-  margin: '5px',
+  marginLeft: '10px',
+  marginRight: '10px',
+  marginTop: '12px',
+  marginBottom: '13px',
   cursor: 'pointer'
+};
+
+const indicatorNameStyle = (state: string, disabled: boolean): React.CSSProperties => {
+  let fontColor = disabled ? 'lightgray' : 'black';
+  if (['normal', 'defective', 'enhanced', 'unknown'].includes(state)) {
+    fontColor = Styles.analysisColors[state];
+  } else {
+    fontColor = Styles.colors.grey2;
+  }
+  return {
+    textTransform: 'uppercase',
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '26px',
+    color: fontColor
+  };
 };
 
 const indicatorImageStyle = (icon: string, state: string, disabled: boolean): Styles.ExtendedCSSProperties => {

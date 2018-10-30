@@ -36,10 +36,13 @@ export class BasePage extends React.Component<any, any> {
 
 const baseContainerStyle: Styles.ExtendedCSSProperties = {
   ...Styles.fonts.helvetica,
+  color: Styles.colors.defaultTextColor,
   backgroundColor: Styles.colors.defaultBackground,
+  fontWeight: 300,
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100vh',
   paddingLeft: '0px',
-  paddingRight: '0px'
+  paddingRight: '0px',
+  '-webkit-font-smoothing': 'antialiased'
 };

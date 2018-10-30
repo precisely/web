@@ -63,21 +63,15 @@ export class NavigationBar extends React.Component {
     );
   }
 
-  renderStyle() {
-    return [
-      <Radium.Style key="1" scopeSelector=".navbar-collapse.collapsing" rules={navbarHousingStyle} />,
-      <Radium.Style key="2" scopeSelector=".nav-link" rules={navlinkStyle} />
-    ];
-  }
-
   render() {
     const {backgroundColor} = this.state;
     navbarStyle.backgroundColor = backgroundColor;
     // The <style> tags below enforces centering for the menu during the collapsing
     // animation. Not truly scoped, unfortunately.
     return (
-      <RW.Container fluid={false} className="sticky-top">
-        {this.renderStyle()}
+      <RW.Container id="main-navbar-container" fluid={false} className="sticky-top">
+        <Radium.Style key="1" scopeSelector="#main-navbar-container .navbar-collapse.collapsing" rules={navbarHousingStyle} />
+        <Radium.Style key="2" scopeSelector="#main-navbar-container .nav-link" rules={navlinkStyle} />
         <RW.Navbar light={true} sticky="top" expand="md" style={navbarStyle}>
           <RW.NavbarBrand href="/" style={navbarBrandStyle}>
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
