@@ -7845,9 +7845,9 @@ smart-buffer@^4.0.1:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.0.1.tgz#07ea1ca8d4db24eb4cac86537d7d18995221ace3"
   integrity sha512-RFqinRVJVcCAL9Uh1oVqE6FZkqsyLiVOYEZ20TqIOjuX7iFVJ+zsbs4RIghnw/pTs7mZvt8ZHhvm1ZUrR4fykg==
 
-"smart-report@git+ssh://git@github.com/precisely/smart-report.git#2.0.2":
-  version "2.0.2"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#3b74fc5fc16948491039f833f1ae82373c8daeb3"
+"smart-report@git+ssh://git@github.com/precisely/smart-report.git#2.0.6":
+  version "2.0.6"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#041d925918f7fa1d23749fe0a9dd143c66b566ef"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"

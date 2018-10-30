@@ -17,6 +17,7 @@ import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 import {Parser, Analyzer} from './services/smart-report';
 import { ReportContentError } from './errors';
 import { UserSampleRequirement, JoiUserSampleRequirement, UserSampleStatus } from 'src/services/user-sample/external';
+import { CodeError } from 'smart-report/lib/error';
 
 const { uuid } = dynogels.types;
 
@@ -111,14 +112,20 @@ Report.prototype.publish = async function publishReport() {
   if (errors.length > 0) {
     throw new ReportContentError(errors);
   }
-  const requirements = Analyzer.extractRequirements(elements);
-  this.set({ 
-    publishedElements: elements, 
-    publishedContent: content, 
-    state: 'published', 
-    ...requirements });
-
-  return await this.updateAsync();
+  try {
+    const requirements = Analyzer.extractRequirements(elements);
+    this.set({ 
+      publishedElements: elements, 
+      publishedContent: content, 
+      state: 'published', 
+      ...requirements });
+  
+    return await this.updateAsync();
+  } catch (e) {
+    if (e instanceof CodeError) {
+      throw new ReportContentError([e]);
+    }
+  }
 };
 
 //
