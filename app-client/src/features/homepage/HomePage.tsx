@@ -92,9 +92,8 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
               insights from the world’s top health experts designed to help you understand and improve your health.
           </p>
         </div>
-        {/* FIXME: I have no idea how to properly style a button with a link */}
         <RW.Link to="/report/mecfs">
-          <RW.Button style={{backgroundColor: Styles.colors.preciselyMagenta}} size="lg">Get Your Personalized Report Now</RW.Button>
+          <RW.Button style={Styles.actionButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
         </RW.Link>
       </RW.Container>
     );

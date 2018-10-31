@@ -22,7 +22,8 @@ export const colors: {[key: string]: string} = {
   preciselyOrange: '#FF8A4B',
   preciselyMagenta: '#c83a6e',
   preciselyGreen: '#00bc3e',
-  preciselyPurple: '#9d6ca0',
+  preciselyPurple: '#a56aa3',
+  preciselyPurpleAlpha: 'rgba(165, 106, 163, 0.85)',
   defaultTextColor: '#4a4a4a',
 
   buttonDefault: '#6c757d',
@@ -55,4 +56,14 @@ export const fonts: {[key: string]: CSSProperties} = {
 };
 
 
+export const actionButtonStyle: CSSProperties = {
+  backgroundColor: '#2b3fe0',
+  borderRadius: '10px',
+  border: 0,
+  paddingLeft: '85px',
+  paddingRight: '85px',
+  paddingTop: '10px',
+  paddingBottom: '10px',
+  fontSize: '16px',
+  color: colors.white
 };
