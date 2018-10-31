@@ -39,7 +39,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
       <div style={pageStyle}>
         <NavigationBar {...this.props}/>
         <ParallaxProvider>
-          <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
+          <h1 style={titleStyle}>
             Personalized Genetic Reports for Chronic Disease
           </h1>
           <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
@@ -175,14 +175,15 @@ const headingStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   ...Styles.fonts.helveticaThin,
+  color: Styles.colors.preciselyGreen,
+  backgroundColor: 'transparent',
   fontSize: '32px',
   fontWeight: 50,
   fontStyle: 'normal',
   fontStretch: 'normal',
   lineHeight: 'normal',
   letterSpacing: 'normal',
-  textAlign: 'center',
-  color: '#00bc3e'
+  textAlign: 'center'
 };
 
 const smallTextStyle: React.CSSProperties = {
