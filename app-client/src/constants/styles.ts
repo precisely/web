@@ -65,5 +65,6 @@ export const actionButtonStyle: CSSProperties = {
   paddingTop: '10px',
   paddingBottom: '10px',
   fontSize: '16px',
+  cursor: 'pointer',
   color: colors.white
 };
