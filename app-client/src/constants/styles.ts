@@ -55,18 +55,4 @@ export const fonts: {[key: string]: CSSProperties} = {
 };
 
 
-export const inputStyle: ExtendedCSSProperties = {
-  width: '385px',
-  height: '44px',
-  '@media screen and (max-width: 700px)': {
-    width: '249px'
-  },
-  ':focus': {
-    borderColor: '#d9d9d9'
-  }
-};
-
-
-export const removeBorderRadius: CSSProperties = {
-  borderRadius: 0
 };
