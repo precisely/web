@@ -48,7 +48,7 @@ const headingStyle: React.CSSProperties = {
   textAlign: 'center',
   width: '100%',
   fontSize: '40px',
-  fontWeight: 500
+  fontWeight: 700
 };
 
 const subheadingStyle: React.CSSProperties = {

@@ -57,9 +57,11 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   }
 
   renderSmartReport(report: ReportData): JSX.Element | string {
+    const subtitle = report.subtitle ? <h2>{report.subtitle}</h2> : null;
     return (
       <div>
         <h1 style={reportHeaderStyle}>{report.title}</h1>
+        {subtitle}
         <SmartReport elements={report.personalization.elements} />
       </div>
     );

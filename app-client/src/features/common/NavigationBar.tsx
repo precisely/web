@@ -92,7 +92,7 @@ export class NavigationBar extends React.Component {
             <RW.NavLink href="/about-us">About Us</RW.NavLink>
           </RW.NavItem>
           <RW.NavItem>
-            <RW.NavLink href="/report/mecfs">MECFS Report</RW.NavLink>
+            <RW.NavLink href="/report/me-cfs">ME-CFS Report</RW.NavLink>
           </RW.NavItem>
           <RW.NavItem>
             {this.renderLoginStatus()}

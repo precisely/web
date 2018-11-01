@@ -88,7 +88,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
           We all have questions about our health. Precise.ly is the first service to deliver personalized
           insights from the world’s top health experts designed to help you understand and improve your health.
         </div>
-        <RW.Link to="/report/mecfs">
+        <RW.Link to="/report/me-cfs">
           <RW.Button style={reportButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
         </RW.Link>
       </RW.Container>

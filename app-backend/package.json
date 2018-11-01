@@ -5,6 +5,7 @@
   "scripts": {
     "build": "yarn sls webpack",
     "console": "yarn sls console",
+    "debug": "IS_OFFLINE=true ENV=offline SLS_DEBUG=* STAGE=offline REGION=us-east-1 NODE_OPTIONS=--max-old-space-size=4096 node --inspect-brk=5858 ./node_modules/.bin/serverless offline start",
     "deploy": "yarn env:deploy sls deploy",
     "deploy:delete": "scripts/guard-prod && yarn env:deploy sls remove && yarn env:deploy sls delete_domain",
     "deploy:new": "yarn env:deploy sls create_domain && yarn deploy && tput setaf 6 && echo \"New domains may take up to 40 minutes to be initialized.\n\" && tput setaf sgr0",
@@ -30,8 +31,9 @@
     "sls": "yarn env sls",
     "tslint": "tslint 'src/*.ts' 'src/**/*.ts'",
     "test": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test",
-    "test:watch": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:watch",
     "test:coverage": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:coverage",
+    "test:trace": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:trace",
+    "test:watch": "yarn env:test-offline scripts/wait-for-dynamodb-local.sh && yarn env:test-offline sls test:watch",
     "wsd": "scripts/wsd"
   },
   "jest": {
@@ -97,9 +99,9 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "sequelize": "4.35.2",
-    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs#1.3.1",
+    "seqvarnomjs": "git+ssh://git@github.com/precisely/seqvarnomjs#1.3.2",
     "slugify": "^1.3.0",
-    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#2.0.2",
+    "smart-report": "git+ssh://git@github.com/precisely/smart-report.git#2.0.6",
     "winston": "^3.0.0",
     "winston-cloudwatch": "^2.0.2"
   },

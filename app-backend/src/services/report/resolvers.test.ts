@@ -7,7 +7,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-10 09:50:16 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-26 07:41:22
+ * @Last Modified time: 2018-10-30 06:42:38
  */
 
 // tslint:disable no-any
@@ -66,11 +66,16 @@ describe('Report resolver', function () {
       const context = makeContext({ userId: 'bob', roles: ['author']});
       expect(isString(report.get('id'))).toBeTruthy();
       const updatedReport = await resolvers.Mutation.updateReport(
-        null, { id: <string> report.get('id'), content: 'updated content'},
+        null, { 
+          id: report.getValid('id'), 
+          content: 'updated content'
+        },
         context
       );
-      expect(updatedReport.get('id')).toEqual(report.get('id'));
-      expect(updatedReport.get('content')).toEqual('updated content');
+      if (updatedReport) {
+        expect(updatedReport.get('id')).toEqual(report.get('id'));
+        expect(updatedReport.get('content')).toEqual('updated content');
+      }
     });  
 
     it('should throw an error if the user is not an author', async function () {

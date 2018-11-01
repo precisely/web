@@ -17,6 +17,7 @@ import {VariantIndex, JoiVariantIndex} from 'src/common/variant-tools';
 import {Parser, Analyzer} from './services/smart-report';
 import { ReportContentError } from './errors';
 import { UserSampleRequirement, JoiUserSampleRequirement, UserSampleStatus } from 'src/services/user-sample/external';
+import { CodeError } from 'smart-report/lib/error';
 
 const { uuid } = dynogels.types;
 
@@ -26,6 +27,7 @@ export interface ReportAttributes {
   id?: string;
   slug?: string;
   title?: string;
+  subtitle?: string;
   ownerId?: string;
   state?: ReportState;
   content?: string;
@@ -43,8 +45,6 @@ interface ReportMethods {
 
 interface ReportStaticMethods {
   findBySlug(slug: string): Promise<Report | null>;
-  // safeSave({slug, title, content, variants}: ReportCreateArgs): Promise<Report>;
-  safeSave(report: Report): Promise<Report>;
   findUniqueSlug(s: string): Promise<string>;
   listReports({ state, ownerId }: { state?: ReportState, ownerId?: string }): Promise<Report[]>;
 }
@@ -60,6 +60,7 @@ export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticM
     id: uuid(),
     slug: Joi.string().required(),
     title: Joi.string().required(),
+    subtitle: Joi.string().optional().allow(null),
     ownerId: Joi.string().required(),
     state: Joi.string().valid('published', 'draft').default('draft'),
     content: Joi.string().allow(null),
@@ -111,14 +112,20 @@ Report.prototype.publish = async function publishReport() {
   if (errors.length > 0) {
     throw new ReportContentError(errors);
   }
-  const requirements = Analyzer.extractRequirements(elements);
-  this.set({ 
-    publishedElements: elements, 
-    publishedContent: content, 
-    state: 'published', 
-    ...requirements });
-
-  return await this.updateAsync();
+  try {
+    const requirements = Analyzer.extractRequirements(elements);
+    this.set({ 
+      publishedElements: elements, 
+      publishedContent: content, 
+      state: 'published', 
+      ...requirements });
+  
+    return await this.updateAsync();
+  } catch (e) {
+    if (e instanceof CodeError) {
+      throw new ReportContentError([e]);
+    }
+  }
 };
 
 //
