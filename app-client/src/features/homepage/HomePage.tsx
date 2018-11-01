@@ -128,28 +128,6 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
     );
   }
 
-  renderMoreInformation = (): JSX.Element => {
-    return (
-      <RW.Container className="pt-5 pb-4 ">
-        <h3 style={headingStyle}>
-          Third Section of the website
-        </h3>
-        <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
-        <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-          <RW.Col md={{size: 6, offset: 3}}>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-          </RW.Col>
-        </div>
-      </RW.Container>
-    );
-  }
 }
 
 
