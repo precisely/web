@@ -21,7 +21,7 @@ import * as Styles from 'src/constants/styles';
 export type IndicatorProps = {icon: string, name: string, state: string, link: string, disabled: boolean};
 
 
-const BUTTON = {
+const buttons = {
   dna: {
     normal: {
       rest: require('src/assets/indicator/dna/normal/rest.png'),
@@ -45,58 +45,66 @@ const BUTTON = {
 };
 
 
+const labelColors = {
+  normal: {
+    rest: 'rgb(41, 190, 80)',
+    hover: 'rgb(34, 145, 64)',
+    down: 'rgb(23, 101, 46)',
+    disabled: 'rgb(196, 237, 209)'
+  },
+  defective: {
+    rest: 'rgb(249, 76, 64)',
+    hover: 'rgb(189, 61, 50)',
+    down: 'rgb(130, 45, 37)',
+    disabled: 'rgb(252, 208, 203)'
+  },
+  unknown: {
+    rest: 'rgb(160, 160, 160)',
+    hover: 'rgb(124, 124, 124)',
+    down: 'rgb(89, 89, 89)',
+    disabled: 'rgb(229, 229, 229)'
+  }
+};
+
+
 export const Indicator: React.StatelessComponent<IndicatorProps> = Radium(({icon, name, state, link, disabled}: IndicatorProps) => {
   const clickHandler = () => {
     window.location.href = link;
   };
   const fontColor = disabled ? 'lightgray' : 'black';
   return (
-    <div style={indicatorBoxStyle} onClick={disabled ? null : clickHandler}>
-      <div key="indicatorName" style={indicatorNameStyle(state, disabled)}>{name}</div>
-      <div key="indicatorImage" style={indicatorImageStyle(icon, state, disabled)} />
-    </div>
+    <div style={indicatorStyle(icon, state, disabled)}>{name}</div>
   );
 });
 
 
-const indicatorBoxStyle: React.CSSProperties = {
-  width: '89px',
-  float: 'left',
-  marginLeft: '10px',
-  marginRight: '10px',
-  marginTop: '12px',
-  marginBottom: '13px',
-  cursor: 'pointer'
-};
-
-const indicatorNameStyle = (state: string, disabled: boolean): React.CSSProperties => {
-  let fontColor = disabled ? 'lightgray' : 'black';
-  if (['normal', 'defective', 'enhanced', 'unknown'].includes(state)) {
-    fontColor = Styles.analysisColors[state];
-  } else {
-    fontColor = Styles.colors.grey2;
-  }
+const indicatorStyle = (icon: string, state: string, disabled: boolean): Styles.ExtendedCSSProperties => {
+  const fontColor = labelColors[state][disabled ? 'disabled' : 'rest'];
   return {
+    width: '89px',
+    height: '45px',
+    float: 'left',
+    marginLeft: '10px',
+    marginRight: '10px',
+    marginTop: '12px',
+    marginBottom: '13px',
     textTransform: 'uppercase',
     fontSize: '16px',
     fontWeight: 500,
     lineHeight: '26px',
-    color: fontColor
-  };
-};
-
-const indicatorImageStyle = (icon: string, state: string, disabled: boolean): Styles.ExtendedCSSProperties => {
-  return {
-    backgroundImage: `url(${BUTTON[icon][state][disabled ? 'disabled' : 'rest']})`,
+    cursor: 'pointer',
+    color: fontColor,
+    backgroundImage: `url(${buttons[icon][state][disabled ? 'disabled' : 'rest']})`,
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    height: '20px',
+    backgroundPosition: 'bottom',
     ':hover': {
-      backgroundImage: `url(${BUTTON[icon][state][disabled ? 'disabled' : 'hover']})`
+      color: labelColors[state][disabled ? 'disabled' : 'hover'],
+      backgroundImage: `url(${buttons[icon][state][disabled ? 'disabled' : 'hover']})`
     },
     ':active': {
-      backgroundImage: `url(${BUTTON[icon][state][disabled ? 'disabled' : 'down']})`
+      color: labelColors[state][disabled ? 'disabled' : 'down'],
+      backgroundImage: `url(${buttons[icon][state][disabled ? 'disabled' : 'down']})`
     }
   };
 };
