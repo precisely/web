@@ -14,7 +14,6 @@ export type ExtendedCSSProperties = CSSProperties & { [key: string]: any }; // t
 
 
 export const colors: {[key: string]: string} = {
-
   grey1: '#6c757d',
   grey2: '#545b62',
   white: '#FFF',
@@ -25,12 +24,7 @@ export const colors: {[key: string]: string} = {
   preciselyPurple: '#a56aa3',
   preciselyPurpleAlpha: 'rgba(165, 106, 163, 0.85)',
   defaultTextColor: '#4a4a4a',
-
-  buttonDefault: '#6c757d',
-  buttonHover: '#545b62',
-  defaultBackground: '#F5F5F5',
-  authLockButtonBackground: '#FF8A4B'
-
+  defaultBackground: '#F5F5F5'
 };
 
 
