@@ -92,7 +92,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
               insights from the world’s top health experts designed to help you understand and improve your health.
           </p>
         </div>
-        <RW.Link to="/report/mecfs">
+        <RW.Link to="/report/me-cfs">
           <RW.Button style={Styles.actionButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
         </RW.Link>
       </RW.Container>
