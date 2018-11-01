@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu 
  * @Date: 2018-08-17 08:26:01 
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-26 07:35:49
+ * @Last Modified time: 2018-11-01 13:24:02
  */
 
  //
@@ -21,13 +21,25 @@ import { ReducibleTagElement, Context, ReducerFunction, isTagElement } from 'sma
 import {ensureAttributes} from './util';
 import { isString } from 'util';
 
+export enum IndicatorStates {
+  normal = 'normal',
+  defective = 'defective',
+  enhanced = 'enhanced',
+  unknown = 'unknown'
+}
+export enum IndicatorIcons {
+  dna = 'dna'
+}
 export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
-  let {normal, defective, default: defaultState} = elt.attrs;
+  let {icon, normal, defective, default: defaultState} = elt.attrs;
   
   // IndicatorPanel shows a legend, explaining what green vs red means
+  icon = icon || 'dna';
   normal = normal || 'normal'; // text for green label
   defective = defective || 'defective'; // text for red label
   defaultState = defaultState || 'unknown';
+  checkIcon(icon);
+  checkDefaultState(defaultState);
   elt.attrs.personalize = ctx.personalize;
   elt.children.map(child => {
     if (!isTagElement(child) || child.name !== 'indicator') {
@@ -43,9 +55,8 @@ export const IndicatorPanel: ReducerFunction = (elt: ReducibleTagElement, ctx: C
 export const Indicator: ReducerFunction = (elt: ReducibleTagElement, ctx: Context) => {
   ensureAttributes('Indicator', elt.attrs, 'icon', 'name');
   const defaultValue = isString(elt.attrs.default) ? elt.attrs.default : 'unknown';
-  if (!/normal|defective|unknown/.test(defaultValue)) {
-    throw new Error(`Indicator default must be one of normal|defective|unknown, but received ${defaultValue}`);
-  }
+  checkDefaultState(defaultValue);
+
   // TODO: consider fixing the semantics for determining indicator state. Currently the author defines a default state, 
   //       and defines exceptions to that default:
   // <IndicatorPanel default="normal">
@@ -68,3 +79,19 @@ export const Indicator: ReducerFunction = (elt: ReducibleTagElement, ctx: Contex
   }
   return [[], ctx];
 };
+
+function checkDefaultState(defaultState: any): defaultState is keyof IndicatorStates { // tslint:disable-line no-any
+  if (!isString(defaultState) || !IndicatorStates[defaultState]) {
+    throw new Error(`Invalid default state ${defaultState}. Expecting one of ${
+      Object.keys(IndicatorStates).join(', ')
+    }`);
+  }
+  return true;
+}
+
+function checkIcon(icon: any): icon is keyof IndicatorIcons { // tslint:disable-line no-any
+  if (!isString(icon) || !IndicatorIcons[icon]) {
+    throw new Error(`Invalid Indicator icon (${icon}). Must be one of: ${Object.keys(IndicatorIcons).join(',')}`);
+  }
+  return true;  
+}

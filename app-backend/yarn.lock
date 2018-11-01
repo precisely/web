@@ -7847,7 +7847,7 @@ smart-buffer@^4.0.1:
 
 "smart-report@git+ssh://git@github.com/precisely/smart-report.git#2.0.6":
   version "2.0.6"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#041d925918f7fa1d23749fe0a9dd143c66b566ef"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#e396a3995d9a1614b836f6be7ade540b0aca2b2f"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"

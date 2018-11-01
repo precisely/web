@@ -12,9 +12,9 @@ We've assembled this list of genes and variants based on research publications i
 
 
 <IndicatorPanel normal="normal (wildtype)" 
-                abnormal="contains variants" 
-                default="abnormal"> 
-  <Indicator icon="gene" name="MTHFR" link="/report/mthfr" require={
+                defective="contains variants" 
+                default="defective"> 
+  <Indicator icon="dna" name="MTHFR" link="/report/mthfr" require={
       variantCall("NC_000001.10:g.11856378") and
       variantCall("NC_000001.10:g.11854476")
     } 
@@ -23,7 +23,7 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000001.10:g.[11854476=];[11854476=]")
     } />
     
-  <Indicator icon="gene" name="CHRN5A" link="/report/chrn5a" require={
+  <Indicator icon="dna" name="CHRN5A" link="/report/chrn5a" require={
       variantCall("NC_000015.9:g.78882925") and 
       variantCall("NC_000015.9:g.78865893") and 
       variantCall("NC_000015.9:g.78873993") 
@@ -33,7 +33,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000015.9:g.[78865893=];[78865893=]") and 
       variantCall("NC_000015.9:g.[78873993=];[78873993=]") 
     } />
-   <Indicator icon="gene" name="CHRNA2" link="/report/chrna2" require={
+   <Indicator icon="dna" name="CHRNA2" link="/report/chrna2" require={
       variantCall("NC_000008.10:g.27321124") and 
       variantCall("NC_000006.11:g.12727715") and 
       variantCall("NC_000008.10:g.27328511") and
@@ -47,7 +47,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000008.10:g.[27326127A>G];[27326127=]") OR variantCall("NC_000008.10:g.[27326127=];[27326127=]") )      and
       (variantCall("NC_000008.10:g.[27324822T>C];[27324822T>C]") OR variantCall("NC_000008.10:g.[27324822T>C];[27324822=]") )
     } />
-   <Indicator icon="gene" name="CHRNA3" link="/report/chrna3" require={
+   <Indicator icon="dna" name="CHRNA3" link="/report/chrna3" require={
       variantCall("NC_000015.9:g.78898723") and
       variantCall("NC_000015.9:g.78894339")
     } 
@@ -55,7 +55,7 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000015.9:g.[78898723=];[78898723=]") and 
     variantCall("NC_000015.9:g.[78894339=];[78894339=]")
     } />
-  <Indicator icon="gene" name="CHRNB4" link="/report/chrnb4" require={
+  <Indicator icon="dna" name="CHRNB4" link="/report/chrnb4" require={
       variantCall("NC_000015.9:g.78923987") and 
       variantCall("NC_000015.9:g.78928264") and 
       variantCall("NC_000015.9:g.78930510") 
@@ -65,13 +65,13 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000015.9:g.[78928264G>T];[78928264=]") OR variantCall("NC_000015.9:g.[78928264=];[78928264=]") )      and
       (variantCall("NC_000015.9:g.[78930510A>G];[78930510A>G]") OR variantCall("NC_000015.9:g.[78930510=];[78930510=]") ) 
     } />   
-  <Indicator icon="gene" name="CLYBL" link="/report/clybl" require={
+  <Indicator icon="dna" name="CLYBL" link="/report/clybl" require={
       variantCall("NC_000013.10:g.100518634") 
     }
     normal={
       variantCall("NC_000013.10:g.[100518634=];[100518634=]")
     } />   
-  <Indicator icon="gene" name="COMT" link="/report/comt" require={
+  <Indicator icon="dna" name="COMT" link="/report/comt" require={
       variantCall("NC_000022.10:g.19931407") and 
       variantCall("NC_000022.10:g.19948337") and 
       variantCall("NC_000022.10:g.19937533") and
@@ -83,7 +83,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000022.10:g.[19937533=];[19937533=]") and
       variantCall("NC_000022.10:g.[19950235=];[19950235=]")
     } />   
-  <Indicator icon="gene" name="CRHR1" link="/report/crhr1" require={
+  <Indicator icon="dna" name="CRHR1" link="/report/crhr1" require={
       variantCall("NC_000017.10:g.43892600") and
       variantCall("NC_000017.10:g.43902997")
     } 
@@ -91,7 +91,7 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000017.10:g.[43892600=];[43892600=]") and 
     variantCall("NC_000017.10:g.[43902997=];[43902997=]")
     } />   
-  <Indicator icon="gene" name="DRD2" link="/report/drd2" require={
+  <Indicator icon="dna" name="DRD2" link="/report/drd2" require={
       variantCall("NC_000011.9:g.113346251") and 
       variantCall("NC_000011.9:g.113283484") and 
       variantCall("NC_000011.9:g.113283688") and
@@ -111,7 +111,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000011.9:g.[113331532=];[113331532=]") OR variantCall("NC_000011.9:g.[113331532G>A];[113331532=]") ) and
       (variantCall("NC_000011.9:g.[113283459=];[113283459=]") OR variantCall("NC_000011.9:g.[113283459G>A];[113283459=]") )
     } />   
-  <Indicator icon="gene" name="GRIK3" link="/report/grik3" require={
+  <Indicator icon="dna" name="GRIK3" link="/report/grik3" require={
       variantCall("NC_000001.10:g.37325477") and
       variantCall("NC_000001.10:g.37449595")
     } 
@@ -119,13 +119,13 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000001.10:g.[37325477=];[37325477=]") and 
     (variantCall("NC_000001.10:g.[37449595C>T];[37449595C>T]") OR variantCall("NC_000001.10:g.[37449595=];[37449595=]") )
     } />   
- <Indicator icon="gene" name="GRIK2" link="/report/grik2" require={
+ <Indicator icon="dna" name="GRIK2" link="/report/grik2" require={
       variantCall("NC_000006.11:g.101966454") 
     }
     normal={
       variantCall("NC_000006.11:g.[101966454=];[101966454=]")
     } />
-  <Indicator icon="gene" name="HSD11B1" link="/report/hsd11b1" require={
+  <Indicator icon="dna" name="HSD11B1" link="/report/hsd11b1" require={
       variantCall("NC_000005.9:g.133482348") and 
       variantCall("NC_000005.9:g.111358802") and 
       variantCall("NC_000001.10:g.209905734") and
@@ -139,7 +139,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000001.10:g.[209885318=];[209885318=]") OR variantCall("NC_000001.10:g.[209885318C>A];[209885318=]") ) and 
       variantCall("NC_000001.10:g.[209887718T>C];[209887718T>C]")
     } />   
-  <Indicator icon="gene" name="HTR2A" link="/report/htr2a" require={
+  <Indicator icon="dna" name="HTR2A" link="/report/htr2a" require={
       variantCall("NC_000013.10:g.47466549") and 
       variantCall("NC_000013.10:g.47469940") and 
       variantCall("NC_000013.10:g.47421836") and
@@ -159,7 +159,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000013.10:g.[47411985=];[47411985=]") and
       variantCall("NC_000013.10:g.[47440560=];[47440560=]")
     } />   
-  <Indicator icon="gene" name="IFNG" link="/report/ifng" require={
+  <Indicator icon="dna" name="IFNG" link="/report/ifng" require={
       variantCall("NC_000005.9:g.40831942") and
       variantCall("NC_000012.11:g.68550162")
     } 
@@ -167,17 +167,17 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000005.9:g.[40831942=];[40831942=]") and 
     (variantCall("NC_000012.11:g.[68550162A>G];[68550162=]") OR variantCall("NC_000012.11:g.[68550162=];[68550162=]") )
     } />   
-  <Indicator icon="gene" name="ILI2B" link="/report/ili2b" require={
+  <Indicator icon="dna" name="ILI2B" link="/report/ili2b" require={
       variantCall("NC_000005.9:g.158742014") and 
       variantCall("NC_000005.9:g.158750013") and 
       variantCall("NC_000005.9:g.158742950") 
     }
     normal={
       variantCall("NC_000005.9:g.[158742014=];[158742014=]") and 
-      variantCall("NC_000005.9:g.[158750013=];[ 158750013=]") and
+      variantCall("NC_000005.9:g.[158750013=];[158750013=]") and
       (variantCall("NC_000005.9:g.[158742950T>G];[158742950T>G]") OR variantCall("NC_000005.9:g.[158742950=];[158742950=]") ) 
     } />   
-  <Indicator icon="gene" name="NOS3" link="/report/nos3" require={
+  <Indicator icon="dna" name="NOS3" link="/report/nos3" require={
       variantCall("NC_000007.13:g.150696008") and 
       variantCall("NC_000007.13:g.150707488") and 
       variantCall("NC_000007.13:g.150708089") and
@@ -191,13 +191,13 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000007.13:g.[150690079C=];[150690079C=]") OR variantCall("NC_000007.13:g.[150690079C=];[150690079=]") ) and 
       (variantCall("NC_000018.9:g.[9986548G>C];[9986548G>C]") OR variantCall("NC_000018.9:g.[9986548G>C];[9986548=]") ) 
     } />   
-  <Indicator icon="gene" name="NPAS2" link="/report/npas2" require={
+  <Indicator icon="dna" name="NPAS2" link="/report/npas2" require={
       variantCall("NC_000002.11:g.101539790") 
     }
     normal={
       variantCall("NC_000002.11:g.[101539790=];[101539790=]")
     } />
-  <Indicator icon="gene" name="NR3C1" link="/report/nr3c1" require={
+  <Indicator icon="dna" name="NR3C1" link="/report/nr3c1" require={
       variantCall("NC_000005.9:g.126857714") and 
       variantCall("NC_000005.9:g.126855889") and 
       variantCall("NC_000005.9:g.126859406") and
@@ -248,7 +248,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000005.9:g.[142722353=];[142722353=]") 
       and
       (variantCall("NC_000005.9:g.[142680344C>A];[142680344C>A]") 
-       or variantCall("NC_000005.9:g.[142680344C>A];[ 142680344=]")) 
+       or variantCall("NC_000005.9:g.[142680344C>A];[142680344=]")) 
       and
       variantCall("NC_000005.9:g.[142661490=];[142661490=]") 
       and
@@ -256,7 +256,7 @@ We've assembled this list of genes and variants based on research publications i
       and
       variantCall("NC_000005.9:g.[142696036=];[142696036=]") 
     } />   
-  <Indicator icon="gene" name="POMC" link="/report/pomc" require={
+  <Indicator icon="dna" name="POMC" link="/report/pomc" require={
       variantCall("NC_000018.9:g.20340572") and 
       variantCall("NC_000006.11:g.42297712") and 
       variantCall("NC_000002.11:g.25387181") and
@@ -270,7 +270,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000002.11:g.[25384833T>C];[25384833=]") OR variantCall("NC_000002.11:g.[25384833=];[25384833=]") ) and 
       (variantCall("NC_000002.11:g.[25389224A>G];[25389224=]") OR variantCall("NC_000002.11:g.[25389224=];[25389224=]") ) 
     } />   
-  <Indicator icon="gene" name="SCN9A" link="/report/scn9a" require={
+  <Indicator icon="dna" name="SCN9A" link="/report/scn9a" require={
       variantCall("NC_000002.11:g.167155438") and 
       variantCall("NC_000002.11:g.167149864") and 
       variantCall("NC_000002.11:g.167159672") and
@@ -286,7 +286,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000002.11:g.[167133643C>T];[167133643=]") OR variantCall("NC_000002.11:g.[167133643=];[167133643=]") ) and
       (variantCall("NC_000002.11:g.[167143072G>C];[167143072=]") OR variantCall("NC_000002.11:g.[167143072=];[167143072=]") )
     } />   
-  <Indicator icon="gene" name="SCL6A4" link="/report/scl6a4" require={
+  <Indicator icon="dna" name="SCL6A4" link="/report/scl6a4" require={
       variantCall("NC_000017.10:g.28564346") and 
       variantCall("NC_000017.10:g.28525011") and
       variantCall("NC_000017.10:g.28526475") and 
@@ -302,7 +302,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000017.10:g.[28531793=];[28531793=]") and
       (variantCall("NC_000017.10:g.[28523726G>T];[28523726G>T]") OR variantCall("NC_000017.10:g.[28523726=];[28523726=]") )
     } />   
-  <Indicator icon="gene" name="TPH2" link="/report/tph2" require={
+  <Indicator icon="dna" name="TPH2" link="/report/tph2" require={
       variantCall("NC_000012.11:g.72372601") and 
       variantCall("NC_000012.11:g.72360264") and 
       variantCall("NC_000012.11:g.72412220") and
@@ -312,9 +312,9 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000012.11:g.[72372601=];[72372601=]") and
       variantCall("NC_000012.11:g.[72360264A>G];[72360264A>G]") and
       variantCall("NC_000012.11:g.[72412220=];[72412220=]") and
-      variantCall("NC_000012.11:g.[72336512=];[72336512=]") and
+      variantCall("NC_000012.11:g.[72336512=];[72336512=]")
     } />   
-  <Indicator icon="gene" name="TRPC2" link="/report/trpc2" require={
+  <Indicator icon="dna" name="TRPC2" link="/report/trpc2" require={
       variantCall("NC_000011.9:g.3650086") and
       variantCall("NC_000011.9:g.3638061")
     }
@@ -322,7 +322,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000011.9:g.[3650086G>T];[3650086G>T]") OR variantCall("NC_000011.9:g.[3650086=];[3650086=]") ) and
       (variantCall("NC_000011.9:g.[3638061G>A];[3638061=]") OR variantCall("NC_000011.9:g.[3638061=];[3638061=]") )
     } />   
-  <Indicator icon="gene" name="TRPC4" link="/report/trpc4" require={
+  <Indicator icon="dna" name="TRPC4" link="/report/trpc4" require={
       variantCall("NC_000013.10:g.38368012") and 
       variantCall("NC_000013.10:g.38242481") and 
       variantCall("NC_000013.10:g.38230542") and
@@ -334,7 +334,7 @@ We've assembled this list of genes and variants based on research publications i
       (variantCall("NC_000013.10:g.[38230542G>A];[38230542G>A]") OR variantCall("NC_000013.10:g.[38230542G>A];[38230542=]") ) and
       (variantCall("NC_000013.10:g.[38367949C>T];[38367949=]") OR variantCall("NC_000013.10:g.[38367949=];[38367949=]") )
     } />   
-  <Indicator icon="gene" name="TRPM3" link="/report/trpm3" require={
+  <Indicator icon="dna" name="TRPM3" link="/report/trpm3" require={
       variantCall("NC_000009.11:g.73980222") and 
       variantCall("NC_000009.11:g.74042243") and 
       variantCall("NC_000009.11:g.74017174") and
@@ -376,7 +376,7 @@ We've assembled this list of genes and variants based on research publications i
       variantCall("NC_000009.11:g.[73204431A>G];[73204431A>G]") and
       variantCall("NC_000009.11:g.[73306551C>A];[73306551C>A]")
     } />       
-  <Indicator icon="gene" name="TRPM8" link="/report/trpm8" require={
+  <Indicator icon="dna" name="TRPM8" link="/report/trpm8" require={
       variantCall("NC_000002.11:g.234917377") and 
       variantCall("NC_000002.11:g.234919314") and 
       variantCall("NC_000002.11:g.234854550") and

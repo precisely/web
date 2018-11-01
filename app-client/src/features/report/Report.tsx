@@ -22,6 +22,7 @@ import { NavigationPage } from 'src/features/common/NavigationPage';
 import { checkGraphQLData } from 'src/errors';
 import { NetworkError } from '../../errors/display-error';
 import { CTAOverlay } from './CTAOverlay';
+import { fonts } from '../../constants/styles';
 
 
 export type ReportProps = OptionProps<any, {report: ReportData}>;
@@ -57,7 +58,8 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   }
 
   renderSmartReport(report: ReportData): JSX.Element | string {
-    const subtitle = report.subtitle ? <h2>{report.subtitle}</h2> : null;
+    const subtitleStyle: React.CSSProperties = { ... fonts.helveticaThin, fontSize: 14 };
+    const subtitle = report.subtitle ? <p style={subtitleStyle}>{report.subtitle}</p> : null;
     return (
       <div>
         <h1 style={reportHeaderStyle}>{report.title}</h1>
