@@ -46,8 +46,9 @@ accessControl
 // tslint:enable no-unused-expressions
 
 export interface ReportCreateArgs {
-  title: string;
-  content: string;
+  title?: string;
+  subtitle?: string;
+  content?: string;
   userSampleRequirements?: UserSampleRequirement[];
 }
 
@@ -85,30 +86,34 @@ export const resolvers = {
   },
   Mutation: {
     async createReport(
-      _: null | undefined, {title, content, userSampleRequirements}: ReportCreateArgs, context: GraphQLContext
+      _: null | undefined, {title, subtitle, content, userSampleRequirements}: ReportCreateArgs, context: GraphQLContext
     ): Promise<Report> {
       const report = <Report> await context.valid('report:create',
         new Report({
           ownerId: context.userId,
-          content, title, userSampleRequirements
+          content, title, subtitle, userSampleRequirements
         })
       );
       return await report.saveAsync();
     },
     async updateReport(
       _: null | undefined,
-      {id, title, content}: ReportUpdateArgs,
+      {id, title, subtitle, content}: ReportUpdateArgs,
       context: GraphQLContext
     ) {
       const report = <Report> await context.valid(
         'report:update',
         await Report.getAsync(id)
       );
-      // process raw content here
-      report.set({
-        title: title || report.get('title'),
-        content: content || report.get('content')
-      });
+      if (title) {
+        report.set({title});
+      }
+      if (subtitle) {
+        report.set({subtitle});
+      }
+      if (content) {
+        report.set({content});
+      }
       return await report.updateAsync();
     },
     async publishReport(
@@ -130,6 +135,7 @@ export const resolvers = {
       ownerId: 'ownerId',
       slug: 'slug',
       title: 'title',
+      subtitle: 'subtitle',
       content: 'content'
       // variantIndexes: 'variantIndexes'
     }), 

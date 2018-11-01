@@ -9,6 +9,7 @@
 export interface ReportData {
   id: string;
   title: string;
+  subtitle: string;
   slug: string;
   content: string;
   personalization: {

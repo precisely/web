@@ -7578,9 +7578,9 @@ sequelize@4.35.2:
     validator "^9.4.1"
     wkx "^0.4.1"
 
-"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.3.1":
-  version "1.3.1"
-  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#2a95cfb244d03f733a90a48c9633eb129a578dca"
+"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.3.2":
+  version "1.3.2"
+  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#6ab327cd0cbf3eb80b954e7e5a2ce18d7122a2d0"
   dependencies:
     lodash "^4.17.5"
     mathjs "^3.16.3"
@@ -7845,9 +7845,9 @@ smart-buffer@^4.0.1:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.0.1.tgz#07ea1ca8d4db24eb4cac86537d7d18995221ace3"
   integrity sha512-RFqinRVJVcCAL9Uh1oVqE6FZkqsyLiVOYEZ20TqIOjuX7iFVJ+zsbs4RIghnw/pTs7mZvt8ZHhvm1ZUrR4fykg==
 
-"smart-report@git+ssh://git@github.com/precisely/smart-report.git#2.0.2":
-  version "2.0.2"
-  resolved "git+ssh://git@github.com/precisely/smart-report.git#3b74fc5fc16948491039f833f1ae82373c8daeb3"
+"smart-report@git+ssh://git@github.com/precisely/smart-report.git#2.0.6":
+  version "2.0.6"
+  resolved "git+ssh://git@github.com/precisely/smart-report.git#041d925918f7fa1d23749fe0a9dd143c66b566ef"
   dependencies:
     js-htmlencode "^0.3.0"
     lodash "^4.17.10"
