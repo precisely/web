@@ -18,17 +18,22 @@ import * as Styles from 'src/constants/styles';
 export class Footer extends React.Component {
 
   renderWithRealFooter() {
+    const year = (new Date()).getFullYear();
     return (
       <div className="pt-5 pb-5 text-center sticky-bottom" style={footerStyle}>
-        <div className="row pt-2" style={{fontWeight: 300}}>
-          <RW.Col md={{size: 2, offset: 3}}>FAQ</RW.Col>
-          <RW.Col md={{size: 2}}>Blog</RW.Col>
-          <RW.Col md={{size: 2}}>Contact Us</RW.Col>
-        </div>
-        <div className="row mt-2 pb-2" style={{color: '#808080', fontWeight: 100}}>
-          <RW.Col md={{size: 2, offset: 3}}>Privacy Policy</RW.Col>
-          <RW.Col md={{size: 2}}>Terms of Service</RW.Col>
-          <RW.Col md={{size: 2}}>&copy; 2017 Precise.ly</RW.Col>
+        <div className="row">
+          <RW.Col className="pl-4 pr-4 col-md-auto">
+            <RW.Link to="/contact-us">Contact Us</RW.Link>
+          </RW.Col>
+          <RW.Col className="pl-4 pr-4 col-md-auto">
+            <RW.Link to="/privacy-policy">Privacy Policy</RW.Link>
+          </RW.Col>
+          <RW.Col className="pl-4 pr-4 col-md-auto">
+            <RW.Link to="/tos">Terms of Service</RW.Link>
+          </RW.Col>
+          <RW.Col className="pl-4 pr-4 col-md-auto">
+            <RW.Link to="/">&copy; {year} Precise.ly</RW.Link>
+          </RW.Col>
         </div>
       </div>
     );
@@ -50,4 +55,6 @@ const footerStyle: React.CSSProperties = {
   ...Styles.fonts.helvetica,
   backgroundColor: '#F5F5F5',
   fontSize: '1rem',
+  marginLeft: 'auto',
+  marginRight: 'auto'
 };

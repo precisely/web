@@ -29,8 +29,8 @@ describe('Footer tests.', () => {
     done();
   }, [
     ['elementName', 'element', 'count'],
-    ['div', 'div', 3],
-    ['Col', Col, 6],
+    ['div', 'div', 2],
+    ['Col', Col, 4],
   ]);
 
 });
