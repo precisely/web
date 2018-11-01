@@ -44,17 +44,20 @@ const bottomOverlayStyle: React.CSSProperties = {
 
 const headingStyle: React.CSSProperties = {
   position: 'absolute',
-  top: '30px',
+  top: '28px',
   textAlign: 'center',
   width: '100%',
   fontSize: '40px',
-  fontWeight: 700
+  fontWeight: 500
 };
 
 const subheadingStyle: React.CSSProperties = {
   position: 'absolute',
   textAlign: 'center',
   width: '100%',
+  padding: '0px',
+  margin: '0px',
+  marginTop: '-5px',
   fontSize: '20px',
   fontWeight: 300
 };
@@ -63,5 +66,5 @@ const actionStyle: React.CSSProperties = {
   position: 'absolute',
   textAlign: 'center',
   width: '100%',
-  bottom: '40px'
+  bottom: '46px'
 };

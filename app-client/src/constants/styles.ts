@@ -57,14 +57,15 @@ export const fonts: {[key: string]: CSSProperties} = {
 
 
 export const actionButtonStyle: CSSProperties = {
-  backgroundColor: '#2b3fe0',
-  borderRadius: '10px',
+  backgroundColor: 'rgba(43, 63, 224, 0.8)',
+  borderRadius: '8px',
   border: 0,
   paddingLeft: '85px',
   paddingRight: '85px',
-  paddingTop: '10px',
-  paddingBottom: '10px',
+  paddingTop: '5px',
+  paddingBottom: '5px',
   fontSize: '16px',
+  fontWeight: 300,
   cursor: 'pointer',
   color: colors.white
 };
