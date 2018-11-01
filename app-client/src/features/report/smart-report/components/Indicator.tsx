@@ -71,9 +71,8 @@ export const Indicator: React.StatelessComponent<IndicatorProps> = Radium(({icon
   const clickHandler = () => {
     window.location.href = link;
   };
-  const fontColor = disabled ? 'lightgray' : 'black';
   return (
-    <div style={indicatorStyle(icon, state, disabled)}>{name}</div>
+    <div onClick={disabled ? null : clickHandler} style={indicatorStyle(icon, state, disabled)}>{name}</div>
   );
 });
 
