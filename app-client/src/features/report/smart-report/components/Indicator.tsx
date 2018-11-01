@@ -8,7 +8,7 @@
  * @Author: Aneil Mallavarapu
  * @Date: 2018-09-25 09:01:39
  * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-25 09:04:14
+ * @Last Modified time: 2018-11-01 13:22:20
  */
 
 
@@ -40,6 +40,12 @@ const buttons = {
       hover: require('src/assets/indicator/dna/defective/hover.png'),
       down: require('src/assets/indicator/dna/defective/down.png'),
       disabled: require('src/assets/indicator/dna/defective/disabled.png')
+    },
+    enhanced: {
+      rest: require('src/assets/indicator/dna/enhanced/rest.png'),
+      hover: require('src/assets/indicator/dna/enhanced/hover.png'),
+      down: require('src/assets/indicator/dna/enhanced/down.png'),
+      disabled: require('src/assets/indicator/dna/enhanced/disabled.png')
     }
   }
 };
@@ -79,6 +85,7 @@ export const Indicator: React.StatelessComponent<IndicatorProps> = Radium(({icon
 
 const indicatorStyle = (icon: string, state: string, disabled: boolean): Styles.ExtendedCSSProperties => {
   const fontColor = labelColors[state][disabled ? 'disabled' : 'rest'];
+
   return {
     width: '89px',
     height: '45px',

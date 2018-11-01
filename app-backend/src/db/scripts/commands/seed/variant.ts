@@ -5,7 +5,7 @@ import { get as dig } from 'lodash';
 
 export async function variantCommand(userId?: string, variantDescription?: string) {
   if (!userId || !variantDescription) {
-    console.log(`usage: yarn sls seed:variant {userId} {variant e.g., mthfr.c677t:het`);
+    console.log(`usage: yarn seed:variant --user {userId} --variant {variant e.g., mthfr.c677t:het`);
     process.exit(1);
     return;
   }

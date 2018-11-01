@@ -112,6 +112,7 @@ Report.prototype.publish = async function publishReport() {
   if (errors.length > 0) {
     throw new ReportContentError(errors);
   }
+  
   try {
     const requirements = Analyzer.extractRequirements(elements);
     this.set({ 
@@ -124,6 +125,8 @@ Report.prototype.publish = async function publishReport() {
   } catch (e) {
     if (e instanceof CodeError) {
       throw new ReportContentError([e]);
+    } else {
+      throw e;
     }
   }
 };

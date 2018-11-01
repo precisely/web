@@ -6,8 +6,8 @@ import batchPromises = require('batch-promises');
 import { UserSampleType } from 'src/services/user-sample/external';
 import { ReportContentError } from 'src/services/report/errors';
 
-const dataFolder = path.resolve(__dirname, '../../../data');
-const reportsFolder = path.join(dataFolder, 'reports');
+export const dataFolder = path.resolve(__dirname, '../../../data');
+export const reportsFolder = path.join(dataFolder, 'reports');
 
 /**
  * Loads all reports (files with .md) in this directory, assigning ownership to ownerId
@@ -15,11 +15,7 @@ const reportsFolder = path.join(dataFolder, 'reports');
  * @param ownerId 
  */
 export async function reportsCommand(ownerId: string = 'system') {  
-  const reportsData: any[] = fs.readdirSync(reportsFolder).map((file: string) => { 
-    const mdMatch = /([^~\s]*)\s*(~\s*(.*))?\.md/i.exec(file);
-    
-    return mdMatch ? { filename: mdMatch[0], title: mdMatch[1], subtitle: mdMatch[3] } : null;
-  }).filter(x => x);
+  const reportsData = listReportFiles();
   const reports = await batchPromises(
     10, reportsData, async (data) => {
       const report = await new Report(reportAttributes({ ...data, ownerId })).saveAsync();
@@ -50,6 +46,20 @@ export async function reportsCommand(ownerId: string = 'system') {
       console.log(`{slug: ${report.get('slug')}, title: ${report.get('title')}, id: ${report.get('id')}}`);
     }
   }
+}
+
+interface ReportData {
+  filename: string;
+  title: string;
+  subtitle: string;
+}
+
+export function listReportFiles(): ReportData[] {
+  return <ReportData[]> fs.readdirSync(reportsFolder).map((file: string) => { 
+    const mdMatch = /([^~\s]*)\s*(~\s*(.*))?\.md/i.exec(file);
+    
+    return mdMatch ? { filename: mdMatch[0], title: mdMatch[1], subtitle: mdMatch[3] } : null;
+  }).filter(x => x);
 }
 
 function reportContent(filename: string) {
