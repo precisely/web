@@ -63,37 +63,33 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
 
   renderValueProp = (): JSX.Element => {
     return (
-      <RW.Container>
-        <div className="pt-4 pb-4" style={{textAlign: 'center'}}>
-          <h4 style={headingStyle}>
-            <span style={{color: Styles.colors.preciselyMagenta}}>Precise.ly</span>
-            <span> — Discover the genetic basis of your health</span>
-          </h4>
+      <RW.Container style={valuePropStyle}>
+        <h4 style={headingStyle}>
+          <span style={{color: Styles.colors.preciselyMagenta}}>Precise.ly</span>
+          <span> — Discover the genetic basis of your health</span>
+        </h4>
+        <div style={iconGalleryStyle}>
+          <img src={iconGallery} />
         </div>
-        <RW.Container className="pt-2 pb-2">
-          <img src={iconGallery} style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', maxWidth: '100%'}} />
-        </RW.Container>
       </RW.Container>
     );
   }
 
   renderFirstProduct = (): JSX.Element => {
     return (
-      <RW.Container className="pt-5 pb-4">
+      <RW.Container style={mainContainerStyle}>
         <h3 style={headingStyle}>
-          Our first product: a genetic report for ME/CFS
-        </h3>
-        <h3 style={headingStyle}>
+          Our first product: a genetic report for ME/CFS.
+          <br />
           For a limited time, get your personalized report for free.
         </h3>
-        <img src={dnaImg} style={{maxWidth: '100%', maxHeight: '100%' }}/>
-        <div className="lead row" style={smallTextStyle}>
-          <p>We all have questions about our health. Precise.ly is the first service to deliver personalized
-              insights from the world’s top health experts designed to help you understand and improve your health.
-          </p>
+        <img src={dnaImg} style={dnaImgStyle} />
+        <div style={firstProductTextStyle}>
+          We all have questions about our health. Precise.ly is the first service to deliver personalized
+          insights from the world’s top health experts designed to help you understand and improve your health.
         </div>
         <RW.Link to="/report/me-cfs">
-          <RW.Button style={Styles.actionButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
+          <RW.Button style={reportButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
         </RW.Link>
       </RW.Container>
     );
@@ -128,28 +124,6 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
     );
   }
 
-  renderMoreInformation = (): JSX.Element => {
-    return (
-      <RW.Container className="pt-5 pb-4 ">
-        <h3 style={headingStyle}>
-          Third Section of the website
-        </h3>
-        <img src={dnaImg} className="mt-4 mb-4" height="70px"/>
-        <div className="lead row" style={{fontSize: '0.4em', textAlign: 'justify'}}>
-          <RW.Col md={{size: 6, offset: 3}}>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-          </RW.Col>
-        </div>
-      </RW.Container>
-    );
-  }
 }
 
 
@@ -167,9 +141,22 @@ const backgroundStyle: React.CSSProperties = {
   backgroundPosition: 'center',
 };
 
+const mainContainerStyle: React.CSSProperties = {
+  paddingTop: '37px',
+  paddingBottom: '50px',
+};
+
 const headingStyle: React.CSSProperties = {
   ...Styles.fonts.helvetica,
+  fontSize: '40px',
+  margin: '0px',
   fontWeight: 300
+};
+
+const dnaImgStyle: React.CSSProperties = {
+  marginTop: '39px',
+  marginBottom: '30px',
+  height: '18px'
 };
 
 const titleStyle: React.CSSProperties = {
@@ -187,5 +174,25 @@ const titleStyle: React.CSSProperties = {
 
 const smallTextStyle: React.CSSProperties = {
   ...Styles.fonts.helvetica,
+  fontSize: '16px',
   color: Styles.colors.defaultTextColor
+};
+
+const firstProductTextStyle: React.CSSProperties = {
+  ...smallTextStyle,
+  marginBottom: '77px'
+};
+
+const reportButtonStyle: React.CSSProperties = {
+  ...Styles.actionButtonStyle
+};
+
+const valuePropStyle: React.CSSProperties = {
+  paddingTop: '39px',
+  paddingBottom: '73px'
+};
+
+const iconGalleryStyle: React.CSSProperties = {
+  marginTop: '30px',
+  marginBottom: '24px'
 };
