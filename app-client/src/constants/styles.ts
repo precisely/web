@@ -22,7 +22,8 @@ export const colors: {[key: string]: string} = {
   preciselyOrange: '#FF8A4B',
   preciselyMagenta: '#c83a6e',
   preciselyGreen: '#00bc3e',
-  preciselyPurple: '#9d6ca0',
+  preciselyPurple: '#a56aa3',
+  preciselyPurpleAlpha: 'rgba(165, 106, 163, 0.85)',
   defaultTextColor: '#4a4a4a',
 
   buttonDefault: '#6c757d',
@@ -55,18 +56,16 @@ export const fonts: {[key: string]: CSSProperties} = {
 };
 
 
-export const inputStyle: ExtendedCSSProperties = {
-  width: '385px',
-  height: '44px',
-  '@media screen and (max-width: 700px)': {
-    width: '249px'
-  },
-  ':focus': {
-    borderColor: '#d9d9d9'
-  }
-};
-
-
-export const removeBorderRadius: CSSProperties = {
-  borderRadius: 0
+export const actionButtonStyle: CSSProperties = {
+  backgroundColor: 'rgba(43, 63, 224, 0.8)',
+  borderRadius: '8px',
+  border: 0,
+  paddingLeft: '85px',
+  paddingRight: '85px',
+  paddingTop: '5px',
+  paddingBottom: '5px',
+  fontSize: '16px',
+  fontWeight: 300,
+  cursor: 'pointer',
+  color: colors.white
 };

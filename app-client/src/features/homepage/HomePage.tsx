@@ -39,7 +39,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
       <div style={pageStyle}>
         <NavigationBar {...this.props}/>
         <ParallaxProvider>
-          <h1 style={{...titleStyle, color: Styles.colors.preciselyGreen, backgroundColor: 'transparent'}}>
+          <h1 style={titleStyle}>
             Personalized Genetic Reports for Chronic Disease
           </h1>
           <Parallax offsetYMin="-50%" offsetYMax="40%" slowerScrollRate={true}>
@@ -92,9 +92,8 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
               insights from the world’s top health experts designed to help you understand and improve your health.
           </p>
         </div>
-        {/* FIXME: I have no idea how to properly style a button with a link */}
         <RW.Link to="/report/me-cfs">
-          <RW.Button style={{backgroundColor: Styles.colors.preciselyMagenta}} size="lg">Get Your Personalized Report Now</RW.Button>
+          <RW.Button style={Styles.actionButtonStyle} size="lg">Get Your Personalized Report Now</RW.Button>
         </RW.Link>
       </RW.Container>
     );
@@ -175,14 +174,15 @@ const headingStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   ...Styles.fonts.helveticaThin,
+  color: Styles.colors.preciselyGreen,
+  backgroundColor: 'transparent',
   fontSize: '32px',
   fontWeight: 50,
   fontStyle: 'normal',
   fontStretch: 'normal',
   lineHeight: 'normal',
   letterSpacing: 'normal',
-  textAlign: 'center',
-  color: '#00bc3e'
+  textAlign: 'center'
 };
 
 const smallTextStyle: React.CSSProperties = {
