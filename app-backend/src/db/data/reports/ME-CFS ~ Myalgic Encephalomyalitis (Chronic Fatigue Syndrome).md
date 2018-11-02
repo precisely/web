@@ -23,7 +23,7 @@ We've assembled this list of genes and variants based on research publications i
     variantCall("NC_000001.10:g.[11854476=];[11854476=]")
     } />
     
-  <Indicator icon="dna" name="CHRN5A" link="/report/chrn5a" require={
+  <Indicator icon="dna" name="CHRNA5" link="/report/chrna5" require={
       variantCall("NC_000015.9:g.78882925") and 
       variantCall("NC_000015.9:g.78865893") and 
       variantCall("NC_000015.9:g.78873993") 
