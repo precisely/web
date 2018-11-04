@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as CryptoJS from 'crypto-js';
 
+import * as RW from 'src/features/common/RadiumWrappers';
+import * as Styles from 'src/constants/styles';
 import * as AuthUtils from 'src/utils/auth';
 import { getEnvVar } from 'src/utils/env';
 
@@ -17,6 +19,7 @@ interface FileUploadComponentState {
 
 
 export class FileUpload extends React.Component<{
+  isOpen: boolean,
   onFinish?: (complete: boolean) => void
 }, FileUploadComponentState> {
 
@@ -122,17 +125,51 @@ export class FileUpload extends React.Component<{
     );
   }
 
-  render(): JSX.Element {
+  renderHeader(): JSX.Element {
+    return (
+      <RW.ModalHeader>
+        It’s easy to upload your 23andMe data
+      </RW.ModalHeader>
+    );
+  }
+
+  renderBody(): JSX.Element {
     const disabled = this.state.uploadState !== UploadState.Ready;
     return (
-      <form onSubmit={this.upload}>
+      <RW.ModalBody>
+        <form onSubmit={this.upload}>
+          <div>
+            uploading for user ID {AuthUtils.getUserId()}
+          </div>
+          <input type="file" onChange={this.prepareFileForUpload} />
+          {this.renderUploadStatus()}
+          <button type="submit" disabled={disabled}>Upload</button>
+        </form>
+      </RW.ModalBody>
+    );
+  }
+
+  renderFooter(): JSX.Element {
+    return (
+      <RW.ModalFooter>
         <div>
-          uploading for user ID {AuthUtils.getUserId()}
+          Cancel
         </div>
-        <input type="file" onChange={this.prepareFileForUpload} />
-        {this.renderUploadStatus()}
-        <button type="submit" disabled={disabled}>Upload</button>
-      </form>
+        <div>
+          Your privacy and security is our priority.
+          <RW.Link to="/privacy-policy">View our Privacy Policy</RW.Link>
+        </div>
+      </RW.ModalFooter>
+    );
+  }
+
+  render(): JSX.Element {
+    return (
+      <RW.Modal isOpen={this.props.isOpen} fade={true} centered={true}>
+        {this.renderHeader()}
+        {this.renderBody()}
+        {this.renderFooter()}
+      </RW.Modal>
     );
   }
 
