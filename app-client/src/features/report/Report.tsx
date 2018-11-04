@@ -103,11 +103,17 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
         toast.info('Upload successful!');
         this.setState({ctaStatus: 'processing', showUpload: false});
       } else {
-        toast.error('Upload failed', { autoClose: false });
+        toast.error('Upload failed', {autoClose: false});
       }
     };
+    const cancelCallback = () => {
+      this.setState({showUpload: false});
+    };
     return (
-      <FileUpload isOpen={this.state.showUpload} onFinish={fileUploadCallback} />
+      <FileUpload
+        isOpen={this.state.showUpload}
+        onCancel={cancelCallback}
+        onFinish={fileUploadCallback} />
     );
   }
 

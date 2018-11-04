@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as CryptoJS from 'crypto-js';
+import Radium from 'radium';
 
 import * as RW from 'src/features/common/RadiumWrappers';
 import * as Styles from 'src/constants/styles';
@@ -18,9 +19,11 @@ interface FileUploadComponentState {
 }
 
 
+@Radium
 export class FileUpload extends React.Component<{
   isOpen: boolean,
-  onFinish?: (complete: boolean) => void
+  onCancel: () => void,
+  onFinish: (complete: boolean) => void
 }, FileUploadComponentState> {
 
   constructor(props: any) {
@@ -61,7 +64,7 @@ export class FileUpload extends React.Component<{
     const uploadResult = await fetch(location, fetchOptionsUpload);
     if (200 === uploadResult.status) {
       this.setState({uploadState: UploadState.Success});
-      this.callFinishCallback(true);
+      this.callFinish(true);
     } else {
       const resultBody = await uploadResult.text();
       // TODO: Unfortunately, the result body is a full HTML document, and
@@ -69,14 +72,16 @@ export class FileUpload extends React.Component<{
       // to get a better error.
       console.log('error:', resultBody);
       this.setState({uploadState: UploadState.Failure, reason: 'AWS mystery'});
-      this.callFinishCallback(false);
+      this.callFinish(false);
     }
   }
 
-  callFinishCallback(result: boolean) {
-    if (this.props.onFinish) {
-      this.props.onFinish(result);
-    }
+  callFinish = (result: boolean) => {
+    this.props.onFinish(result);
+  }
+
+  callCancel = () => {
+    this.props.onCancel();
   }
 
   prepareFileForUpload = async (event: any) => {
@@ -127,7 +132,7 @@ export class FileUpload extends React.Component<{
 
   renderHeader(): JSX.Element {
     return (
-      <RW.ModalHeader>
+      <RW.ModalHeader style={headerStyle}>
         It’s easy to upload your 23andMe data
       </RW.ModalHeader>
     );
@@ -136,7 +141,7 @@ export class FileUpload extends React.Component<{
   renderBody(): JSX.Element {
     const disabled = this.state.uploadState !== UploadState.Ready;
     return (
-      <RW.ModalBody>
+      <RW.ModalBody style={bodyStyle}>
         <form onSubmit={this.upload}>
           <div>
             uploading for user ID {AuthUtils.getUserId()}
@@ -151,12 +156,13 @@ export class FileUpload extends React.Component<{
 
   renderFooter(): JSX.Element {
     return (
-      <RW.ModalFooter>
+      <RW.ModalFooter style={footerStyle}>
         <div>
-          Cancel
+          <button onClick={this.callCancel} style={cancelStyle}>Cancel</button>
         </div>
         <div>
           Your privacy and security is our priority.
+          &nbsp;
           <RW.Link to="/privacy-policy">View our Privacy Policy</RW.Link>
         </div>
       </RW.ModalFooter>
@@ -165,7 +171,7 @@ export class FileUpload extends React.Component<{
 
   render(): JSX.Element {
     return (
-      <RW.Modal isOpen={this.props.isOpen} fade={true} centered={true}>
+      <RW.Modal isOpen={this.props.isOpen} fade={true} centered={true} style={modalStyle}>
         {this.renderHeader()}
         {this.renderBody()}
         {this.renderFooter()}
@@ -174,3 +180,29 @@ export class FileUpload extends React.Component<{
   }
 
 }
+
+
+const modalStyle: React.CSSProperties = {
+};
+
+const headerStyle: React.CSSProperties = {
+};
+
+const bodyStyle: React.CSSProperties = {
+};
+
+const footerStyle: React.CSSProperties = {
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignContent: 'center'
+};
+
+const cancelStyle: React.CSSProperties = {
+  fontSize: '16px',
+  backgroundColor: 'inherit',
+  color: Styles.colors.blue,
+  border: 'none',
+  padding: '0 !important',
+  cursor: 'pointer'
+};
