@@ -105,35 +105,51 @@ export class FileUpload extends React.Component<{
     let status;
     switch (this.state.uploadState) {
       case UploadState.Success:
-        status = 'upload complete';
+        status = 'Upload complete.';
         break;
       case UploadState.Ready:
-        status = `ready to upload, file hash: ${this.state.hash}`;
+        status = 'Ready to upload.';
         break;
       case UploadState.Checksumming:
-        status = 'checksumming file, please wait';
+        status = 'Checksumming file, please wait...';
         break;
       case UploadState.NoFile:
-        status = 'select a file';
+        status = 'Please select a file.';
         break;
       case UploadState.Uploading:
-        status = 'uploading file, please wait';
+        status = 'Uploading file, please wait...';
         break;
       case UploadState.Failure:
-        status = `error: ${this.state.reason}`;
+        status = `Error: ${this.state.reason}`;
         break;
     }
-    return (
-      <div>
-        {status}
-      </div>
-    );
+    if (this.state.file) {
+      return (
+        <div style={uploadStatusStyle}>
+          {status}
+          <br />
+          {this.state.file.name}
+        </div>
+      );
+    } else {
+      return (
+        <div style={uploadStatusStyle}>
+          {status}
+        </div>
+      );
+    }
   }
 
   renderHeader(): JSX.Element {
     return (
       <RW.ModalHeader style={headerStyle}>
-        It’s easy to upload your 23andMe data
+        <Radium.Style scopeSelector="#file-upload-modal .modal-title" rules={headerTitleStyle} />
+        <div style={headerLine1Style}>
+          It’s easy to upload your 23andMe data
+        </div>
+        <div style={headerLine2Style}>
+          Log in to 23andMe and download your DNA file then upload it here.
+        </div>
       </RW.ModalHeader>
     );
   }
@@ -142,14 +158,31 @@ export class FileUpload extends React.Component<{
     const disabled = this.state.uploadState !== UploadState.Ready;
     return (
       <RW.ModalBody style={bodyStyle}>
-        <form onSubmit={this.upload}>
-          <div>
-            uploading for user ID {AuthUtils.getUserId()}
+        <table style={bodyTableStyle}>
+          <tbody>
+            <tr style={line1Style}>
+              <td style={col1Style}>Step 1.</td>
+              <td style={col2Style}>
+                Go to <a href="https://www.23andme.com/you/download">www.23andme.com/you/download</a> and download your 23andMe data to your computer
+              </td>
+            </tr>
+            <tr style={line2Style}>
+              <td style={col1Style}>Step 2.</td>
+              <td style={col2Style}>Upload your data using the form below</td>
+            </tr>
+          </tbody>
+        </table>
+        <form onSubmit={this.upload} style={uploadFormStyle}>
+          <div style={uploadFormBoxStyle}>
+            <label htmlFor="file-upload-input" style={uploadFormButtonStyle}>
+              Browse
+            </label>
+            <input id="file-upload-input" type="file" onChange={this.prepareFileForUpload} style={uploadFormInputStyle} />
+            {this.renderUploadStatus()}
           </div>
-          <input type="file" onChange={this.prepareFileForUpload} />
-          {this.renderUploadStatus()}
-          <button type="submit" disabled={disabled}>Upload</button>
+          <button type="submit" disabled={disabled} style={uploadFormButtonStyle}>Submit</button>
         </form>
+        {this.renderDebuggingInfo()}
       </RW.ModalBody>
     );
   }
@@ -157,21 +190,33 @@ export class FileUpload extends React.Component<{
   renderFooter(): JSX.Element {
     return (
       <RW.ModalFooter style={footerStyle}>
-        <div>
-          <button onClick={this.callCancel} style={cancelStyle}>Cancel</button>
+        <div style={footerCancelStyle}>
+          <button onClick={this.callCancel} style={cancelButtonStyle}>Cancel</button>
         </div>
-        <div>
-          Your privacy and security is our priority.
-          &nbsp;
-          <RW.Link to="/privacy-policy">View our Privacy Policy</RW.Link>
+        <div style={footerPrivacyNoteStyle}>
+          Your privacy and security is our priority. <RW.Link to="/privacy-policy">View our Privacy Policy</RW.Link>
         </div>
       </RW.ModalFooter>
     );
   }
 
+  renderDebuggingInfo(): JSX.Element {
+    return (
+      <div style={debuggingInfoStyle}>
+        <div>
+          uploading for user ID {AuthUtils.getUserId()}
+        </div>
+        <div>
+          file hash: {this.state.hash}
+        </div>
+      </div>
+    );
+  }
+
   render(): JSX.Element {
     return (
-      <RW.Modal isOpen={this.props.isOpen} fade={true} centered={true} style={modalStyle}>
+      <RW.Modal id="file-upload-modal" isOpen={this.props.isOpen} size="lg" fade={true} centered={true} style={modalStyle}>
+        <Radium.Style scopeSelector="#file-upload-modal.modal-lg" rules={modalLgStyle} />
         {this.renderHeader()}
         {this.renderBody()}
         {this.renderFooter()}
@@ -183,26 +228,145 @@ export class FileUpload extends React.Component<{
 
 
 const modalStyle: React.CSSProperties = {
+  fontWeight: 300
+};
+
+const modalLgStyle: React.CSSProperties = {
+  maxWidth: '656px'
 };
 
 const headerStyle: React.CSSProperties = {
+  borderBottom: 'none'
+};
+
+const headerTitleStyle: React.CSSProperties = {
+  width: '100%',
+  marginTop: '28px',
+  textAlign: 'center'
+};
+
+const headerLine1Style: React.CSSProperties = {
+  fontSize: '30px'
+};
+
+const headerLine2Style: React.CSSProperties = {
+  marginBottom: '-4px',
+  fontSize: '16px'
 };
 
 const bodyStyle: React.CSSProperties = {
+  fontSize: '16px'
+};
+
+const bodyTableStyle: React.CSSProperties = {
+  width: '440px',
+  marginTop: '20px',
+  marginLeft: 'auto',
+  marginRight: 'auto'
+};
+
+const line1Style: React.CSSProperties = {
+};
+
+const line2Style: React.CSSProperties = {
+  lineHeight: '46px'
+};
+
+const col1Style: React.CSSProperties = {
+  width: '60px',
+  verticalAlign: 'top'
+};
+
+const col2Style: React.CSSProperties = {
+};
+
+const uploadFormStyle: React.CSSProperties = {
+  width: '420px',
+  height: '50px',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignContent: 'center',
+  marginLeft: 'auto',
+  marginRight: 'auto'
+};
+
+const uploadFormBoxStyle: React.CSSProperties = {
+  width: '320px',
+  height: '50px',
+  display: 'flex',
+  alignItems: 'center',
+  border: `1px solid ${Styles.colors.blue}`
+};
+
+const uploadFormButtonStyle: Styles.ExtendedCSSProperties = {
+  position: 'relative',
+  overflow: 'hidden',
+  cursor: 'pointer',
+  color: Styles.colors.white,
+  backgroundColor: Styles.colors.blue,
+  width: '78px',
+  height: '34px',
+  marginTop: '0px',
+  marginRight: '0px',
+  marginBottom: '0px',
+  marginLeft: '6px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: 'none',
+  borderRadius: '8px',
+  ':disabled': {
+    backgroundColor: Styles.colors.disabledBlue
+  }
+};
+
+const uploadFormInputStyle: React.CSSProperties = {
+  display: 'none'
 };
 
 const footerStyle: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  alignContent: 'center'
+  alignContent: 'center',
+  fontSize: '16px',
+  borderTop: 'none'
 };
 
-const cancelStyle: React.CSSProperties = {
-  fontSize: '16px',
+const footerCancelStyle: React.CSSProperties = {
+  marginBottom: '20px'
+};
+
+const footerPrivacyNoteStyle: React.CSSProperties = {
+  marginTop: '20px'
+};
+
+const cancelButtonStyle: React.CSSProperties = {
   backgroundColor: 'inherit',
   color: Styles.colors.blue,
   border: 'none',
   padding: '0 !important',
   cursor: 'pointer'
+};
+
+const uploadStatusStyle: React.CSSProperties = {
+  height: '40px',
+  fontSize: '12px',
+  width: '220px',
+  marginLeft: '10px',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  textAlign: 'right',
+  verticalAlign: 'middle',
+  display: 'flex',
+  flexDirection: 'row-reverse',
+  alignContent: 'center',
+  alignItems: 'center'
+};
+
+const debuggingInfoStyle: React.CSSProperties = {
+  display: 'none'
 };
