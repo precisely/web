@@ -8,6 +8,9 @@ import * as AuthUtils from 'src/utils/auth';
 import { getEnvVar } from 'src/utils/env';
 
 
+const modalCloseX = require('src/assets/icon/close-modal.png');
+
+
 enum UploadState { NoFile, Checksumming, Ready, Uploading, Success, Failure }
 
 
@@ -140,9 +143,18 @@ export class FileUpload extends React.Component<{
     }
   }
 
+  renderCloseX(): JSX.Element {
+    return (
+      <div onClick={this.callCancel} style={closeXStyle}>
+        <img src={modalCloseX} />
+      </div>
+    );
+  }
+
   renderHeader(): JSX.Element {
     return (
       <RW.ModalHeader style={headerStyle}>
+        {this.renderCloseX()}
         <Radium.Style scopeSelector="#file-upload-modal .modal-title" rules={headerTitleStyle} />
         <div style={headerLine1Style}>
           It’s easy to upload your 23andMe data
@@ -215,7 +227,7 @@ export class FileUpload extends React.Component<{
 
   render(): JSX.Element {
     return (
-      <RW.Modal id="file-upload-modal" isOpen={this.props.isOpen} size="lg" fade={true} centered={true} style={modalStyle}>
+      <RW.Modal id="file-upload-modal" isOpen={this.props.isOpen} size="lg" fade={false} centered={true} style={modalStyle}>
         <Radium.Style scopeSelector="#file-upload-modal.modal-lg" rules={modalLgStyle} />
         {this.renderHeader()}
         {this.renderBody()}
@@ -233,6 +245,13 @@ const modalStyle: React.CSSProperties = {
 
 const modalLgStyle: React.CSSProperties = {
   maxWidth: '656px'
+};
+
+const closeXStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '11px',
+  right: '11px',
+  cursor: 'pointer'
 };
 
 const headerStyle: React.CSSProperties = {
