@@ -84,7 +84,10 @@ export class FileUpload extends React.Component<{
   }
 
   callCancel = () => {
-    this.props.onCancel();
+    // disallow cancel during upload
+    if (this.state.uploadState != UploadState.Uploading) {
+      this.props.onCancel();
+    }
   }
 
   prepareFileForUpload = async (event: any) => {
@@ -200,10 +203,11 @@ export class FileUpload extends React.Component<{
   }
 
   renderFooter(): JSX.Element {
+    const cancelDisabled = this.state.uploadState == UploadState.Uploading;
     return (
       <RW.ModalFooter style={footerStyle}>
         <div style={footerCancelStyle}>
-          <button onClick={this.callCancel} style={cancelButtonStyle}>Cancel</button>
+          <button disabled={cancelDisabled} onClick={this.callCancel} style={cancelButtonStyle}>Cancel</button>
         </div>
         <div style={footerPrivacyNoteStyle}>
           Your privacy and security is our priority. <RW.Link to="/privacy-policy">View our Privacy Policy</RW.Link>
@@ -362,12 +366,15 @@ const footerPrivacyNoteStyle: React.CSSProperties = {
   marginTop: '20px'
 };
 
-const cancelButtonStyle: React.CSSProperties = {
+const cancelButtonStyle: Styles.ExtendedCSSProperties = {
   backgroundColor: 'inherit',
   color: Styles.colors.blue,
   border: 'none',
   padding: '0 !important',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  ':disabled': {
+    color: Styles.colors.disabledBlue
+  }
 };
 
 const uploadStatusStyle: React.CSSProperties = {
