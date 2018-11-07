@@ -1,9 +1,12 @@
+<# Gene_Name CHRNA3 / #>
+
+<# GeneName_full Neuronal acetylcholine receptor subunit alpha-3 / #>
 
 # What does the CHRNA3 gene do?
 
 CHRNA3 encodes a neurotransmitter called [acetylcholine](http://www.uniprot.org/citations/8906617) that regulates the creation and destruction of nicotine receptors in the nervous system. It also controls [serotonin](https://www.ebi.ac.uk/QuickGO/term/GO:0022850) channels in the brain. Variants in this gene have been associated with [nicotine dependence](https://www.ncbi.nlm.nih.gov/pubmed/22290489), [lung cancer](https://www.ncbi.nlm.nih.gov/pubmed/19836008), [COPD](https://www.ncbi.nlm.nih.gov/pubmed/24621683) (Chronic Obstructive Pulmonary Disease), [cocaine dependence](https://www.ncbi.nlm.nih.gov/pubmed/20485328), and [ME/CFS](https://www.ncbi.nlm.nih.gov/pubmed/27099524). This gene is located on chromosome 15.
 
-<GeneMap name= "CHRNA3" interval="NC_000015.9:g.78885394_78913637=">
+<# GeneMap name= "CHRNA3" interval="NC_000015.9:g.78885394_78913637=" #>
 
 # What are some common variants of CHRNA3?
  
@@ -25,7 +28,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
 
   </Variant>
 
-</GeneMap>
+<# </GeneMap> #>
 
 <AnalysisPanel>
 
@@ -58,10 +61,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
     People should not smoke. If you do smoke, be aware of your risk for dependency or increased difficulty of quitting smoking. Consider regular checks for lung cancer. Avoid [radiation, toxins such as heavy metal](https://www.cancer.gov/types/lung/patient/lung-prevention-pdq#section/all), and eat more [yellow and orange fruits and vegetables](https://www.cancer.gov/types/lung/patient/lung-prevention-pdq#section/all).
  
     Consult your physician on [medications](http://www.uniprot.org/uniprot/P32297) that act on variants in CHRNA3, including [Bupropion](https://www.drugbank.ca/drugs/DB01156), [Cytisine](https://www.drugbank.ca/drugs/DB09028), [Dextromethorphan](https://www.drugbank.ca/drugs/DB00514), [Ethanol](https://www.drugbank.ca/drugs/DB00898), [Galantamine](https://www.drugbank.ca/drugs/DB00674), [Levamisole](https://www.drugbank.ca/drugs/DB00848), [Levomethadyl Acetate](https://www.drugbank.ca/drugs/DB01227), [Nicotine](https://www.drugbank.ca/drugs/DB00184), [Pentolinium](https://www.drugbank.ca/drugs/DB01090), and [Varenicline](https://www.drugbank.ca/drugs/DB01273).
-
-    # How common is this genotype in the general population?
-
-    <piechart percentage=37.9 />
+    <#     # How common is this genotype in the general population? piechart percentage=37.9 / #>
   </Analysis>
 <# C78606381T (T;T) #>
 
@@ -112,9 +112,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
     - [Inositol hexaphosphate (IP6), found in germ, bran, and whole kernel corn](https://www.ncbi.nlm.nih.gov/pubmed/11366552) may activate the immune system and help fight bacterial and fungal infections. 
     - [Arabinoxylan rice bran (MGN-3/Biobran](https://www.ncbi.nlm.nih.gov/pubmed/25541298) increases activation and stimulates cell killing activity.
 
-    # How common is this genotype in the general population?
-
-    <piechart percentage=15.9 />
+    <#    # How common is this genotype in the general population? piechart percentage=15.9 / #>
   </Analysis>
 <# C645T  (C:T) #>
 
@@ -147,9 +145,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
  
     Consult your physician on [medications](http://www.uniprot.org/uniprot/P32297) that act on variants in CHRNA3, including [Bupropion](https://www.drugbank.ca/drugs/DB01156), [Cytisine](https://www.drugbank.ca/drugs/DB09028), [Dextromethorphan](https://www.drugbank.ca/drugs/DB00514), [Ethanol](https://www.drugbank.ca/drugs/DB00898), [Galantamine](https://www.drugbank.ca/drugs/DB00674), [Levamisole](https://www.drugbank.ca/drugs/DB00848), [Levomethadyl Acetate](https://www.drugbank.ca/drugs/DB01227), [Nicotine](https://www.drugbank.ca/drugs/DB00184), [Pentolinium](https://www.drugbank.ca/drugs/DB01090), and [Varenicline](https://www.drugbank.ca/drugs/DB01273).
 
-    # How common is this genotype in the general population?
-
-    <piechart percentage=39.7 />
+    <#    # How common is this genotype in the general population? piechart percentage=39.7 / #>
   </Analysis>
 <# C645T  (T;T) #>
 
@@ -190,9 +186,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
 
     Consult your physician on [medications](http://www.uniprot.org/uniprot/P32297) that act on variants in CHRNA3, including [Bupropion](https://www.drugbank.ca/drugs/DB01156), [Cytisine](https://www.drugbank.ca/drugs/DB09028), [Dextromethorphan](https://www.drugbank.ca/drugs/DB00514), [Ethanol](https://www.drugbank.ca/drugs/DB00898), [Galantamine](https://www.drugbank.ca/drugs/DB00674), [Levamisole](https://www.drugbank.ca/drugs/DB00848), [Levomethadyl Acetate](https://www.drugbank.ca/drugs/DB01227), [Nicotine](https://www.drugbank.ca/drugs/DB00184), [Pentolinium](https://www.drugbank.ca/drugs/DB01090), and [Varenicline](https://www.drugbank.ca/drugs/DB01273).
 
-    # How common is this genotype in the general population?
-
-    <piechart percentage=42.9 />
+    <#     # How common is this genotype in the general population? piechart percentage=42.9 / #>
   </Analysis>
 <# C78606381T (C;T) and C645T  (C:T) #>
 
@@ -239,11 +233,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
  
     Consult your physician on [medications](http://www.uniprot.org/uniprot/P32297) that act on variants in CHRNA3, including [Bupropion](https://www.drugbank.ca/drugs/DB01156), [Cytisine](https://www.drugbank.ca/drugs/DB09028), [Dextromethorphan](https://www.drugbank.ca/drugs/DB00514), [Ethanol](https://www.drugbank.ca/drugs/DB00898), [Galantamine](https://www.drugbank.ca/drugs/DB00674), [Levamisole](https://www.drugbank.ca/drugs/DB00848), [Levomethadyl Acetate](https://www.drugbank.ca/drugs/DB01227), [Nicotine](https://www.drugbank.ca/drugs/DB00184), [Pentolinium](https://www.drugbank.ca/drugs/DB01090), and [Varenicline](https://www.drugbank.ca/drugs/DB01273).
 
-    <#
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-    #>
+    <#    # How common is this genotype in the general population? piechart percentage= / #>
   </Analysis>
 <# C78606381T (T;T) and C645T  (C:T) #>
 
@@ -310,11 +300,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
     - [Inositol hexaphosphate (IP6), found in germ, bran, and whole kernel corn](https://www.ncbi.nlm.nih.gov/pubmed/11366552) may activate the immune system and help fight bacterial and fungal infections. 
     - [Arabinoxylan rice bran (MGN-3/Biobran](https://www.ncbi.nlm.nih.gov/pubmed/25541298) increases activation and stimulates cell killing activity.
 
-    <#
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-    #>
+    <#    # How common is this genotype in the general population? piechart percentage= / #>
   </Analysis>
 <# C78606381T (T;T) and C645T  (T;T) #>
 
@@ -388,12 +374,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
     - [Inositol hexaphosphate (IP6), found in germ, bran, and whole kernel corn](https://www.ncbi.nlm.nih.gov/pubmed/11366552) may activate the immune system and help fight bacterial and fungal infections. 
     - [Arabinoxylan rice bran (MGN-3/Biobran](https://www.ncbi.nlm.nih.gov/pubmed/25541298) increases activation and stimulates cell killing activity.
 
-
-    <#
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-    #>
+    <#    # How common is this genotype in the general population? piechart percentage= / #>
   </Analysis>
 <# C78606381T (C;T) and C645T  (T;T) #>
 
@@ -448,11 +429,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
 
     Consult your physician on [medications](http://www.uniprot.org/uniprot/P32297) that act on variants in CHRNA3, including [Bupropion](https://www.drugbank.ca/drugs/DB01156), [Cytisine](https://www.drugbank.ca/drugs/DB09028), [Dextromethorphan](https://www.drugbank.ca/drugs/DB00514), [Ethanol](https://www.drugbank.ca/drugs/DB00898), [Galantamine](https://www.drugbank.ca/drugs/DB00674), [Levamisole](https://www.drugbank.ca/drugs/DB00848), [Levomethadyl Acetate](https://www.drugbank.ca/drugs/DB01227), [Nicotine](https://www.drugbank.ca/drugs/DB00184), [Pentolinium](https://www.drugbank.ca/drugs/DB01090), and [Varenicline](https://www.drugbank.ca/drugs/DB01273).
 
-    <#
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-    #>
+    <#    # How common is this genotype in the general population? piechart percentage= /  #>
   </Analysis>
 <# Wild type #>
 
@@ -466,11 +443,7 @@ A variant is a change at a specific point in the gene from the expected nucleoti
 
     Your CHRNA3 gene has no variants. A normal gene is referred to as a "wild-type" gene.
 
-    <#
-    # How common is this genotype in the general population?
-
-    <piechart percentage= />
-    #>
+    <#     # How common is this genotype in the general population? piechart percentage= / #>
   </Analysis>
 <# Unknown #>
 
@@ -478,22 +451,19 @@ A variant is a change at a specific point in the gene from the expected nucleoti
 
     # What does this mean?
 
-    The effect is unknown.
+    Your gene has an unknown variant, and at this time we are unable to determine your genotype.
 
-    # How common is this genotype in the general population?
-
-    <piechart percentage=0 />
   </Analysis>
 </AnalysisPanel>
 
 <# Tissues brain D001921 bone marrow and immune system D007107  #>
 
-<TopicBar mesh_D001921 mesh_D007107  />
+<TopicBar brain bone-marrow-immune-system  />
 
 <# Symptoms fatigue D005221 inflamation D007249 anxiety D001007 depression D003863 #>
 
-<TopicBar mesh_D005221 mesh_D007249 mesh_D001007 mesh_D003863 />
+<TopicBar fatigue inflamation anxiety depression />
 
 <# Diseases cancer;  COPD; anxiety disorder; ME/CFS; nicotine dependency; autoimmune disorder; Disease susceptibility - increased susceptibility to viral, bacterial, and parasitical infections; cocaine dependence; schizophrenia, Major depression; coronary heart disease; #>
 
-<TopicBar mesh_D009369 mesh_D029424 mesh_D001008 mesh_D015673 mesh_D014029 mesh_D001327 mesh_D004198 mesh_D019970 mesh_D012559 mesh_D003866 mesh_D003327  />
+<TopicBar cancer COPD anxiety-disorder ME-CFS nicotine-dependency autoimmune-disorder genetic-predisposition-disease	 cocaine-dependence schizophrenia depression coronary-heart-disease	  />
