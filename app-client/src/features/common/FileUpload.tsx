@@ -9,6 +9,7 @@ import { getEnvVar } from 'src/utils/env';
 
 
 const modalCloseX = require('src/assets/icon/close-modal.png');
+const loadingGif = require('src/assets/custom/precisely-loading-34px.gif');
 
 
 enum UploadState { NoFile, Checksumming, Ready, Uploading, Success, Failure }
@@ -85,7 +86,7 @@ export class FileUpload extends React.Component<{
 
   callCancel = () => {
     // disallow cancel during upload
-    if (this.state.uploadState != UploadState.Uploading) {
+    if (this.state.uploadState !== UploadState.Uploading) {
       this.props.onCancel();
     }
   }
@@ -170,7 +171,22 @@ export class FileUpload extends React.Component<{
   }
 
   renderBody(): JSX.Element {
-    const disabled = this.state.uploadState !== UploadState.Ready;
+    const disabledSubmit = this.state.uploadState !== UploadState.Ready;
+    const disabledBrowse = this.state.uploadState === UploadState.Checksumming ||
+                           this.state.uploadState === UploadState.Uploading;
+    const renderBrowse = () => {
+      if (disabledBrowse) {
+        return (
+          <img src={loadingGif} style={browseDisabledStyle} />
+        );
+      } else {
+        return (
+          <label htmlFor="file-upload-input" style={uploadFormButtonStyle}>
+            Browse
+          </label>
+        );
+      }
+    };
     return (
       <RW.ModalBody style={bodyStyle}>
         <table style={bodyTableStyle}>
@@ -189,13 +205,11 @@ export class FileUpload extends React.Component<{
         </table>
         <form onSubmit={this.upload} style={uploadFormStyle}>
           <div style={uploadFormBoxStyle}>
-            <label htmlFor="file-upload-input" style={uploadFormButtonStyle}>
-              Browse
-            </label>
-            <input id="file-upload-input" type="file" onChange={this.prepareFileForUpload} style={uploadFormInputStyle} />
+            {renderBrowse()}
+            <input id="file-upload-input" type="file" disabled={disabledBrowse} onChange={this.prepareFileForUpload} style={uploadFormInputStyle} />
             {this.renderUploadStatus()}
           </div>
-          <button type="submit" disabled={disabled} style={uploadFormButtonStyle}>Submit</button>
+          <button type="submit" disabled={disabledSubmit} style={uploadFormButtonStyle}>Submit</button>
         </form>
         {this.renderDebuggingInfo()}
       </RW.ModalBody>
@@ -203,7 +217,7 @@ export class FileUpload extends React.Component<{
   }
 
   renderFooter(): JSX.Element {
-    const cancelDisabled = this.state.uploadState == UploadState.Uploading;
+    const cancelDisabled = this.state.uploadState === UploadState.Uploading;
     return (
       <RW.ModalFooter style={footerStyle}>
         <div style={footerCancelStyle}>
@@ -343,6 +357,13 @@ const uploadFormButtonStyle: Styles.ExtendedCSSProperties = {
   ':disabled': {
     backgroundColor: Styles.colors.disabledBlue
   }
+};
+
+const browseDisabledStyle: React.CSSProperties = {
+  height: '34px',
+  width: '34px',
+  marginLeft: '25px',
+  marginRight: '25px'
 };
 
 const uploadFormInputStyle: React.CSSProperties = {
