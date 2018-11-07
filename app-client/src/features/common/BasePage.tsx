@@ -43,6 +43,5 @@ const baseContainerStyle: Styles.ExtendedCSSProperties = {
   flexDirection: 'column',
   minHeight: '100vh',
   paddingLeft: '0px',
-  paddingRight: '0px',
-  '-webkit-font-smoothing': 'antialiased'
+  paddingRight: '0px'
 };

@@ -18,6 +18,8 @@ export const colors: {[key: string]: string} = {
   grey2: '#545b62',
   white: '#FFF',
   offWhite: '#F5F5F5',
+  blue: '#2b3fe0',
+  disabledBlue: 'rgb(202, 208, 246)',
   preciselyOrange: '#FF8A4B',
   preciselyMagenta: '#c83a6e',
   preciselyGreen: '#00bc3e',

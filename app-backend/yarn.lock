@@ -4714,21 +4714,6 @@ istanbul@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/istanbul/-/istanbul-0.4.5.tgz#65c7d73d4c4da84d4f3ac310b918fb0b8033733b"
   integrity sha1-ZcfXPUxNqE1POsMQuRj7C4Azczs=
-  dependencies:
-    abbrev "1.0.x"
-    async "1.x"
-    escodegen "1.8.x"
-    esprima "2.7.x"
-    glob "^5.0.15"
-    handlebars "^4.0.1"
-    js-yaml "3.x"
-    mkdirp "0.5.x"
-    nopt "3.x"
-    once "1.x"
-    resolve "1.1.x"
-    supports-color "^3.1.0"
-    which "^1.1.1"
-    wordwrap "^1.0.0"
 
 isurl@^1.0.0-alpha5:
   version "1.0.0"
@@ -7578,9 +7563,9 @@ sequelize@4.35.2:
     validator "^9.4.1"
     wkx "^0.4.1"
 
-"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.3.2":
-  version "1.3.2"
-  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#6ab327cd0cbf3eb80b954e7e5a2ce18d7122a2d0"
+"seqvarnomjs@git+ssh://git@github.com/precisely/seqvarnomjs#1.3.3":
+  version "1.3.3"
+  resolved "git+ssh://git@github.com/precisely/seqvarnomjs#5bd1c2ac94be6580eb68e887cb2e67735b3dfe33"
   dependencies:
     lodash "^4.17.5"
     mathjs "^3.16.3"

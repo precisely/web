@@ -10,6 +10,7 @@
 import * as React from 'react';
 import Radium from 'radium';
 import { graphql, OptionProps } from 'react-apollo';
+import { toast } from 'react-toastify';
 
 import * as Styles from 'src/constants/styles';
 import {FileUpload} from 'src/features/common/FileUpload';
@@ -99,23 +100,21 @@ export class ReportImpl extends React.Component<ReportProps, ReportState> {
   renderUploadDialog() {
     const fileUploadCallback = (complete: boolean) => {
       if (complete) {
-        this.setState({ctaStatus: 'processing', showUpload: false });
+        toast.info('Upload successful!');
+        this.setState({ctaStatus: 'processing', showUpload: false});
       } else {
-        // FIXME: show toast with error
+        toast.error('Upload failed', {autoClose: false});
       }
     };
-
-    const centeredOverlayStyle: React.CSSProperties = {position: 'absolute', top: '50%', margin: 'auto', width: '100%'};
-
-    if (this.state.showUpload) {
-      return (
-        <div style={{...centeredOverlayStyle, backgroundColor: 'white', height: '100%'}}>
-          <FileUpload onFinish={fileUploadCallback}/>
-        </div>
-      );
-    } else {
-      return null;
-    }
+    const cancelCallback = () => {
+      this.setState({showUpload: false});
+    };
+    return (
+      <FileUpload
+        isOpen={this.state.showUpload}
+        onCancel={cancelCallback}
+        onFinish={fileUploadCallback} />
+    );
   }
 
   renderContent() {
