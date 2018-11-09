@@ -36,7 +36,13 @@ describe('SendGrid email tests', () => {
   log.error = jest.fn();
 
   it('should call SendGrid APIs and return true on success', async () => {
-    const sendRes = await EmailService.send({to: 'alice@example.com', subject: 'test subject', line1: 'test line 1', line2: 'test line 2', link: 'link text'});
+    const sendRes = await EmailService.send({
+      to: 'alice@example.com',
+      subject: 'test subject',
+      line1: 'test line 1',
+      line2: 'test line 2',
+      link: 'link text'
+    });
     expect(mockSetApiKey).toHaveBeenCalled();
     expect(mockSend).toHaveBeenCalled();
     expect(sendRes).toBeTruthy();
@@ -46,7 +52,13 @@ describe('SendGrid email tests', () => {
     mockSend.mockImplementationOnce((...x) => {
       throw 'error';
     });
-    const sendRes = await EmailService.send({to: 'alice@example.com', subject: 'test subject', line1: 'test line 1', line2: 'test line 2', link: 'link text'});
+    const sendRes = await EmailService.send({
+      to: 'alice@example.com',
+      subject: 'test subject',
+      line1: 'test line 1',
+      line2: 'test line 2',
+      link: 'link text'
+    });
     expect(mockSetApiKey).toHaveBeenCalled();
     expect(mockSend).toHaveBeenCalled();
     expect(sendRes).toBeFalsy();

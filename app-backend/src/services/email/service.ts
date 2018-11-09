@@ -97,7 +97,7 @@ function transformTemplate(template: string, conf: EmailArgs): string {
     '###LINK###': conf.link
   };
   let res = template;
-  for (const key in xforms) {
+  for (const key of Object.keys(xforms)) {
     const value = xforms[key];
     res = res.replace(new RegExp(key, 'g'), value);
   }

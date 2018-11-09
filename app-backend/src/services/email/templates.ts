@@ -1,3 +1,5 @@
+// tslint:disable
+
 // XXX: This is completely idiotic. These templates should be stored in separate
 // files. Unfortunately, Serverless, or maybe the serverless webpack plugin,
 // does not seem to provide a non-broken mechanism for adding resource files to
