@@ -19,7 +19,7 @@
     "eslint": "eslint src",
     "sls": "yarn env sls",
     "start": "yarn sls static",
-    "start:offline-auth": "OFFLINE_AUTH=true yarn sls static",
+    "start:offline-auth": "REACT_APP_OFFLINE_AUTH=true yarn sls static",
     "test": "yarn sls test ",
     "test:watch": "yarn sls test:watch",
     "test:coverage": "yarn sls test:coverage",
