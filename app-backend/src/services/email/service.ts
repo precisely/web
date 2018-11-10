@@ -7,10 +7,14 @@ import { MailData } from '@sendgrid/helpers/classes/mail';
 import * as Logger from 'src/common/logger';
 import { getEnvVar } from 'src/common/environment';
 
+import * as EmailTemplates from './templates';
+
 export interface EmailArgs {
   to: string;
   subject: string;
-  text: string;
+  line1: string;
+  line2: string;
+  link: string;
 }
 
 const ssmParamSendGridToken = 'API_SENDGRID_TOKEN';
@@ -19,6 +23,7 @@ const ssmParamAuth0ClientSecret = 'API_AUTH0_CLIENT_SECRET';
 
 const reEmail = new RegExp(/(.+)@(.+)\.(.+)/);
 
+const appDomain = getEnvVar('BASE_DOMAIN');
 const auth0Domain = `${getEnvVar('AUTH0_TENANT_NAME')}.auth0.com`;
 
 interface ResultAuth0BearerToken {
@@ -80,6 +85,35 @@ async function getAuth0User(auth0AccessToken: string, userId: string) {
   }
 }
 
+function transformTemplate(template: string, conf: EmailArgs): string {
+  const cleanup = (s: string) => {
+    return s.replace('Precise.ly: ', '');
+  };
+  const xforms = {
+    '###SUBJECT###': cleanup(conf.subject),
+    '###LINE1###': conf.line1,
+    '###LINE2###': conf.line2,
+    '###DOMAIN###': appDomain,
+    '###LINK###': conf.link
+  };
+  let res = template;
+  for (const key of Object.keys(xforms)) {
+    const value = xforms[key];
+    res = res.replace(new RegExp(key, 'g'), value);
+  }
+  return res;
+}
+
+function buildEmailText(conf: EmailArgs): string {
+  const template = EmailTemplates.default.text;
+  return transformTemplate(template, conf);
+}
+
+function buildEmailHTML(conf: EmailArgs): string {
+  const template = EmailTemplates.default.html;
+  return transformTemplate(template, conf);
+}
+
 export class EmailService {
 
   static async send(conf: EmailArgs, log: Logger.Logger = Logger.log): Promise<boolean> {
@@ -114,7 +148,17 @@ export class EmailService {
       from: getEnvVar('FROM_EMAIL'),
       to: realTo,
       subject: conf.subject,
-      text: conf.text
+      html: buildEmailHTML(conf),
+      text: buildEmailText(conf),
+      trackingSettings: {
+        clickTracking: {
+          enable: true,
+          enableText: true
+        },
+        openTracking: {
+          enable: true
+        }
+      }
     };
     try {
       await SendGrid.send(mailData);
