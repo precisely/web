@@ -11,7 +11,7 @@ methionine. The body uses [methionine](https://ghr.nlm.nih.gov/condition/hyperme
 
 This gene is located on chromosome 1. The enzyme it creates acts in your endocrine system and pancreas.
 
-<TopicBar endocrineSystem pancreas />
+<TopicBar endocrine-system pancreas />
 
 <GeneMap name="MTHFR" interval="NC_000001.10:g.11845787_11866160="> 
 
@@ -35,7 +35,7 @@ This gene is located on chromosome 1. The enzyme it creates acts in your endocri
 </GeneMap>
 
 <# C677T #>
-<AnalysisPanel titlePrefix="Your MTHFR genotype is" >
+<AnalysisPanel titlePrefix="Your MTHFR genotype is"  >
   <Analysis title="C677T (C;T)" type="defective"
             case={  variantCall("NC_000001.10:g.[11856378G>A];[11856378=]") 
                     and 
