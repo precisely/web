@@ -21,23 +21,36 @@ import { DisplayError } from 'src/errors/display-error';
 //    a JS Error objects (provided as error)
 //    GraphQL errors - a JSON array returned in a graphql query
 //    Network error - a network error as returned by a graphql query
+
+const errorTextStyle: React.CSSProperties = {
+  textAlign: 'center',
+  textShadow: '-1px 1px #FFF',
+
+};
+
+const linkStyle: React.CSSProperties = {
+  textDecorationLine: 'underline'
+};
+
 @Radium
 export class ErrorView extends React.Component<{error: DisplayError}> {
 
   render() {
     return (
-      <>
-        <h1>{this.props.error.message}</h1>
-        <h3>{this.props.error.description}</h3>
-        {this.renderResolution()}
-      </>
+      <div style={{display: 'inline'}}>
+        <h1 style={errorTextStyle}>{this.props.error.message}</h1>
+        <h3 style={errorTextStyle}>{this.props.error.description}</h3>
+        <div style={{textAlign: 'center'}}>{this.renderResolution()}</div>
+      </div>
     );
   }
 
   renderResolution()  {
     if (this.props.error.resolution) {
       const { url, text} = this.props.error.resolution.link;
-      return <a href={url}>{text}</a>;
+      return <a style={linkStyle} href={url}>{text}</a>;
+    } else {
+      return <a style={linkStyle} href="/">back to home page</a>;
     }
     return null;
   }
