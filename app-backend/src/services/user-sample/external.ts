@@ -5,10 +5,6 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  *
- * @Author: Aneil Mallavarapu 
- * @Date: 2018-09-21 13:40:08 
- * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-09-24 15:47:14
  */
 
  // UserSample definitions used externally

@@ -4,10 +4,6 @@
  *
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
- * @Author: Aneil Mallavarapu 
- * @Date: 2018-08-10 09:51:51 
- * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-06 09:10:52
  */
 
 import { createError } from 'apollo-errors';
