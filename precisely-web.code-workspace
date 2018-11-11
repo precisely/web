@@ -17,7 +17,7 @@
 		}
 	],
 	"settings": {
-		"fileheader.tpl": "/*\n * Copyright (c) 2017-Present, Precise.ly, Inc.\n * All rights reserved.\n *\n * Redistribution and use in source and binary forms, with or\n * without modification, are not permitted.\n *\n * @Author: {author}\n * @Date: {createTime}\n * @Last Modified by:   {lastModifiedBy}\n * @Last Modified time: {updateTime}\n */\n",
+		"fileheader.tpl": "/*\n * Copyright (c) 2017-Present, Precise.ly, Inc.\n * All rights reserved.\n *\n * Redistribution and use in source and binary forms, with or\n * without modification, are not permitted.\n *\n */\n",
 		"jest.pathToJest": ".vscode/jest",
 		"search.exclude": {
 			"**/node_modules": true,
