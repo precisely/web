@@ -5,10 +5,6 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  *
- * @Author: Aneil Mallavarapu
- * @Date: 2018-10-06 05:38:39
- * @Last Modified by:   Aneil Mallavarapu
- * @Last Modified time: 2018-10-06 05:38:39
  */
 
 import * as React from 'react';

@@ -4,10 +4,6 @@
  *
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
- * @Author: Aneil Mallavarapu 
- * @Date: 2018-08-10 09:43:09 
- * @Last Modified by:   mikey.zhaopeng 
- * @Last Modified time: 2018-08-10 09:43:09 
  */
 
 import gql from 'graphql-tag';

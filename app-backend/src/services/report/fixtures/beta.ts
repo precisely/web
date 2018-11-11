@@ -4,10 +4,6 @@
  *
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
- * @Author: Aneil Mallavarapu 
- * @Date: 2018-08-13 15:10:44 
- * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-10-16 09:49:43
  */
 
 // This file represent fixtures for reports in the beta product

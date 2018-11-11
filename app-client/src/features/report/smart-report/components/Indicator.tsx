@@ -5,12 +5,7 @@
  * Redistribution and use in source and binary forms, with or
  * without modification, are not permitted.
  *
- * @Author: Aneil Mallavarapu
- * @Date: 2018-09-25 09:01:39
- * @Last Modified by: Aneil Mallavarapu
- * @Last Modified time: 2018-11-01 13:22:20
  */
-
 
 import * as React from 'react';
 import Radium from 'radium';
