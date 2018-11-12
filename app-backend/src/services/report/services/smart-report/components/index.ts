@@ -8,5 +8,5 @@ import { Indicator, IndicatorPanel } from 'src/services/report/services/smart-re
  */
 
 export { AnalysisPanel } from './analysis-panel';
-export { GeneMap } from './gene-map';
+export { GeneVariants } from './gene-variants';
 export { Indicator, IndicatorPanel } from './indicator-panel';

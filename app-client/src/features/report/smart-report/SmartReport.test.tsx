@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SmartReport } from './SmartReport';
 import * as Adapter from 'enzyme-adapter-react-16';
 import {shallow, mount, configure} from 'enzyme';
-import { Variant } from './components/GeneMap';
+import { Variant } from './components/Variant';
 
 configure({adapter: new Adapter()});
 

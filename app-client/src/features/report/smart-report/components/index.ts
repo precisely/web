@@ -8,7 +8,8 @@
  */
 
 export { AnalysisPanel, Analysis } from './AnalysisPanel';
-export { GeneMap, Variant } from './GeneMap';
+export { GeneVariants } from './GeneVariants';
+export { Variant } from './Variant';
 export { PieChart } from './PieChart';
 export { TopicBar } from './TopicBar';
 export { IndicatorPanel } from './IndicatorPanel';
