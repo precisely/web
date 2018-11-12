@@ -242,6 +242,20 @@ See https://github.com/aaronshaf/dynamodb-admin
 npm install -g dynamodb-admin
 ```
 
+##### Debugging the backend
+
+1. Check that `"debug.node.autoAttach": "enabled"` is set in VSCode workspace or user settings  
+2. Add a `debugger;` statement at code point(s) you want to break at
+3. Start the server in debug mode:
+   ```shell
+   yarn debug
+   ```
+ 
+This is  a modified version of what is suggested [here](
+ https://medium.com/@OneMuppet_/debugging-lambada-functions-locally-in-vscode-with-actual-break-points-deee6235f590 
+). Note that setting debug points in the original source using VSCode won't work because serverless-webpack transpiles the code. 
+
+
 #### Frontend
 
 Just one step:

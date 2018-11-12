@@ -25,7 +25,11 @@
 			"**/coverage": true
 		},
 		"fileheader.Author": "Aneil Mallavarapu",
-		"fileheader.LastModifiedBy": "Aneil Mallavarapu"
+		"fileheader.LastModifiedBy": "Aneil Mallavarapu",
+		"cSpell.words": [
+			"hgvs"
+		],
+		"debug.node.autoAttach": "on"
 	}
 
 }
