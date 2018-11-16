@@ -33,15 +33,39 @@ export class UserSampleStaticMethods {
     UserSampleRequirementStatus[], 
     UserSampleRequirement[]
   ]> {
+    const dateSortFn = (a: any, b: any) => // tslint:disable-line no-any
+      (a.get().createdAt < b.get().createdAt) ? -1 : ((a.get().createdAt > b.get().createdAt) ? 1 : 0);
     const {Items: samples} = await UserSample.query(userId).execAsync();
     const satisfied: UserSampleRequirementStatus[] = [];
     const unsatisfied: UserSampleRequirement[] = [];
     for (const req of requirements) {
-      const matchingSampleIndex = samples.findIndex(s => s.matchesRequirement(req));
-      if (matchingSampleIndex === -1) {
+      let matchingSample;
+      const matchingSampleList = samples.filter(s => s.matchesRequirement(req));
+      if (matchingSampleList.length !== 0) {
+        // if any matching sample is 'ready', use it
+        const readySample = matchingSampleList.find(s => s.get().status === UserSampleStatus.ready);
+        if (readySample) {
+          matchingSample = readySample;
+        } else {
+          const pendingSampleList = matchingSampleList
+            .filter(s => s.get().status === UserSampleStatus.processing)
+            .sort(dateSortFn);
+          if (pendingSampleList.length !== 0) {
+            matchingSample = pendingSampleList[0];
+          } else {
+            const errorSampleList = matchingSampleList
+              .filter(s => s.get().status === UserSampleStatus.error)
+              .sort(dateSortFn);
+            if (errorSampleList.length !== 0) {
+              matchingSample = errorSampleList[0];
+            }
+          }
+        }
+      }
+      if (!matchingSample) {
         unsatisfied.push(req);
       } else {
-        const attrs = samples[matchingSampleIndex].get();
+        const attrs = matchingSample.get();
         if (attrs.status !== undefined) {
           satisfied.push(<any> attrs); // tslint:disable-line no-any
         } else {
