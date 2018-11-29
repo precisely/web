@@ -10,7 +10,7 @@ describe('seed:reports', function () {
     expect(beforeCount).toEqual(0);
     const reportFiles = listReportFiles();
     expect(reportFiles.length).toBeGreaterThan(0);
-    await reportsCommand();
+    await reportsCommand('system', true);
     const {Count: afterCount, Items} = await Report.scan().execAsync();
     expect(afterCount).toEqual(reportFiles.length);
     expect(Items.every(report => {
