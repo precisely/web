@@ -14,23 +14,11 @@ const { format } = winston;
 const WinstonCloudWatch = require('winston-cloudwatch');
 
 export const LOG_DATA_SEP = '\t|\t';
+import * as fs from 'fs';
 
 type FormatInfo = { timestamp: number, level: number | string, message: string };
 const shouldLogToCloudWatchAggregate = process.env.STAGE !== 'prod' && !isOffline;
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase();
-const LOG_TRANSPORTS = shouldLogToCloudWatchAggregate ? [
-  new winston.transports.Console(),
-
-  // Adds Cloudwatch logging at
-  // /precisely/web/{stage}/aggregated-log
-  new WinstonCloudWatch({ // aggregate view across all lambda fns
-    level: LOG_LEVEL,
-    logGroupName: `/precisely/web/${process.env.STAGE}`,
-    logStreamName: 'aggregated-log'
-  })
-] : [
-  new winston.transports.Console()
-];
 
 function makeFormatter(colorize: boolean, requestId?: string) {
   const plugins = [ format.timestamp(), format.splat() ];
@@ -46,7 +34,6 @@ function makeFormatter(colorize: boolean, requestId?: string) {
       (info: FormatInfo) => `${info.timestamp} ${info.level}: ${info.message}${LOG_DATA_SEP}`)
     );
   }
-
   return format.combine(... plugins);
 }
 
@@ -69,10 +56,26 @@ export interface Logger {
   shouldLog(level: number | string): boolean;
 }
 
+function makeTransports() {
+  return shouldLogToCloudWatchAggregate ? [
+    new winston.transports.Console(),
+  
+    // Adds Cloudwatch logging at
+    // /precisely/web/{stage}/aggregated-log
+    new WinstonCloudWatch({ // aggregate view across all lambda fns
+      level: LOG_LEVEL,
+      logGroupName: `/precisely/web/${process.env.STAGE}`,
+      logStreamName: 'aggregated-log'
+    })
+  ] : [
+    new winston.transports.Console()
+  ];
+}
+
 export function makeLogger(requestId?: string): Logger {
   const shouldColorize = isOffline;
   const logger = winston.createLogger({
-    transports: LOG_TRANSPORTS,
+    transports: makeTransports(),
     level: LOG_LEVEL,
     format: makeFormatter(shouldColorize, requestId)
   });
