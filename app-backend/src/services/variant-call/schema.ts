@@ -20,7 +20,6 @@ type VariantCall {
   refVersion: String,
   
   start: Int,
-  end: Int,
   
   altBases: [String],
   refBases: String,

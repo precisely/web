@@ -24,8 +24,7 @@ export const JoiNCBIAccession = Joi.string().regex(NCBIAccessionRegex)
 export const JoiVariantIndex = Joi.object({
   refName: JoiRefName,
   refVersion: JoiRefVersion,
-  start: JoiStart,
-  end: Joi.number().optional().greater(Joi.ref('start'))
+  start: JoiStart
 });
 
 // structure used to index variants throughout the system

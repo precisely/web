@@ -32,8 +32,7 @@ export class VariantCallAttributes {
 
   // start index with respect to sequence - must be string for DynamoDB indexing
   start?: number;
-  // end index of variant
-  end?: number;
+  
   // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
   altBases?: string[];
   // sequence being replaced e.g., "A"
@@ -126,8 +125,7 @@ export const VariantCall = defineModel<
 
       // start index with respect to sequence - must be string for DynamoDB indexing
       start: JoiStart.required(),
-      // end index of variant
-      end: Joi.number().min(Joi.ref('start')),
+      
       // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
       altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]*)|<NON_REF>/, 'altbases pattern')).min(1),
       // sequence being replaced e.g., "A"
@@ -185,14 +183,12 @@ export const VariantCall = defineModel<
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
   try {
-    const {refName, refVersion, start, sampleSource, sampleId, genotype, refBases, altBases } = ensureProps(
-      variantCall, 'start', 'genotype', 'sampleSource', 'sampleId', 'genotype', 'refName', 
-      'refBases', 'refVersion', 'altBases'
+    const {refName, refVersion, start, sampleSource, sampleId, altBases, imputed, readFail } = ensureProps(
+      variantCall, 'start', 'sampleSource', 'sampleId', 'refName', 
+      'refBases', 'refVersion', 'altBases', 'readFail', 'userId', 'imputed', 'readFail'
     );
-    const end = start + Math.max( ... genotype.map(
-      g => lengthFromGenotypeIndex(refBases, altBases, g)
-    ));
     const accession = refToNCBIAccession(refName, refVersion);
+    const variantId = makeVariantId(refName, refVersion, start, sampleSource, sampleId);
     
     const variantId = makeVariantId(refName, refVersion, start, end, sampleSource, sampleId);
     const zygosity = zygosityFromGenotype(genotype);
@@ -211,13 +207,13 @@ function basesFromGenotypeIndex(refBases: string, altBases: string[], index: num
   return index === 0 ? refBases : altBases[index - 1];
 }
 
-function makeVariantId(
-  refName: string, refVersion: string, start: number, end: number, sampleSource: string, sampleId: string
+export function makeVariantId(
+  refName: string, refVersion: string, start: number, sampleSource: string, sampleId: string
 ) {
-  return `${refName}:${refVersion}:${start}:${end}:${sampleSource}:${sampleId}`;
+  return `${refName}:${refVersion}:${start}:${sampleSource}:${sampleId}`;
 }
 
-function makePartialVariantId({refVersion, refName, start}: VariantIndex) {
+export function makePartialVariantId({refVersion, refName, start}: VariantIndex) {
   return `${refName}:${refVersion}:${start}`;
 }
 
