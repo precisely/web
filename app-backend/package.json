@@ -129,7 +129,7 @@
     "cors": "2.8.4",
     "dynamodb-localhost": "^0.0.7",
     "graphql-import": "^0.6.0",
-    "jest": "^23.4.1",
+    "jest": "^23.6.0",
     "jest-in-case": "^1.0.2",
     "jest-plugin-context": "^2.7.0",
     "jsonfile": "4.0.0",
