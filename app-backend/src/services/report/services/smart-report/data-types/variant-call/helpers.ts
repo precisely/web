@@ -15,7 +15,7 @@ function alleleFromGenotypeFn(vc: VariantCall) {
         return `[${start}${refBases}>${altBase}]`;
       }
     }
-    throw new Error(`Unable process variant call genotype ${g} in ${vc.get()}`);
+    throw new Error(`Unable process variant call genotype ${g} in ${JSON.stringify(vc.get())}`);
   };
 }
 import { ensureProps } from 'src/common/type-tools';

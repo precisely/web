@@ -114,7 +114,7 @@ describe('Personalizer reducer functions', function () {
       });
 
       describe('when provided location-only syntax', function () {
-        it.only('should be falsey when the variant call is not present at the location', function () {
+        it('should be falsey when the variant call is not present at the location', function () {
           expect(variantCall(context, 'chr1.37p13:g.9999')).toBeFalsy();
         });
 

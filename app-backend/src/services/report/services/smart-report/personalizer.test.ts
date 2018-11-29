@@ -109,6 +109,9 @@ describe('Personalizer', function () {
         beforeAll(async function() {
           const result = await addSimpleReportFixtures();
           report = result.report;
+          if (!report) {
+            throw new Error(`Failed to create report`);
+          }
         });
 
         afterAll(destroyFixtures);
