@@ -51,8 +51,119 @@ export async function addSimpleReportFixtures() {
     status: UserSampleStatus.error,
     type: UserSampleType.genetics,
     source: '23andme' 
-  })];
-  
+  }),
+  // fixtures for users with multiple samples: three errors
+  ... await addUserSamples( ['user-id-100'], {
+    id: 'user-id-100-1',
+    status: UserSampleStatus.error,
+    statusMessage: 'first error for user-id-100',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-100'], {
+    id: 'user-id-100-2',
+    status: UserSampleStatus.error,
+    statusMessage: 'second error for user-id-100',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-100'], {
+    id: 'user-id-100-3',
+    status: UserSampleStatus.error,
+    statusMessage: 'third error for user-id-100',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  // fixtures for users with multiple samples: two errors and ready
+  ... await addUserSamples( ['user-id-101'], {
+    id: 'user-id-101-1',
+    status: UserSampleStatus.error,
+    statusMessage: 'first error for user-id-101',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-101'], {
+    id: 'user-id-101-2',
+    status: UserSampleStatus.error,
+    statusMessage: 'second error for user-id-101',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-101'], {
+    id: 'user-id-101-3',
+    status: UserSampleStatus.ready,
+    statusMessage: 'ready for user-id-101',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  // fixtures for users with multiple samples: two errors and processing
+  ... await addUserSamples( ['user-id-102'], {
+    id: 'user-id-102-1',
+    status: UserSampleStatus.error,
+    statusMessage: 'first error for user-id-102',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-102'], {
+    id: 'user-id-102-2',
+    status: UserSampleStatus.error,
+    statusMessage: 'second error for user-id-102',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-102'], {
+    id: 'user-id-102-3',
+    status: UserSampleStatus.processing,
+    statusMessage: 'processing for user-id-102',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  // fixtures for users with multiple samples: error, processing, ready
+  ... await addUserSamples( ['user-id-103'], {
+    id: 'user-id-103-1',
+    status: UserSampleStatus.error,
+    statusMessage: 'error for user-id-103',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-103'], {
+    id: 'user-id-103-2',
+    status: UserSampleStatus.processing,
+    statusMessage: 'processing for user-id-103',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-103'], {
+    id: 'user-id-103-3',
+    status: UserSampleStatus.ready,
+    statusMessage: 'ready for user-id-103',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  // fixtures for users with multiple samples: error and processing; favors processing
+  ... await addUserSamples( ['user-id-104'], {
+    id: 'user-id-104-1',
+    status: UserSampleStatus.error,
+    statusMessage: 'error for user-id-104',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-104'], {
+    id: 'user-id-104-2',
+    status: UserSampleStatus.processing,
+    statusMessage: 'processing for user-id-104',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  }),
+  ... await addUserSamples( ['user-id-104'], {
+    id: 'user-id-104-3',
+    status: UserSampleStatus.error,
+    statusMessage: 'ready for user-id-104',
+    type: UserSampleType.genetics,
+    source: '23andme'
+  })
+  ];
+
   const variantData = [...userSampleReadyVariantData, userSampleMissingVariantData, userSampleErrorVariantData];
 
   const variants: VariantCall[] = await addVariants(...variantData);

@@ -10,13 +10,14 @@ const cases = require('jest-in-case');
 import { map } from 'lodash';
 
 import {Report} from 'src/services/report/models';
-import {destroyFixtures} from 'src/common/fixtures';
+import {destroyFixtures, resetAllTables} from 'src/common/fixtures';
 
 import {Personalizer} from './personalizer';
 import { addSimpleReportFixtures } from '../../fixtures/simple';
 import { addBetaReportFixtures } from 'src/services/report/fixtures/beta';
 import { isTagElement } from 'smart-report';
 import { Personalization } from './personalizer';
+import { UserSampleStatus } from 'src/services/user-sample/external';
 
 describe('Personalizer', function () {
   describe('constructor', function () {
@@ -28,6 +29,46 @@ describe('Personalizer', function () {
   });
 
   describe('personalize,', function() {
+
+    describe('user sample priority selection behavior', function() {
+      afterAll(destroyFixtures);
+
+      it('reads error when only errors exist', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-id-100');
+        const personalization = await personalizer.personalize();
+        expect(personalization.status).toEqual(UserSampleStatus.error);
+      });
+
+      it('reads ready after errors occur', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-id-101');
+        const personalization = await personalizer.personalize();
+        expect(personalization.status).toEqual(UserSampleStatus.ready);
+      });
+
+      it('reads processing after errors occur', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-id-102');
+        const personalization = await personalizer.personalize();
+        expect(personalization.status).toEqual(UserSampleStatus.processing);
+      });
+
+      it('reads ready after error and processing states occur', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-id-103');
+        const personalization = await personalizer.personalize();
+        expect(personalization.status).toEqual(UserSampleStatus.ready);
+      });
+
+      it('reads processing when both error and processing states occur', async function() {
+        const { report } = await addSimpleReportFixtures();
+        const personalizer = new Personalizer(report, 'user-id-104');
+        const personalization = await personalizer.personalize();
+        expect(personalization.status).toEqual(UserSampleStatus.processing);
+      });
+    });
+
     describe('when the sample has error status', function () {
       afterAll(destroyFixtures);
 
