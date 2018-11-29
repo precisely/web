@@ -7813,7 +7813,7 @@ serverless-dynamodb-local@^0.2.35:
     dynamodb-localhost "^0.0.6"
     lodash "^4.17.0"
 
-serverless-offline@^3.25.4:
+serverless-offline@^3.31.3:
   version "3.31.3"
   resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-3.31.3.tgz#ccab814cc97e59dc6cf6cfbcb5dd04ec5f1dc481"
   integrity sha512-Nl42T+RMSYaI+AuSN/3bn2hIXFzU6l50Oiri6173xVoEEKeRdRwdMzBa83/YQA2DQgiIc4zGXHThhcpUVz0OPw==
