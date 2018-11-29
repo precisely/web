@@ -14,6 +14,7 @@ import { addFixtures } from 'src/common/fixtures';
 import { VariantCall } from 'src/services/variant-call';
 import { addVariants, addUserSamples } from 'src/services/variant-call/test-helpers';
 import { UserSampleType, UserSampleStatus } from 'src/services/user-sample/external';
+import { isEqual } from 'lodash';
 
 export async function addBetaReportFixtures() {
   const variantData = [
@@ -68,6 +69,19 @@ export async function addBetaReportFixtures() {
 
 const WT: [number, number] = [0, 0];
 
+function likelihoods(genotype: number[]): number[] {
+  if (isEqual(genotype, [0, 0])) {
+    return [1, 0, 0];
+  } else if (isEqual(genotype, [0, 1]) || isEqual(genotype, [1, 0])) {
+    return [0, 1, 0];
+  } else if (isEqual(genotype, [1, 1])) {
+    return [0, 0, 1];
+  } else {
+    return [];
+  }
+}
+
+type VariantDataGuaranteedKeys = 'userId'|'refVersion'|'start'|'refBases'|'genotype'|'genotypeLikelihood';
 function makeVariantData(
   userId: string, 
   { // MTHFR variants
@@ -78,14 +92,19 @@ function makeVariantData(
 ) {
   return [
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11856378, refBases: 'G', 
+    genotypeLikelihoods: likelihoods(c677t),
     altBases: [ 'A' ], genotype: c677t, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr1', refVersion: '37p13', start: 11854476, refBases: 'T', 
+    genotypeLikelihoods: likelihoods(a1298c),
     altBases: [ 'G' ],  genotype: a1298c, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78882925, refBases: 'G', 
+    genotypeLikelihoods: likelihoods(g1192a),
     altBases: [ 'A' ], genotype: g1192a, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78865893, refBases: 'A', 
+    genotypeLikelihoods: likelihoods(a78573551g),
     altBases: [ 'G' ], genotype: a78573551g, sampleSource: '23andme', sampleId: 'userwt-23andme' },
     { userId: userId, refName: 'chr15', refVersion: '37p13', start: 78873993, refBases: 'A', 
+    genotypeLikelihoods: likelihoods(a78581651t),
     altBases: [ 'T' ], genotype: a78581651t, sampleSource: '23andme', sampleId: 'userwt-23andme' },
   ];
 }

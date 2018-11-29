@@ -25,7 +25,7 @@ type VariantCall {
   refBases: String,
   
   genotype: [Int],
-  genotypeLikelihood: [Int],
+  genotypeLikelihoods: [Int],
   filter: [String],
 
   rsId: String,

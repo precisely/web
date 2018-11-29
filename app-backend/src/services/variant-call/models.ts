@@ -8,7 +8,7 @@
 
 import { ExecResult } from 'dynogels';
 import * as Joi from 'joi';
-
+import * as math from 'mathjs';
 import { ensureProps } from 'src/common/type-tools';
 import {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 import { 
@@ -37,14 +37,16 @@ export class VariantCallAttributes {
   altBases?: string[];
   // sequence being replaced e.g., "A"
   refBases?: string;
-  // array of 1-based indexes into alternateBases
+  // array of (usually 2) numbers representing refBase (if 0) or an altBase (if >=1) for each chromosome
   genotype?: number[];
-  // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
-  genotypeLikelihood?: number;
+  // Probabilities corresponding to enumerated genotypes (see discussing of how VCF encodes this below)
+  genotypeLikelihoods?: number[];
   // Filter
   filter?: string;
   // Imputed
   imputed?: boolean;
+  // Indicates a failed attempt to read this variant
+  readFail?: boolean;
   // is this seed data?
   seed?: boolean;
 
@@ -58,7 +60,8 @@ export class VariantCallAttributes {
   zygosity?: keyof typeof Zygosity;
 }
 
-class VariantCallMethods {
+interface VariantCallMethods {
+  genotypeBases(): string[];
 }
 
 class VariantCallStaticMethods {
@@ -92,6 +95,24 @@ export enum Zygosity {
   wildtype = 'wildtype', 
   haploid = 'haploid'
 }
+
+const genotypeLikelihoods = () => {
+  return Joi.array().items(Joi.number());
+};
+
+const ifValidRead = (
+  validReadSchema: Joi.AnySchema, 
+  invalidReadSchema: Joi.AnySchema, 
+  defaultValue: any // tslint:disable-line
+) => Joi.any().when('imputed', {
+  is: true,
+  then: validReadSchema,
+  otherwise: Joi.any().when('readFail', {
+    is: true,
+    then: invalidReadSchema,
+    otherwise: validReadSchema,
+  }).default(defaultValue)
+});
 
 export const VariantFilter = [ 'IMP', 'FAIL', 'BOOST' ];
 export const VariantCall = defineModel<
@@ -130,19 +151,48 @@ export const VariantCall = defineModel<
       altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]*)|<NON_REF>/, 'altbases pattern')).min(1),
       // sequence being replaced e.g., "A"
       refBases: Joi.string().uppercase().regex(/\.|[ATGC]*/, 'reference bases pattern'),
-      // array of 1-based indexes into alternateBases
-      genotype: Joi.array().items(Joi.number()),
-      // Phred scale likelihood corresponding to genotypes 0/0, 0/1, and 1/1
-      genotypeLikelihood: Joi.array().items(Joi.number()).length(3).optional(),
+      
+      // array of 1-based indexes into alternateBases 
+      // (for diploid chromosomes, there are two values, each representing a
+      // call for one of the chromosomes
+      genotype: ifValidRead(
+        Joi.array().items(Joi.number()).min(1), 
+        Joi.array().items(Joi.number()),
+        []
+      ),
+      
+      // Array of floats representing probabilities corresponding to 
+      // genotypes, where the genotypes are enumerated as defined in the VCF spec:
+      // "the ordering of genotypes for the likelihoods is given by:
+      //  F(j/k) = (k*(k+1)/2)+j. In other words, for biallelic sites 
+      //  the ordering is: AA,AB,BB; for triallelic sites the
+      //  ordering is: AA,AB,BB,AC,BC,CC, etc."
+      //  Where AA = genotype [0,0], AB = genotype [0,1] etc
+      // NOTE: this function produces ambiguous orderings unless genotype order is normalized
+      //       so values are in ascending order:
+      // F(0,0) = 0
+      // F(0,1) = F(1,0) = 1 (good)
+      // F(1,1) = 2
+      // F(0,2) = 3 !== F(2,0) (bad! F(2,0)=2)
+      // F(1,2) = 4
+      // F(2,2) = 5
+      genotypeLikelihoods: ifValidRead(
+        genotypeLikelihoods().required(), 
+        Joi.optional(),
+        undefined
+      ),
       
       // Filter
       filter: Joi.string().uppercase().optional(),
       
       // Was the reading imputed?
-      imputed: Joi.boolean().default(false),
+      imputed: Joi.boolean().default(false).description('if true. this row was imputed'),
+
+      // Was there a failed attempt to read this variant? (this may be true for valid rows - when imputed is true)
+      readFail: Joi.boolean().default(false).description('failed attempt to read this variant'),
 
       // is this seed data?
-      seed: Joi.boolean().description('represents seed data'),
+      seed: Joi.boolean().description('if true, this entry represents seed data'),
 
       //
       // Annotations
@@ -176,6 +226,34 @@ export const VariantCall = defineModel<
   VariantCallStaticMethods
 );
 
+//
+// Instance methods
+//
+VariantCall.prototype.genotypeBases = function genotypeBases() {
+  const _this = <VariantCall> this;
+  return _this.getValid('genotype').map(index => {
+    if (index === 0) {
+      return this.getValid('refBases');
+    } else {
+      const altBases = this.getValid('altBases');
+      if (index > altBases.length) {
+        const id = `${this.get('userId')} ${this.get('variantId')}`;
+        throw new Error(`Invalid VariantCall ${id} no altBase for genotype index ${index}`);
+      }
+      return altBases[index - 1];
+    }
+  });
+};
+
+//
+// Hooks
+//
+VariantCall.before('create', computeAttributes);
+VariantCall.before('update', computeAttributes);
+
+//
+// Helper functions
+//
 /**
  * Computes / updates dependent attributes
  * @param variantCall
@@ -189,22 +267,42 @@ function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNex
     );
     const accession = refToNCBIAccession(refName, refVersion);
     const variantId = makeVariantId(refName, refVersion, start, sampleSource, sampleId);
+    if (imputed || !readFail) {
+      const { genotype, genotypeLikelihoods: likelihoods } = ensureProps(variantCall, 
+        'genotype', 'genotypeLikelihoods');
+      const zygosity = zygosityFromGenotype(genotype);
+      checkGenotypeLikelihoods(likelihoods, genotype, altBases);
+      next(null, {...variantCall, variantId, zygosity, accession });
+    } else {
+      next(null, {...variantCall, variantId, accession});
+    }
     
-    const variantId = makeVariantId(refName, refVersion, start, end, sampleSource, sampleId);
-    const zygosity = zygosityFromGenotype(genotype);
-    next(null, {...variantCall, end, variantId, zygosity, accession });
   } catch (e) {
-    next(e);
+    const message = e instanceof Error ? e.message : e;
+    const resultError = new Error(`Bad VariantCall attributes ${message}: ${JSON.stringify(variantCall)}`);
+    if (e instanceof Error) {
+      resultError.stack = e.stack;
+    }
+    next(resultError);
   }
 }
 
-function lengthFromGenotypeIndex(refBases: string, altBases: string[], index: number): number {
-  const bases = basesFromGenotypeIndex(refBases, altBases, index);
-  return bases === '.' ? 0 : bases.length;
+export function checkGenotypeLikelihoods(gLikelihood?: number[], genotype?: number[], altBases?: string[]): void {
+  if (genotype && altBases) {
+    const expectedLength = combinationsWithRepeats(altBases.length + 1, genotype.length);
+    if (!gLikelihood || expectedLength !== gLikelihood.length) {
+      throw new Error(`Invalid genotype likelihood values: ${gLikelihood} expecting ${expectedLength} numbers`);
+    }
+  }
 }
 
-function basesFromGenotypeIndex(refBases: string, altBases: string[], index: number): string {
-  return index === 0 ? refBases : altBases[index - 1];
+export function combinationsWithRepeats(alternatives: number, selections: number) {
+  const result = math.divide(
+    math.permutations(selections + alternatives - 1),
+    math.multiply(math.permutations(alternatives - 1),  math.permutations(selections))
+  );
+  
+  return result;
 }
 
 export function makeVariantId(
@@ -217,9 +315,9 @@ export function makePartialVariantId({refVersion, refName, start}: VariantIndex)
   return `${refName}:${refVersion}:${start}`;
 }
 
-function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined {
+export function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined {
   if (!genotype) {
-    return;
+    throw new Error(`Unable to determine zygosity from genotype ${genotype}`);
   }
 
   genotype.sort();
@@ -234,43 +332,3 @@ function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined {
     return Zygosity.heterozygous;
   }
 }
-
-VariantCall.before('create', computeAttributes);
-VariantCall.before('update', computeAttributes);
-
-//
-// STATIC METHOD DEFINITIONS
-//
-// VariantCall.forUser = async function forUser(
-//   userId: string,
-//   { refIndexes, rsIds }: VariantCallIndexes
-// ): Promise<VariantCall[]> {
-  
-//   const queries: Promise<ExecResult<any>>[] = []; // tslint:disable-line no-any
-//   if (refIndexes) {
-//     refIndexes.forEach((index: RefIndex) => {
-//       const { refName, refVersion, start} = index;
-//       if (refName && refVersion && start) {
-//         const variantIdStart = `${refName}:${refVersion}:${start}`;
-//         queries.push(VariantCall.query(userId).where('variantId').beginsWith(variantIdStart).execAsync());
-//       } else {
-//         throw new Error(`Invalid index for Variant: ${index}`);
-//       }
-//     });
-//   }
-//   if (rsIds) {
-//     rsIds.forEach(rsId => {
-//       queries.push(VariantCall.query(userId).usingIndex('userRSIdIndex').where('rsId').equals(rsId).execAsync());
-//     });
-//   }
-
-//   const execResults = await Promise.all(queries);
-//   return <VariantCall[]> (execResults.map( 
-//     er => (er && er.Count) ? <VariantCall> er.Items[0] : null
-//   ).filter(x => !!x));
-// };
-
-//
-// INSTANCE METHOD DEFINITIONS
-//
-// VariantCall.prototype.foo = function foo() {}
