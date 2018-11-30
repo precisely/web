@@ -55,12 +55,14 @@ ALIASES:
     install_dynamodb: &install_dynamodb
         run:
             name: Installing DynamoDB
-            command: if [ ! -d .dynamodb ]; then yarn sls dynamodb install; else echo "DynamoDB already installed"; fi
+            command: |
+                if [ ! -d .dynamodb ]; then yarn sls dynamodb install; else echo "DynamoDB already installed"; fi
+                yarn dynamodb:enable-logging
     
     run_dynamodb: &run_dynamodb
         run:
             name: Running DynamoDB
-            command: DYNAMODB_MODE=disk yarn dynamodb:test-offline
+            command: DYNAMODB_MODE=disk yarn dynamodb:test-offline && sleep 999d
             background: true
 
     build_webpack: &build_webpack

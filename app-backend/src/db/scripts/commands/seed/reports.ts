@@ -14,7 +14,7 @@ export const reportsFolder = path.join(dataFolder, 'reports');
  * 
  * @param ownerId 
  */
-export async function reportsCommand(ownerId: string = 'system') {  
+export async function reportsCommand(ownerId: string = 'system', silent: boolean = false) {  
   const reportsData = listReportFiles();
   const reports = await batchPromises(
     10, reportsData, async (data) => {
@@ -40,10 +40,12 @@ export async function reportsCommand(ownerId: string = 'system') {
     }
   );
   
-  console.log('Created %d reports:', reports.length);
-  for (const report of reports) {
-    if (report) {
-      console.log(`{slug: ${report.get('slug')}, title: ${report.get('title')}, id: ${report.get('id')}}`);
+  if (!silent) {
+    console.log('Created %d reports:', reports.length);
+    for (const report of reports) {
+      if (report) {
+        console.log(`{slug: ${report.get('slug')}, title: ${report.get('title')}, id: ${report.get('id')}}`);
+      }
     }
   }
 }
