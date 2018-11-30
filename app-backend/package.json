@@ -17,6 +17,7 @@
     "dynamodb:admin-test-offline": "DYNAMO_ENDPOINT=http://localhost:8100 dynamodb-admin -p 8002",
     "dynamodb:reset": "yarn sls dynamodb:reset",
     "dynamodb:install": "yarn sls dynamodb install",
+    "dynamodb:enable-logging": "./scripts/enable-dynamodb-local-logging.sh",
     "env": "ENV=${ENV:-offline} ../env/withenv",
     "env:deploy": "ENV=${ENV:-deploy} ../env/withenv",
     "env:test-offline": "ENV=${ENV:-test-offline} ../env/withenv",
