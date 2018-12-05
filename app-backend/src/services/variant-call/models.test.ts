@@ -8,8 +8,9 @@
 
 // tslint:disable no-any
 
-import { VariantCall, combinationsWithRepeats } from './models';
+import { VariantCall, combinationsWithRepeats, isValidCall } from './models';
 import { destroyFixtures, addFixtures, resetAllTables } from 'src/common/fixtures';
+import { VariantCallAttributes } from 'src/services/variant-call/models';
 
 const cases = require('jest-in-case');
 
@@ -22,6 +23,7 @@ describe('VariantCall', function () {
         userId: 'bob-user-id',
         refName: 'chr1',
         refVersion: '37p13',
+        directRead: 'PASS',
         start: 100,
         sampleSource: '23andme',
         sampleId: 'sampleId123',
@@ -33,6 +35,7 @@ describe('VariantCall', function () {
         userId: 'bob-user-id',
         refName: 'chr2',
         refVersion: '37p13',
+        directRead: 'pass',
         start: 200,
         sampleSource: '23andme',
         sampleId: 'sampleId123',
@@ -46,6 +49,7 @@ describe('VariantCall', function () {
         refName: 'chr3',
         refVersion: '37p13',
         start: 300,
+        directRead: 'pass',
         sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [0, 0],
@@ -53,10 +57,13 @@ describe('VariantCall', function () {
         refBases: 'c',
         altBases: ['t']
       }));
+
+      const vcs = await VariantCall.query('bob-user-id').execAsync();
+      expect(vcs.Items).toHaveLength(3);
     });
     
     afterEach(destroyFixtures);
-    
+
     it('should retrieve one item if the user has a variantcall matching the variant index provided', async function () {
       const variantCalls = await VariantCall.forUser('bob-user-id', [{
         refName: 'chr1', refVersion: '37p13', start: 100
@@ -89,7 +96,7 @@ describe('VariantCall', function () {
 
   describe('save', function () {
 
-    describe('read failures', function () {
+    describe('failure', function () {
       let vc: VariantCall;
       const baseAttrs = { 
         userId: 'bob-user-id',
@@ -99,61 +106,88 @@ describe('VariantCall', function () {
         sampleSource: '23andme',
         sampleId: 'sampleId123',
         refBases: 'c',
-        altBases: ['t'],
-        filter: '.',
+        altBases: ['t']
       };
 
       afterEach(() => vc && vc.destroyAsync);
       
-      it('should require a genotype when read succeeds', function () {
+      cases('should occur when valid VariantCall is missing genotype', (
+        [directRead, imputed]: [string?, string?]
+      ) => {
         vc = new VariantCall({
           ...baseAttrs,
-          imputed: false,
-          readFail: false,
+          imputed,
+          directRead,
           genotypeLikelihoods: [.5, .3, .2]
         });
         expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
-      });
+      }, [
+        ['pass', 'pass'],
+        ['pass', undefined],
+        ['pass', 'FAIL'],
+        [undefined, 'pass'],
+        ['fail', 'pass']
+      ]);
 
-      it('should require a genotype when imputation succeeds', function () {
+      cases('should occur when valid VariantCall is missing genotypeLikelihood', (
+        [directRead, imputed]: [string?, string?]
+      ) => {
         vc = new VariantCall({
           ...baseAttrs,
-          imputed: true,
-          readFail: true,
-          genotypeLikelihoods: [.5, .3, .2]
-        });
-        expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
-      });
-
-      it('should require a genotypeLikelihood when read succeeds', function () {
-        vc = new VariantCall({
-          ...baseAttrs,
-          imputed: false,
-          readFail: false,
+          imputed,
+          directRead,
           genotype: [1, 1]
         });
         expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
-      });
+      }, [
+        ['pass', 'pass'],
+        ['pass', undefined],
+        ['pass', 'FAIL'],
+        [undefined, 'pass'],
+        ['fail', 'pass']
+      ]);
 
-      it('should require a genotypeLikelihood when imputation succeeds', function () {
+      it('should occur when altBaseDosage is missing and VariantCall was imputed', async function () {
         vc = new VariantCall({
           ...baseAttrs,
-          imputed: true,
-          readFail: true,
-          genotype: [1, 1]
+          imputed: 'PASS',
+          genotype: [1, 1],
+          genotypeLikelihoods: [0, 0, 1]
         });
+        
         expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
       });
 
-      describe(' when read fails and there is no imputation', function () {
-        it('should save successfully without genotype and without genotypeLikelihood', async function () {
+      cases('should not occur if altBaseDosage is missing but VariantCall is not imputed', (
+        { imputed}: { imputed?: string}
+      ) => {
+        vc = new VariantCall({
+          ...baseAttrs,
+          imputed,
+          directRead: 'PASS',
+          genotype: [1, 1],
+          genotypeLikelihoods: [0, 0, 1]
+        });
+        
+        expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
+      }, [ {imputed: 'FAIL'}, {imputed: 'fail'}, {imputed: undefined} ]);
+
+      describe('when both direct read and imputation fail', function () {
+        cases('should save successfully without genotype and without genotypeLikelihood', (
+          [directRead, imputed]: [string?, string?]
+        ) => {
           vc = new VariantCall({
             ...baseAttrs,
-            imputed: false,
-            readFail: true
+            directRead, 
+            imputed
           });
           return expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
-        });
+        }, [
+          [ undefined, undefined ],
+          [ 'FAIL', 'FAIL' ],
+          [ 'fail', undefined ],
+          [ undefined, 'fail' ]
+        ]);
       });
     });
 
@@ -171,8 +205,8 @@ describe('VariantCall', function () {
           genotype: [1, 1],
           refBases: 'c',
           altBases: ['t'],
-          filter: 'pass',
-          imputed: true,
+          directRead: 'pass',
+          imputed: 'fail',
           genotypeLikelihoods: [.5, .3, .2]
         }).saveAsync();
       });
@@ -191,8 +225,8 @@ describe('VariantCall', function () {
         expect(vc.get('refVersion')).toEqual('37p13');
         expect(vc.get('sampleSource')).toEqual('23andme');
         expect(vc.get('sampleId')).toEqual('sampleId123');
-        expect(vc.get('filter')).toEqual('PASS');
-        expect(vc.get('imputed')).toEqual(true);
+        expect(vc.get('directRead')).toEqual('PASS');
+        expect(vc.get('imputed')).toEqual('FAIL');
       });
 
       it('should uppercase the ref and altbases', function () {
@@ -303,5 +337,22 @@ describe('VariantCall helpers', function () {
         [3, 2, 6]
       ]
     );
+  });
+  
+  describe('isValidCall', function () {
+    cases('should be valid when imputed is true', function (
+      {imputed, directRead, isValid}: VariantCallAttributes & {isValid: boolean}) {
+      expect(isValidCall({imputed, directRead})).toEqual(isValid);
+    }, [
+      { imputed: 'PASS', directRead: 'PASS', isValid: true},
+      { imputed: 'pass', directRead: 'pass', isValid: true},
+      { imputed: 'FAIL', directRead: 'PASS', isValid: true},
+      { imputed: 'PASS', directRead: 'FAIL', isValid: true},
+      { imputed: 'FAIL', directRead: 'FAIL', isValid: false},
+      { imputed: 'fail', directRead: 'fail', isValid: false},
+      { imputed: undefined, directRead: 'PASS', isValid: true},
+      { imputed: 'PASS', directRead: undefined, isValid: true},
+      { imputed: undefined, directRead: undefined, isValid: false}
+    ]);
   });
 });

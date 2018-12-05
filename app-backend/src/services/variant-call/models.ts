@@ -11,7 +11,7 @@ import * as Joi from 'joi';
 import * as math from 'mathjs';
 import { ensureProps } from 'src/common/type-tools';
 import {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
-import { 
+import {
   JoiStart, JoiRefVersion, JoiRefName, JoiNCBIAccession, refToNCBIAccession, VariantIndex
 } from 'src/common/variant-tools';
 
@@ -41,12 +41,12 @@ export class VariantCallAttributes {
   genotype?: number[];
   // Probabilities corresponding to enumerated genotypes (see discussing of how VCF encodes this below)
   genotypeLikelihoods?: number[];
-  // Filter
-  filter?: string;
-  // Imputed
-  imputed?: boolean;
-  // Indicates a failed attempt to read this variant
-  readFail?: boolean;
+  // The extent to which the genotype is supported by imputation
+  altBaseDosage?: number;
+  // directRead a non-imputed variant call was found for this location
+  directRead?: string;
+  // imputed an imputed variant call was found for this location
+  imputed?: string;
   // is this seed data?
   seed?: boolean;
 
@@ -62,6 +62,7 @@ export class VariantCallAttributes {
 
 interface VariantCallMethods {
   genotypeBases(): string[];
+  isValid(): boolean;
 }
 
 class VariantCallStaticMethods {
@@ -100,21 +101,39 @@ const genotypeLikelihoods = () => {
   return Joi.array().items(Joi.number());
 };
 
-const ifValidRead = (
+const failOrUndefined = Joi.alternatives().try(
+  Joi.string().uppercase().only('FAIL'), 
+  Joi.forbidden() // think of this as an alias for .isUndefined()
+);
+  
+const ifValidCall = ( 
+  validReadSchema: Joi.AnySchema, 
+  invalidReadSchema: Joi.AnySchema, 
+  defaultValue: any // tslint:disable-line
+) => {
+  return Joi.alternatives().when('directRead', {
+    is: failOrUndefined,
+    then: Joi.alternatives().when('imputed', {
+      is: failOrUndefined, 
+      then: invalidReadSchema,
+      otherwise: validReadSchema
+    }),
+    otherwise: validReadSchema
+  })
+  .default(defaultValue);
+};
+
+const ifImputed = (
   validReadSchema: Joi.AnySchema, 
   invalidReadSchema: Joi.AnySchema, 
   defaultValue: any // tslint:disable-line
 ) => Joi.any().when('imputed', {
-  is: true,
-  then: validReadSchema,
-  otherwise: Joi.any().when('readFail', {
-    is: true,
-    then: invalidReadSchema,
-    otherwise: validReadSchema,
-  }).default(defaultValue)
-});
+  is: failOrUndefined,
+  then: invalidReadSchema,
+  otherwise: validReadSchema
+})
+.default(defaultValue);
 
-export const VariantFilter = [ 'IMP', 'FAIL', 'BOOST' ];
 export const VariantCall = defineModel<
   VariantCallAttributes, VariantCallMethods, VariantCallStaticMethods
 >(
@@ -155,7 +174,7 @@ export const VariantCall = defineModel<
       // array of 1-based indexes into alternateBases 
       // (for diploid chromosomes, there are two values, each representing a
       // call for one of the chromosomes
-      genotype: ifValidRead(
+      genotype: ifValidCall(
         Joi.array().items(Joi.number()).min(1), 
         Joi.array().items(Joi.number()),
         []
@@ -176,21 +195,27 @@ export const VariantCall = defineModel<
       // F(0,2) = 3 !== F(2,0) (bad! F(2,0)=2)
       // F(1,2) = 4
       // F(2,2) = 5
-      genotypeLikelihoods: ifValidRead(
+      genotypeLikelihoods: ifValidCall(
         genotypeLikelihoods().required(), 
         Joi.optional(),
         undefined
       ),
       
-      // Filter
-      filter: Joi.string().uppercase().optional(),
-      
-      // Was the reading imputed?
-      imputed: Joi.boolean().default(false).description('if true. this row was imputed'),
+      // The dosage of the altBase detected, a floating point value from 0 to 2 where
+      //    0 = most certain "wt" call
+      //    1 = most certain "het" call
+      //    2 = most certain "hom" call 
+      altBaseDosage: ifImputed(
+        Joi.number().min(0).max(2).required(),
+        Joi.optional(),
+        undefined),
 
-      // Was there a failed attempt to read this variant? (this may be true for valid rows - when imputed is true)
-      readFail: Joi.boolean().default(false).description('failed attempt to read this variant'),
+      directRead: Joi.string().uppercase().allow('PASS', 'FAIL')
+        .optional().description('if PASS this was successfully read'),
 
+      imputed: Joi.string().uppercase().valid('PASS', 'FAIL')
+                .optional().description('if PASS this was successfully imputed'),
+    
       // is this seed data?
       seed: Joi.boolean().description('if true, this entry represents seed data'),
 
@@ -245,6 +270,11 @@ VariantCall.prototype.genotypeBases = function genotypeBases() {
   });
 };
 
+VariantCall.prototype.isValid = function isValid() {
+  const _this = <VariantCall> this;
+  return isValidCall(_this.get());
+};
+
 //
 // Hooks
 //
@@ -261,13 +291,13 @@ VariantCall.before('update', computeAttributes);
  */
 function computeAttributes(variantCall: VariantCallAttributes, next: ListenerNextFunction) {
   try {
-    const {refName, refVersion, start, sampleSource, sampleId, altBases, imputed, readFail } = ensureProps(
+    const {refName, refVersion, start, sampleSource, sampleId, altBases } = ensureProps(
       variantCall, 'start', 'sampleSource', 'sampleId', 'refName', 
-      'refBases', 'refVersion', 'altBases', 'readFail', 'userId', 'imputed', 'readFail'
+      'refBases', 'refVersion', 'altBases', 'userId'
     );
     const accession = refToNCBIAccession(refName, refVersion);
     const variantId = makeVariantId(refName, refVersion, start, sampleSource, sampleId);
-    if (imputed || !readFail) {
+    if (isValidCall(variantCall)) {
       const { genotype, genotypeLikelihoods: likelihoods } = ensureProps(variantCall, 
         'genotype', 'genotypeLikelihoods');
       const zygosity = zygosityFromGenotype(genotype);
@@ -331,4 +361,9 @@ export function zygosityFromGenotype(genotype?: number[]): Zygosity | undefined 
   } else {
     return Zygosity.heterozygous;
   }
+}
+
+export function isValidCall(vcAttrs: VariantCallAttributes): boolean {
+  const valid = (x?: string) => x && /PASS/i.test(x);
+  return !!(valid(vcAttrs.imputed) || valid(vcAttrs.directRead));
 }

@@ -20,30 +20,34 @@ import { UserSample} from 'src/services/user-sample/models';
 export async function addSimpleReportFixtures() {
   const userSampleReadyVariantData = [
     { userId: 'user-wt10', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T'], 
-      genotype: [0, 0], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userwt-23andme' },
+      genotype: [0, 0], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userwt-23andme', 
+      directRead: 'pass' },
     { userId: 'user-het10t', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T'], 
-      genotype: [0, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhet10t-23andme' },
+      genotype: [0, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhet10t-23andme', 
+      directRead: 'pass' },
     { userId: 'user-het10c', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: [ 'T', 'C'], 
       genotype: [0, 2], genotypeLikelihoods: [0, 0, 0, 1, 0, 0], sampleSource: '23andme', 
-      sampleId: 'userhet10c-23andme' },            
+      sampleId: 'userhet10c-23andme', directRead: 'pass' },
     { userId: 'user-hom10t', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: ['T'], 
-      genotype: [1, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhom-23andme' },
+      genotype: [1, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhom-23andme', 
+      directRead: 'pass' },
     { userId: 'user-hom10c', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: ['C'], 
-      genotype: [1, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhomc-23andme' },
+      genotype: [1, 1], genotypeLikelihoods: [1, 0, 0], sampleSource: '23andme', sampleId: 'userhomc-23andme', 
+      directRead: 'pass' },
     // compound heterozygote:
     { userId: 'user-cmpnd10', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', altBases: ['T', 'C'], 
       genotype: [1, 2], genotypeLikelihoods: [0, 0, 0, 0, 0, 0], 
-      sampleSource: '23andme', sampleId: 'usercmpd-23andme' },
+      sampleSource: '23andme', sampleId: 'usercmpd-23andme', directRead: 'pass' },
   ];
   const userSampleMissingVariantData = { 
     userId: 'user-sample-missing', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', 
     altBases: ['T'], genotype: [0, 0], sampleSource: '23andme', sampleId: 'userwt-23andme',
-    genotypeLikelihoods: [1, 0, 0] 
+    genotypeLikelihoods: [1, 0, 0], directRead: 'pass' 
   };
   const userSampleErrorVariantData = { 
     userId: 'user-sample-error', refName: 'chr1', refVersion: '37p13', start: 10, refBases: 'A', 
     altBases: [ 'T'], genotype: [0, 0], sampleSource: '23andme', sampleId: 'userwt-23andme', 
-    genotypeLikelihoods: [1, 0, 0]
+    genotypeLikelihoods: [1, 0, 0], directRead: 'pass' 
   };
   
   const userSamples: UserSample[] = [...await addUserSamples(userSampleReadyVariantData.map(vd => vd.userId), {
