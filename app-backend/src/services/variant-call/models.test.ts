@@ -120,7 +120,7 @@ describe('VariantCall', function () {
           directRead,
           genotypeLikelihoods: [.5, .3, .2]
         });
-        expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
       }, [
         ['pass', 'pass'],
         ['pass', undefined],
@@ -138,7 +138,7 @@ describe('VariantCall', function () {
           directRead,
           genotype: [1, 1]
         });
-        expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
       }, [
         ['pass', 'pass'],
         ['pass', undefined],
@@ -147,7 +147,7 @@ describe('VariantCall', function () {
         ['fail', 'pass']
       ]);
 
-      it('should occur when altBaseDosage is missing and VariantCall was imputed', async function () {
+      it('should occur when altBaseDosage is missing and VariantCall was imputed', function () {
         vc = new VariantCall({
           ...baseAttrs,
           imputed: 'PASS',
@@ -155,7 +155,7 @@ describe('VariantCall', function () {
           genotypeLikelihoods: [0, 0, 1]
         });
         
-        expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
       });
 
       cases('should not occur if altBaseDosage is missing but VariantCall is not imputed', (
@@ -169,11 +169,11 @@ describe('VariantCall', function () {
           genotypeLikelihoods: [0, 0, 1]
         });
         
-        expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
+        return expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
       }, [ {imputed: 'FAIL'}, {imputed: 'fail'}, {imputed: undefined} ]);
 
       describe('when both direct read and imputation fail', function () {
-        cases('should save successfully without genotype and without genotypeLikelihood', (
+        cases('should save successfully without genotype, genotypeLikelihood or altBaseDosage', (
           [directRead, imputed]: [string?, string?]
         ) => {
           vc = new VariantCall({

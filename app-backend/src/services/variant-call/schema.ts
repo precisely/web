@@ -25,11 +25,12 @@ type VariantCall {
   refBases: String,
   
   genotype: [Int],
-  genotypeLikelihoods: [Int],
+  genotypeLikelihoods: [Float],
+  altBaseDosage: [Float]
 
   imputed: String,
   directRead: String,
-  
+
   rsId: String,
   gene: String,
   geneStart: Int,

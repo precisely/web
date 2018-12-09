@@ -20,7 +20,7 @@ describe('VariantCallService', function () {
           sampleSource: '23andme', sampleId: 'b4ccfd7a87a', directRead: 'PASS',
           userId: 'the-user-id', genotype: [0, 1], genotypeLikelihoods: [1, 0, 0, 0, 0, 0] },
         { refName: 'chr2', refVersion: '37p13', start: 20, altBases: ['G'], refBases: 'A', 
-          sampleSource: '23andme', sampleId: 'b4ccfd7a87a', imputed: 'PASS', altBaseDosage: 2,
+          sampleSource: '23andme', sampleId: 'b4ccfd7a87a', imputed: 'PASS', altBaseDosage: [2],
           userId: 'the-user-id', genotype: [1, 1], genotypeLikelihoods: [0, 0, 1] },
       ]);
       expect(result).toHaveLength(2);

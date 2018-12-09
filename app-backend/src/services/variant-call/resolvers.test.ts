@@ -22,6 +22,7 @@ describe('VariantCall resolver', function () {
       start: 10,
       refBases: 'A',
       altBases: ['T'],
+      altBaseDosage: [1],
       genotype: [0, 1],
       genotypeLikelihoods: [0, 1, 0],
       rsId: 'rs-id',
@@ -56,6 +57,7 @@ describe('VariantCall resolver', function () {
     [ 'geneEnd', 100],
     [ 'zygosity', 'heterozygous'],
     [ 'imputed', 'PASS'],
-    [ 'directRead', 'PASS']
+    [ 'directRead', 'PASS'],
+    [ 'altBaseDosage', [1]]
   ]);
 });

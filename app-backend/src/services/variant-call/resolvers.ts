@@ -28,7 +28,7 @@ export const resolvers = {
     ... GraphQLContext.dynamoAttributeResolver<VariantCallAttributes>('variant-call', [
       'sampleSource', 'refName', 'refVersion', 'sampleId', 'start', 'altBases', 'refBases', 'genotype',
       'genotypeLikelihoods', 'rsId', 'gene', 'geneStart', 'geneEnd', 
-      'zygosity', 'imputed', 'directRead'
+      'zygosity', 'imputed', 'directRead', 'altBaseDosage'
     ])
   }
 };
