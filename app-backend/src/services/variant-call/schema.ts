@@ -26,8 +26,10 @@ type VariantCall {
   
   genotype: [Int],
   genotypeLikelihoods: [Int],
-  filter: [String],
 
+  imputed: String,
+  directRead: String,
+  
   rsId: String,
   gene: String,
   geneStart: Int,
