@@ -15,10 +15,12 @@ import { variantCommand } from './commands/seed/variant';
 import { reportsCommand } from './commands/seed/reports';
 import { clearCommand } from './commands/seed/clear';
 import { dynamodbResetCommand } from './commands/dynamodb';
+import { upscaleDynamoDB, downscaleDynamoDB } from './throughput';
 
 async function processCommand() {
   const command = process.argv[2];
   const args = process.argv.slice(3);
+  await upscaleDynamoDB();
   switch (command) {
     case 'seed:genetics': 
       await geneticsCommand(...args);
@@ -45,6 +47,7 @@ async function processCommand() {
         '\tyarn sls dynamodb:reset\n'         
       );
   }
+  await downscaleDynamoDB();
 }
 
 processCommand();
