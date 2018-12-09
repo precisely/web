@@ -42,7 +42,7 @@ export class VariantCallAttributes {
   // Probabilities corresponding to enumerated genotypes (see discussing of how VCF encodes this below)
   genotypeLikelihoods?: number[];
   // The extent to which the genotype is supported by imputation
-  altBaseDosage?: number[];
+  altBaseDosages?: number[];
   // directRead a non-imputed variant call was found for this location
   directRead?: string;
   // imputed an imputed variant call was found for this location
@@ -205,7 +205,7 @@ export const VariantCall = defineModel<
       //    0 = most certain "wt" call
       //    1 = most certain "het" call
       //    2 = most certain "hom" call 
-      altBaseDosage: ifImputed(
+      altBaseDosages: ifImputed(
         Joi.array().min(1).items(Joi.number().min(0).max(2)).required(),
         Joi.array().items(Joi.number().min(0).max(2)).optional(),
         undefined),

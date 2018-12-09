@@ -26,7 +26,7 @@ type VariantCall {
   
   genotype: [Int],
   genotypeLikelihoods: [Float],
-  altBaseDosage: [Float]
+  altBaseDosages: [Float]
 
   imputed: String,
   directRead: String,

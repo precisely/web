@@ -147,7 +147,7 @@ describe('VariantCall', function () {
         ['fail', 'pass']
       ]);
 
-      it('should occur when altBaseDosage is missing and VariantCall was imputed', function () {
+      it('should occur when altBaseDosages is missing and VariantCall was imputed', function () {
         vc = new VariantCall({
           ...baseAttrs,
           imputed: 'PASS',
@@ -158,7 +158,7 @@ describe('VariantCall', function () {
         return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
       });
 
-      cases('should not occur if altBaseDosage is missing but VariantCall is not imputed', (
+      cases('should not occur if altBaseDosages is missing but VariantCall is not imputed', (
         { imputed}: { imputed?: string}
       ) => {
         vc = new VariantCall({
@@ -173,7 +173,7 @@ describe('VariantCall', function () {
       }, [ {imputed: 'FAIL'}, {imputed: 'fail'}, {imputed: undefined} ]);
 
       describe('when both direct read and imputation fail', function () {
-        cases('should save successfully without genotype, genotypeLikelihood or altBaseDosage', (
+        cases('should save successfully without genotype, genotypeLikelihood or altBaseDosages', (
           [directRead, imputed]: [string?, string?]
         ) => {
           vc = new VariantCall({
