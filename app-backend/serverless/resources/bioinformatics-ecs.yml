@@ -72,7 +72,7 @@ BioinformaticsMetricFilterErrors:
         MetricNamespace: Bioinformatics/Tasks
         MetricName: ${self:provider.stage}-TaskErrorCount
 
-BioinformaticsAlarm:
+BioinformaticsErrorAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
     AlarmDescription: Bioinformatics task error alert
@@ -86,3 +86,29 @@ BioinformaticsAlarm:
     TreatMissingData: notBreaching
     AlarmActions:
       - Ref: TopicErrorNotification
+
+BioinformaticsMetricFilterWarnings:
+  Type: AWS::Logs::MetricFilter
+  Properties:
+    LogGroupName:
+      Ref: BioinformaticsECSLogs
+    FilterPattern: '{$.level="warn"}'
+    MetricTransformations:
+      - MetricValue: 1
+        MetricNamespace: Bioinformatics/Tasks
+        MetricName: ${self:provider.stage}-TaskWarningCount
+
+BioinformaticsWarningAlarm:
+  Type: AWS::CloudWatch::Alarm
+  Properties:
+    AlarmDescription: Bioinformatics task warning alert
+    Namespace: Bioinformatics/Tasks
+    MetricName: ${self:provider.stage}-TaskWarningCount
+    Statistic: Sum
+    Period: 43200
+    EvaluationPeriods: 1
+    Threshold: 0
+    ComparisonOperator: GreaterThanThreshold
+    TreatMissingData: notBreaching
+    AlarmActions:
+      - Ref: TopicWarningNotification
