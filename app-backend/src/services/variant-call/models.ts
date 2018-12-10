@@ -167,7 +167,11 @@ export const VariantCall = defineModel<
       start: JoiStart.required(),
       
       // changes described in this variant call e.g., [ "T", "C" ] or [ "<NO_REF>" ]
-      altBases: Joi.array().items(Joi.string().uppercase().regex(/([ATGC]*)|<NON_REF>/, 'altbases pattern')).min(1),
+      altBases: ifValidCall(
+        Joi.array().items(Joi.string().uppercase().regex(/([ATGC]*)|<NON_REF>/, 'altbases pattern')).min(1),
+        Joi.optional(),
+        undefined
+      ),
       // sequence being replaced e.g., "A"
       refBases: Joi.string().uppercase().regex(/\.|[ATGC]*/, 'reference bases pattern'),
       
