@@ -5,8 +5,14 @@
 * Redistribution and use in source and binary forms, with or
 * without modification, are not permitted.
 */
-import { VariantCall } from './models';
+
+// tslint:disable no-any
+
+import { VariantCall, combinationsWithRepeats, isValidCall } from './models';
 import { destroyFixtures, addFixtures, resetAllTables } from 'src/common/fixtures';
+import { VariantCallAttributes } from 'src/services/variant-call/models';
+
+const cases = require('jest-in-case');
 
 describe('VariantCall', function () {
   beforeAll(resetAllTables);
@@ -17,20 +23,24 @@ describe('VariantCall', function () {
         userId: 'bob-user-id',
         refName: 'chr1',
         refVersion: '37p13',
+        directRead: 'PASS',
         start: 100,
         sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [0, 1],
+        genotypeLikelihoods: [1, 0, 0],
         refBases: 'c',
         altBases: ['t']
       }), new VariantCall({
         userId: 'bob-user-id',
         refName: 'chr2',
         refVersion: '37p13',
+        directRead: 'pass',
         start: 200,
         sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [1, 1],
+        genotypeLikelihoods: [1, 0, 0],
         refBases: 'c',
         altBases: ['t']
       }),
@@ -39,16 +49,21 @@ describe('VariantCall', function () {
         refName: 'chr3',
         refVersion: '37p13',
         start: 300,
+        directRead: 'pass',
         sampleSource: '23andme',
         sampleId: 'sampleId123',
         genotype: [0, 0],
+        genotypeLikelihoods: [1, 0, 0],
         refBases: 'c',
         altBases: ['t']
       }));
+
+      const vcs = await VariantCall.query('bob-user-id').execAsync();
+      expect(vcs.Items).toHaveLength(3);
     });
     
     afterEach(destroyFixtures);
-    
+
     it('should retrieve one item if the user has a variantcall matching the variant index provided', async function () {
       const variantCalls = await VariantCall.forUser('bob-user-id', [{
         refName: 'chr1', refVersion: '37p13', start: 100
@@ -80,6 +95,102 @@ describe('VariantCall', function () {
   });
 
   describe('save', function () {
+
+    describe('failure', function () {
+      let vc: VariantCall;
+      const baseAttrs = { 
+        userId: 'bob-user-id',
+        refName: 'chr1',
+        refVersion: '37p13',
+        start: 100,
+        sampleSource: '23andme',
+        sampleId: 'sampleId123',
+        refBases: 'c',
+        altBases: ['t']
+      };
+
+      afterEach(() => vc && vc.destroyAsync);
+      
+      cases('should occur when valid VariantCall is missing genotype', (
+        [directRead, imputed]: [string?, string?]
+      ) => {
+        vc = new VariantCall({
+          ...baseAttrs,
+          imputed,
+          directRead,
+          genotypeLikelihoods: [.5, .3, .2]
+        });
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+      }, [
+        ['pass', 'pass'],
+        ['pass', undefined],
+        ['pass', 'FAIL'],
+        [undefined, 'pass'],
+        ['fail', 'pass']
+      ]);
+
+      cases('should occur when valid VariantCall is missing genotypeLikelihood', (
+        [directRead, imputed]: [string?, string?]
+      ) => {
+        vc = new VariantCall({
+          ...baseAttrs,
+          imputed,
+          directRead,
+          genotype: [1, 1]
+        });
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+      }, [
+        ['pass', 'pass'],
+        ['pass', undefined],
+        ['pass', 'FAIL'],
+        [undefined, 'pass'],
+        ['fail', 'pass']
+      ]);
+
+      it('should occur when altBaseDosages is missing and VariantCall was imputed', function () {
+        vc = new VariantCall({
+          ...baseAttrs,
+          imputed: 'PASS',
+          genotype: [1, 1],
+          genotypeLikelihoods: [0, 0, 1]
+        });
+        
+        return expect(vc.saveAsync()).rejects.toBeInstanceOf(Error);
+      });
+
+      cases('should not occur if altBaseDosages is missing but VariantCall is not imputed', (
+        { imputed}: { imputed?: string}
+      ) => {
+        vc = new VariantCall({
+          ...baseAttrs,
+          imputed,
+          directRead: 'PASS',
+          genotype: [1, 1],
+          genotypeLikelihoods: [0, 0, 1]
+        });
+        
+        return expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
+      }, [ {imputed: 'FAIL'}, {imputed: 'fail'}, {imputed: undefined} ]);
+
+      describe('when both direct read and imputation fail', function () {
+        cases('should save successfully without genotype, genotypeLikelihood or altBaseDosages', (
+          [directRead, imputed]: [string?, string?]
+        ) => {
+          vc = new VariantCall({
+            ...baseAttrs,
+            directRead, 
+            imputed
+          });
+          return expect(vc.saveAsync()).resolves.toBeInstanceOf(VariantCall);
+        }, [
+          [ undefined, undefined ],
+          [ 'FAIL', 'FAIL' ],
+          [ 'fail', undefined ],
+          [ undefined, 'fail' ]
+        ]);
+      });
+    });
+
     describe('a single nucleotide polymorphism', function () {
       let vc: VariantCall;
 
@@ -94,8 +205,9 @@ describe('VariantCall', function () {
           genotype: [1, 1],
           refBases: 'c',
           altBases: ['t'],
-          filter: 'pass',
-          imputed: true
+          directRead: 'pass',
+          imputed: 'fail',
+          genotypeLikelihoods: [.5, .3, .2]
         }).saveAsync();
       });
 
@@ -104,7 +216,7 @@ describe('VariantCall', function () {
       });
 
       it('should set the variantId correctly for a SNP', () => {
-        expect(vc.get('variantId')).toEqual('chr1:37p13:100:101:23andme:sampleId123');
+        expect(vc.get('variantId')).toEqual('chr1:37p13:100:23andme:sampleId123');
       });
 
       it('should have properties set as expected', function () {
@@ -113,8 +225,8 @@ describe('VariantCall', function () {
         expect(vc.get('refVersion')).toEqual('37p13');
         expect(vc.get('sampleSource')).toEqual('23andme');
         expect(vc.get('sampleId')).toEqual('sampleId123');
-        expect(vc.get('filter')).toEqual('PASS');
-        expect(vc.get('imputed')).toEqual(true);
+        expect(vc.get('directRead')).toEqual('PASS');
+        expect(vc.get('imputed')).toEqual('FAIL');
       });
 
       it('should uppercase the ref and altbases', function () {
@@ -136,7 +248,8 @@ describe('VariantCall', function () {
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',
-          altBases: ['tag', 't']
+          altBases: ['tag', 't'],
+          genotypeLikelihoods: [.5, .3, .2, 1, .2, .7]
         }).saveAsync();
       });
 
@@ -145,8 +258,8 @@ describe('VariantCall', function () {
       });
 
       it('should set the end chromosome position correctly', () => {
-        expect(vc.get('end')).toEqual(103);
-        expect(vc.get('variantId')).toEqual('chr1:37p13:100:103:23andme:sampleId123');
+        expect(vc).toBeDefined();
+        expect(vc.get('variantId')).toEqual('chr1:37p13:100:23andme:sampleId123');
       });
 
     });
@@ -164,7 +277,8 @@ describe('VariantCall', function () {
           sampleId: 'sampleId123',
           genotype: [0, 0],  // NOTE: genotype is wildtype
           refBases: 'c',
-          altBases: ['tag', 'tttttt'] // these altBases aren't actually referenced
+          altBases: ['tag', 'tttttt'], // these altBases aren't actually referenced
+          genotypeLikelihoods: [.5, .3, .2, .1, 0, .9]
         }).saveAsync();
       });
 
@@ -173,8 +287,8 @@ describe('VariantCall', function () {
       });
 
       it('should set the end chromosome position correctly', () => {
-        expect(vc.get('end')).toEqual(101);
-        expect(vc.get('variantId')).toEqual('chr1:37p13:100:101:23andme:sampleId123');
+        expect(vc).toBeDefined();
+        expect(vc.get('variantId')).toEqual('chr1:37p13:100:23andme:sampleId123');
       });
 
     });
@@ -192,7 +306,8 @@ describe('VariantCall', function () {
           sampleId: 'sampleId123',
           genotype: [1, 1],
           refBases: 'c',
-          altBases: ['.']
+          altBases: ['.'],
+          genotypeLikelihoods: [.5, .3, .2]
         }).saveAsync();
       });
 
@@ -201,10 +316,43 @@ describe('VariantCall', function () {
       });
 
       it('should set the end chromosome position correctly', () => {
-        expect(vc.get('end')).toEqual(100);
-        expect(vc.get('variantId')).toEqual('chr1:37p13:100:100:23andme:sampleId123');
+        expect(vc).toBeDefined();
+        expect(vc.get('variantId')).toEqual('chr1:37p13:100:23andme:sampleId123');
       });
 
     });
+  });
+});
+
+describe('VariantCall helpers', function () {
+  describe('repeatingCombinations', function () {
+    cases('should return the right number of combinations for a variety of inputs', 
+      ([alternatives, selections, combinations]: number[]) => {
+        expect(combinationsWithRepeats(alternatives, selections)).toEqual(combinations);
+      }, [
+        [1, 0, 1],
+        [1, 1, 1],
+        [2, 1, 2],
+        [2, 2, 3],
+        [3, 2, 6]
+      ]
+    );
+  });
+  
+  describe('isValidCall', function () {
+    cases('should be valid when imputed is true', function (
+      {imputed, directRead, isValid}: VariantCallAttributes & {isValid: boolean}) {
+      expect(isValidCall({imputed, directRead})).toEqual(isValid);
+    }, [
+      { imputed: 'PASS', directRead: 'PASS', isValid: true},
+      { imputed: 'pass', directRead: 'pass', isValid: true},
+      { imputed: 'FAIL', directRead: 'PASS', isValid: true},
+      { imputed: 'PASS', directRead: 'FAIL', isValid: true},
+      { imputed: 'FAIL', directRead: 'FAIL', isValid: false},
+      { imputed: 'fail', directRead: 'fail', isValid: false},
+      { imputed: undefined, directRead: 'PASS', isValid: true},
+      { imputed: 'PASS', directRead: undefined, isValid: true},
+      { imputed: undefined, directRead: undefined, isValid: false}
+    ]);
   });
 });

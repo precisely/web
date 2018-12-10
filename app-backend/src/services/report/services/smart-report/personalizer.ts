@@ -33,8 +33,7 @@ export class Personalization {
 }
 
 export class Personalizer {
-  constructor(public readonly report: Report, public readonly userId: string) {
-  }
+  constructor(public readonly report: Report, public readonly userId: string) {}
 
   async personalize(): Promise<Personalization> {
     const elements: ReducibleElement[] = this.report.getValid('publishedElements'); 
