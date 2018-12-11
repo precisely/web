@@ -67,6 +67,7 @@ plugins:
   - serverless-plugin-scripts
   - serverless-plugin-git-variables
   - serverless-plugin-log-retention
+  - serverless-dynamodb-autoscaling
   - serverless-offline # serverless-offline must be last in the list
 
 custom:
@@ -113,6 +114,9 @@ custom:
     bioinformaticsECSClusterName: ${self:provider.stage}-BioinformaticsECSCluster
     bioinformaticsECSContainerName: ${self:provider.stage}-BioinformaticsECSContainer
     bioinformaticsECSTaskName: ${self:provider.stage}-BioinformaticsECSTask
+
+  capacities: # serverless-dynamodb-autoscaling
+    ${file(./serverless/resources/dynogels-tables.js):Autoscaling}
 
   customDomain: # domain-manager settings - for the api
     domainName: ${self:custom.common.apiDomain}
