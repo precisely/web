@@ -15,35 +15,37 @@ import { variantCommand } from './commands/seed/variant';
 import { reportsCommand } from './commands/seed/reports';
 import { clearCommand } from './commands/seed/clear';
 import { dynamodbResetCommand } from './commands/dynamodb';
+import { upscaleDynamoDB, downscaleDynamoDB } from './throughput';
 
 async function processCommand() {
   const command = process.argv[2];
   const args = process.argv.slice(3);
-  switch (command) {
-    case 'seed:genetics': 
-      await geneticsCommand(...args);
-      break;
-    case 'seed:variant': 
-      await variantCommand(...args);
-      break;
-    case 'seed:reports': 
-      await reportsCommand(...args);
-      break;
-    case 'seed:clear':
-      await clearCommand(...args);
-      break;
-    case 'dynamodb:reset':
-      await dynamodbResetCommand(...args);
-      break;
-    default:
-      console.log(
-        'usage:\n' +
-        '\tyarn sls seed:genetics --user {userId} --genetics {wt|het|hom|lessCommonHet|compoundHet}\n' +
-        '\tyarn sls seed:variant --user {userId} --variant {variant - e.g., mthfr.c677t:het}\n' +
-        '\tyarn sls seed:reports\n' +
-        '\tyarn sls seed:clear --models "{model1,model2,...}"' +
-        '\tyarn sls dynamodb:reset\n'         
-      );
+  const commandToAction = {
+    'seed:genetics': geneticsCommand,
+    'seed:variant': variantCommand,
+    'seed:reports': reportsCommand,
+    'seed:clear': clearCommand,
+    'dynamodb:reset': dynamodbResetCommand
+  };
+  const action = commandToAction[command];
+  if (action) {
+    try {
+      await upscaleDynamoDB();
+      await action(...args);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      await downscaleDynamoDB();
+    }
+  } else {
+    console.log(
+      'usage:\n' +
+      '\tyarn sls seed:genetics --user {userId} --genetics {wt|het|hom|lessCommonHet|compoundHet}\n' +
+      '\tyarn sls seed:variant --user {userId} --variant {variant - e.g., mthfr.c677t:het}\n' +
+      '\tyarn sls seed:reports\n' +
+      '\tyarn sls seed:clear --models "{model1,model2,...}"' +
+      '\tyarn sls dynamodb:reset\n'         
+    );
   }
 }
 
