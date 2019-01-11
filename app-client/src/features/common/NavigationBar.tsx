@@ -95,6 +95,9 @@ export class NavigationBar extends React.Component {
             <RW.NavLink href="/report/me-cfs">ME-CFS Report</RW.NavLink>
           </RW.NavItem>
           <RW.NavItem>
+            <RW.NavLink href="/surveys">Surveys</RW.NavLink>
+          </RW.NavItem>
+          <RW.NavItem>
             {this.renderLoginStatus()}
           </RW.NavItem>
         </RW.Nav>

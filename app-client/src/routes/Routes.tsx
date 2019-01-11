@@ -45,6 +45,8 @@ export class Routes extends React.Component {
               component={makeLoadable('AboutUs', 'homepage/AboutUs')} />
         <AuthRoute path="/report/:slug" exact={true}
                   component={makeLoadable('Report', 'report/Report')} />
+        <AuthRoute path="/surveys" exact={true}
+                   component={makeLoadable('SurveyList', 'survey/SurveyList')} />
         <Route path="*" component={NotFoundErrorComponent} />
       </Switch>
     );
