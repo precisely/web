@@ -5,6 +5,8 @@ import { graphql, OptionProps } from 'react-apollo';
 import { toast } from 'react-toastify';
 
 import * as Styles from 'src/constants/styles';
+import { NavigationPage } from 'src/features/common/NavigationPage';
+import { WhitePage } from 'src/features/common/WhitePage';
 
 
 export type SurveyListProps = OptionProps<any>;
@@ -30,9 +32,32 @@ export class SurveyList extends React.Component<SurveyListProps, SurveyListState
       ]
     };
     const surveyModel = new Survey.ReactSurveyModel(surveyJson);
+
     return (
-      <Survey.Survey model={surveyModel} />
+      <NavigationPage {...this.props}>
+        <WhitePage>
+          <h2 style={pageHeader}>Health Profile</h2>
+          <div style={surveys}>
+            <Survey.Survey model={surveyModel} />
+          </div>
+        </WhitePage>
+      </NavigationPage>
     );
   }
 
+}
+
+
+const fontWeight: React.CSSProperties = {
+  fontWeight: 200,
+};
+
+const pageHeader: React.CSSProperties = {
+  ...fontWeight,
+  fontSize: '40px',
+  marginTop: '-3px',
+};
+
+const surveys: React.CSSProperties = {
+  marginTop: '10px'
 }
