@@ -10,6 +10,7 @@ import gql from 'graphql-tag';
 
 import variantCallSchema from './variant-call/schema';
 import reportSchema from './report/schema';
+import surveySchema from './survey/schema';
 
 const mainSchema = [gql`
 type Query 
@@ -18,4 +19,4 @@ type Mutation
 
 scalar JSON`];
 
-export default [...mainSchema, ...variantCallSchema, ...reportSchema];
+export default [...mainSchema, ...variantCallSchema, ...reportSchema, ...surveySchema];
