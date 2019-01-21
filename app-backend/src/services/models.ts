@@ -6,6 +6,7 @@
 * without modification, are not permitted.
 */
 
+export * from 'src/services/survey/models';
 export * from 'src/services/variant-call/models';
 export * from 'src/services/report/models';
 export * from 'src/services/system/models';
