@@ -23,7 +23,7 @@
     "env:test-offline": "ENV=${ENV:-test-offline} ../env/withenv",
     "log": "scripts/log",
     "offline": "echo Deprecated - try yarn start",
-    "start": "NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
+    "start": "NODE_OPTIONS=--max-old-space-size=8192 yarn sls offline start",
     "start:offline-auth": "OFFLINE_AUTH=true NODE_OPTIONS=--max-old-space-size=4096 yarn sls offline start",
     "seed": "yarn sls seed",
     "seed:clear": "yarn sls seed:clear",
