@@ -2,7 +2,8 @@ import { IContext } from 'accesscontrol-plus';
 import { IResolvers } from 'graphql-tools';
 
 import { GraphQLContext, accessControl } from 'src/services/graphql';
-import { Survey } from './models';
+import { NotFoundError } from 'src/common/errors';
+import { Survey, SurveyAttributes } from './models';
 
 
  // helpers
@@ -51,10 +52,16 @@ export const resolvers = {
 
   Query: {
 
-    async survey(): Promise<Survey> {
-      return {
-        id: 'test-survey',
-        title: 'Test Survey'
+    async survey(
+      _: {},
+      {id}: {id: string},
+      context: GraphQLContext
+    ): Promise<Survey> {
+      const result = await Survey.getAsync(id);
+      if (result) {
+        return await context.valid('survey:read', result);
+      } else {
+        throw new NotFoundError({data: {id, resourceType: 'Survey'}});
       }
     }
 
@@ -89,6 +96,21 @@ export const resolvers = {
   },
 
   Mutation: {
+
+    async saveSurvey(
+      _: null | undefined,
+      {id, title}: any, // FIXME: Type.
+      context: GraphQLContext
+    ): Promise<Survey> {
+      const actualId = id ? id : 'dc1';
+      // FIXME: Validate context.
+      const survey = new Survey({
+        id: actualId,
+        title,
+        ownerId: context.userId
+      });
+      return await survey.saveAsync();
+    }
 
     /*
     async createReport(
@@ -138,6 +160,17 @@ export const resolvers = {
     */
 
   },
+
+  // FIXME: Implement Survey and SurveyVersion resolvers as below:
+
+  Survey: {
+    ...GraphQLContext.dynamoAttributeResolver<SurveyAttributes>('survey', {
+      // structured as { graphQLField: dynamoDBAttribute, ... }
+      id: 'id',
+      title: 'title',
+      ownerId: 'ownerId'
+    })
+  }
 
   /*
   Report: {
