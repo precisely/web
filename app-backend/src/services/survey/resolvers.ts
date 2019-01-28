@@ -56,7 +56,7 @@ export const resolvers = {
       _: {},
       {id}: {id: string},
       context: GraphQLContext
-    ): Promise<Survey> {
+    ) {
       const result = await Survey.getAsync(id);
       if (result) {
         return await context.valid('survey:read', result);
