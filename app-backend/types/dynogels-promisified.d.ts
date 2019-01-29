@@ -293,6 +293,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
   }
 
   export type Item<Attributes = { any: any }, Methods extends {} = {}> = Methods & {
+    attrs: Attributes;
     get<K extends keyof Attributes>(key: K): Attributes[K];
     get(): Attributes;
     set(params: {}): Item<Attributes, Methods>;
