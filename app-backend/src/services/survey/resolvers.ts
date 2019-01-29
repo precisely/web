@@ -123,7 +123,6 @@ export const resolvers = {
       context: GraphQLContext
     ) {
       if (isSaveSurveyNew(args)) {
-        console.log('\n\n\n\nisSaveSurveyNew is true\n\n\n\n');
         const id = uuid();
         const versionId = Luxon.DateTime.utc().toISO();
         const draftTmp = new SurveyVersion({
@@ -136,25 +135,30 @@ export const resolvers = {
           id,
           title: args.title,
           ownerId: context.userId,
-          draftVersionId: draft['versionId']
+          draftVersionId: draft.get('versionId')
         });
         // FIXME: Validate context.
         return await surveyTmp.saveAsync();
       } else {
-        console.log('\n\n\n\nisSaveSurveyNew is false\n\n\n\n');
         const survey = await Survey.getAsync(args.id);
         if (!survey) {
           throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
         }
-        console.log(JSON.stringify(survey, null, 2));
-        // FIXME: This does not work.
-        const draft = await SurveyVersion.getAsync(survey['id'], survey['draftVersionId']);
-        //const draft = await SurveyVersion.getAsync(survey['id']);
-        console.log('read draft');
-        console.log(JSON.stringify(draft, null, 2));
-        draft['questions'] = args.questions;
-        // FIXME: Validate context.
+        let draft = await SurveyVersion.getAsync(survey.get('id'), survey.get('draftVersionId'));
+        if (!draft) {
+          draft = new SurveyVersion({
+            surveyId: survey.get('id'),
+            versionId: survey.get('draftVersionId') || Luxon.DateTime.utc().toISO(), // XXX: Not ideal, since this draft has somehow been deleted.
+            questions: args.questions
+          });
+        } else {
+          // XXX: Item.prototype.set uses _.merge internally, so changing a
+          // map object requires resetting it first.
+          draft.set({questions: null});
+          draft.set({questions: args.questions});
+        }
         await draft.saveAsync();
+        // FIXME: Validate context.
         return survey;
       }
     }
