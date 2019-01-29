@@ -1,9 +1,11 @@
 import { IContext } from 'accesscontrol-plus';
 import { IResolvers } from 'graphql-tools';
+import uuid = require('uuid');
+import * as Luxon from 'luxon';
 
 import { GraphQLContext, accessControl } from 'src/services/graphql';
 import { NotFoundError } from 'src/common/errors';
-import { Survey, SurveyAttributes } from './models';
+import { SurveyVersion, Survey, SurveyAttributes } from './models';
 
 
  // helpers
@@ -14,7 +16,7 @@ function userOwnsResource({user, resource}: IContext) {
 }
 
 
- // other stuff
+ // access control
 
 // tslint:disable no-unused-expression
 
@@ -45,6 +47,24 @@ accessControl
 // FIXME: Need an .action("...") specifier here?
 
 // tslint:enable no-unused-expressions
+
+
+ // resolver helper types
+
+interface ISaveSurveyNewArgs {
+  title: string,
+  ownerId: string,
+  questions: object
+}
+
+interface ISaveSurveyUpdateArgs {
+  id: string,
+  questions: object
+}
+
+function isSaveSurveyNew(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs): surveyArgs is ISaveSurveyNewArgs {
+  return (<ISaveSurveyNewArgs> surveyArgs).title !== undefined;
+}
 
 
  // actual resolver code
@@ -99,17 +119,44 @@ export const resolvers = {
 
     async saveSurvey(
       _: null | undefined,
-      {id, title}: any, // FIXME: Type.
+      args: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs,
       context: GraphQLContext
-    ): Promise<Survey> {
-      const actualId = id ? id : 'dc1';
-      // FIXME: Validate context.
-      const survey = new Survey({
-        id: actualId,
-        title,
-        ownerId: context.userId
-      });
-      return await survey.saveAsync();
+    ) {
+      if (isSaveSurveyNew(args)) {
+        console.log('\n\n\n\nisSaveSurveyNew is true\n\n\n\n');
+        const id = uuid();
+        const versionId = Luxon.DateTime.utc().toISO();
+        const draftTmp = new SurveyVersion({
+          surveyId: id,
+          versionId,
+          questions: args.questions
+        });
+        const draft = await draftTmp.saveAsync();
+        const surveyTmp = new Survey({
+          id,
+          title: args.title,
+          ownerId: context.userId,
+          draftVersionId: draft['versionId']
+        });
+        // FIXME: Validate context.
+        return await surveyTmp.saveAsync();
+      } else {
+        console.log('\n\n\n\nisSaveSurveyNew is false\n\n\n\n');
+        const survey = await Survey.getAsync(args.id);
+        if (!survey) {
+          throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
+        }
+        console.log(JSON.stringify(survey, null, 2));
+        // FIXME: This does not work.
+        const draft = await SurveyVersion.getAsync(survey['id'], survey['draftVersionId']);
+        //const draft = await SurveyVersion.getAsync(survey['id']);
+        console.log('read draft');
+        console.log(JSON.stringify(draft, null, 2));
+        draft['questions'] = args.questions;
+        // FIXME: Validate context.
+        await draft.saveAsync();
+        return survey;
+      }
     }
 
     /*

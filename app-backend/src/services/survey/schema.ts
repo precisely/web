@@ -32,7 +32,7 @@ export default [gql`
   }
 
   extend type Mutation {
-    saveSurvey(id: String!, title: String!): Survey
+    saveSurvey(id: String, title: String, ownerId: String, questions: JSON!): Survey
   }
 
 `];
