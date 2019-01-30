@@ -152,10 +152,7 @@ export const resolvers = {
             questions: args.questions
           });
         } else {
-          // XXX: Item.prototype.set uses _.merge internally, so changing a
-          // map object requires resetting it first.
-          draft.set({questions: null});
-          draft.set({questions: args.questions});
+          draft.attrs.questions = args.questions; // XXX: Workaround: Item.prototype.set uses _.merge internally.
         }
         await draft.saveAsync();
         // FIXME: Validate context.
