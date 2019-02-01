@@ -117,7 +117,7 @@
     "@types/graphql-type-json": "^0.1.2",
     "@types/jest": "21.1.4",
     "@types/jest-in-case": "^1.0.0",
-    "@types/joi": "^13.3.0",
+    "@types/joi": "^14.3.1",
     "@types/jsonwebtoken": "^7.2.6",
     "@types/jsonwebtoken-promisified": "^1.0.0",
     "@types/jwt-decode": "^2.2.1",

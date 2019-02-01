@@ -366,10 +366,10 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.4.tgz#83c5c474dd6dee5bef9d014ff36787edfd4ab5a7"
   integrity sha512-CItNfCz6osAOxdhWMbUYbSz0iMGKuxDHu/0iaqnsGKQd98OY2J8EBtVQvozc3gXvPh2Y3uAjTGgqYv8rEj6qzA==
 
-"@types/joi@^13.3.0":
-  version "13.6.3"
-  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.6.3.tgz#79364839a9cc2c6d4d915ef8822e1f703e28648f"
-  integrity sha512-n5tDa0/3MUtHsA2fVH+emDfGQkPramIpWaOvWS+7C/Yq7bn2j979RAIy9pbl4F4hSE5lwjgBXhJN019DP+3ofg==
+"@types/joi@^14.3.1":
+  version "14.3.1"
+  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-14.3.1.tgz#1bc31b60a928da30cc206b1b4f88e13a48bffc79"
+  integrity sha512-1kAPyOBvPPQoWOV4b1qT2SRJrQbYY9kz6h5DV8fNgSW0+/Ma+aDLQDACISC1M982uWwjAgsMEVXdalA/+IhvaA==
 
 "@types/json5@^0.0.29":
   version "0.0.29"
