@@ -21,6 +21,13 @@ function userOwnsResource({user, resource}: IContext) {
 // tslint:disable no-unused-expression
 
 accessControl
+  .grant('admin')
+  .resource('survey')
+  .read
+  .create
+  .update;
+
+accessControl
   .grant('user')
   .resource('survey')
   .read.onFields('*', '!ownerId', '!draftVersionId', '!draftVersion');
@@ -36,15 +43,6 @@ accessControl
   .read.onFields('*').where(userOwnsResource) 
   .create
   .update.where(userOwnsResource);
-// FIXME: Need an .action("...") specifier here?
-
-accessControl
-  .grant('author')
-  .resource('surveyVersion')
-  .read.onFields('*').where(userOwnsResource) 
-  .create
-  .update.where(userOwnsResource);
-// FIXME: Need an .action("...") specifier here?
 
 // tslint:enable no-unused-expressions
 
@@ -125,22 +123,21 @@ export const resolvers = {
       if (isSaveSurveyNew(args)) {
         const id = uuid();
         const versionId = Luxon.DateTime.utc().toISO();
-        const draftTmp = new SurveyVersion({
+        const draftTmp = <SurveyVersion> await context.valid('survey:create', new SurveyVersion({
           surveyId: id,
           versionId,
           questions: args.questions
-        });
+        }));
         const draft = await draftTmp.saveAsync();
-        const surveyTmp = new Survey({
+        const surveyTmp = <Survey> await context.valid('survey:create', new Survey({
           id,
           title: args.title,
           ownerId: context.userId,
           draftVersionId: draft.get('versionId')
-        });
-        // FIXME: Validate context.
+        }));
         return await surveyTmp.saveAsync();
       } else {
-        const survey = await Survey.getAsync(args.id);
+        const survey = <Survey> await context.valid('survey:update', await Survey.getAsync(args.id));
         if (!survey) {
           throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
         }
@@ -155,7 +152,6 @@ export const resolvers = {
           draft.attrs.questions = args.questions; // XXX: Workaround: Item.prototype.set uses _.merge internally.
         }
         await draft.saveAsync();
-        // FIXME: Validate context.
         return survey;
       }
     }
