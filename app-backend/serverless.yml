@@ -45,10 +45,6 @@ provider:
     AUTH0_TENANT_NAME: ${self:custom.common.auth0Tenant} # set in Auth0: dev-precisely, beta-precisely, prod-precisely
     AUTH0_API_IDENTIFIER: https://${self:custom.common.account}-precise.ly/graphql/api
 
-    # Quick and dirty way to define admins for now
-    # TODO: better approach
-    ADMIN_EMAILS: "aneil@precise.ly,vetoshev@gmail.com"
-
 resources:
   - Resources: ${file(./serverless/resources/roles.yml)}
   - Resources: ${file(./serverless/resources/cors.yml)}

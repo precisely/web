@@ -38,7 +38,6 @@ export interface Auth0AuthenticationResult {
 
 export async function authenticate(event: CustomAuthorizerEvent, log: Logger): Promise<Auth0AuthenticationResult> {
   try {
-    const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : [];
     const AUTH0_TENANT_NAME = process.env.AUTH0_TENANT_NAME;
     const AUTH0_DOMAIN = `${AUTH0_TENANT_NAME}.auth0.com`;
     const AUTH0_JWKS_URI = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
@@ -71,11 +70,11 @@ export async function authenticate(event: CustomAuthorizerEvent, log: Logger): P
       }
     );
     log.info('auth0.authenticate verified token: %j', verified);
-
+    
     return {
       principalId: auth0SubToUserId(verified.sub),
       email: verified.email,
-      roles: ADMIN_EMAILS.indexOf(verified.email) !== -1 ? 'admin,user' : 'user'
+      roles: verified['https://precise.ly/roles']
     };
   } catch (e) {
     log.silly('Failed to authenticate: %s', e);
