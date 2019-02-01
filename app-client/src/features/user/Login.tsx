@@ -18,7 +18,7 @@ export class Login extends React.Component<RouteComponentProps<void>> {
     redirectUri: `${window.location.protocol}//${window.location.host}/login`,
     audience: getEnvVar('REACT_APP_AUTH0_AUDIENCE'),
     responseType: 'token id_token',
-    scope: 'openid profile'
+    scope: 'openid profile email'
   });
 
 

@@ -21,3 +21,11 @@ See [AWS: Output from a custom authorizer](https://docs.aws.amazon.com/apigatewa
 We use [AccessControlPlus](https://github.com/aneilbaboo/accesscontrol-plus) to define roles and scopes (permissions).
 
 See also the [GraphQLContext](../graphql/README.md) documentation
+
+## Roles
+
+Users may be associated with one or more roles. Current roles are `user`, `admin`, and `author`. The accesscontrol-plus library is used to map roles to permissions, and the `GraphQLContext` class provides a convenient way of guarding access to GraphQL queries, mutations and fields. 
+
+User roles are stored in Auth0 app_metadata under the `"roles"` key as a comma delimited string. This value is copied into the JWKS token returned by Auth0 under the key `"https://precise.ly/roles"`. This is performed by a custom Auth0 rule "Copy App Metadata Roles to idToken". If no `"roles"` key is found in the user's app_metadata, the `"user"` role is assumed. 
+
+Currently, the only means provided for changing a user's role is via the [Auth0 user management interface](https://manage.auth0.com/#/users ). Simply find the user and update their app_metadata. For example, by setting app_metadata to `{ "roles": "user,author" }`, you are granting a user both the `"user"` and `"author"` role.
