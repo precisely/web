@@ -16,7 +16,7 @@ import { AccessDeniedError } from 'src/common/errors';
 import { Item } from 'src/db/dynamo/dynogels';
 import { get as dig } from 'lodash';
 import { IResolverObject } from 'graphql-tools';
-import { isArray, isString } from 'util';
+import { isArray, isString, isFunction } from 'util';
 
 export {_accessControl as accessControl};
 
@@ -185,14 +185,81 @@ export class GraphQLContext {
     }
     return resolver;
   }
+
+  /**
+   * Provides access-controled resolvers for top-level queries, 
+   * 
+   * @param accessors 
+   */
+  public static accessResolver(
+    accessors: { [prop: string]: { scope?: string, resolver: PropertyAccessor }}
+  ): IResolverObject {
+    let resolver: IResolverObject = {};
+    for (const prop in accessors) {
+      const accessor = accessors[prop];
+      const scope = accessor.scope;
+      if (isString(scope)) {
+        resolver[<string> prop] = async (obj: any, args: IContext, context: GraphQLContext) => {
+          if (await context.valid(scope, obj, args)) {
+            return await accessor.resolver(obj, args, context);
+          }
+        };  
+      } else {
+        resolver[prop] = accessor.resolver;
+      }
+    }
+    return resolver; 
+  }
 }
 
+/**
+ * Performs a scope check before calling a resolver
+ * 
+ * @param scope scope the current user must 
+ * @param fn 
+ * 
+ * E.g., 
+ * const resolvers = {
+ *    Mutations: {
+ *      createPost: callScope('post:create', (_: any, args: IContext) => {
+ *        // checks 'post:read' satisfied before calling this fn
+ *      }
+ *    },
+ *    
+ */
+export function preScope(scope: string, fn: Accessor) {
+  return async (obj: any, args: IContext, context: GraphQLContext) => {
+    if (await context.valid(scope, obj, args)) {
+      return await fn(obj, args, context);
+    }
+  };
+}
+
+/**
+ * Performs a scope test on a given object returned by a resolver
+ * 
+ * @param scope 
+ * @param fn 
+ * 
+ * E.g.,
+ * const resolvers = {
+ * };
+ */
+export function postScope(scope: string, fn: Accessor) {
+  return async (obj: any, args: IContext, context: GraphQLContext) => {
+    const result = await fn(obj, args, context);
+    return await context.valid(scope, result, args);
+  };
+}
+
+type Accessor = (obj?: any, args?: IContext, context?: GraphQLContext) => any;
 type PropertyAccessor = (obj: any, args?: IContext, context?: GraphQLContext) => any;
 type PropertyMapArg = string[] | { [key: string]: PropertyAccessor | string };
 type NormalizedPropertyMap = { [key: string]: PropertyAccessor };
 type PropertyAccessorGenerator = (value: string) => PropertyAccessor;
 import {fromPairs, zip, mapValues} from 'lodash';
 import { makeLogger, Logger } from 'src/common/logger';
+import { string } from 'joi';
 
 export function normalizePropertyMap(
   inMap: PropertyMapArg,
