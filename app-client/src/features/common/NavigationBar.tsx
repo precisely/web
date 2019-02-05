@@ -25,7 +25,7 @@ export interface NavigationBarState {
 
 
 @Radium
-export class NavigationBar extends React.Component {
+export class NavigationBar extends React.Component<{noBorder?: boolean}> {
 
   state: NavigationBarState = {
     backgroundColor: 'transparent',
@@ -45,7 +45,6 @@ export class NavigationBar extends React.Component {
   }
 
   renderLoginStatus() {
-    const props = this.props;
     function helper() {
       return AuthUtils.isAuthenticated() ? 'log out' : 'log in';
     }
@@ -65,14 +64,15 @@ export class NavigationBar extends React.Component {
 
   render() {
     const {backgroundColor} = this.state;
-    navbarStyle.backgroundColor = backgroundColor;
+    const {noBorder} = this.props;
+    const style = {... noBorder ? navbarStyle : navbarBorderedStyle, backgroundColor};
     // The <style> tags below enforces centering for the menu during the collapsing
     // animation. Not truly scoped, unfortunately.
     return (
       <RW.Container id="main-navbar-container" fluid={false} className="sticky-top">
         <Radium.Style key="1" scopeSelector="#main-navbar-container .navbar-collapse.collapsing" rules={navbarHousingStyle} />
         <Radium.Style key="2" scopeSelector="#main-navbar-container .nav-link" rules={navlinkStyle} />
-        <RW.Navbar light={true} sticky="top" expand="md" style={navbarStyle}>
+        <RW.Navbar light={true} sticky="top" expand="md" style={style}>
           <RW.NavbarBrand href="/" style={navbarBrandStyle}>
             <img id="brand-logo" src={logo} alt="precise.ly" style={logoStyle} />
             <span style={logoTextStyle}>Precise.ly</span>
@@ -120,6 +120,11 @@ const navbarStyle: React.CSSProperties = {
   textTransform: 'uppercase',
   flexDirection: 'row',
   zIndex: 1000000
+};
+
+const navbarBorderedStyle: React.CSSProperties = {
+  ...navbarStyle,
+  boxShadow: `0px 2px ${Styles.colors.defaultBackground}`
 };
 
 const navbarBrandStyle: React.CSSProperties = {

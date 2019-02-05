@@ -37,7 +37,7 @@ export class HomePage extends React.Component<ReactRouter.RouteComponentProps<vo
   render(): JSX.Element {
     return (
       <div style={pageStyle}>
-        <NavigationBar {...this.props}/>
+        <NavigationBar noBorder={true} {...this.props}/>
         <ParallaxProvider>
           <h1 style={titleStyle}>
             Personalized Genetic Reports for Chronic Disease
