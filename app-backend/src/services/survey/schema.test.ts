@@ -1,12 +1,12 @@
+const cases = require('jest-in-case');
 import { graphql, GraphQLSchema } from 'graphql';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
-const cases = require('jest-in-case');
 
-import { Survey, SurveyVersion } from './models';
 import typeDefs from 'src/services/schema';
+import { Survey, SurveyVersion } from './models';
 
 // mocked schema tests according to https://www.apollographql.com/docs/graphql-tools/mocking.html
-describe('Survey schema', function () {
+describe('survey schema', () => {
 
   let mockSchema: GraphQLSchema;
   
@@ -27,18 +27,18 @@ describe('Survey schema', function () {
     });
   });
 
-  describe('mutations', function () {
+  describe('mutations', () => {
 
     it('should allow saving an intial save of a survey', async () => {
       const query = `mutation {
-      saveSurvey(title: "test survey 2", questions: {
-        one: 1,
-        two: 2
-      }) {
-        id,
-        title
-      }
-    }`;
+        saveSurvey(title: "test survey 2", questions: {
+          one: 1,
+          two: 2
+        }) {
+          id,
+          title
+        }
+      }`;
       const result = await graphql(mockSchema, query, null, {}, {});
       expect(result).toEqual({
         data: {
@@ -52,14 +52,14 @@ describe('Survey schema', function () {
 
     it('should allow updating the draft version of a survey', async () => {
       const query = `mutation {
-      saveSurvey(id: "survey-id", questions: {
-        three: 3,
-        four: 4
-      }) {
-        id,
-        title
-      }
-    }`;
+        saveSurvey(id: "survey-id", questions: {
+          three: 3,
+          four: 4
+        }) {
+          id,
+          title
+        }
+      }`;
       const result = await graphql(mockSchema, query, null, {}, {});
       expect(result).toEqual({
         data: {
@@ -68,20 +68,6 @@ describe('Survey schema', function () {
             title: 'str'
           }
         }
-      });
-    });
-
-    it('should refuse to perform an invalid survey save', async () => {
-      // omit the required questions object
-      const query = `mutation {
-      saveSurvey(id: "survey-id") {
-        id,
-        title
-      }
-    }`;
-      const result = await graphql(mockSchema, query, null, {}, {});
-      expect(result).toEqual({
-        errors: expect.arrayContaining([])
       });
     });
 

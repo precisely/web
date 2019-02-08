@@ -9,7 +9,7 @@ import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db
 export interface SurveyVersionAttributes {
   surveyId: string;
   versionId: string;
-  questions: object;
+  questions?: object;
 }
 
 interface SurveyVersionMethods {}
@@ -43,13 +43,6 @@ export interface SurveyAttributes {
   ownerId: string;
   currentPublishedVersionId?: string;
   draftVersionId?: string;
-  /*
-  FIXME: Should these just be methods?
-  currentPublishedVersion?: SurveyVersion;
-  // FIXME: These shouldn't be optional.
-  draftVersion?: SurveyVersion;
-  versions?: [SurveyVersion]
-  */
 }
 
 interface SurveyMethods {}
@@ -62,14 +55,11 @@ export const Survey = defineModel<SurveyAttributes, SurveyMethods, SurveyStaticM
   hashKey: 'id',
   timestamps: true,
   schema: {
-    id: Joi.string(), // FIXME: uuid()?
+    id: Joi.string().required(), // FIXME: uuid()?
     title: Joi.string().required(),
     ownerId: Joi.string().required(),
     currentPublishedVersionId: Joi.string(), // FIXME: Add timestamp format validation string.
     draftVersionId: Joi.string(), // FIXME: Ditto.
-    /* currentPublishedVersion: Joi.string(), // FIXME: Wrong type.
-     * draftVersion: Joi.string(), // FIXME: Wrong type.
-     * versions: Joi.array().items(Joi.string()) // FIXME: Wrong type.*/
   },
   indexes: [{
     name: 'titleIndex',
