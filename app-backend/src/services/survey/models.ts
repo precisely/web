@@ -4,7 +4,7 @@ import uuid = require('uuid');
 import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
 
 
-// SurveyVersion model definition
+// SurveyVersion model definition
 
 export interface SurveyVersionAttributes {
   surveyId: string;
@@ -35,7 +35,7 @@ export const SurveyVersion = defineModel<SurveyVersionAttributes, SurveyVersionM
 });
 
 
-// Survey model definition
+// Survey model definition
 
 export interface SurveyAttributes {
   id: string;
@@ -69,6 +69,6 @@ export const Survey = defineModel<SurveyAttributes, SurveyMethods, SurveyStaticM
 });
 
 
-// helper model definitions
+// helper model definitions
 
 export type SurveyState = 'published' | 'draft' | 'all';
