@@ -8,7 +8,7 @@ import { NotFoundError } from 'src/common/errors';
 import { SurveyVersion, Survey, SurveyAttributes } from './models';
 
 
- // helpers
+// helpers
 
 // TODO: report.userOwnsResource is identical
 function userOwnsResource({user, resource}: IContext) {
@@ -16,7 +16,7 @@ function userOwnsResource({user, resource}: IContext) {
 }
 
 
- // access control
+// access control
 
 // tslint:disable no-unused-expression
 
@@ -47,7 +47,7 @@ accessControl
 // tslint:enable no-unused-expressions
 
 
- // resolver helper types
+// resolver helper types
 
 interface ISaveSurveyNewArgs {
   title: string,
@@ -65,7 +65,7 @@ function isSaveSurveyUpdate(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateAr
 }
 
 
- // actual resolver code
+// actual resolver code
 export const resolvers = {
 
   Query: {
