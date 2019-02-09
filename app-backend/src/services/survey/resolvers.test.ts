@@ -1,3 +1,4 @@
+import * as SurveyFixtures from './fixtures/simple';
 import { AccessDeniedError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';
 import { Survey, SurveyVersion } from './models';
@@ -10,10 +11,29 @@ describe('survey resolver', () => {
   beforeAll(resetAllTables);
   afterAll(destroyFixtures);
 
-  describe('saveSurvey', () => {
+  const contextAuthor = makeContext({userId: 'author-id', roles: ['author']});
+  const contextUser = makeContext({userId: 'user-id', roles: ['user']});
 
-    const contextAuthor = makeContext({userId: 'author-id', roles: ['author']});
-    const contextUser = makeContext({userId: 'user-id', roles: ['user']});
+  describe('query: survey', () => {
+
+    beforeAll(SurveyFixtures.addSimpleFixtures);
+
+    it('should read a fixture survey', async () => {
+      const surveyFixture = SurveyFixtures.surveys[0];
+      const survey = <Survey> await resolvers.Query.survey(
+        {},
+        {
+          id: surveyFixture.get('id')
+        },
+        contextUser
+      );
+      expect(survey.get('title')).toEqual(surveyFixture.get('title'));
+    });
+
+  });
+
+  describe('mutation: saveSurvey', () => {
+
     let surveyId: string;
 
     it('should create a new survey along with a draft', async () => {
