@@ -60,9 +60,8 @@ interface ISaveSurveyUpdateArgs {
   questions?: object
 }
 
-function isSaveSurveyNew(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs): surveyArgs is ISaveSurveyNewArgs {
-  const sa = <ISaveSurveyNewArgs> surveyArgs;
-  return (sa.title !== undefined && sa.questions !== undefined);
+function isSaveSurveyUpdate(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs): surveyArgs is ISaveSurveyUpdateArgs {
+  return (<ISaveSurveyUpdateArgs> surveyArgs).id !== undefined;
 }
 
 
@@ -122,7 +121,7 @@ export const resolvers = {
       context: GraphQLContext
     ) {
       // creating a brand new survey
-      if (isSaveSurveyNew(args)) {
+      if (!isSaveSurveyUpdate(args)) {
         const id = uuid();
         const versionId = Luxon.DateTime.utc().toISO();
         const draftTmp = <SurveyVersion> await context.valid('survey:create', new SurveyVersion({

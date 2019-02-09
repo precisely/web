@@ -51,7 +51,7 @@ describe('survey resolver', () => {
       expect(surveyReloaded.get('title')).toEqual(newSurveyTitle);
     });
 
-    it('should update questions in a survey', async () => {
+    it('should update survey questions', async () => {
       const newQuestions = {
         three: 3,
         four: 4
@@ -66,6 +66,27 @@ describe('survey resolver', () => {
       );
       const surveyReloaded = await Survey.getAsync(surveyId);
       const draftVersion = await SurveyVersion.getAsync(surveyReloaded.get('id'), surveyReloaded.get('draftVersionId'));
+      expect(draftVersion.get('questions')).toEqual(newQuestions);
+    });
+
+    it('should update survey questions and title in one mutation', async () => {
+      const newSurveyTitle = 'new survey renamed again';
+      const newQuestions = {
+        five: 5,
+        six: 6
+      };
+      const survey = await resolvers.Mutation.saveSurvey(
+        null,
+        {
+          id: surveyId,
+          title: newSurveyTitle,
+          questions: newQuestions
+        },
+        contextAuthor
+      );
+      const surveyReloaded = await Survey.getAsync(surveyId);
+      const draftVersion = await SurveyVersion.getAsync(surveyReloaded.get('id'), surveyReloaded.get('draftVersionId'));
+      expect(surveyReloaded.get('title')).toEqual(newSurveyTitle);
       expect(draftVersion.get('questions')).toEqual(newQuestions);
     });
 
