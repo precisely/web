@@ -52,7 +52,7 @@ describe('survey schema', () => {
 
     it('should allow updating the draft version of a survey', async () => {
       const query = `mutation {
-        saveSurvey(id: "survey-id", questions: {
+        saveSurvey(id: "survey-id", title: "new title", questions: {
           three: 3,
           four: 4
         }) {
