@@ -34,6 +34,9 @@ describe('survey resolver', () => {
 
   describe('mutation: saveSurvey', () => {
 
+    // This is a stateful test suite. It creates a survey in the first test,
+    // and modifies it through successive tests.
+
     let surveyId: string;
 
     it('should create a new survey along with a draft', async () => {
