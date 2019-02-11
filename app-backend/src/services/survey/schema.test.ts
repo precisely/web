@@ -62,7 +62,7 @@ describe('survey schema', () => {
           survey: {
             id: 'str',
             title: 'str',
-            ownerId: 'owner-id',
+            ownerId: 'str',
             draftVersion: {
               questions: {
                 one: 1,
