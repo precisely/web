@@ -30,7 +30,7 @@ accessControl
 accessControl
   .grant('user')
   .resource('survey')
-  .read.onFields('*', '!ownerId', '!draftVersionId', '!draftVersion');
+  .read.onFields('*', '!draftVersionId');
 
 accessControl
   .grant('user')
@@ -62,6 +62,10 @@ interface ISaveSurveyUpdateArgs {
 
 function isSaveSurveyUpdate(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs): surveyArgs is ISaveSurveyUpdateArgs {
   return (<ISaveSurveyUpdateArgs> surveyArgs).id !== undefined;
+}
+
+interface IPublishSurveyArgs {
+  id: string
 }
 
 
@@ -120,7 +124,7 @@ export const resolvers = {
         if (!draft) {
           draft = new SurveyVersion({
             surveyId: survey.get('id'),
-            versionId: survey.get('draftVersionId') || Luxon.DateTime.utc().toISO() // XXX: Not ideal, since this draft has somehow been deleted.
+            versionId: survey.get('draftVersionId') || Luxon.DateTime.utc().toISO()
           });
         }
         if (args.questions) {
@@ -133,6 +137,29 @@ export const resolvers = {
         }
         return survey;
       }
+    },
+
+    async publishSurvey(
+      _: null | undefined,
+      args: IPublishSurveyArgs,
+      context: GraphQLContext
+    ) {
+      // TODO: Maybe this needs a separate survey:publish permission?
+      const survey = <Survey> await context.valid('survey:update', await Survey.getAsync(args.id));
+      if (!survey) {
+        throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
+      }
+      const draftVersionId = survey.get('draftVersionId');
+      if (!draftVersionId) {
+        throw new NotFoundError({data: {resourceType: 'SurveyVersion'}});
+      }
+      const publishedVersions: string[] = survey.get('versions') || [];
+      publishedVersions.push(draftVersionId);
+      survey.attrs.versions = publishedVersions;
+      survey.attrs.draftVersionId = undefined;
+      survey.attrs.currentPublishedVersionId = draftVersionId;
+      await survey.saveAsync();
+      return survey;
     }
 
   },
@@ -153,13 +180,15 @@ export const resolvers = {
       title: 'title',
       ownerId: 'ownerId',
       currentPublishedVersionId: 'currentPublishedVersionId',
-      draftVersionId: 'draftVersionId'
+      draftVersionId: 'draftVersionId',
+      versions: 'versions'
     }),
-    // FIXME: Add currentPublishedVersion.
-    // FIXME: Add versions.
     ...GraphQLContext.propertyResolver('survey', {
       draftVersion(survey: Survey, { userId }: IContext, context: GraphQLContext): Promise<SurveyVersion> {
         return SurveyVersion.getAsync(survey.get('id'), survey.get('draftVersionId'));
+      },
+      currentPublishedVersion(survey: Survey, { userId }: IContext, context: GraphQLContext): Promise<SurveyVersion> {
+        return SurveyVersion.getAsync(survey.get('id'), survey.get('currentPublishedVersionId'));
       }
     })
   }

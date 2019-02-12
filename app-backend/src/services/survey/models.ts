@@ -43,6 +43,7 @@ export interface SurveyAttributes {
   ownerId: string;
   currentPublishedVersionId?: string;
   draftVersionId?: string;
+  versions?: string[];
 }
 
 interface SurveyMethods {}
@@ -60,6 +61,7 @@ export const Survey = defineModel<SurveyAttributes, SurveyMethods, SurveyStaticM
     ownerId: Joi.string().required(),
     currentPublishedVersionId: Joi.string(), // FIXME: Add timestamp format validation string.
     draftVersionId: Joi.string(), // FIXME: Ditto.
+    versions: Joi.array().items(Joi.string())
   },
   indexes: [{
     name: 'titleIndex',

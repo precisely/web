@@ -120,6 +120,10 @@ describe('survey schema', () => {
       });
     });
 
+    it('should allow publishing a survey', async () => {
+      // FIXME: Write this.
+    });
+
   });
 
 });

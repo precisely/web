@@ -11,6 +11,7 @@ describe('survey resolver', () => {
   beforeAll(resetAllTables);
   afterAll(destroyFixtures);
 
+  const contextAdmin = makeContext({userId: 'author-id', roles: ['admin']});
   const contextAuthor = makeContext({userId: 'author-id', roles: ['author']});
   const contextUser = makeContext({userId: 'user-id', roles: ['user']});
 
@@ -22,9 +23,7 @@ describe('survey resolver', () => {
       const surveyFixture = SurveyFixtures.surveys[0];
       const survey = <Survey> await resolvers.Query.survey(
         {},
-        {
-          id: surveyFixture.get('id')
-        },
+        {id: surveyFixture.get('id')},
         contextUser
       );
       expect(survey.get('title')).toEqual(surveyFixture.get('title'));
@@ -126,6 +125,29 @@ describe('survey resolver', () => {
       await expect(promise).rejects.toHaveProperty('data.scope', 'survey:create');
     });
 
+  });
+
+  describe('mutation: publishSurvey', () => {
+
+    beforeAll(SurveyFixtures.addSimpleFixtures);
+
+    it('should take an existing survey and publish it', async () => {
+      const surveyFixture = SurveyFixtures.surveys[0];
+      const draftVersionId = surveyFixture.get('draftVersionId');
+      const surveyWithPublishedDraft = await resolvers.Mutation.publishSurvey(
+        null,
+        {id: surveyFixture.get('id')},
+        contextAdmin
+      );
+      expect(surveyWithPublishedDraft.get('draftVersionId')).toBeUndefined();
+      expect(surveyWithPublishedDraft.get('currentPublishedVersionId')).toEqual(draftVersionId);
+      expect(surveyWithPublishedDraft.get('versions')).toEqual([draftVersionId]);
+    });
+
+  });
+
+  describe('system test', () => {
+    // FIXME: Write a test which exercises the system as a whole.
   });
 
 });

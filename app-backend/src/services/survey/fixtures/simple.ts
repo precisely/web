@@ -11,7 +11,8 @@ export const surveys = [
   new Survey({
     id: '08a6eedb-84c0-4731-9177-7647b5eddb72',
     title: 'test survey 2',
-    ownerId: 'owner-id-1'
+    ownerId: 'owner-id-1',
+    draftVersionId: '2019-01-29T23:46:41.088Z'
   })
 ];
 

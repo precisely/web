@@ -11,7 +11,7 @@ export default [gql`
     draftVersionId: String,
     currentPublishedVersion: SurveyVersion,
     draftVersion: SurveyVersion,
-    versions: [SurveyVersion]!
+    versions: [String]
   }
 
   type SurveyVersion {
@@ -32,7 +32,8 @@ export default [gql`
   }
 
   extend type Mutation {
-    saveSurvey(id: String, title: String, ownerId: String, questions: JSON): Survey
+    saveSurvey(id: String, title: String, ownerId: String, questions: JSON): Survey,
+    publishSurvey(id: String): Survey
   }
 
 `];
