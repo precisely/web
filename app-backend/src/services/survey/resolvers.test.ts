@@ -141,7 +141,7 @@ describe('survey resolver', () => {
       );
       expect(surveyWithPublishedDraft.get('draftVersionId')).toBeUndefined();
       expect(surveyWithPublishedDraft.get('currentPublishedVersionId')).toEqual(draftVersionId);
-      expect(surveyWithPublishedDraft.get('versions')).toEqual([draftVersionId]);
+      expect(surveyWithPublishedDraft.get('publishedVersionIds')).toEqual([draftVersionId]);
     });
 
   });

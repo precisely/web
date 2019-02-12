@@ -30,7 +30,7 @@ accessControl
 accessControl
   .grant('user')
   .resource('survey')
-  .read.onFields('*', '!draftVersionId');
+  .read.onFields('*', '!draftVersionId', '!publishedVersionIds');
 
 accessControl
   .grant('user')
@@ -153,9 +153,9 @@ export const resolvers = {
       if (!draftVersionId) {
         throw new NotFoundError({data: {resourceType: 'SurveyVersion'}});
       }
-      const publishedVersions: string[] = survey.get('versions') || [];
-      publishedVersions.push(draftVersionId);
-      survey.attrs.versions = publishedVersions;
+      const publishedVersionIds: string[] = survey.get('publishedVersionIds') || [];
+      publishedVersionIds.push(draftVersionId);
+      survey.attrs.publishedVersionIds = publishedVersionIds;
       survey.attrs.draftVersionId = undefined;
       survey.attrs.currentPublishedVersionId = draftVersionId;
       await survey.saveAsync();
@@ -181,7 +181,7 @@ export const resolvers = {
       ownerId: 'ownerId',
       currentPublishedVersionId: 'currentPublishedVersionId',
       draftVersionId: 'draftVersionId',
-      versions: 'versions'
+      publishedVersionIds: 'publishedVersionIds'
     }),
     ...GraphQLContext.propertyResolver('survey', {
       draftVersion(survey: Survey, { userId }: IContext, context: GraphQLContext): Promise<SurveyVersion> {

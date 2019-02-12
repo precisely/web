@@ -11,7 +11,7 @@ export default [gql`
     draftVersionId: String,
     currentPublishedVersion: SurveyVersion,
     draftVersion: SurveyVersion,
-    versions: [String]
+    publishedVersionIds: [String]
   }
 
   type SurveyVersion {
