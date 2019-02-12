@@ -189,6 +189,15 @@ export const resolvers = {
       },
       currentPublishedVersion(survey: Survey, { userId }: IContext, context: GraphQLContext): Promise<SurveyVersion> {
         return SurveyVersion.getAsync(survey.get('id'), survey.get('currentPublishedVersionId'));
+      },
+      publishedVersions(survey: Survey, { userId }: IContext, context: GraphQLContext) {
+        const surveyId = survey.get('id');
+        const publishedVersionIds = survey.get('publishedVersionIds');
+        if (publishedVersionIds) {
+          return publishedVersionIds.map((versionId) => SurveyVersion.getAsync(surveyId, versionId));
+        } else {
+          return [];
+        }
       }
     })
   }

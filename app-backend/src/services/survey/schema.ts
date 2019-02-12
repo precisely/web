@@ -9,9 +9,10 @@ export default [gql`
     ownerId: String!,
     currentPublishedVersionId: String,
     draftVersionId: String,
+    publishedVersionIds: [String],
     currentPublishedVersion: SurveyVersion,
     draftVersion: SurveyVersion,
-    publishedVersionIds: [String]
+    publishedVersions: [SurveyVersion]
   }
 
   type SurveyVersion {
