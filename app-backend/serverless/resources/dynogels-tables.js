@@ -56,7 +56,7 @@ const AutoscalingSettings = {
       usage: 0.75
     },
     write: {
-      minimum: 40,
+      minimum: 5,
       maximum: 200,
       usage: 0.5  
     }
