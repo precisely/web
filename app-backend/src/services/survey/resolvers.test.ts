@@ -130,44 +130,66 @@ describe('survey resolver', () => {
 
     // NB: This is a stateful test suite. Test order matters.
 
-    beforeAll(SurveyFixtures.addSimpleFixtures);
+    let surveyId: string;
+    let draftVersionId1: string | undefined;
+    let draftVersionId2: string | undefined;
+    const title1 = 'new survey';
+    const title2 = 'great new title';
+    const questions1 = {one: 1, two: 2};
+    const questions2 = {ten: 10, eleven: 11};
 
-    const surveyFixture = SurveyFixtures.surveys[0];
-    const surveyId = surveyFixture.get('id');
-
-    it('should take an existing survey and publish it', async () => {
-      const draftVersionId = surveyFixture.get('draftVersionId');
-      const surveyWithPublishedDraft = await resolvers.Mutation.publishSurvey(
-        null,
-        {id: surveyId},
-        contextAdmin
-      );
-      expect(surveyWithPublishedDraft.get('draftVersionId')).toBeUndefined();
-      expect(surveyWithPublishedDraft.get('currentPublishedVersionId')).toEqual(draftVersionId);
-      expect(surveyWithPublishedDraft.get('publishedVersionIds')).toEqual([draftVersionId]);
-    });
-
-    it('should update the survey and republish it', async () => {
-      const survey = await Survey.getAsync(surveyId);
-      const newTitle = 'great new title';
-      const newQuestions = {ten: 10, eleven: 11};
-      // change draft questions after publication
-      const updatedSurvey = await resolvers.Mutation.saveSurvey(
+    beforeAll(async () => {
+      const survey = await resolvers.Mutation.saveSurvey(
         null,
         {
-          id: surveyId,
-          title: newTitle,
-          questions: newQuestions
+          title: title1,
+          questions: questions1
         },
         contextAuthor
       );
-      expect(updatedSurvey.get('id')).toEqual(surveyId);
-      expect(updatedSurvey.get('draftVersionId')).not.toBeUndefined();
-      expect(updatedSurvey.get('draftVersionId')).not.toEqual(surveyFixture.get('draftVersionId'));
-      expect(updatedSurvey.get('title')).toEqual(newTitle);
-      const newDraft = await SurveyVersion.getAsync(surveyId, updatedSurvey.get('draftVersionId'));
-      expect(newDraft.get('questions')).toEqual(newQuestions);
-      // republish
+      surveyId = survey.get('id');
+      draftVersionId1 = survey.get('draftVersionId');
+    });
+
+    it('should publish the survey', async () => {
+      const survey = await resolvers.Mutation.publishSurvey(
+        null,
+        {id: surveyId},
+        contextAuthor
+      );
+      expect(survey.get('draftVersionId')).toBeUndefined();
+      expect(survey.get('currentPublishedVersionId')).toEqual(draftVersionId1);
+      expect(survey.get('publishedVersionIds')).toEqual([draftVersionId1]);
+      const version = await SurveyVersion.getAsync(surveyId, draftVersionId1);
+      expect(version).not.toBeUndefined();
+    });
+
+    it('should update the survey after publication', async () => {
+      const survey = await Survey.getAsync(surveyId);
+      await resolvers.Mutation.saveSurvey(
+        null,
+        {
+          id: surveyId,
+          title: title2,
+          questions: questions2
+        },
+        contextAuthor
+      );
+      const reloadedSurvey = await Survey.getAsync(surveyId);
+      draftVersionId2 = reloadedSurvey.get('draftVersionId');
+      expect(survey).not.toEqual(reloadedSurvey);
+      expect(reloadedSurvey.get('title')).toEqual(title2);
+      expect(reloadedSurvey.get('draftVersionId')).not.toBeUndefined();
+      expect(reloadedSurvey.get('draftVersionId')).not.toEqual(draftVersionId1);
+      expect(reloadedSurvey.get('draftVersionId')).not.toEqual(reloadedSurvey.get('currentPublishedVersionId'));
+      expect(reloadedSurvey.get('currentPublishedVersionId')).not.toContain(draftVersionId2);
+      const oldDraft = await SurveyVersion.getAsync(surveyId, draftVersionId1);
+      expect(oldDraft.get('questions')).toEqual(questions1);
+      const newDraft = await SurveyVersion.getAsync(surveyId, draftVersionId2);
+      expect(newDraft.get('questions')).toEqual(questions2);
+    });
+
+    it('should republish the survey after draft changed', async () => {
       await resolvers.Mutation.publishSurvey(
         null,
         {id: surveyId},
@@ -175,8 +197,22 @@ describe('survey resolver', () => {
       );
       const reloadedSurvey = await Survey.getAsync(surveyId);
       expect(reloadedSurvey.get('draftVersionId')).toBeUndefined();
-      expect(reloadedSurvey.get('currentPublishedVersionId')).toEqual(newDraft.get('versionId'));
-      expect(reloadedSurvey.get('publishedVersionIds')).toEqual([surveyFixture.get('draftVersionId'), newDraft.get('versionId')]);
+      expect(reloadedSurvey.get('currentPublishedVersionId')).toEqual(draftVersionId2);
+      expect(reloadedSurvey.get('publishedVersionIds')).toEqual([draftVersionId1, draftVersionId2]);
+
+
+      /*
+      const reloadedSurveyPublishedVersion = await SurveyVersion.getAsync(surveyId, reloadedSurvey.get('currentPublishedVersionId'));
+      expect(reloadedSurveyPublishedVersion.get('versionId')).not.toEqual(draftVersionId1);
+      expect(reloadedSurveyPublishedVersion.get('versionId')).toEqual(draftVersionId2);
+      const reloadedSurveyOldPublishedVersion = await SurveyVersion.getAsync(surveyId, draftVersionId1);
+
+      console.log(JSON.stringify(reloadedSurveyOldPublishedVersion, null, 2));
+      console.log(JSON.stringify(reloadedSurveyPublishedVersion, null, 2));
+
+      expect(reloadedSurveyOldPublishedVersion.get('versionId')).toEqual(draftVersionId1);
+      expect(reloadedSurveyPublishedVersion).not.toEqual(reloadedSurveyOldPublishedVersion);
+      */
     });
 
   });
