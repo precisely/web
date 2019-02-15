@@ -11,8 +11,8 @@ describe('survey resolver', () => {
   beforeAll(resetAllTables);
   afterAll(destroyFixtures);
 
-  const contextAdmin = makeContext({userId: 'author-id', roles: ['admin']});
-  const contextAuthor = makeContext({userId: 'author-id', roles: ['author']});
+  const contextAdmin = makeContext({userId: 'admin-id', roles: ['admin']});
+  const contextAuthor = makeContext({userId: 'owner-id-1', roles: ['author']});
   const contextUser = makeContext({userId: 'user-id', roles: ['user']});
 
   describe('query: survey', () => {
@@ -33,8 +33,7 @@ describe('survey resolver', () => {
 
   describe('mutation: saveSurvey', () => {
 
-    // This is a stateful test suite. It creates a survey in the first test,
-    // and modifies it through successive tests.
+    // NB: This is a stateful test suite. Test order matters.
 
     let surveyId: string;
 
@@ -127,16 +126,20 @@ describe('survey resolver', () => {
 
   });
 
-  describe('mutation: publishSurvey', () => {
+  describe.only('mutation: publishSurvey', () => {
+
+    // NB: This is a stateful test suite. Test order matters.
 
     beforeAll(SurveyFixtures.addSimpleFixtures);
 
+    const surveyFixture = SurveyFixtures.surveys[0];
+    const surveyId = surveyFixture.get('id');
+
     it('should take an existing survey and publish it', async () => {
-      const surveyFixture = SurveyFixtures.surveys[0];
       const draftVersionId = surveyFixture.get('draftVersionId');
       const surveyWithPublishedDraft = await resolvers.Mutation.publishSurvey(
         null,
-        {id: surveyFixture.get('id')},
+        {id: surveyId},
         contextAdmin
       );
       expect(surveyWithPublishedDraft.get('draftVersionId')).toBeUndefined();
@@ -144,10 +147,48 @@ describe('survey resolver', () => {
       expect(surveyWithPublishedDraft.get('publishedVersionIds')).toEqual([draftVersionId]);
     });
 
+    it('should update the survey and republish it', async () => {
+      const survey = await Survey.getAsync(surveyId);
+      const newTitle = 'great new title';
+      const newQuestions = {ten: 10, eleven: 11};
+      // change draft questions after publication
+      const updatedSurvey = await resolvers.Mutation.saveSurvey(
+        null,
+        {
+          id: surveyId,
+          title: newTitle,
+          questions: newQuestions
+        },
+        contextAuthor
+      );
+      expect(updatedSurvey.get('id')).toEqual(surveyId);
+      expect(updatedSurvey.get('draftVersionId')).not.toBeUndefined();
+      expect(updatedSurvey.get('draftVersionId')).not.toEqual(surveyFixture.get('draftVersionId'));
+      expect(updatedSurvey.get('title')).toEqual(newTitle);
+      const newDraft = await SurveyVersion.getAsync(surveyId, updatedSurvey.get('draftVersionId'));
+      expect(newDraft.get('questions')).toEqual(newQuestions);
+      // republish
+      await resolvers.Mutation.publishSurvey(
+        null,
+        {id: surveyId},
+        contextAuthor
+      );
+      const reloadedSurvey = await Survey.getAsync(surveyId);
+      expect(reloadedSurvey.get('draftVersionId')).toBeUndefined();
+      expect(reloadedSurvey.get('currentPublishedVersionId')).toEqual(newDraft.get('versionId'));
+      expect(reloadedSurvey.get('publishedVersionIds')).toEqual([surveyFixture.get('draftVersionId'), newDraft.get('versionId')]);
+    });
+
   });
 
   describe('system test', () => {
+
+    // NB: This is a stateful test suite. Test order matters.
+
+    let surveyId: string;
+
     // FIXME: Write a test which exercises the system as a whole.
+
   });
 
 });

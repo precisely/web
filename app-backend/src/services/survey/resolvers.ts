@@ -120,19 +120,37 @@ export const resolvers = {
         if (!survey) {
           throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
         }
-        let draft = await SurveyVersion.getAsync(survey.get('id'), survey.get('draftVersionId'));
+        // nasty logic to handle all cases
+        let surveyNeedsSave = false;
+        let draftNeedsSave = false;
+        let draftVersionId = survey.get('draftVersionId');
+        let draft =
+          draftVersionId ?
+          await SurveyVersion.getAsync(survey.get('id'), draftVersionId) :
+          undefined;
         if (!draft) {
+          draftVersionId = draftVersionId || Luxon.DateTime.utc().toISO();
           draft = new SurveyVersion({
             surveyId: survey.get('id'),
-            versionId: survey.get('draftVersionId') || Luxon.DateTime.utc().toISO()
+            versionId: draftVersionId,
+            questions: {}
           });
+          survey.attrs.draftVersionId = draftVersionId;
+          draftNeedsSave = true;
+          surveyNeedsSave = true;
         }
         if (args.questions) {
           draft.attrs.questions = args.questions;
-          await draft.saveAsync();
+          draftNeedsSave = true;
         }
         if (args.title) {
           survey.attrs.title = args.title;
+          surveyNeedsSave = true;
+        }
+        if (draftNeedsSave) {
+          await draft.saveAsync();
+        }
+        if (surveyNeedsSave) {
           await survey.saveAsync();
         }
         return survey;
