@@ -125,20 +125,12 @@ export const resolvers = {
         let draftNeedsSave = false;
         let draftVersionId = survey.get('draftVersionId');
         if (!draftVersionId) {
-          console.log('draftVersionId missing');
           draftVersionId = Luxon.DateTime.utc().toISO();
           survey.attrs.draftVersionId = draftVersionId;
           surveyNeedsSave = true;
         }
-        console.log('doing retrieval on', survey.get('id'), draftVersionId);
-        let draft = await SurveyVersion.getAsync(
-          survey.get('id'),
-          //draftVersionId
-          "your mom"
-        );
-        console.log(JSON.stringify(draft, null, 2));
+        let draft = await SurveyVersion.getAsync(survey.get('id'), draftVersionId);
         if (!draft) {
-          console.log('making a new draft');
           draft = new SurveyVersion({
             surveyId: survey.get('id'),
             versionId: draftVersionId,

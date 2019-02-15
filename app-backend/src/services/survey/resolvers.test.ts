@@ -199,20 +199,12 @@ describe('survey resolver', () => {
       expect(reloadedSurvey.get('draftVersionId')).toBeUndefined();
       expect(reloadedSurvey.get('currentPublishedVersionId')).toEqual(draftVersionId2);
       expect(reloadedSurvey.get('publishedVersionIds')).toEqual([draftVersionId1, draftVersionId2]);
-
-
-      /*
       const reloadedSurveyPublishedVersion = await SurveyVersion.getAsync(surveyId, reloadedSurvey.get('currentPublishedVersionId'));
       expect(reloadedSurveyPublishedVersion.get('versionId')).not.toEqual(draftVersionId1);
       expect(reloadedSurveyPublishedVersion.get('versionId')).toEqual(draftVersionId2);
       const reloadedSurveyOldPublishedVersion = await SurveyVersion.getAsync(surveyId, draftVersionId1);
-
-      console.log(JSON.stringify(reloadedSurveyOldPublishedVersion, null, 2));
-      console.log(JSON.stringify(reloadedSurveyPublishedVersion, null, 2));
-
       expect(reloadedSurveyOldPublishedVersion.get('versionId')).toEqual(draftVersionId1);
       expect(reloadedSurveyPublishedVersion).not.toEqual(reloadedSurveyOldPublishedVersion);
-      */
     });
 
   });

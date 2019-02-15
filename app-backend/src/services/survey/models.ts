@@ -20,18 +20,14 @@ export interface SurveyVersion extends ModelInstance<SurveyVersionAttributes, Su
 
 export const SurveyVersion = defineModel<SurveyVersionAttributes, SurveyVersionMethods, SurveyVersionStaticMethods>('surveyVersion', {
   hashKey: 'surveyId',
+  rangeKey: 'versionId',
   timestamps: true,
   schema: {
     surveyId: Joi.string().required(),
     versionId: Joi.string().required(),
     questions: Joi.object().required()
   },
-  indexes: [{
-    name: 'surveyVersionIndex',
-    hashKey: 'surveyId',
-    rangeKey: 'versionId',
-    type: 'global'
-  }]
+  indexes: []
 });
 
 
