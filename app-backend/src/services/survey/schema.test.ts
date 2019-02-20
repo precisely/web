@@ -17,6 +17,7 @@ describe('survey schema', () => {
     addMockFunctionsToSchema({
       schema: mockSchema,
       mocks: {
+        Boolean: () => true,
         Int: () => 1,
         Float: () => 2.2,
         String: () => 'str',
@@ -150,6 +151,18 @@ describe('survey schema', () => {
           publishSurvey: {
             id: 'str'
           }
+        }
+      });
+    });
+
+    it('should allow deleting a survey', async () => {
+      const mutation = `mutation {
+        deleteSurvey(id: "survey-id")
+      }`
+      const result = await graphql(mockSchema, mutation, null, {}, {});
+      expect(result).toEqual({
+        data: {
+          deleteSurvey: true
         }
       });
     });
