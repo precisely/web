@@ -45,7 +45,7 @@ describe('survey schema', () => {
 
   describe('queries', () => {
 
-    it('should allow full querying', async () => {
+    it('should allow survey querying', async () => {
       const query = `query {
         survey(id: "survey-id") {
           id,
@@ -70,6 +70,24 @@ describe('survey schema', () => {
               }
             }
           }
+        }
+      });
+    });
+
+    it('should allow querying surveys by type', async () => {
+      const query = `query {
+        surveys(state: published) {
+          id,
+          title
+        }
+      }`;
+      const result = await graphql(mockSchema, query, null, {}, {});
+      expect(result).toEqual({
+        data: {
+          surveys: [
+            {id: 'str', title: 'str'},
+            {id: 'str', title: 'str'}
+          ]
         }
       });
     });
@@ -121,7 +139,19 @@ describe('survey schema', () => {
     });
 
     it('should allow publishing a survey', async () => {
-      // FIXME: Write this.
+      const mutation = `mutation {
+        publishSurvey(id: "survey-id") {
+          id
+        }
+      }`;
+      const result = await graphql(mockSchema, mutation, null, {}, {});
+      expect(result).toEqual({
+        data: {
+          publishSurvey: {
+            id: 'str'
+          }
+        }
+      });
     });
 
   });
