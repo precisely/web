@@ -2,7 +2,9 @@ import * as Joi from 'joi';
 
 import dynogels, { defineModel, ModelInstance } from 'src/db/dynamo/dynogels';
 
+
 const { uuid } = dynogels.types;
+
 
 // SurveyVersion model definition
 
@@ -18,7 +20,9 @@ interface SurveyVersionStaticMethods {}
 
 export interface SurveyVersion extends ModelInstance<SurveyVersionAttributes, SurveyVersionMethods> {}
 
-export const SurveyVersion = defineModel<SurveyVersionAttributes, SurveyVersionMethods, SurveyVersionStaticMethods>('surveyVersion', {
+export const SurveyVersion = defineModel<SurveyVersionAttributes,
+             SurveyVersionMethods,
+             SurveyVersionStaticMethods>('surveyVersion', {
   hashKey: 'surveyId',
   rangeKey: 'versionId',
   timestamps: true,

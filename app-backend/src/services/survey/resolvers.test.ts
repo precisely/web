@@ -261,7 +261,9 @@ describe('survey resolver', () => {
       expect(reloadedSurvey.get('draftVersionId')).toBeUndefined();
       expect(reloadedSurvey.get('currentPublishedVersionId')).toEqual(draftVersionId2);
       expect(reloadedSurvey.get('publishedVersionIds')).toEqual([draftVersionId1, draftVersionId2]);
-      const reloadedSurveyPublishedVersion = await SurveyVersion.getAsync(surveyId, reloadedSurvey.get('currentPublishedVersionId'));
+      const reloadedSurveyPublishedVersion = await SurveyVersion.getAsync(
+        surveyId,
+        reloadedSurvey.get('currentPublishedVersionId'));
       expect(reloadedSurveyPublishedVersion.get('versionId')).not.toEqual(draftVersionId1);
       expect(reloadedSurveyPublishedVersion.get('versionId')).toEqual(draftVersionId2);
       const reloadedSurveyOldPublishedVersion = await SurveyVersion.getAsync(surveyId, draftVersionId1);

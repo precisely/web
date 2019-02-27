@@ -1,4 +1,3 @@
-const cases = require('jest-in-case');
 import { graphql, GraphQLSchema } from 'graphql';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
@@ -158,7 +157,7 @@ describe('survey schema', () => {
     it('should allow deleting a survey', async () => {
       const mutation = `mutation {
         deleteSurvey(id: "survey-id")
-      }`
+      }`;
       const result = await graphql(mockSchema, mutation, null, {}, {});
       expect(result).toEqual({
         data: {

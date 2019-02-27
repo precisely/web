@@ -63,4 +63,4 @@ export const surveyVersions = [
 export async function addSimpleFixtures() {
   await addFixtures(...surveys);
   await addFixtures(...surveyVersions);
-};
+}

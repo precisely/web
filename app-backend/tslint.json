@@ -52,7 +52,7 @@
     "no-any": true,
     "no-arg": true,
     "no-bitwise": true,
-    "no-consecutive-blank-lines": true,
+    "no-consecutive-blank-lines": [true, 2],
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,

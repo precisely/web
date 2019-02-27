@@ -50,27 +50,28 @@ accessControl
 
 // resolver helper types
 
-interface ISaveSurveyNewArgs {
-  title: string,
-  questions: object
+interface SaveSurveyNewArgs {
+  title: string;
+  questions: object;
 }
 
-interface ISaveSurveyUpdateArgs {
-  id: string,
-  title?: string,
-  questions?: object
+interface SaveSurveyUpdateArgs {
+  id: string;
+  title?: string;
+  questions?: object;
 }
 
-function isSaveSurveyUpdate(surveyArgs: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs): surveyArgs is ISaveSurveyUpdateArgs {
-  return (<ISaveSurveyUpdateArgs> surveyArgs).id !== undefined;
+function isSaveSurveyUpdate(surveyArgs: SaveSurveyNewArgs | SaveSurveyUpdateArgs):
+              surveyArgs is SaveSurveyUpdateArgs {
+  return (<SaveSurveyUpdateArgs> surveyArgs).id !== undefined;
 }
 
-interface IPublishSurveyArgs {
-  id: string
+interface PublishSurveyArgs {
+  id: string;
 }
 
-interface IDeleteSurveyArgs {
-  id: string
+interface DeleteSurveyArgs {
+  id: string;
 }
 
 
@@ -124,11 +125,11 @@ export const resolvers = {
 
     async saveSurvey(
       _: null | undefined,
-      args: ISaveSurveyNewArgs | ISaveSurveyUpdateArgs,
+      args: SaveSurveyNewArgs | SaveSurveyUpdateArgs,
       context: GraphQLContext
     ) {
-      // creating a brand new survey
       if (!isSaveSurveyUpdate(args)) {
+        // creating a brand new survey
         const id = uuid();
         const versionId = Luxon.DateTime.utc().toISO();
         const draftTmp = <SurveyVersion> await context.valid('survey:create', new SurveyVersion({
@@ -144,9 +145,8 @@ export const resolvers = {
           draftVersionId: draft.get('versionId')
         }));
         return await surveyTmp.saveAsync();
-      }
-      // updating an existing survey
-      else {
+      } else {
+        // updating an existing survey
         const survey = <Survey> await context.valid('survey:update', await Survey.getAsync(args.id));
         if (!survey) {
           throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
@@ -189,7 +189,7 @@ export const resolvers = {
 
     async publishSurvey(
       _: null | undefined,
-      args: IPublishSurveyArgs,
+      args: PublishSurveyArgs,
       context: GraphQLContext
     ) {
       // TODO: Maybe this needs a separate survey:publish permission?
@@ -212,7 +212,7 @@ export const resolvers = {
 
     async deleteSurvey(
       _: null | undefined,
-      args: IDeleteSurveyArgs,
+      args: DeleteSurveyArgs,
       context: GraphQLContext
     ) {
       // TODO: Maybe this should use a separate survey:delete permission?
