@@ -31,6 +31,39 @@ describe('survey resolver', () => {
 
   });
 
+  describe('query: surveys (multiple)', () => {
+
+    beforeAll(SurveyFixtures.addSimpleFixtures);
+
+    it('should return one published survey', async () => {
+      const surveys = await resolvers.Query.surveys(
+        {},
+        {state: 'published'},
+        contextUser
+      );
+      expect(surveys).toHaveLength(1);
+    });
+
+    it('should return two draft surveys', async () => {
+      const surveys = await resolvers.Query.surveys(
+        {},
+        {state: 'draft'},
+        contextUser
+      );
+      expect(surveys).toHaveLength(2);
+    });
+
+    it('should return three total surveys', async () => {
+      const surveys = await resolvers.Query.surveys(
+        {},
+        {state: 'all'},
+        contextUser
+      );
+      expect(surveys).toHaveLength(3);
+    });
+
+  });
+
   describe('mutation: saveSurvey', () => {
 
     // NB: This is a stateful test suite. Test order matters.
@@ -126,7 +159,7 @@ describe('survey resolver', () => {
 
   });
 
-  describe.only('mutation: publishSurvey', () => {
+  describe('mutation: publishSurvey', () => {
 
     // NB: This is a stateful test suite. Test order matters.
 

@@ -5,7 +5,7 @@ import * as Luxon from 'luxon';
 
 import { GraphQLContext, accessControl } from 'src/services/graphql';
 import { NotFoundError } from 'src/common/errors';
-import { SurveyVersion, SurveyVersionAttributes, Survey, SurveyAttributes } from './models';
+import { SurveyState, SurveyVersion, SurveyVersionAttributes, Survey, SurveyAttributes } from './models';
 
 
 // helpers
@@ -85,6 +85,26 @@ export const resolvers = {
       } else {
         throw new NotFoundError({data: {id, resourceType: 'Survey'}});
       }
+    },
+
+    async surveys(
+      _: {},
+      {state}: {state: SurveyState},
+      context: GraphQLContext
+    ) {
+      let query = Survey.scan();
+      if ('draft' === state) {
+        // FIXME: Why does query.filter error out as "not a function"?
+        //query.filter('draftVersionId').notNull();
+        query.where('draftVersionId').notNull();
+      }
+      if ('published' === state) {
+        // FIXME: Why does query.filter error out as "not a function"?
+        //query.filter('currentPublishedVersionId').notNull();
+        query.where('currentPublishedVersionId').notNull();
+      }
+      const result = await query.execAsync();
+      return await context.valid('survey:read', result.Items);
     }
 
   },

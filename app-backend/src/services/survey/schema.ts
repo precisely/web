@@ -29,7 +29,7 @@ export default [gql`
 
   extend type Query {
     survey(id: String): Survey,
-    surveys(state: SurveyState): [Survey]
+    surveys(state: SurveyState!): [Survey]
   }
 
   extend type Mutation {
