@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 import uuid = require('uuid');
 
-import dynogels, {defineModel, ListenerNextFunction, ModelInstance} from 'src/db/dynamo/dynogels';
+import { defineModel, ModelInstance } from 'src/db/dynamo/dynogels';
 
 
 // SurveyVersion model definition
@@ -40,6 +40,7 @@ export interface SurveyAttributes {
   currentPublishedVersionId?: string;
   draftVersionId?: string;
   publishedVersionIds?: string[];
+  isDeleted?: boolean;
 }
 
 interface SurveyMethods {}
@@ -57,7 +58,8 @@ export const Survey = defineModel<SurveyAttributes, SurveyMethods, SurveyStaticM
     ownerId: Joi.string().required(),
     currentPublishedVersionId: Joi.string(), // FIXME: Add timestamp format validation string.
     draftVersionId: Joi.string(), // FIXME: Ditto.
-    publishedVersionIds: Joi.array().items(Joi.string())
+    publishedVersionIds: Joi.array().items(Joi.string()),
+    isDeleted: Joi.boolean()
   },
   indexes: [{
     name: 'titleIndex',

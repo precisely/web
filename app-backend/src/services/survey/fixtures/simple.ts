@@ -1,6 +1,8 @@
 import { Survey, SurveyVersion } from '../../models';
 import { addFixtures } from 'src/common/fixtures';
 
+// TODO: Convert this to a factory? e.g., https://github.com/rosiejs/rosie
+
 export const surveys = [
   new Survey({
     id: '8d6f5c9f-1243-4255-9758-a5f1401bb247',
@@ -20,6 +22,14 @@ export const surveys = [
     ownerId: 'owner-id-1',
     currentPublishedVersionId: '2019-02-21T01:31:21.681Z',
     publishedVersionIds: ['2019-02-21T01:31:21.681Z']
+  }),
+  new Survey({
+    id: '7f5784a0-81e7-4db6-9546-060ef8110d0b',
+    isDeleted: true,
+    title: 'test survey 4 (deleted)',
+    ownerId: 'owner-id-1',
+    currentPublishedVersionId: '2019-02-27T10:28:19.312Z',
+    publishedVersionIds: ['2019-02-27T10:28:19.312Z']
   })
 ];
 
@@ -51,6 +61,6 @@ export const surveyVersions = [
 ];
 
 export async function addSimpleFixtures() {
-  addFixtures(...surveys);
-  addFixtures(...surveyVersions);
+  await addFixtures(...surveys);
+  await addFixtures(...surveyVersions);
 };

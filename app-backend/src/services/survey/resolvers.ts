@@ -6,6 +6,7 @@ import * as Luxon from 'luxon';
 import { GraphQLContext, accessControl } from 'src/services/graphql';
 import { NotFoundError } from 'src/common/errors';
 import { SurveyState, SurveyVersion, SurveyVersionAttributes, Survey, SurveyAttributes } from './models';
+import { isUndefined } from 'util';
 
 
 // helpers
@@ -68,6 +69,10 @@ interface IPublishSurveyArgs {
   id: string
 }
 
+interface IDeleteSurveyArgs {
+  id: string
+}
+
 
 // actual resolver code
 export const resolvers = {
@@ -80,7 +85,8 @@ export const resolvers = {
       context: GraphQLContext
     ) {
       const result = await Survey.getAsync(id);
-      if (result) {
+      if (result && (isUndefined(result.attrs.isDeleted) ||
+                     !result.attrs.isDeleted)) {
         return await context.valid('survey:read', result);
       } else {
         throw new NotFoundError({data: {id, resourceType: 'Survey'}});
@@ -93,14 +99,19 @@ export const resolvers = {
       context: GraphQLContext
     ) {
       let query = Survey.scan();
+      // XXX: "FilterExpression" calling conventions are crazy.
+      // Why does this garbage not just mimic SQL parameter interpolation?
+      // Also, the parantheses around the filterExpression are CRITICAL,
+      // because this thing just puts together a string with AND clauses,
+      // which will mess up evaluation order with an embedded OR.
+      query
+        .expressionAttributeNames({'#isDeleted': 'isDeleted'})
+        .expressionAttributeValues({':isDeleted': false})
+        .filterExpression('(attribute_not_exists(#isDeleted) OR (#isDeleted = :isDeleted))');
       if ('draft' === state) {
-        // FIXME: Why does query.filter error out as "not a function"?
-        //query.filter('draftVersionId').notNull();
         query.where('draftVersionId').notNull();
       }
       if ('published' === state) {
-        // FIXME: Why does query.filter error out as "not a function"?
-        //query.filter('currentPublishedVersionId').notNull();
         query.where('currentPublishedVersionId').notNull();
       }
       const result = await query.execAsync();
@@ -197,6 +208,21 @@ export const resolvers = {
       survey.attrs.currentPublishedVersionId = draftVersionId;
       await survey.saveAsync();
       return survey;
+    },
+
+    async deleteSurvey(
+      _: null | undefined,
+      args: IDeleteSurveyArgs,
+      context: GraphQLContext
+    ) {
+      // TODO: Maybe this should use a separate survey:delete permission?
+      const survey = <Survey> await context.valid('survey:update', await Survey.getAsync(args.id));
+      if (!survey) {
+        throw new NotFoundError({data: {id: args.id, resourceType: 'Survey'}});
+      }
+      survey.attrs.isDeleted = true;
+      await survey.saveAsync();
+      return true;
     }
 
   },

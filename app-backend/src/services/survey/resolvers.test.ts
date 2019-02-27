@@ -1,5 +1,5 @@
 import * as SurveyFixtures from './fixtures/simple';
-import { AccessDeniedError } from 'src/common/errors';
+import { AccessDeniedError, NotFoundError } from 'src/common/errors';
 import { GraphQLContext } from 'src/services/graphql';
 import { Survey, SurveyVersion } from './models';
 import { destroyFixtures, resetAllTables } from 'src/common/fixtures';
@@ -9,15 +9,14 @@ import { resolvers } from './resolvers';
 describe('survey resolver', () => {
 
   beforeAll(resetAllTables);
-  afterAll(destroyFixtures);
+  beforeEach(SurveyFixtures.addSimpleFixtures);
+  afterEach(destroyFixtures);
 
   const contextAdmin = makeContext({userId: 'admin-id', roles: ['admin']});
   const contextAuthor = makeContext({userId: 'owner-id-1', roles: ['author']});
   const contextUser = makeContext({userId: 'user-id', roles: ['user']});
 
   describe('query: survey', () => {
-
-    beforeAll(SurveyFixtures.addSimpleFixtures);
 
     it('should read a fixture survey', async () => {
       const surveyFixture = SurveyFixtures.surveys[0];
@@ -29,11 +28,21 @@ describe('survey resolver', () => {
       expect(survey.get('title')).toEqual(surveyFixture.get('title'));
     });
 
+    it('should not read a deleted survey', async () => {
+      const deletedSurveyId = '7f5784a0-81e7-4db6-9546-060ef8110d0b';
+      const surveyFixture = await Survey.getAsync(deletedSurveyId);
+      expect(surveyFixture).toBeDefined();
+      const promise = resolvers.Query.survey(
+        {},
+        {id: deletedSurveyId},
+        contextUser
+      );
+      await expect(promise).rejects.toBeInstanceOf(NotFoundError);
+    });
+
   });
 
-  describe('query: surveys (multiple)', () => {
-
-    beforeAll(SurveyFixtures.addSimpleFixtures);
+  describe('tests query: surveys (multiple)', () => {
 
     it('should return one published survey', async () => {
       const surveys = await resolvers.Query.surveys(
@@ -64,9 +73,31 @@ describe('survey resolver', () => {
 
   });
 
-  describe('mutation: saveSurvey', () => {
+  describe('mutation: deleteSurvey', () => {
 
-    // NB: This is a stateful test suite. Test order matters.
+    it('should delete an existing survey from the fixtures', async () => {
+      const surveyId = '7c79621e-1ebf-49f7-a209-a1feb4b6e6be';
+      const deleteResult = await resolvers.Mutation.deleteSurvey(
+        null,
+        {id: surveyId},
+        contextAdmin
+      );
+      expect(deleteResult).toEqual(true);
+      // load the survey object and check it
+      const deletedSurvey = await Survey.getAsync(surveyId);
+      expect(deletedSurvey.attrs.isDeleted).toEqual(true);
+      // now check that it does not come back in the surveys query
+      const surveys = await resolvers.Query.surveys(
+        {},
+        {state: 'all'},
+        contextUser
+      );
+      expect(surveys).toHaveLength(2);
+    });
+
+  });
+
+  describe('mutation: saveSurvey', () => {
 
     let surveyId: string;
 
@@ -159,9 +190,7 @@ describe('survey resolver', () => {
 
   });
 
-  describe('mutation: publishSurvey', () => {
-
-    // NB: This is a stateful test suite. Test order matters.
+  describe('mutation: publishSurvey', async () => {
 
     let surveyId: string;
     let draftVersionId1: string | undefined;
@@ -171,7 +200,7 @@ describe('survey resolver', () => {
     const questions1 = {one: 1, two: 2};
     const questions2 = {ten: 10, eleven: 11};
 
-    beforeAll(async () => {
+    it('should first save the survey', async () => {
       const survey = await resolvers.Mutation.saveSurvey(
         null,
         {
@@ -239,16 +268,6 @@ describe('survey resolver', () => {
       expect(reloadedSurveyOldPublishedVersion.get('versionId')).toEqual(draftVersionId1);
       expect(reloadedSurveyPublishedVersion).not.toEqual(reloadedSurveyOldPublishedVersion);
     });
-
-  });
-
-  describe('system test', () => {
-
-    // NB: This is a stateful test suite. Test order matters.
-
-    let surveyId: string;
-
-    // FIXME: Write a test which exercises the system as a whole.
 
   });
 
