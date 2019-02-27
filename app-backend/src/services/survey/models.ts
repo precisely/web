@@ -1,8 +1,8 @@
 import * as Joi from 'joi';
-import uuid = require('uuid');
 
-import { defineModel, ModelInstance } from 'src/db/dynamo/dynogels';
+import dynogels, { defineModel, ModelInstance } from 'src/db/dynamo/dynogels';
 
+const { uuid } = dynogels.types;
 
 // SurveyVersion model definition
 
@@ -53,11 +53,11 @@ export const Survey = defineModel<SurveyAttributes, SurveyMethods, SurveyStaticM
   hashKey: 'id',
   timestamps: true,
   schema: {
-    id: Joi.string().required(), // FIXME: uuid()?
+    id: uuid(),
     title: Joi.string().required(),
     ownerId: Joi.string().required(),
-    currentPublishedVersionId: Joi.string(), // FIXME: Add timestamp format validation string.
-    draftVersionId: Joi.string(), // FIXME: Ditto.
+    currentPublishedVersionId: Joi.string().isoDate(),
+    draftVersionId: Joi.string().isoDate(),
     publishedVersionIds: Joi.array().items(Joi.string()),
     isDeleted: Joi.boolean()
   },
