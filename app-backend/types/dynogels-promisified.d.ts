@@ -407,6 +407,7 @@ declare module "@aneilbaboo/dynogels-promisified" {
   export interface ModelConfiguration {
     hashKey: string;
     rangeKey?: string;
+    billingMode?: 'PROVISIONED' | 'PAY_PER_REQUEST',
     timestamps?: boolean;
     createdAt?: boolean;
     updatedAt?: string;

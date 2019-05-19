@@ -53,7 +53,7 @@ export interface Report extends ModelInstance<ReportAttributes, ReportMethods> {
 
 export const Report = defineModel<ReportAttributes, ReportMethods, ReportStaticMethods>('report', {
   hashKey: 'id',
-
+  
   timestamps : true,
 
   schema: {
