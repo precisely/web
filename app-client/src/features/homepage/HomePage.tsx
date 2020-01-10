@@ -31,9 +31,6 @@ const ParallaxProvider = scrollParallax.ParallaxProvider;
 @Radium
 export class HomePage extends React.Component<ReactRouter.RouteComponentProps<void>> {
 
-  // NB: This is the app landing page. Its temporary placeholder non-app-enabled
-  // counterpart is LaunchPage.tsx.
-
   render(): JSX.Element {
     return (
       <div style={pageStyle}>

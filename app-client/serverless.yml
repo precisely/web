@@ -23,6 +23,7 @@ provider:
     REACT_APP_AUTH0_CLIENT_ID: ${self:custom.common.auth0ReactClientId}
     REACT_APP_GRAPHQL_ENDPOINT: ${self:custom.common.graphQLEndpoint}
     REACT_APP_LAUNCH_PAGE: ${env:LAUNCH_PAGE, ''}
+    REACT_APP_INDEX_PAGE: ${self:custom.common.indexPage}
     # helper URL
     REACT_APP_BIOINFORMATICS_UPLOAD_SIGNED_URL_ENDPOINT: ${self:custom.common.bioinformaticsUploadSignedURLEndpoint}
     
@@ -51,8 +52,8 @@ custom:
   client:
     bucketName: ${self:custom.vars.reactS3BucketName}
     distributionFolder: build
-    indexDocument: index.html
-    errorDocument: index.html
+    indexDocument: ${self:custom.vars.indexPage}
+    errorDocument: app.html
 
   scripts:
     commands:

@@ -56,6 +56,9 @@ module.exports.vars = (sls)=> {
   // see https://docs.aws.amazon.com/general/latest/gr/rande.html#cf_region
   const cloudfrontHostedZoneId = 'Z2FDTNDATAQYW2';
 
+  // launch page dispatch
+  const indexPage = (env.LAUNCH_PAGE && env.LAUNCH_PAGE === 'true') ? 'index.html' : 'app.html';
+
   const result = {
     account,
     accountId: { Ref: 'AWS::AccountId' },
@@ -73,6 +76,7 @@ module.exports.vars = (sls)=> {
     graphQLAPIPath,
     graphQLEndpoint,
     isOffline,
+    indexPage,
     offlineAPIPort,
     profile,
     region,

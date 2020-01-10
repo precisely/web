@@ -66,14 +66,16 @@ Bluebird.config({
   warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
 });
 
-ReactDOM.render(
-  <ApolloProvider client={client}>
-    <Radium.StyleRoot>
-      <ToastContainer hideProgressBar={true} />
-      <BrowserRouter>
-        <BasePage />
-      </BrowserRouter>
-    </Radium.StyleRoot>
-  </ApolloProvider>,
-  document.getElementById('root') as HTMLElement
-);
+if (!process.env.REACT_APP_LAUNCH_PAGE) {
+  ReactDOM.render(
+    <ApolloProvider client={client}>
+      <Radium.StyleRoot>
+        <ToastContainer hideProgressBar={true} />
+        <BrowserRouter>
+          <BasePage />
+        </BrowserRouter>
+      </Radium.StyleRoot>
+    </ApolloProvider>,
+    document.getElementById('root') as HTMLElement
+  );
+}

@@ -25,16 +25,6 @@ const NotFoundErrorComponent = () => {
 export class Routes extends React.Component {
 
   render(): JSX.Element {
-    if (process.env.REACT_APP_LAUNCH_PAGE === 'true') {
-      return (
-        <Switch>
-          <Route path="/" exact={true}
-                component={makeLoadable('LaunchPage', 'homepage/LaunchPage')} />
-          <Route path="*" component={NotFoundErrorComponent} />
-        </Switch>
-      );
-    }
-
     return (
       <Switch>
         <Route path="/" exact={true}
@@ -49,4 +39,5 @@ export class Routes extends React.Component {
       </Switch>
     );
   }
+
 }
