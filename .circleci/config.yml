@@ -1,8 +1,9 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
+# -*- yaml-indent-offset: 4; -*-
+
+version: 2.1
+
+orbs:
+    aws-cli: circleci/aws-cli@0.1.19
 
 ALIASES:
     defaults: &defaults
@@ -95,7 +96,15 @@ ALIASES:
             name: Set AWS Profile
             # run a script so that the keys don't print into the CircleCI console
             command: ../.circleci/make-beta-deployment-profile.sh                
-            
+
+    setup_aws_deployment_profile_prod: &setup_aws_deployment_profile_prod
+        - aws-cli/install
+        - aws-cli/configure:
+            profile-name: prod-profile-precisely
+            aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+            aws-secret-access-key: PROD_AWS_SECRET_KEY
+            aws-region: AWS_REGION
+
     upload_coverage_report: &upload_coverage_report
         run:
             name: Save Coverage Report in S3
@@ -115,7 +124,6 @@ workflows:
             #         - build-frontend
             #         - build-backend
 
-            # run this job only when dev branch is build
             - beta-deploy-backend:
                 filters:
                     branches:
@@ -132,6 +140,14 @@ workflows:
                             - dev
                 requires:
                     - beta-deploy-backend
+
+            - prod-deploy-frontend:
+                filters:
+                    branches:
+                        only:
+                            - master
+                requires:
+                    - build-frontend
 
 jobs:
     build-frontend:
@@ -178,7 +194,7 @@ jobs:
             - *restore_frontend_cache
             - *setup_aws_deployment_profile
             - run:
-                name: Deploying frontend on Beta
+                name: Deploying frontend on BETA
                 command: ENV=beta yarn deploy
 
     beta-deploy-backend:
@@ -188,5 +204,15 @@ jobs:
             - *restore_backend_cache
             - *setup_aws_deployment_profile
             - run:
-                name: Deploying backend on Beta
+                name: Deploying backend on BETA
                 command: SLS_DEBUG=* ENV=beta yarn deploy
+
+    prod-deploy-frontend:
+        <<: *frontend_defaults
+        steps:
+            - *checkout
+            - *restore_frontend_cache
+            - *setup_aws_deployment_profile_profile
+            - run:
+                name: Deploying frontend on PRODUCTION
+                command: ENV=prod yarn deploy
