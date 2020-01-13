@@ -6,22 +6,13 @@ orbs:
     aws-cli: circleci/aws-cli@0.1.19
 
 ALIASES:
-    defaults: &defaults
+    docker-image: &docker-image
         docker:
-            # specify the version you desire here
             - image: aneilbaboo/precisely-circleci-node-2018-10-14
-              
+
     checkout: &checkout
         checkout:
             path: ~/repo
-
-    frontend_defaults: &frontend_defaults
-        <<: *defaults
-        working_directory: ~/repo/app-client
-
-    backend_defaults: &backend_defaults
-        <<: *defaults
-        working_directory: ~/repo/app-backend
 
     restore_frontend_cache: &restore_frontend_cache
         restore_cache:
@@ -90,16 +81,16 @@ ALIASES:
                 yarn test:coverage
                 yarn tslint
                 yarn eslint
-    
-    setup_aws_deployment_profile: &setup_aws_deployment_profile
-        run:
-            name: Set AWS Profile
-            # run a script so that the keys don't print into the CircleCI console
-            command: ../.circleci/make-beta-deployment-profile.sh                
+
+    setup_aws_deployment_profile_beta: &setup_aws_deployment_profile_beta
+        aws-cli/setup:
+            profile-name: beta-profile-precisely
+            aws-access-key-id: BETA_AWS_ACCESS_KEY_ID
+            aws-secret-access-key: BETA_AWS_SECRET_KEY
+            aws-region: AWS_REGION
 
     setup_aws_deployment_profile_prod: &setup_aws_deployment_profile_prod
-        - aws-cli/install
-        - aws-cli/configure:
+        aws-cli/setup:
             profile-name: prod-profile-precisely
             aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
             aws-secret-access-key: PROD_AWS_SECRET_KEY
@@ -111,6 +102,14 @@ ALIASES:
             command: |
                 cc-test-reporter format-coverage -t lcov --output "coverage/codeclimate.$CIRCLE_JOB.json" --add-prefix ${PWD##*/}
                 AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync coverage/ "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1"
+
+executors:
+    precisely-frontend:
+        <<: *docker-image
+        working_directory: ~/repo/app-client
+    precisely-backend:
+        <<: *docker-image
+        working_directory: ~/repo/app-backend
 
 workflows:
     version: 2
@@ -141,6 +140,8 @@ workflows:
                 requires:
                     - beta-deploy-backend
 
+            # TODO: Add prod-deploy-backend when it makes sense.
+
             - prod-deploy-frontend:
                 filters:
                     branches:
@@ -151,8 +152,7 @@ workflows:
 
 jobs:
     build-frontend:
-        <<: *frontend_defaults
-
+        executor: precisely-frontend
         steps:
             - *checkout
             - *restore_frontend_cache
@@ -162,8 +162,7 @@ jobs:
             - *upload_coverage_report
 
     build-backend:
-        <<: *backend_defaults
-
+        executor: precisely-backend
         steps:
             - *checkout
             - *restore_backend_cache
@@ -177,7 +176,7 @@ jobs:
             - *upload_coverage_report
 
     report-codeclimate:
-        <<: *defaults
+        executor: precisely-backend
         working_directory: ~/repo
         steps:
             - run:
@@ -186,33 +185,33 @@ jobs:
                     AWS_SECRET_ACCESS_KEY=$CODECLIMATE_AWS_SECRET_ACCESS_KEY AWS_ACCESS_KEY_ID=$CODECLIMATE_AWS_ACCESS_KEY_ID aws s3 sync "s3://dev-precisely-codeclimate/coverage/$CIRCLE_SHA1" coverage/
                     cc-test-reporter sum-coverage -p 2 -o coverage/codeclimate-final.json coverage/codeclimate.*.json
                     cc-test-reporter upload-coverage -i coverage/codeclimate-final.json
-                    
+
     beta-deploy-frontend:
-        <<: *frontend_defaults
+        executor: precisely-frontend
         steps:
             - *checkout
             - *restore_frontend_cache
-            - *setup_aws_deployment_profile
+            - *setup_aws_deployment_profile_beta
             - run:
                 name: Deploying frontend on BETA
                 command: ENV=beta yarn deploy
 
     beta-deploy-backend:
-        <<: *backend_defaults
+        executor: precisely-backend
         steps:
             - *checkout
             - *restore_backend_cache
-            - *setup_aws_deployment_profile
+            - *setup_aws_deployment_profile_beta
             - run:
                 name: Deploying backend on BETA
                 command: SLS_DEBUG=* ENV=beta yarn deploy
 
     prod-deploy-frontend:
-        <<: *frontend_defaults
+        executor: precisely-frontend
         steps:
             - *checkout
             - *restore_frontend_cache
-            - *setup_aws_deployment_profile_profile
+            - *setup_aws_deployment_profile_prod
             - run:
                 name: Deploying frontend on PRODUCTION
                 command: ENV=prod yarn deploy
