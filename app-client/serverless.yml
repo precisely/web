@@ -48,7 +48,8 @@ custom:
       dev: 60
       beta: 300
       default: 86400
-      
+    indexPage: ${self:custom.common.indexPage}
+
   client:
     bucketName: ${self:custom.vars.reactS3BucketName}
     distributionFolder: build
