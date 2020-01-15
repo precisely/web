@@ -32,7 +32,7 @@ async function invalidateDistribution(distributionId) {
       Paths: { 
         Quantity: 1,
         Items: [
-          '/'
+          '/*'
         ]
       }
     }
