@@ -1,43 +1,55 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+
+<html class="text-base">
+
   <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
-	<title>Precisely</title>
-	<style>
-		html {
-			height:100%;
-		}
-		body {
-			background-color:#FFF;
-			margin:0;
-			height:100%;
-		}
-	</style>
-	<!-- copy these lines to your document head: -->
-
-	<meta name="viewport" content="user-scalable=yes, width=1200" />
-	<link href="https://fonts.googleapis.com/css?family=Gelasio:400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet">
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106318128-2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-106318128-2');
-</script>
-	
-	
-
-	<!-- end copy -->
+    <title>Precise.ly</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106318128-2"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+     gtag('config', 'UA-106318128-2');
+    </script>
+    <style>
+     @font-face {
+       font-family: "Ageo";
+       font-weight: 400;
+       src: url("./assets/fonts/ageo/regular.woff2") format("woff2"),
+       url("./assets/fonts/ageo/regular.woff") format("woff"),
+       url("./assets/fonts/ageo/regular.ttf") format("truetype");
+     }
+     body {
+       font-family: "Ageo";
+       background-color: #E71F54;
+     }
+    </style>
   </head>
-  <body>
-	<!-- copy these lines to your document: -->
 
-	<div id="index_hype_container" class="HYPE_document" style="margin:auto;position:relative;width:100%;height:1475px;overflow:hidden;">
-		<script type="text/javascript" charset="utf-8" src="index.hyperesources/index_hype_generated_script.js?19704"></script>
-	</div>
-
-	<!-- end copy -->
+  <body class="text-white">
+    <div class="absolute inset-x-0 bottom-0 text-center text-sm underline">
+      <a href="mailto:contact@precise.ly">contact@precise.ly</a>
+    </div>
+    <div class="flex flex-col content-center justify-center h-screen">
+      <div class="grid grid-cols-8">
+        <div class="col-start-2 col-end-8 bg-grey-100">
+          <img src="./assets/images/logo/full-white.svg" />
+        </div>
+        <div class="mt-8 col-start-2 col-end-8 text-center">
+          Intelligent health service
+        </div>
+        <div class="col-start-2 col-end-8 text-center">
+          from the creator of 23andMe
+        </div>
+        <div class="mt-8 col-start-2 col-end-8 text-center">
+          Coming Soon
+        </div>
+      </div>
+    </div>
   </body>
+
 </html>
